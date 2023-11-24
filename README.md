@@ -1,8 +1,8 @@
 ### DBD Digital / Wealth At Work
 
-# Advisor Hub
+# Adviser Hub
 
-## About AdvisorHub
+## About AdviserHub
 
 
 ## Git
