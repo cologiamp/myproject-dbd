@@ -1,9 +1,13 @@
 ### DBD Digital / Wealth At Work
 
-# Advisor Hub
+# Adviser Hub
 
-## About AdvisorHub
+## About AdviserHub
 
+
+## Setup:
+
+- Run the Database seeder *before* running php artisan config:cache fot the first time as the seeder needs the .env 
 
 ## Git
 
