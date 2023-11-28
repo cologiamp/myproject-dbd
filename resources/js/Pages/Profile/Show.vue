@@ -44,13 +44,6 @@ defineProps({
                     <SectionBorder />
                 </div>
 
-                <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
-
-                <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
-                    <SectionBorder />
-
-                    <DeleteUserForm class="mt-10 sm:mt-0" />
-                </template>
             </div>
         </div>
     </AppLayout>

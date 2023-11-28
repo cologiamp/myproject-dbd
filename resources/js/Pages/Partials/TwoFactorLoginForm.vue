@@ -1,7 +1,7 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import {ref, computed, watch, onMounted} from 'vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import ActionSection from '@/Components/ActionSection.vue';
+import ASForm from '@/Components/ASForm.vue';
 import ConfirmsPassword from '@/Components/ConfirmsPassword.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import InputError from '@/Components/InputError.vue';
@@ -12,6 +12,7 @@ import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
     requiresConfirmation: Boolean,
+    showQrCode: Boolean,
 });
 
 const page = usePage();
@@ -36,6 +37,16 @@ watch(twoFactorEnabled, () => {
         confirmationForm.clearErrors();
     }
 });
+
+onMounted(() => {
+    if(props.showQrCode){
+        Promise.all([
+            showQrCode(),
+            showSetupKey()
+        ]);
+        confirming.value = true;
+    }
+})
 
 const enableTwoFactorAuthentication = () => {
     enabling.value = true;
@@ -78,9 +89,7 @@ const confirmTwoFactorAuthentication = () => {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
-            confirming.value = false;
-            qrCode.value = null;
-            setupKey.value = null;
+           window.location.href = "/dashboard"
         },
     });
 };
@@ -91,21 +100,11 @@ const regenerateRecoveryCodes = () => {
         .then(() => showRecoveryCodes());
 };
 
-const disableTwoFactorAuthentication = () => {
-    disabling.value = true;
 
-    router.delete(route('two-factor.disable'), {
-        preserveScroll: true,
-        onSuccess: () => {
-            disabling.value = false;
-            confirming.value = false;
-        },
-    });
-};
 </script>
 
 <template>
-    <ActionSection>
+    <ASForm>
         <template #title>
             Two Factor Authentication
         </template>
@@ -115,8 +114,10 @@ const disableTwoFactorAuthentication = () => {
         </template>
 
         <template #content>
-            <h3 v-if="twoFactorEnabled && ! confirming" class="text-lg font-medium text-gray-900">
-                You have enabled two factor authentication.
+
+
+            <h3 v-if="!twoFactorEnabled" class="text-lg font-medium text-gray-900">
+                You have not enabled two factor authentication.
             </h3>
 
             <h3 v-else-if="twoFactorEnabled && confirming" class="text-lg font-medium text-gray-900">
@@ -124,8 +125,9 @@ const disableTwoFactorAuthentication = () => {
             </h3>
 
             <h3 v-else class="text-lg font-medium text-gray-900">
-                You have not enabled two factor authentication.
+                Confirm your 2-FA
             </h3>
+
 
             <div class="mt-3 max-w-xl text-sm text-gray-600">
                 <p>
@@ -230,5 +232,5 @@ const disableTwoFactorAuthentication = () => {
                 </div>
             </div>
         </template>
-    </ActionSection>
+    </ASForm>
 </template>
