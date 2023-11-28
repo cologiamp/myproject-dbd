@@ -7,20 +7,8 @@ defineProps({
     halfPageImage: String
 });
 
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
 
-const submit = () => {
-    form.transform(data => ({
-        ...data,
 
-    })).post(route('2fa-store'), {
-
-    });
-};
 </script>
 
 <template>
