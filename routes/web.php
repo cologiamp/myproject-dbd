@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use \App\Http\Controllers\DashboardController;
+use \App\Http\Controllers\TwoFaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +20,25 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return redirect()->route('login');
 });
+Route::get('/logout',function (){
+    \Illuminate\Support\Facades\Auth::logout();
+    return redirect()->to('/login');
+});
+
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/2fa-setup', [TwoFaController::class,'show'])->name('2fa-setup');
+    Route::post('/2fa-setup', [TwoFaController::class,'store'])->name('2fa-store');
+});
+
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    '2fa'
+])->group(function () {
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 });
