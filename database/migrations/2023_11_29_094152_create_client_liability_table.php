@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('advice_cases', function (Blueprint $table) {
+        Schema::create('client_liability', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('advisor_id')->constrained();
+            $table->foreignId('liability_id')->constrained();
+            $table->foreignId('client_id')->constrained();
+//            $table->integer('percent_ownership')->default(100); //TBC based on IO
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('advice_cases');
+        Schema::dropIfExists('client_liability');
     }
 };

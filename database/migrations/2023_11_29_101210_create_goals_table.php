@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('advice_cases', function (Blueprint $table) {
+        Schema::create('goals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('advisor_id')->constrained();
+            $table->integer('type');//enum
+            $table->foreignId('client_id')->constrained();
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('advice_cases');
+        Schema::dropIfExists('goals');
     }
 };

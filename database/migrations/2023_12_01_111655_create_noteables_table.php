@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('advice_cases', function (Blueprint $table) {
+        Schema::create('notables', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('advisor_id')->constrained();
+            $table->foreignId('note_id');
+            $table->integer('noteable_id');
+            $table->string('noteable_type');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('advice_cases');
+        Schema::dropIfExists('noteables');
     }
 };
