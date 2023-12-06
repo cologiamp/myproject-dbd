@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\BaseModels\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -11,6 +12,11 @@ class Client extends Model
 {
     protected $guarded = [];
 
+
+    public function advice_case():BelongsTo
+    {
+        return $this->belongsTo(AdviceCase::class);
+    }
 
     public function assets():BelongsToMany
     {

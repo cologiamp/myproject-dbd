@@ -12,6 +12,11 @@ class AdviceCase extends Model
 {
     protected $guarded = [];
 
+    public function clients():HasMany
+    {
+        return $this->hasMany(Client::class);
+    }
+
     public function advice():BelongsToMany
     {
         return $this->belongsToMany(Advice::class);

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('report_id')->constrained();
             $table->foreignId('advice_case_id')->constrained();
+            $table->foreignId('client_id')->nullable();
+            $table->boolean('is_joint')->default(false);
             $table->timestamps();
         });
     }

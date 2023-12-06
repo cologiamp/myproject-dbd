@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
+use Waw\Io\Io;
 
 class DashboardController extends Controller
 {
@@ -14,6 +15,9 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $i = new Io();
+//        dd($i->getClient(36045374));
+        dd($i->getClients(5));
         return Inertia::render('Dashboard');
     }
 }

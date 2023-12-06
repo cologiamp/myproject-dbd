@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('advice', function (Blueprint $table) {
+        Schema::create('asset_client', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('address_id')->constrained();
+            $table->foreignId('client_id')->constrained();
+            $table->boolean('is_current');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('advice');
+        Schema::dropIfExists('asset_client');
     }
 };

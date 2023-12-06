@@ -14,6 +14,13 @@ return new class extends Migration
         Schema::create('advice_cases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('advisor_id')->constrained();
+            $table->dateTime('meeting_one_date')->nullable();
+            $table->integer('meeting_one_type')->nullable();
+            $table->text('anyone_else_present')->nullable();
+            $table->boolean('client_two_exists')->nullable();
+            $table->boolean('client_two_present')->nullable();
+            $table->dateTime('meeting_two_date')->nullable();
+            $table->text('origin_of_wealth')->nullable();
             $table->timestamps();
         });
     }
