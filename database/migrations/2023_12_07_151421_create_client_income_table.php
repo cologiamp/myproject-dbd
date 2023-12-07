@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('other_incomes', function (Blueprint $table) {
+        Schema::create('client_income', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('income_not_from_employment_id')->constrained();
+            $table->foreignId('client_id')->constrained();
+            $table->foreignId('income_id')->constrained();
+            $table->boolean('is_primary')->default(true);
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('other_incomes');
+        Schema::dropIfExists('client_income');
     }
 };

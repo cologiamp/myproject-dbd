@@ -27,6 +27,12 @@ class Client extends Model
         return $this->belongsToMany(Liability::class);
     }
 
+    public function incomes():BelongsToMany
+    {
+        return $this->belongsToMany(Income::class);
+    }
+
+
 
     public function addresses():BelongsToMany
     {

@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('employment_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained();
+            $table->integer('employment_status')->nullable();
+            $table->integer('intended_retirement_age')->nullable();
+            $table->date('start_at')->nullable();
+            $table->date('end_at')->nullable();
+            $table->string('employer')->nullable();
             $table->timestamps();
         });
     }

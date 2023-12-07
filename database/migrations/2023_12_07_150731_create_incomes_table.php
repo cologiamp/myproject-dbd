@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dependents', function (Blueprint $table) {
+        Schema::create('incomes', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->date('born_at')->nullable();
-            $table->boolean('is_financially_dependent')->default(true);
-//            $table->boolean('is_living_with_client')->default(true);
-            $table->integer('relationship_type');
+            $table->integer('category')->nullable();
+            $table->integer('frequency')->nullable();
+            $table->integer('gross_amount')->nullable();
+            $table->date('ends_at')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dependents');
+        Schema::dropIfExists('incomes');
     }
 };
