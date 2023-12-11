@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->date('born_at')->nullable();
-            $table->boolean('is_financially_dependent')->default(true);
-//            $table->boolean('is_living_with_client')->default(true);
+            $table->integer('financial_dependent')->nullable();
+            $table->boolean('is_living_with_client')->default(true);
             $table->integer('relationship_type');
             $table->timestamps();
         });

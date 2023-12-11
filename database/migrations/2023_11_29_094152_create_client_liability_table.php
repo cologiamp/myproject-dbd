@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('liability_id')->constrained();
             $table->foreignId('client_id')->constrained();
-//            $table->integer('percent_ownership')->default(100); //TBC based on IO
             $table->timestamps();
         });
     }

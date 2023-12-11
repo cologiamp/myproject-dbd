@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('liabilities', function (Blueprint $table) {
             $table->id();
+            $table->integer('type');
+            $table->boolean('is_repayment')->nullable();
+            $table->integer('amount_outstanding')->nullable();
+            $table->integer('monthly_repayment')->nullable();
+            $table->string('lender')->nullable();
+            $table->date('ends_at')->nullable();
+            $table->boolean('is_to_be_repaid')->nullable();
+            $table->text('repay_details')->nullable();
             $table->timestamps();
         });
     }

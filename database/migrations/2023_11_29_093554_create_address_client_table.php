@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('address_id')->constrained();
             $table->foreignId('client_id')->constrained();
-            $table->boolean('is_current');
+            $table->integer('percent_ownership')->default(100);
             $table->timestamps();
         });
     }

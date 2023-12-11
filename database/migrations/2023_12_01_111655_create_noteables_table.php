@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('note_id');
             $table->integer('noteable_id');
             $table->string('noteable_type');
+            $table->text('note');
             $table->timestamps();
         });
     }

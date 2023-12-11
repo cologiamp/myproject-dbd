@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('pension_schemes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained();
+            $table->integer('pensionable_type');
+            $table->integer('pensionable_id');
+            $table->string('employer')->nullable();
+            $table->integer('retirement_age')->nullable();
+            $table->boolean('is_retained')->nullable();
             $table->timestamps();
         });
     }

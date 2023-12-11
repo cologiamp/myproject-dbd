@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
+            $table->integer('category')->nullable();
+            $table->integer('type');//0 = Asset 1 = existing account
+            $table->text('description')->nullable();
+            $table->string('product_name')->nullable();
+            $table->integer('original_value')->nullable();
+            $table->integer('current_value')->nullable();
+            $table->integer('retained_value')->nullable();
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
+            $table->boolean('is_retained')->nullable();
+            $table->double('interest_rate')->nullable();
             $table->timestamps();
         });
     }

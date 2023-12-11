@@ -28,9 +28,9 @@ class AdviceCase extends Model
     }
 
 
-    public function expenditure_report():HasOne
+    public function expenditure():HasMany
     {
-        return $this->hasOne(ExpenditureReport::class);
+        return $this->hasMany(Expenditure::class);
     }
     public function income_changes():HasMany
     {
