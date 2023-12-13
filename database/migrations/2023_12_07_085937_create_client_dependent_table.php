@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained();
             $table->foreignId('dependent_id')->constrained();
+            $table->integer('relationship_type');
             $table->timestamps();
         });
     }

@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('goals', function (Blueprint $table) {
+        Schema::create('client_investment_recommendations', function (Blueprint $table) {
             $table->id();
-            $table->integer('type');//enum
+            $table->foreignId('investment_recommendation_id')->constrained(indexName: 'cir_ir_id_foriegn');
             $table->foreignId('client_id')->constrained();
+            $table->integer('isa_allowance_used')->nullable();
+            $table->integer('cgt_allowance_used')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('goals');
+        Schema::dropIfExists('client_recommendations');
     }
 };

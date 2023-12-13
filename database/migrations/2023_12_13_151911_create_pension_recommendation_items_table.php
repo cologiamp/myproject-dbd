@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('current_year_finances', function (Blueprint $table) {
+        Schema::create('pension_recommendation_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained();
+            $table->foreignId('pension_recommendation_id');
+            $table->integer('type');
+            $table->integer('value');
+            $table->integer('is_percentage');
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('current_year_finances');
+        Schema::dropIfExists('pension_recommendation_items');
     }
 };

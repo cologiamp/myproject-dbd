@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('advice_cases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('advisor_id')->constrained();
+            $table->integer('advisor_id');
             $table->dateTime('meeting_one_date')->nullable();
             $table->integer('meeting_one_type')->nullable();
             $table->text('anyone_else_present')->nullable();

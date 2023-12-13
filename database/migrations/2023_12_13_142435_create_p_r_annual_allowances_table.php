@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notables', function (Blueprint $table) {
+        Schema::create('p_r_annual_allowances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('note_id');
-            $table->integer('noteable_id');
-            $table->string('noteable_type');
-            $table->text('note');
+            $table->foreignId('pension_recommendation_id')->constrained();
+            $table->string('tax_year');
+            $table->integer('annual_allowance');
+            $table->integer('pension_input')->default(0);
+            $table->integer('unused_allowance')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('noteables');
+        Schema::dropIfExists('p_r_annual_allowances');
     }
 };

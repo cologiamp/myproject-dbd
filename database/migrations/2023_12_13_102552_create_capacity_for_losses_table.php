@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('c_f_l_questions', function (Blueprint $table) {
+        Schema::create('capacity_for_losses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('risk_profile_id')->constrained();
+            $table->foreignId('client_id')->constrained();
+            $table->integer('investment_length')->nullable();
+            $table->integer('standard_of_living')->nullable();
+            $table->integer('emergency_funds')->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('c_f_l_questions');
+        Schema::dropIfExists('capacity_for_losses');
     }
 };
