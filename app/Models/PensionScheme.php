@@ -12,4 +12,13 @@ class PensionScheme extends Model
         return $this->belongsTo(Client::class);
     }
 
+    public function defined_benefit_pension(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(DefinedBenefitPension::class);
+    }
+    public function defined_contribution_pension(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(DefinedContributionPension::class);
+    }
+
 }
