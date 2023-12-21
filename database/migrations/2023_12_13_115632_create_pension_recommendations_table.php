@@ -21,10 +21,9 @@ return new class extends Migration
             $table->boolean('active_pension_member')->nullable();
             $table->text('active_pension_member_reason_not')->nullable();
             $table->integer('active_pension_review_for_transfer')->nullable();
-//            $table->integer('dd_drawdown_fund')->nullable();
-//            $table->integer('dd_new_income')->nullable();
-//            $table->integer('dd_pcls')->nullable();
-//            $table->integer('dd_income')->nullable();
+            $table->integer('dd_pcls_spend')->nullable();
+            $table->integer('dd_pcls_income')->nullable();
+            $table->integer('dd_income')->nullable();
             $table->timestamps();
         });
     }

@@ -15,8 +15,24 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['K2D', ...defaultTheme.fontFamily.sans],
             },
+            colors:{
+                'aaron': {
+                    '50': '#ecf5ff',
+                    '100': '#ddecff',
+                    '200': '#c1dbff',
+                    '300': '#9cc2ff',
+                    '400': '#00B3DD',
+                    '500': '#547aff',
+                    '600': '#3551f6',
+                    '700': '#293fd9',
+                    '800': '#2438af',
+                    '900': '#1C245F',
+                    '950': '#0b0f28',
+                },
+
+            }
         },
     },
 

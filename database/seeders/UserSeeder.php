@@ -28,15 +28,15 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'access IO data']);
 
         Role::create(['name' => 'paraplanner'])->givePermissionTo(['update cases','create notes']);
-        Role::create(['name' => 'advisor'])->givePermissionTo(['create cases','delete cases','update cases','create notes','access IO data']);
+        Role::create(['name' => 'adviser'])->givePermissionTo(['create cases','delete cases','update cases','create notes','access IO data']);
         Role::create(['name' => 'admin'])->givePermissionTo(Permission::all());
 
         User::create([
-            'name' => 'DBD Advisor Test',
-            'email' => 'advisor@dbd.digital',
+            'name' => 'DBD Adviser Test',
+            'email' => 'adviser@dbd.digital',
             'password' => bcrypt(env('ADMIN_PASSWORD')),
             'email_verified_at' => Carbon::now()
-        ])->assignRole('advisor');
+        ])->assignRole('adviser');
 
         User::create([
             'name' => 'DBD Admin',

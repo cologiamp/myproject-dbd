@@ -37,6 +37,12 @@ class JetstreamServiceProvider extends ServiceProvider
             ]);
         });
 
+        Fortify::twoFactorChallengeView(function (){
+            return Inertia::render('Auth/TwoFactorChallenge', [
+                'halfPageImage' => config('constants.2faImage'),
+            ]);
+        });
+
         $this->app->singleton(
           LoginResponse::class,
           \App\Http\Responses\LoginResponse::class

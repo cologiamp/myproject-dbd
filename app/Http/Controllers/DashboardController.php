@@ -15,9 +15,33 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $i = new Io();
+//        $i = new Io();
 //        dd($i->getClient(36045374));
-        dd($i->getClients(5));
-        return Inertia::render('Dashboard');
+//        dd($i->getClients(5));
+        return Inertia::render('Dashboard',[
+            'title' => 'Dashboard',
+            'breadcrumbs' => [
+                [
+                    'title' => 'Hardcoded',
+                    'link' => '#',
+                    'is_active' => false
+                ],
+                [
+                    'title' => 'As Required',
+                    'link' => '#',
+                    'is_active' => false
+                ],
+                [
+                    'title' => 'In The',
+                    'link' => '#',
+                    'is_active' => false
+                ], [
+                    'title' => 'Designs',
+                    'link' => '#',
+                    'is_active' => true
+                ],
+
+            ]
+        ]);
     }
 }

@@ -3,15 +3,55 @@
 namespace App\Models;
 
 use App\Models\BaseModels\Model;
+use App\Models\Presenters\ClientPresenter;
+use App\Models\Presenters\LayoutPresenter;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Client extends Model
 {
     protected $guarded = [];
 
+    //ENUMS
+    public function title():Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => config('enums.client.title')[$value],
+            set: fn($value) => array_flip(config('enums.client.title'))[$value],
+        );
+    }
+
+    public function gender():Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => config('enums.client.gender')[$value],
+            set: fn($value) => array_flip(config('enums.client.gender'))[$value]
+        );
+    }
+
+    public function maritalStatus():Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => config('enums.client.marital_status')[$value],
+            set: fn($value) => array_flip(config('enums.client.marital_status'))[$value]
+        );
+    }
+
+    public function nationality():Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => config('enums.client.nationality')[$value],
+            set: fn($value) => array_flip(config('enums.client.nationality'))[$value]
+        );
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->title . ' ' . $this->first_name . ' ' . $this->last_name;
+    }
 
     public function advice_case():BelongsTo
     {
@@ -77,5 +117,12 @@ class Client extends Model
     public function retirement(): HasOne
     {
         return $this->hasOne(Retirement::class);
+    }
+
+
+    //Presenter
+    public function presenter() : ClientPresenter
+    {
+        return new ClientPresenter($this);
     }
 }

@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->integer('io_id');
-            $table->integer('case_id');
+            $table->foreignId('case_id')->nullable()->references('id')->on('advice_cases');
+            $table->foreignId('adviser_id')->nullable()->references('id')->on('user');
             $table->integer('title')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email_address')->nullable();
