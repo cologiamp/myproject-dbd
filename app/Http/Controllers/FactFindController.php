@@ -2,27 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
 use App\Repositories\ClientRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ClientDashboardController extends Controller
+class FactFindController extends Controller
 {
     protected ClientRepository $clientRepository;
     public function __construct(ClientRepository $cr)
     {
         $this->clientRepository = $cr;
     }
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke(Request $request, Client $client)
+    public function show($client, Request $request)
     {
-        return Inertia::render('ClientDashboard',[
-            'title' => 'Client Dashboard',
+        return Inertia::render('FactFind',[
+            'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
-            'content-title' => 'Welcome to ' . $client->name . "'s dashboard"
+            'step' =>  $request->step,
+            'section' => $request->section
         ]);
     }
 }

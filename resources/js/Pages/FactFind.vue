@@ -11,6 +11,6 @@ defineProps({
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
-
+        
     </AppLayout>
 </template>

@@ -10,6 +10,27 @@ return [
     | Here we define config backed enums
     |
     */
+    'factfind' => [
+       'basic-details' => [
+           'personal-details',
+           'health-details',
+           'address-and-contact-details',
+           'family',
+           'employment-details'
+       ],
+       'income-and-expenditure' => [
+
+       ],
+       'assets' => [
+
+       ],
+       'liabilities' => [
+
+       ],
+       'risk' => [
+
+       ],
+    ],
 
     'client' => [
         'title' => [
@@ -102,7 +123,8 @@ return [
             6 => 'Divorced',
             7 => 'Separated',
             8 => 'Widowed',
-            9 => 'Living Together'
+            9 => 'Living Together',
+            10 => 'Unknown'
         ],
         'nationality' => [
             0 => 'British',

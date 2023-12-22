@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('is_primary')->nullable();
             $table->integer('relation_to_c2')->nullable();
             $table->string('first_name')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->string('last_name')->nullable();
             $table->string('salutation')->nullable();
             $table->integer('gender')->nullable();

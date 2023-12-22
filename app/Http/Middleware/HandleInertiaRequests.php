@@ -51,19 +51,13 @@ class HandleInertiaRequests extends Middleware
                     'name' => 'Clients',
                     'href' => '/clients',
                     'icon' => 'ClientIcon',
-//                    'current' => Str::contains($request->route()->getName(),'dashboard')
                     'current' => $request->route()->getName() === 'clients'
                 ],
             ]
+            //Chore: make when there's a "client" in the URL that the other tabs appear
+            //Fact Find
+            //Strategy Report
 
-
-//const navigation = [
-//    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-//    { name: 'Team', href: '#', icon: UsersIcon, current: false },
-//    { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-//    { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-//    { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-//    { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
 //]
 
         ]);

@@ -76,7 +76,7 @@ class ClientRepository extends BaseRepository
     {
         //Note: This will make N database queries. Refactor when extra time.
         $ioClientCollection->each(function ($item) use ($adviser_id){
-            $client = Client::where('io_id',$item->id)->first();
+            $client = Client::where('io_id',$item['id'])->first();
             if($client)
             {
                 if($client->adviser_id != $adviser_id)
@@ -86,18 +86,45 @@ class ClientRepository extends BaseRepository
                 }
             }
             else{
-                $this->client->create([
+                ray($item)->orange();
+                $data = [
                     'io_id' => $item['id'],
                     'adviser_id' => $adviser_id,
-                    'salutation' => $item['person']['salutation'],
-                    'title' => $item['person']['title'], //enum
-                    'first_name' => $item['person']['firstName'],
-                    'last_name' => $item['person']['lastName'],
-                    'gender' => $item['person']['gender'],  //enum
-                    'marital_status' => $item['person']['maritalStatus'],  //enum
-                    'nationality' => $item['person']['NationalityCountry']['name'],  //enum
-                    //Chore: Should we be using isoCode not name?
-                ]);
+                ];
+                if(array_key_exists('title',$item['person']) && $item['person']['title'] != null)
+                {
+                    $data['title'] = $item['person']['title'];
+                }
+                if(array_key_exists('firstName',$item['person']) && $item['person']['firstName'] != null)
+                {
+                    $data['first_name'] = $item['person']['firstName'];
+                }
+                if(array_key_exists('lastName',$item['person']) && $item['person']['lastName'] != null)
+                {
+                    $data['last_name'] = $item['person']['lastName'];
+                }
+                if(array_key_exists('dateOfBirth',$item['person']) && $item['person']['dateOfBirth'] != null)
+                {
+                    $data['date_of_birth'] = $item['person']['dateOfBirth'];
+                }
+                if(array_key_exists('gender',$item['person']) && $item['person']['gender'] != null)
+                {
+                    $data['gender'] = $item['person']['gender'];
+                }
+                if(array_key_exists('maritalStatus',$item['person']) && $item['person']['maritalStatus'] != null)
+                {
+                    $data['marital_status'] = $item['person']['maritalStatus'];
+                }
+                if(array_key_exists('NationalityCountry',$item['person']) && $item['person']['NationalityCountry']['name'] != null)
+                {
+                    $data['nationality'] = $item['person']['NationalityCountry']['name'];
+                }
+                if(array_key_exists('salutation',$item['person']) && $item['person']['salutation'] != null)
+                {
+                    $data['salutation'] = $item['person']['salutation'];
+                }
+                ray($data)->purple();
+                $this->client->create($data);
             }
         });
     }

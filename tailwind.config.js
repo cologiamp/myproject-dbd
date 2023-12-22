@@ -1,6 +1,7 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
+import colors from "tailwindcss/colors.js";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -31,6 +32,8 @@ export default {
                     '900': '#1C245F',
                     '950': '#0b0f28',
                 },
+                'pink': colors.pink,
+                'slate': colors.slate
 
             }
         },

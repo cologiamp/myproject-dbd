@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientDashboardController;
+use App\Http\Controllers\FactFindController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,6 +51,8 @@ Route::middleware([
 
     Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
+       Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind.step');
+
     });
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');

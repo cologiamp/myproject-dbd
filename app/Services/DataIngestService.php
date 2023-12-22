@@ -32,8 +32,6 @@ class DataIngestService
                 throw $exception;
             }
         }
-        return collect($clients)->flatten();
-
-
+        return collect($clients)->flatten(1);
     }
 }

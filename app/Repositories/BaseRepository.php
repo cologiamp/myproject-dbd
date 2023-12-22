@@ -12,8 +12,6 @@ use Request;
 
 class BaseRepository
 {
-
-
     public function loadBreadcrumbs(): array
     {
         return BreadcrumbsService::loadBreadcrumbs();

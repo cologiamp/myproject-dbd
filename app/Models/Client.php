@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\BaseModels\Model;
 use App\Models\Presenters\ClientPresenter;
 use App\Models\Presenters\LayoutPresenter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,32 +20,39 @@ class Client extends Model
     public function title():Attribute
     {
         return Attribute::make(
-            get: fn($value) => config('enums.client.title')[$value],
-            set: fn($value) => array_flip(config('enums.client.title'))[$value],
+            get: fn($value) => $value != null ? config('enums.client.title')[$value] : null,
+            set: fn($value) => $value != null ? array_flip(config('enums.client.title'))[$value] : null,
         );
     }
 
     public function gender():Attribute
     {
         return Attribute::make(
-            get: fn($value) => config('enums.client.gender')[$value],
-            set: fn($value) => array_flip(config('enums.client.gender'))[$value]
+            get: fn($value) => $value != null ? config('enums.client.gender')[$value] : null,
+            set: fn($value) => $value != null ? array_flip(config('enums.client.gender'))[$value] : null
         );
     }
 
     public function maritalStatus():Attribute
     {
         return Attribute::make(
-            get: fn($value) => config('enums.client.marital_status')[$value],
-            set: fn($value) => array_flip(config('enums.client.marital_status'))[$value]
+            get: fn($value) =>  $value != null ? config('enums.client.marital_status')[$value] : null,
+            set: fn($value) => $value != null ? array_flip(config('enums.client.marital_status'))[$value] : null
         );
     }
 
     public function nationality():Attribute
     {
         return Attribute::make(
-            get: fn($value) => config('enums.client.nationality')[$value],
-            set: fn($value) => array_flip(config('enums.client.nationality'))[$value]
+            get: fn($value) => $value != null ? config('enums.client.nationality')[$value] : null,
+            set: fn($value) =>$value != null ? array_flip(config('enums.client.nationality'))[$value] : null
+        );
+    }
+
+    public function date_of_birth():Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => Carbon::parse($value),
         );
     }
 
