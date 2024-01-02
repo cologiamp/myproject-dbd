@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientDashboardController;
+use App\Http\Controllers\FactFindController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,5 +43,18 @@ Route::middleware([
     config('jetstream.auth_session'),
     '2fa'
 ])->group(function () {
+
+//    Route::get('/test',function (){
+//       $dis = App::make(\App\Services\DataIngestService::class);
+//       $dis->getClientsForAdviser(Auth::user()->io_id);
+//    });
+
+    Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
+       Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
+       Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
+
+    });
+
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/clients', ClientController::class)->name('clients');
 });
