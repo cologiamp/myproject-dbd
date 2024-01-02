@@ -71,11 +71,9 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "packages/waw/io",
-            "options": {
-                "symlink": true
-            }
+            "type": "vcs",
+            "url": "https://github.com/wealth-at-work/Intelliflo",
+            "no-api": true
         }
     ],
     "minimum-stability": "dev",

@@ -31,7 +31,7 @@ defineProps({
                 </div>
             </div>
             <div class="button-holder">
-                <Link class="rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-aaron-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" v-if="selectedClient" as="button" type="button" :href='"client/" + selectedClient + "/dashboard"'>Select </link>
+                <Link class="rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-aaron-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" v-if="selectedClient" as="button" type="button" :href='"client/" + selectedClient + "/dashboard"'>Select </Link>
                 <button v-else disabled class="disabled rounded-md bg-slate-300 text-slate-500 border-slate-200 disabled:shadow-none px-3 py-2 text-sm font-semibold shadow-sm">Select </button>
             </div>
         </form-well>

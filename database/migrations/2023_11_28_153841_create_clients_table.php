@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('io_id');
             $table->foreignId('case_id')->nullable()->references('id')->on('advice_cases');
-            $table->foreignId('adviser_id')->nullable()->references('id')->on('user');
+            $table->foreignId('adviser_id')->nullable()->references('id')->on('users');
             $table->integer('title')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email_address')->nullable();

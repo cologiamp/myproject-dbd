@@ -7,6 +7,7 @@ use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Request;
 
@@ -72,7 +73,7 @@ class ClientRepository extends BaseRepository
         ];
     }
 
-    public function syncIoForAdviser($adviser_id,$ioClientCollection)
+    public function syncIoForAdviser(int $adviser_id,Collection $ioClientCollection)
     {
         //Note: This will make N database queries. Refactor when extra time.
         $ioClientCollection->each(function ($item) use ($adviser_id){
