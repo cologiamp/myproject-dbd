@@ -51,7 +51,7 @@ Route::middleware([
 
     Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
-       Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind.step');
+       Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
 
     });
 
