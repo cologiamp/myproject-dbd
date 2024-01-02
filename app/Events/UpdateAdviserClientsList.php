@@ -26,7 +26,9 @@ class UpdateAdviserClientsList
         if($event->user->io_id && $event->user->hasRole(['adviser','admin']))
         {
             //Chore: dispatch this in a queue job if taking too long
-            $this->clientRepository->syncIoForAdviser($event->user->io_id,$this->dataIngestService->getClientsForAdviser($event->user->io_id));
+            $this->clientRepository->syncIoForAdviser(
+                adviser_id: $event->user->id,
+                ioClientCollection: $this->dataIngestService->getClientsForAdviser($event->user->io_id));
         }
     }
 }
