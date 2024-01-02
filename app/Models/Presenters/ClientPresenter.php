@@ -14,4 +14,13 @@ class ClientPresenter extends BasePresenter
         );
     }
 
+    public function formatForExampleForm(): array
+    {
+        return [
+          'first_name'=> $this->model->first_name,
+          'last_name'=> $this->model->last_name,
+          'title' => $this->model->title
+        ];
+    }
+
 }
