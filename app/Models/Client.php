@@ -16,38 +16,7 @@ class Client extends Model
 {
     protected $guarded = [];
 
-    //ENUMS
-    public function title():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value != null ? config('enums.client.title')[$value] : null,
-            set: fn($value) => $value != null ? array_flip(config('enums.client.title'))[$value] : null,
-        );
-    }
 
-    public function gender():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value != null ? config('enums.client.gender')[$value] : null,
-            set: fn($value) => $value != null ? array_flip(config('enums.client.gender'))[$value] : null
-        );
-    }
-
-    public function maritalStatus():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) =>  $value != null ? config('enums.client.marital_status')[$value] : null,
-            set: fn($value) => $value != null ? array_flip(config('enums.client.marital_status'))[$value] : null
-        );
-    }
-
-    public function nationality():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value != null ? config('enums.client.nationality')[$value] : null,
-            set: fn($value) =>$value != null ? array_flip(config('enums.client.nationality'))[$value] : null
-        );
-    }
 
     public function date_of_birth():Attribute
     {

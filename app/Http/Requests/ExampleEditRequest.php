@@ -2,17 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class ExampleEditRequest extends FormRequest
+use Illuminate\Validation\Rule;
+
+class ExampleEditRequest extends BaseClientRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return \Auth::user()->can('update cases');
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +16,14 @@ class ExampleEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => 'sometimes|max:127',
+            'last_name' => 'sometimes|max:127',
+            'title' => [
+                'sometimes',
+                'numeric',
+                'integer',
+                Rule::in(array_keys(config('enums.client.title'))),
+            ]
         ];
     }
 }

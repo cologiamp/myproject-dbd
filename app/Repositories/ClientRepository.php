@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 
 
+use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
@@ -33,7 +34,7 @@ class ClientRepository extends BaseRepository
     }
 
     //Update the given details
-    public function update(UpdateClientRequest $request): void
+    public function update(BaseClientRequest $request): void
     {
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
         $this->client->update($request->safe()->all());

@@ -30,7 +30,8 @@ class ExampleController extends Controller
 
     public function update(Client $client, ExampleEditRequest $request):RedirectResponse
     {
-//        dd($request->all());
+        $this->clientRepository->setClient($client);
+        $this->clientRepository->update($request);
         return to_route('client.example.edit',['client' => $client->io_id]);
     }
 }
