@@ -16,6 +16,13 @@ class ExampleController extends Controller
     {
         $this->clientRepository = $cr;
     }
+
+    /**
+     * Initialise the correct Client to the ClientRepository and then render the form.
+     * @param Client $client
+     * @param Request $request
+     * @return \Inertia\Response
+     */
     public function edit(Client $client, Request $request): \Inertia\Response
     {
         $this->clientRepository->setClient($client);
@@ -28,6 +35,12 @@ class ExampleController extends Controller
         ]);
     }
 
+    /**
+     * Set the Client in the correct repository, before updating and reloading with Inertia.
+     * @param Client $client
+     * @param ExampleEditRequest $request
+     * @return RedirectResponse
+     */
     public function update(Client $client, ExampleEditRequest $request):RedirectResponse
     {
         $this->clientRepository->setClient($client);
