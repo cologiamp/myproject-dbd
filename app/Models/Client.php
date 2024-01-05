@@ -16,37 +16,13 @@ class Client extends Model
 {
     protected $guarded = [];
 
-    //ENUMS
-    public function title():Attribute
+    /**
+     * Return the formatted attribute "title" according to the config enum;
+     * @return null|string
+     */
+    public function getFormattedTitleAttribute():null|string
     {
-        return Attribute::make(
-            get: fn($value) => $value != null ? config('enums.client.title')[$value] : null,
-            set: fn($value) => $value != null ? array_flip(config('enums.client.title'))[$value] : null,
-        );
-    }
-
-    public function gender():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value != null ? config('enums.client.gender')[$value] : null,
-            set: fn($value) => $value != null ? array_flip(config('enums.client.gender'))[$value] : null
-        );
-    }
-
-    public function maritalStatus():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) =>  $value != null ? config('enums.client.marital_status')[$value] : null,
-            set: fn($value) => $value != null ? array_flip(config('enums.client.marital_status'))[$value] : null
-        );
-    }
-
-    public function nationality():Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value != null ? config('enums.client.nationality')[$value] : null,
-            set: fn($value) =>$value != null ? array_flip(config('enums.client.nationality'))[$value] : null
-        );
+        return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
 
     public function date_of_birth():Attribute
@@ -58,7 +34,7 @@ class Client extends Model
 
     public function getNameAttribute()
     {
-        return $this->title . ' ' . $this->first_name . ' ' . $this->last_name;
+        return $this->formatted_title . ' ' . $this->first_name . ' ' . $this->last_name;
     }
 
     public function advice_case():BelongsTo

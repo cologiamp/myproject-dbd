@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 
 
+use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
@@ -33,7 +34,7 @@ class ClientRepository extends BaseRepository
     }
 
     //Update the given details
-    public function update(UpdateClientRequest $request): void
+    public function update(BaseClientRequest $request): void
     {
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
         $this->client->update($request->safe()->all());
@@ -56,17 +57,19 @@ class ClientRepository extends BaseRepository
         select('clients.*');//Limit query here
     }
 
-    //get the options for form (single client)
-    public function getFormOptions():array
+    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
+    public function getExampleFormOptions():array
     {
         return [
             'enums' => [
-
+                'titles' => config('enums.client.title')
             ],
-            'model' => $this->client->presenter()->form()
+            'model' => $this->client->presenter()->formatForExampleForm(),
+            'submit_method' => 'put',
+            'submit_url' => '/client/' . $this->client->io_id . '/example'
         ];
     }
-    public function getIndexOptions()
+    public function getIndexOptions(): array
     {
         return [
             'models' => Auth::user()->clients->map(fn($c) => $c->presenter()->index())
@@ -94,7 +97,7 @@ class ClientRepository extends BaseRepository
                 ];
                 if(array_key_exists('title',$item['person']) && $item['person']['title'] != null)
                 {
-                    $data['title'] = $item['person']['title'];
+                    $data['title'] = array_flip(config('enums.client.title'))[$item['person']['title']];
                 }
                 if(array_key_exists('firstName',$item['person']) && $item['person']['firstName'] != null)
                 {
@@ -110,15 +113,15 @@ class ClientRepository extends BaseRepository
                 }
                 if(array_key_exists('gender',$item['person']) && $item['person']['gender'] != null)
                 {
-                    $data['gender'] = $item['person']['gender'];
+                    $data['gender'] =  array_flip(config('enums.client.gender'))[$item['person']['gender']] ;
                 }
                 if(array_key_exists('maritalStatus',$item['person']) && $item['person']['maritalStatus'] != null)
                 {
-                    $data['marital_status'] = $item['person']['maritalStatus'];
+                    $data['marital_status'] = array_flip(config('enums.client.marital_status'))[$item['person']['maritalStatus']];
                 }
                 if(array_key_exists('NationalityCountry',$item['person']) && $item['person']['NationalityCountry']['name'] != null)
                 {
-                    $data['nationality'] = $item['person']['NationalityCountry']['name'];
+                    $data['nationality'] = array_flip(config('enums.client.nationality'))[$item['person']['NationalityCountry']['name']];
                 }
                 if(array_key_exists('salutation',$item['person']) && $item['person']['salutation'] != null)
                 {

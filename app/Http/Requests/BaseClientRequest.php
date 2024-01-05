@@ -2,8 +2,19 @@
 
 namespace App\Http\Requests;
 
-class UpdateClientRequest extends BaseClientRequest
+use Illuminate\Foundation\Http\FormRequest;
+
+class BaseClientRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return \Auth::user()->can('update cases');
+    }
+
+
     /**
      * Get the validation rules that apply to the request.
      *
