@@ -39,7 +39,7 @@ provide("selectedSectionId", selectedSectionId);
                     <!-- <Link href="/fact-find" :data="{ step: tabIndex, section: index }" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group"> -->
                     <a href="#" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
                         <div class="rounded-full w-11 h-11 py-2 text-center"
-                            :class="[item.current ? 'bg-aaron-400' : 'bg-[#0B0F28]']">
+                            :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                                 {{ index }}
                         </div>
                         <span class="ms-3 text-base">{{ item.name }}</span>
