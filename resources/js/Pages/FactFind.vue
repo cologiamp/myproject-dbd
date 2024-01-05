@@ -2,12 +2,15 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import FormWell from "@/Components/FormWell.vue";
+import Tabs from "@/Components/Tabs.vue";
+import Tab from "@/Components/Tab.vue";
 import {Link} from "@inertiajs/vue3";
 
 
 defineProps({
     title: String,
     breadcrumbs: Array,
+    tabs: Object
 });
 
 function changeSection(section)
@@ -24,24 +27,6 @@ function changeStep(section,step)
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
-        <div class="sections flex flex-col">
-<!--            Chore: Tab component with sections as tabs-->
-                <div class="">
-                    <PrimaryButton class="w-[50px]"  @click="changeSection(1)">1</PrimaryButton>
-                    <PrimaryButton class="w-[50px]" @click="changeSection(2)">2</PrimaryButton>
-                    <PrimaryButton class="w-[50px]" @click="changeSection(3)">3</PrimaryButton>
-                    <PrimaryButton class="w-[50px]" @click="changeSection(4)">4</PrimaryButton>
-                    <PrimaryButton class="w-[50px]" @click="changeSection(5)">5</PrimaryButton>
-                </div>
-            <div class="steps flex flex-col pt-4">
-<!--            Chore: Steps component with steps inside of tabs-->
-                <PrimaryButton class="w-[50px]" @click="changeStep(1)">1</PrimaryButton>
-                <PrimaryButton class="w-[50px]" @click="changeStep(2)">2</PrimaryButton>
-                <PrimaryButton class="w-[50px]" @click="changeStep(3)">3</PrimaryButton>
-                <PrimaryButton class="w-[50px]" @click="changeStep(4)">4</PrimaryButton>
-                <PrimaryButton class="w-[50px]" @click="changeStep(5)">5</PrimaryButton>
-            </div>
-        </div>
         <form-well class="mt-8">
             <div class="form-row flex-1">
                 <label for="client" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 required">Client</label>
@@ -53,9 +38,14 @@ function changeStep(section,step)
                 </div>
             </div>
             <div class="button-holder">
-                <Link class="rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-aaron-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" v-if="selectedClient" as="button" type="button" :href='"client/" + selectedClient + "/dashboard"'>Select </link>
+                <Link class="rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-aaron-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" v-if="selectedClient" as="button" type="button" :href='"client/" + selectedClient + "/dashboard"'>Select </Link>
                 <button v-else disabled class="disabled rounded-md bg-slate-300 text-slate-500 border-slate-200 disabled:shadow-none px-3 py-2 text-sm font-semibold shadow-sm">Select </button>
             </div>
         </form-well>
+        <div class="sections flex flex-col">
+                <Tabs :tabTitles="tabs">
+                    <Tab v-for="(tab, index) in tabs" v-bind:key="index" :tab="tab" :tabIndex="index"></Tab>
+                </Tabs>
+        </div>
     </AppLayout>
 </template>
