@@ -6,18 +6,16 @@ const props = defineProps({
     sidebarItems: {
         type: Object,
         required: true
-    },
-    tabIndex: {
-        type: Number,
-        required: true
-    },
+    }
 });
 
-const defaultItem = (navItem) => navItem.current == true;
-const selectedItem = ref(props.sidebarItems[props.sidebarItems.findIndex(defaultItem)].name);
+const findSectionKey = (obj, fn) =>
+  Object.keys(obj).find(key => fn(obj[key], key, obj));
 
-function itemsClick(item) {
-    selectedItem.value = item.name
+const selectedSectionId = ref(findSectionKey(props.sidebarItems, x => x.current == true));
+
+function sectionsClick(index, item) {
+    selectedSectionId.value = index
 
     Object.keys(props.sidebarItems).forEach(key => {
         props.sidebarItems[key].current = false;
@@ -26,9 +24,7 @@ function itemsClick(item) {
     item.current = true;
 }
 
-provide("selectedItem", selectedItem);
-
-const tabIndex = inject("tabIndex");
+provide("selectedSectionId", selectedSectionId);
 
 </script>
 
@@ -39,12 +35,12 @@ const tabIndex = inject("tabIndex");
                 <li v-for="(item, index) in props.sidebarItems"
                     :key="item.name"
                     :id="index"
-                    @click="itemsClick(item)">
+                    @click="sectionsClick(index, item)">
                     <!-- <Link href="/fact-find" :data="{ step: tabIndex, section: index }" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group"> -->
                     <a href="#" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                        <div class="section-number w-11 h-11 py-2 text-center bg-center bg-auto bg-no-repeat" 
-                            :class="[item.current ? 'section-active' : 'section-inactive']">
-                            {{ index + 1 }}
+                        <div class="rounded-full w-11 h-11 py-2 text-center"
+                            :class="[item.current ? 'bg-aaron-400' : 'bg-[#0B0F28]']">
+                                {{ index }}
                         </div>
                         <span class="ms-3 text-base">{{ item.name }}</span>
                     </a>
@@ -60,13 +56,3 @@ const tabIndex = inject("tabIndex");
     </div>
 
 </template>
-
-<style scoped>
-.section-active {
-    background-image: url("/images/ellipsis-active.png");
-}
-
-.section-inactive {
-    background-image: url("/images/ellipsis-inactive.png");
-}
-</style>

@@ -8,11 +8,14 @@ const props = defineProps({
     }
 });
 
-const defaultTab = (tab) => tab.current == true;
-const selectedTitle = ref(props.tabTitles[props.tabTitles.findIndex(defaultTab)].name);
 
-function tabsClick(tab) {
-    selectedTitle.value = tab.name
+const findTabKey = (obj, fn) =>
+  Object.keys(obj).find(key => fn(obj[key], key, obj));
+
+const selectedTabId = ref(findTabKey(props.tabTitles, x => x.current == true));
+
+function tabsClick(index, tab) {
+    selectedTabId.value = index
 
     Object.keys(props.tabTitles).forEach(key => {
         props.tabTitles[key].current = false;
@@ -21,7 +24,7 @@ function tabsClick(tab) {
     tab.current = true;
 }
 
-provide("selectedTitle", selectedTitle);
+provide("selectedTabId", selectedTabId);
 
 </script>
 
@@ -31,7 +34,7 @@ provide("selectedTitle", selectedTitle);
             <li v-for="(tab, index) in props.tabTitles" 
                 :key="tab.name"
                 :id="index"
-                @click="tabsClick(tab)"
+                @click="tabsClick(index, tab)"
                 class="list-item !w-auto"
                 >
                 <p class="text-white p-4">{{ tab.name }}</p>

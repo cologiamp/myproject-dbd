@@ -3,16 +3,23 @@ import { defineProps, inject } from "vue";
 
 const props = defineProps({
     item: {
-        type: Object
+        type: Object,
+        default: {
+            'name' : 'Section Content',
+            'currrent': true
+        }
+    },
+    sectionIndex: {
+        type: String
     }
 });
 
-const selectedItem = inject("selectedItem");
+const selectedSectionId = inject("selectedSectionId");
 
 </script>
 
 <template>
-    <div class="tab-content" v-show="item.name == selectedItem">
+    <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         {{ item.name }}
     </div>
 </template>
