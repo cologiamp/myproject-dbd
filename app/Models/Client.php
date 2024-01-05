@@ -16,7 +16,14 @@ class Client extends Model
 {
     protected $guarded = [];
 
-
+    /**
+     * Return the formatted attribute "title" according to the config enum;
+     * @return null|string
+     */
+    public function getFormattedTitleAttribute():null|string
+    {
+        return $this->title != null ? config('enums.client.title')[$this->title] : null;
+    }
 
     public function date_of_birth():Attribute
     {
@@ -27,7 +34,7 @@ class Client extends Model
 
     public function getNameAttribute()
     {
-        return $this->title . ' ' . $this->first_name . ' ' . $this->last_name;
+        return $this->formatted_title . ' ' . $this->first_name . ' ' . $this->last_name;
     }
 
     public function advice_case():BelongsTo

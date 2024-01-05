@@ -97,7 +97,7 @@ class ClientRepository extends BaseRepository
                 ];
                 if(array_key_exists('title',$item['person']) && $item['person']['title'] != null)
                 {
-                    $data['title'] = $item['person']['title'];
+                    $data['title'] = array_flip(config('enums.client.title'))[$item['person']['title']];
                 }
                 if(array_key_exists('firstName',$item['person']) && $item['person']['firstName'] != null)
                 {
@@ -113,15 +113,15 @@ class ClientRepository extends BaseRepository
                 }
                 if(array_key_exists('gender',$item['person']) && $item['person']['gender'] != null)
                 {
-                    $data['gender'] = $item['person']['gender'];
+                    $data['gender'] =  array_flip(config('enums.client.gender'))[$item['person']['gender']] ;
                 }
                 if(array_key_exists('maritalStatus',$item['person']) && $item['person']['maritalStatus'] != null)
                 {
-                    $data['marital_status'] = $item['person']['maritalStatus'];
+                    $data['marital_status'] = array_flip(config('enums.client.marital_status'))[$item['person']['maritalStatus']];
                 }
                 if(array_key_exists('NationalityCountry',$item['person']) && $item['person']['NationalityCountry']['name'] != null)
                 {
-                    $data['nationality'] = $item['person']['NationalityCountry']['name'];
+                    $data['nationality'] = array_flip(config('enums.client.nationality'))[$item['person']['NationalityCountry']['name']];
                 }
                 if(array_key_exists('salutation',$item['person']) && $item['person']['salutation'] != null)
                 {
