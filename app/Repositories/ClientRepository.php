@@ -132,4 +132,47 @@ class ClientRepository extends BaseRepository
             }
         });
     }
+
+    /**
+     * Load in factfind sidebar items dynamically for the tabs
+     * @param int - the step that we want to load the sidebar for
+     */
+    public function loadFactFindSidebarItems($sections, $currentSection)
+    {
+        return collect($sections)->map(function ($value,$key) use ($currentSection){
+           return  [
+               'name' => $value,
+               'current' => $key === $currentSection
+           ];
+        });
+    }
+
+
+    /**
+     * Load in the correct data structure for the sidebar tabs of the page we're on
+     * @return array
+     */
+    //Chore:: Refactor this to avoid needing to hardcode "factfind" in 2 places and make SOLID
+    public function loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
+    {
+        return collect(config('navigation_structures.factfind'))->map(function ($value,$key) use ($currentSection,$currentStep){
+
+            return [
+                'name' => $value['name'],
+                'current' =>  $key === $currentStep,
+                'progress' => $this->calculateFactFindElementProgress($key),
+                'sidebaritems' => $this->loadFactFindSidebarItems($value['sections'], $currentSection)->toArray()
+            ];
+        })->toArray();
+    }
+
+    /**
+     * Function to work out the progress % for each section.
+     * @param $key
+     * @return int
+     */
+    public function calculateFactFindElementProgress($key):int
+    {
+        return rand(1,100); //Chore: Write code to calculate this progress as a %%
+    }
 }
