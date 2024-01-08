@@ -17,7 +17,7 @@ const props = defineProps({
     title: String,
     breadcrumbs: Array,
     step: Number,
-    section: Number,
+    section: String,
     formData: {
         type: Object,
         default: {
@@ -33,6 +33,7 @@ const props = defineProps({
             submit_url: '/',
         },
     },
+    progress: Number,
     create: true,
     errors: Object,
 });
@@ -41,7 +42,8 @@ function autosave(){
     autoS.value = 2;
     stepForm.transform((data)=>({
         ...data,
-        autosave: true
+        autosave: true,
+        section: "1-5",
     })).put(props.formData.submit_url,
         {
             preserveScroll: true,
@@ -51,6 +53,7 @@ function autosave(){
                 setTimeout(() => autoS.value = 1,1000);
             },
             onError:() => {
+                console.log(props.errors)
                 //Chore: Make this work
                 setTimeout(() => autoS.value = 3,1000);
             }

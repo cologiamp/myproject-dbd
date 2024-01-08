@@ -8,9 +8,10 @@ use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Request;
+use Illuminate\Support\Facades\Log;
 
 class ClientRepository extends BaseRepository
 {
@@ -37,7 +38,7 @@ class ClientRepository extends BaseRepository
     public function update(BaseClientRequest $request): void
     {
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
-        $this->client->update($request->safe()->all());
+        $this->client->update($request->safe()->only(["first_name", "last_name", "title"]));
         //relations here - e.g  $this->model->relation()->sync();
     }
 
@@ -160,7 +161,7 @@ class ClientRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                'progress' => $this->calculateFactFindElementProgress($key),
+                // 'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems($value['sections'], $currentSection)->toArray()
             ];
         })->toArray();
@@ -171,8 +172,50 @@ class ClientRepository extends BaseRepository
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress($key):int
+    public function calculateFactFindElementProgress(Client $client, string $section):int
     {
-        return rand(1,100); //Chore: Write code to calculate this progress as a %%
+        $progress = match ($section) {
+            "1-5" => Client::query()
+                ->where("io_id", $client->io_id)
+                ->select([
+                    ...config('section_step_mappings.basic-details.1-5')
+                ])
+                ->first(),
+            default => null
+        };
+
+        Log::info($progress);
+        // post request comes from 1.3
+        // need to calculate progress for section 1
+        // need to get
+
+        // get fields based off
+        $fieldsForProgress = [
+            "first_name",
+            "date_of_birth",
+            "last_name"
+        ];
+
+        $allFilteredFields = array_values(array_filter(
+            $progress->toArray(),
+            function($key) use ($fieldsForProgress) {
+                return in_array($key, $fieldsForProgress);
+            }, ARRAY_FILTER_USE_KEY
+        ));
+
+        $filledFilteredFields = array_values(array_filter(
+            $allFilteredFields,
+            function($element) {
+                return $element != null;
+            }
+        ));
+
+        if (count($filledFilteredFields) == 0) {
+            return 0;
+        }
+
+        $progression = count($filledFilteredFields) / count($allFilteredFields);
+
+        return $progression * 100;
     }
 }
