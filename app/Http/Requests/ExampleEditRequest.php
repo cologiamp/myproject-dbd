@@ -23,6 +23,11 @@ class ExampleEditRequest extends BaseClientRequest
                 'numeric',
                 'integer',
                 Rule::in(array_keys(config('enums.client.title'))),
+            ],
+            'section' => [
+                'sometimes',
+                'numeric',
+                Rule::in([1, 2, 3, 4, 5, 6])
             ]
         ];
     }

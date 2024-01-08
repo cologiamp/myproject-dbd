@@ -8,9 +8,10 @@ use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Request;
+use Illuminate\Support\Facades\Log;
 
 class ClientRepository extends BaseRepository
 {
@@ -37,7 +38,7 @@ class ClientRepository extends BaseRepository
     public function update(BaseClientRequest $request): void
     {
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
-        $this->client->update($request->safe()->all());
+        $this->client->update($request->safe()->only(["first_name", "last_name", "title"]));
         //relations here - e.g  $this->model->relation()->sync();
     }
 
@@ -171,8 +172,51 @@ class ClientRepository extends BaseRepository
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress($key):int
+    public function calculateFactFindElementProgress(int $section):int
     {
-        return rand(1,100); //Chore: Write code to calculate this progress as a %%
+        $progress = match ($section) {
+            1 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.basic-details')
+                ])
+                ->first()),
+            2 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.income-and-expenditure')
+                ])
+                ->first()),
+            3 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.assets')
+                ])
+                ->first()),
+            4 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.liabilities')
+                ])
+                ->first()),
+            5 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.risk')
+                ])
+                ->first()),
+            6 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.objectives')
+                ])
+                ->first()),
+            default => null
+        };
+
+        if ($progress->count() === 0) return 0;
+        $filledFields = $progress->filter(fn($element) => $element !== null);
+        $progression = $filledFields->count() / $progress->count();
+        return $progression * 100;
     }
 }

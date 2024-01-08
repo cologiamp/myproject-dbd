@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExampleEditRequest;
+use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use App\Repositories\ClientRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ExampleController extends Controller
@@ -26,12 +28,14 @@ class ExampleController extends Controller
     public function edit(Client $client, Request $request): \Inertia\Response
     {
         $this->clientRepository->setClient($client);
+        $section = $request->section ?? 1;
         return Inertia::render('ExampleForm',[
             'title' => 'Example Form',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $request->step,
-            'section' => $request->section,
-            'formData' => $this->clientRepository->getExampleFormOptions()
+            'section' => $section,
+            'formData' => $this->clientRepository->getExampleFormOptions(),
+            'progress' => $this->clientRepository->calculateFactFindElementProgress($section)
         ]);
     }
 
@@ -45,6 +49,9 @@ class ExampleController extends Controller
     {
         $this->clientRepository->setClient($client);
         $this->clientRepository->update($request);
-        return to_route('client.example.edit',['client' => $client->io_id]);
+        return to_route('client.example.edit',[
+            'client' => $client->io_id,
+            'section' => $request->safe()->only('section')["section"]
+        ]);
     }
 }
