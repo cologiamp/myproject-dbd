@@ -153,7 +153,7 @@ class ClientRepository extends BaseRepository
      * @return array
      */
     //Chore:: Refactor this to avoid needing to hardcode "factfind" in 2 places and make SOLID
-    public function loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
+    public function  loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
     {
         return collect(config('navigation_structures.factfind'))->map(function ($value,$key) use ($currentSection,$currentStep){
 
