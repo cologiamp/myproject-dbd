@@ -1,5 +1,6 @@
 <script setup>
-import { defineProps, inject } from "vue";
+import {defineAsyncComponent, defineProps, inject} from "vue";
+
 
 const props = defineProps({
     item: {
@@ -14,13 +15,18 @@ const props = defineProps({
     }
 });
 
+function dynamicComponent(component){
+    console.log(component);
+    return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
+}
+
 const selectedSectionId = inject("selectedSectionId");
 
 </script>
 
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
-        {{ item.name }}
+        <component :is="dynamicComponent(item.renderable)" :formData="item.dynamicData" />
     </div>
 </template>
 

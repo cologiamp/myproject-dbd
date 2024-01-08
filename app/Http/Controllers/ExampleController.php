@@ -31,7 +31,7 @@ class ExampleController extends Controller
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $request->step,
             'section' => $request->section,
-            'formData' => $this->clientRepository->getExampleFormOptions()
+//            'formData' => $this->clientRepository->getExampleFormOptions()
         ]);
     }
 

@@ -10,6 +10,7 @@ use App\Models\Client;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Request;
 
 class ClientRepository extends BaseRepository
@@ -57,18 +58,7 @@ class ClientRepository extends BaseRepository
         select('clients.*');//Limit query here
     }
 
-    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
-    public function getExampleFormOptions():array
-    {
-        return [
-            'enums' => [
-                'titles' => config('enums.client.title')
-            ],
-            'model' => $this->client->presenter()->formatForExampleForm(),
-            'submit_method' => 'put',
-            'submit_url' => '/client/' . $this->client->io_id . '/example'
-        ];
-    }
+
     public function getIndexOptions(): array
     {
         return [
@@ -142,10 +132,25 @@ class ClientRepository extends BaseRepository
         return collect($sections)->map(function ($value,$key) use ($currentSection){
            return  [
                'name' => $value,
-               'current' => $key === $currentSection
+               'renderable' => Str::studly($value),
+               'current' => $key === $currentSection,
+               'dynamicData' => ,
            ];
         });
     }
+
+//    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
+//    public function getExampleFormOptions():array
+//    {
+//        return [
+//            'enums' => [
+//                'titles' => config('enums.client.title')
+//            ],
+//            'model' => $this->client->presenter()->formatForExampleForm(),
+//            'submit_method' => 'put',
+//            'submit_url' => '/client/' . $this->client->io_id . '/example'
+//        ];
+//    }
 
 
     /**
