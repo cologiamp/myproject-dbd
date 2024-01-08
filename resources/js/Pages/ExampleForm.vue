@@ -17,7 +17,7 @@ const props = defineProps({
     title: String,
     breadcrumbs: Array,
     step: Number,
-    section: Number,
+    section: String | Number,
     formData: {
         type: Object,
         default: {
@@ -33,6 +33,7 @@ const props = defineProps({
             submit_url: '/',
         },
     },
+    progress: Number,
     create: true,
     errors: Object,
 });
@@ -41,7 +42,8 @@ function autosave(){
     autoS.value = 2;
     stepForm.transform((data)=>({
         ...data,
-        autosave: true
+        autosave: true,
+        section: 1,
     })).put(props.formData.submit_url,
         {
             preserveScroll: true,
@@ -51,6 +53,7 @@ function autosave(){
                 setTimeout(() => autoS.value = 1,1000);
             },
             onError:() => {
+                console.log(props.errors)
                 //Chore: Make this work
                 setTimeout(() => autoS.value = 3,1000);
             }
@@ -70,6 +73,9 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
+        <div class="flex w-full h-1.5 bg-gray-200 overflow-hidden dark:bg-gray-700 max-w-xs">
+            <div :class="progress < 100 ? 'bg-blue-600' : 'bg-green-400'" :style="{width: progress + '%'}"></div>
+        </div>
         <form-well :notop="true" class="mt-8">
             <template #loading>
                 <div class="flex">

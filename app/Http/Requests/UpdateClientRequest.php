@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
+
 class UpdateClientRequest extends BaseClientRequest
 {
     /**
@@ -12,7 +14,6 @@ class UpdateClientRequest extends BaseClientRequest
     public function rules(): array
     {
         return [
-            //
         ];
     }
 }
