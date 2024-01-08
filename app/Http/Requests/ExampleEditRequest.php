@@ -26,8 +26,8 @@ class ExampleEditRequest extends BaseClientRequest
             ],
             'section' => [
                 'sometimes',
-                'string',
-                Rule::in(array_keys(config('section_step_mappings.basic-details')))
+                'numeric',
+                Rule::in([1, 2, 3, 4, 5, 6])
             ]
         ];
     }

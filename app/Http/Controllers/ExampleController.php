@@ -29,14 +29,13 @@ class ExampleController extends Controller
     {
         $this->clientRepository->setClient($client);
         $section = $request->section ?? 1;
-        Log::info($section);
         return Inertia::render('ExampleForm',[
             'title' => 'Example Form',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $request->step,
             'section' => $section,
             'formData' => $this->clientRepository->getExampleFormOptions(),
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($client, $section)
+            'progress' => $this->clientRepository->calculateFactFindElementProgress($section)
         ]);
     }
 

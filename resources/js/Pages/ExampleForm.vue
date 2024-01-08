@@ -17,7 +17,7 @@ const props = defineProps({
     title: String,
     breadcrumbs: Array,
     step: Number,
-    section: String,
+    section: String | Number,
     formData: {
         type: Object,
         default: {
@@ -43,7 +43,7 @@ function autosave(){
     stepForm.transform((data)=>({
         ...data,
         autosave: true,
-        section: "1-5",
+        section: 1,
     })).put(props.formData.submit_url,
         {
             preserveScroll: true,
@@ -73,6 +73,9 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
+        <div class="flex w-full h-1.5 bg-gray-200 overflow-hidden dark:bg-gray-700 max-w-xs">
+            <div :class="progress < 100 ? 'bg-blue-600' : 'bg-green-400'" :style="{width: progress + '%'}"></div>
+        </div>
         <form-well :notop="true" class="mt-8">
             <template #loading>
                 <div class="flex">

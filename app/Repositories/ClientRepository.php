@@ -161,7 +161,7 @@ class ClientRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                // 'progress' => $this->calculateFactFindElementProgress($key),
+                'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems($value['sections'], $currentSection)->toArray()
             ];
         })->toArray();
@@ -172,50 +172,51 @@ class ClientRepository extends BaseRepository
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress(Client $client, string $section):int
+    public function calculateFactFindElementProgress(int $section):int
     {
         $progress = match ($section) {
-            "1-5" => Client::query()
-                ->where("io_id", $client->io_id)
+            1 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
                 ->select([
-                    ...config('section_step_mappings.basic-details.1-5')
+                    ...config('section_step_mappings.basic-details')
                 ])
-                ->first(),
+                ->first()),
+            2 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.income-and-expenditure')
+                ])
+                ->first()),
+            3 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.assets')
+                ])
+                ->first()),
+            4 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.liabilities')
+                ])
+                ->first()),
+            5 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.risk')
+                ])
+                ->first()),
+            6 => collect(Client::query()
+                ->where("io_id", $this->client->io_id)
+                ->select([
+                    ...config('section_step_mappings.objectives')
+                ])
+                ->first()),
             default => null
         };
 
-        Log::info($progress);
-        // post request comes from 1.3
-        // need to calculate progress for section 1
-        // need to get
-
-        // get fields based off
-        $fieldsForProgress = [
-            "first_name",
-            "date_of_birth",
-            "last_name"
-        ];
-
-        $allFilteredFields = array_values(array_filter(
-            $progress->toArray(),
-            function($key) use ($fieldsForProgress) {
-                return in_array($key, $fieldsForProgress);
-            }, ARRAY_FILTER_USE_KEY
-        ));
-
-        $filledFilteredFields = array_values(array_filter(
-            $allFilteredFields,
-            function($element) {
-                return $element != null;
-            }
-        ));
-
-        if (count($filledFilteredFields) == 0) {
-            return 0;
-        }
-
-        $progression = count($filledFilteredFields) / count($allFilteredFields);
-
+        if ($progress->count() === 0) return 0;
+        $filledFields = $progress->filter(fn($element) => $element !== null);
+        $progression = $filledFields->count() / $progress->count();
         return $progression * 100;
     }
 }
