@@ -25,9 +25,9 @@ class SyncClientController extends Controller
         if(!(\Auth::user() && \Auth::user()->can('access IO data'))){
             throw new AuthenticationException('No user found or no permission to execute this');
         }
-        if($client->io_json != null && $client->hasDirtyChanges() && !$request->force)
+        if($client->io_json != null && $cdc = $client->getDirtyChanges()->count() > 0 && !$request->force)
         {
-            throw new \Exception('Do you really want to do this? There are changes that are not synced to IO and could be overwritten');
+            throw new \Exception('Do you really want to do this? There are changes to the following fields: ' . implode($cdc,', '));
         }
         //They can do this
          $dis = App::make(\App\Services\DataIngestService::class);

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
 
 class Client extends Model
 {
@@ -134,7 +135,7 @@ class Client extends Model
             ]
         };
     }
-    public function getDirtyChanges()
+    public function getDirtyChanges():Collection
     {
         if($this->io_json)
         {
@@ -150,9 +151,10 @@ class Client extends Model
                 'salutation'
             );
             dd($parsed_data,$diff_data);
+            //this needs to list the fields that are different
 
         }
-        else return false;
+        else return new Collection();
 
     }
 }
