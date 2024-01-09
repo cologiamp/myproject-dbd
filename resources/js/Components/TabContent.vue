@@ -7,7 +7,9 @@ const props = defineProps({
         type: Object,
         default: {
             'name' : 'Section Content',
-            'currrent': true
+            'current': true,
+            'renderable': 'Component',
+            'dynamicData': null
         }
     },
     sectionIndex: {
@@ -19,6 +21,8 @@ function dynamicComponent(component){
     console.log(component);
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
+// need to send the section
+// the input fields
 
 const selectedSectionId = inject("selectedSectionId");
 

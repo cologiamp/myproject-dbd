@@ -16,7 +16,7 @@ return [
            'health-details',
            'address-and-contact-details',
            'family',
-           'employment-details'
+           'employment-details',
        ],
        'income-and-expenditure' => [
 
@@ -31,7 +31,6 @@ return [
 
        ],
     ],
-
     'client' => [
         'title' => [
             0 => 'Miss',
@@ -325,6 +324,22 @@ return [
             195 => 'Yemenite',
             196 => 'Zambian',
             197 => 'Zimbabwean'
+        ]
+    ],
+    'address' => [
+        'residency_status' => [
+            0 => 'OwnerOccupierMortgaged',
+            1 => 'OwnerOccupierUnencumbered',
+            2 => 'TenantPrivate',
+            3 => 'TenantLocalAuthorityHousingAssociation',
+            4 => 'LivingWithFamilyFriends'
+        ],
+        'types' => [
+            0 => 'Home',
+            1 => 'Business',
+            2 => 'Other',
+            3 => 'Registered',
+            4 => 'Correspondence'
         ]
     ]
 

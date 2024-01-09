@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\ParsesIoClientData;
 use App\Models\BaseModels\Model;
 use App\Models\Presenters\ClientPresenter;
 use App\Models\Presenters\LayoutPresenter;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Client extends Model
 {
+    use ParsesIoClientData;
     protected $guarded = [];
 
     /**
@@ -29,6 +31,15 @@ class Client extends Model
     {
         return Attribute::make(
             set: fn($value) => Carbon::parse($value),
+        );
+    }
+
+
+    public function ioJson():Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => json_decode($value),
+            set: fn($value) => json_encode($value)
         );
     }
 
@@ -108,5 +119,40 @@ class Client extends Model
     public function presenter() : ClientPresenter
     {
         return new ClientPresenter($this);
+    }
+
+    //This is where you load the fact find enums
+    //FactFind:// Need to do this for every section/step
+    public function loadEnumsForStep($section,$step)
+    {
+        return match ($section.'.'.$step){
+            '1.1' => [
+                'titles' => config('enums.client.title')
+            ],
+            default => [
+
+            ]
+        };
+    }
+    public function getDirtyChanges()
+    {
+        if($this->io_json)
+        {
+            $parsed_data = $this->parseClientFields($this->io_json['person']);
+            $diff_data = $this->pluck(
+                'title',
+                'first_name',
+                'last_name',
+                'date_of_birth',
+                'gender',
+                'marital_status',
+                'nationality',
+                'salutation'
+            );
+            dd($parsed_data,$diff_data);
+
+        }
+        else return false;
+
     }
 }

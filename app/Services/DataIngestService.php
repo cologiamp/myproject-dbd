@@ -2,11 +2,17 @@
 namespace App\Services;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Waw\Io\Io;
 
 class DataIngestService
 {
+    /**
+     * @param $adviser_io_id
+     * @return Collection
+     * @throws \Exception
+     */
     public function getClientsForAdviser($adviser_io_id): \Illuminate\Support\Collection
     {
         $i = new Io();
@@ -33,5 +39,57 @@ class DataIngestService
             }
         }
         return collect($clients)->flatten(1);
+    }
+
+    /**
+     * @param $io_id
+     * @return Collection
+     * @throws \Exception
+     */
+    public function getClient($io_id): \Illuminate\Support\Collection
+    {
+        $i = new Io();
+        try{
+           return collect($i->getClient($io_id));
+        }
+        catch(\Exception $e)
+        {
+            Log::critical('Failed to fetch from IO.');
+            throw $e;
+        }
+    }
+    /**
+     * @param $io_id
+     * @return Collection
+     * @throws \Exception
+     */
+    public function getAddresses($io_id): \Illuminate\Support\Collection
+    {
+        $i = new Io();
+        try{
+            return collect($i->getAddresses($io_id));
+        }
+        catch(\Exception $e)
+        {
+            Log::critical('Failed to fetch from IO.');
+            throw $e;
+        }
+    }
+    /**
+     * @param $io_id
+     * @return Collection
+     * @throws \Exception
+     */
+    public function getContactDetails($io_id): \Illuminate\Support\Collection
+    {
+        $i = new Io();
+        try{
+            return collect($i->getContactDetails($io_id));
+        }
+        catch(\Exception $e)
+        {
+            Log::critical('Failed to fetch from IO.');
+            throw $e;
+        }
     }
 }

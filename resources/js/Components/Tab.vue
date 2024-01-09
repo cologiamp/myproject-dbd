@@ -9,11 +9,11 @@ const props = defineProps({
         type: Object,
         default: {
             'name' : 'Tab Content',
-            'currrent': true,
+            'current': true,
             'progress': 0,
             'sidebaritems': {
                 'name' : 'Section Content',
-                'currrent': true
+                'current': true
             }
         }
     },

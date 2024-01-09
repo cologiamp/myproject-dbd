@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SyncClientController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\FactFindController;
@@ -42,8 +43,9 @@ Route::middleware([
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    '2fa'
+    // '2fa'
 ])->group(function () {
+
 
 
 
@@ -58,9 +60,15 @@ Route::middleware([
     Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
+        Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
 
         Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
         Route::put('/example',[ExampleController::class,'update'])->name('example.update');
+
+
+
+        //"API" style requests
+        Route::post('/sync',SyncClientController::class)->name('sync');
 
 
     });
@@ -68,3 +76,5 @@ Route::middleware([
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/clients', ClientController::class)->name('clients');
 });
+
+

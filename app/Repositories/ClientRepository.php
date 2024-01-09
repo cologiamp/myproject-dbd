@@ -3,18 +3,22 @@ namespace App\Repositories;
 
 
 
+use App\Concerns\ParsesIoClientData;
 use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
-use App\Http\Requests\UpdateClientRequest;
+use App\Models\Address;
 use App\Models\Client;
+use App\Services\FactFindSectionDataService;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Request;
 
 class ClientRepository extends BaseRepository
 {
+    use ParsesIoClientData;
     protected Client $client;
     public function __construct(Client $client)
     {
@@ -35,11 +39,46 @@ class ClientRepository extends BaseRepository
     }
 
     //Update the given details
+
+    /**
+     * This method uses a generecised form request to update the model.
+     * Use updateFromValidated if you have already run a Validator on your data.
+     * @param BaseClientRequest $request
+     * @return void
+     */
     public function update(BaseClientRequest $request): void
     {
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
-        $this->client->update($request->safe()->all());
+        $this->client->update($request->safe());
         //relations here - e.g  $this->model->relation()->sync();
+    }
+
+    /**
+     * This method uses a pre-validated updated data array rather than a formRequest to update the model.
+     * Do not use unless you have validated your data
+     * @param array $array
+     * @return void
+     */
+    public function updateFromValidated(array $array):void
+    {
+        $this->client->update($array);
+    }
+
+    public function createOrUpdateAddress(mixed $data):void
+    {
+        if($data::class == Request::class)
+        {
+            $data = $data->safe();
+        }
+        $addr = $this->client->addresses()->where('address_line_1',$data['address_line_1'])->first();
+        if(!$addr){
+            $addr = new Address();
+            $addr->create($data);
+            $addr->clients()->attach($addr);
+        }
+        else{
+            $addr->update($data);
+        }
     }
 
     //Delete the resource from the database, doing any cleanup first
@@ -85,38 +124,7 @@ class ClientRepository extends BaseRepository
                     'io_id' => $item['id'],
                     'adviser_id' => $adviser_id,
                 ];
-                if(array_key_exists('title',$item['person']) && $item['person']['title'] != null)
-                {
-                    $data['title'] = array_flip(config('enums.client.title'))[$item['person']['title']];
-                }
-                if(array_key_exists('firstName',$item['person']) && $item['person']['firstName'] != null)
-                {
-                    $data['first_name'] = $item['person']['firstName'];
-                }
-                if(array_key_exists('lastName',$item['person']) && $item['person']['lastName'] != null)
-                {
-                    $data['last_name'] = $item['person']['lastName'];
-                }
-                if(array_key_exists('dateOfBirth',$item['person']) && $item['person']['dateOfBirth'] != null)
-                {
-                    $data['date_of_birth'] = $item['person']['dateOfBirth'];
-                }
-                if(array_key_exists('gender',$item['person']) && $item['person']['gender'] != null)
-                {
-                    $data['gender'] =  array_flip(config('enums.client.gender'))[$item['person']['gender']] ;
-                }
-                if(array_key_exists('maritalStatus',$item['person']) && $item['person']['maritalStatus'] != null)
-                {
-                    $data['marital_status'] = array_flip(config('enums.client.marital_status'))[$item['person']['maritalStatus']];
-                }
-                if(array_key_exists('NationalityCountry',$item['person']) && $item['person']['NationalityCountry']['name'] != null)
-                {
-                    $data['nationality'] = array_flip(config('enums.client.nationality'))[$item['person']['NationalityCountry']['name']];
-                }
-                if(array_key_exists('salutation',$item['person']) && $item['person']['salutation'] != null)
-                {
-                    $data['salutation'] = $item['person']['salutation'];
-                }
+                $data = array_merge($data,$this->parseClientFields($item['person']));
                 ray($data)->purple();
                 $this->client->create($data);
             }
@@ -134,7 +142,7 @@ class ClientRepository extends BaseRepository
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => ,
+               'dynamicData' => FactFindSectionDataService::get($this->client,$currentSection,$key),
            ];
         });
     }
@@ -142,14 +150,7 @@ class ClientRepository extends BaseRepository
 //    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
 //    public function getExampleFormOptions():array
 //    {
-//        return [
-//            'enums' => [
-//                'titles' => config('enums.client.title')
-//            ],
-//            'model' => $this->client->presenter()->formatForExampleForm(),
-//            'submit_method' => 'put',
-//            'submit_url' => '/client/' . $this->client->io_id . '/example'
-//        ];
+//
 //    }
 
 
@@ -157,16 +158,16 @@ class ClientRepository extends BaseRepository
      * Load in the correct data structure for the sidebar tabs of the page we're on
      * @return array
      */
-    //Chore:: Refactor this to avoid needing to hardcode "factfind" in 2 places and make SOLID
-    public function  loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
+    public function loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
     {
         return collect(config('navigation_structures.factfind'))->map(function ($value,$key) use ($currentSection,$currentStep){
-
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
                 'progress' => $this->calculateFactFindElementProgress($key),
-                'sidebaritems' => $this->loadFactFindSidebarItems($value['sections'], $currentSection)->toArray()
+                'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
+                    return [$key => $value['name']];
+                }), $currentSection)->toArray()
             ];
         })->toArray();
     }
@@ -176,8 +177,23 @@ class ClientRepository extends BaseRepository
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress($key):int
+    public function calculateFactFindElementProgress(int $section):int
     {
-        return rand(1,100); //Chore: Write code to calculate this progress as a %%
+        $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
+            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
+            {
+                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                    return match ($key) {
+                        'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
+//                        '//todo write join query here for other places data ends up'.
+                        default => collect([]),
+                    };
+                });
+            }
+            else return collect([]);
+        })->flatten();
+        if ($progress->count() === 0) return 0;
+        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
+
 }

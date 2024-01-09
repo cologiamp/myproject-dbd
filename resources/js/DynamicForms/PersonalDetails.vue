@@ -37,7 +37,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             <div class="md:grid  md:grid-cols-6 md:items-start">
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="title" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Title</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.title" id="unit" name="title"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-950 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.title" id="unit" name="title"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="title" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(title, id) in formData.enums.titles">{{ title }}</option>
                     </select>
