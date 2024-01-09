@@ -3,6 +3,7 @@ import { defineProps, inject, provide } from "vue";
 
 import TabSidebarMenu from "@/Components/TabSidebarMenu.vue";
 import TabContent from "@/Components/TabContent.vue";
+import AutoSaveSpinner from "./AutoSaveSpinner.vue";
 
 const props = defineProps({
     tab: {
@@ -28,8 +29,16 @@ const selectedTabId = inject("selectedTabId");
 
 <template>
     <div class="bg-aaron-900 sm:rounded-lg p-8" v-show="tabIndex == selectedTabId">
-        <div class="my-6 pl-6">
-            <span class="text-2xl font-medium">{{ tab.name }}</span>
+        <div class="w-full flex flex-col gap-6 mb-14">
+            <div class="w-full flex flex-row items-center justify-between">
+                <h1 class="text-2xl font-medium">
+                    {{ tab.name }}
+                </h1>
+                <AutoSaveSpinner />
+            </div>
+            <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
+                <div class="bg-[#078EBF] w-[50%] rounded-r-md" />
+            </div>
         </div>
         <div class="h-screen">
             <TabSidebarMenu v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
