@@ -33,13 +33,9 @@ const selectedTabId = inject("selectedTabId");
                 <h1 class="text-2xl font-medium">
                     {{ tab.name }}
                 </h1>
-                <div class="flex flex-row items-center gap-4">
-                    <p>Saved</p>
-                    <p>Spinner</p>
-                </div>
             </div>
             <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
-                <div class="bg-[#078EBF] w-[50%] rounded-r-md" />
+                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
             </div>
         </div>
         <div class="h-screen">
