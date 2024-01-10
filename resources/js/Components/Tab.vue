@@ -37,7 +37,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="bg-aaron-900 sm:rounded-lg p-8" v-show="tabIndex == selectedTabId">
+    <div class="bg-aaron-900 sm:rounded-[20px] p-8" v-show="tabIndex == selectedTabId">
         <div class="my-6 pl-6">
             <span class="text-2xl font-medium">{{ tab.name }}</span>
         </div>

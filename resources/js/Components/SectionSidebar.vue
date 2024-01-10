@@ -30,8 +30,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <aside id="default-sidebar" class="h-1/4 w-80 sm:hidden md:block md:h-full md:absolute" aria-label="Sidebar">
-        <div class="px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-gray-800 text-white">
+    <aside id="default-sidebar" class="h-1/4 w-80 mb-8 sm:hidden md:block md:h-full md:absolute md:mb-0" aria-label="Sidebar">
+        <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-gray-800 text-white">
             <ul class="font-medium">
                 <li v-for="(item, index) in props.sidebarItems"
                     :key="item.name"
@@ -49,7 +49,7 @@ onBeforeMount(() => {
         </div>
     </aside>
 
-    <div class="p-4 sm:ml-80">
+    <div class="md:p-4 sm:ml-80">
         <div class="p-4 h-full">
             <slot></slot>
         </div>
