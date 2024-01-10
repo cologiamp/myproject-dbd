@@ -57,6 +57,29 @@ class Client extends Model
     }
 
 
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->date_of_birth)->diffInYears(Carbon::now());
+    }
+
+    public function getJobTitleAttribute()
+    {
+        // chore: can we get this from IO
+        return "To Be Implemented";
+    }
+
+    public function getLastContactAttribute()
+    {
+        // chore: can we get this from IO
+        return "To Be Implemented";
+    }
+
+    public function getStatusAttribute()
+    {
+        // chore: can we get this from IO
+        return "To Be Implemented";
+    }
+
 
     public function addresses():BelongsToMany
     {

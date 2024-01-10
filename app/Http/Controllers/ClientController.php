@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\ClientRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -22,10 +23,17 @@ class ClientController extends Controller
      */
     public function __invoke(Request $request)
     {
+        if ($request->has("search") || $request->has("select")) {
+            $clients = $this->clientRepository->filterIndexQuery($request)->get();
+        } else {
+            $clients = auth()->user()->clients;
+        }
+
         return Inertia::render('ClientSelect',[
             'title' => 'Clients',
-            'clients' => $this->clientRepository->getIndexOptions()['models'],
-            'breadcrumbs' => $this->clientRepository->loadBreadcrumbs()
+            'clients' => $clients->map(fn ($client) => $client->presenter()->formatForClientsIndex()),
+            'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
+            'filters' => request()->only(["search", "select"])
         ]);
     }
 }

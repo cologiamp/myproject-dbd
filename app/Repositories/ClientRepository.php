@@ -7,7 +7,7 @@ use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +56,26 @@ class ClientRepository extends BaseRepository
         return Client::
 //          with()-> //Eager Load here
         select('clients.*');//Limit query here
+    }
+
+    public function filterIndexQuery(Request $request): Builder
+    {
+        return $this->constructIndexQuery($request)
+            ->where("adviser_id", auth()->user()->id)
+            ->when($request->has("search"), function($query) use ($request) {
+                $query->where("first_name", "like", "%" . $request->input("search") . "%")
+                    ->orWhere("last_name", "like", "%" . $request->input("search") . "%");
+            })
+            ->when($request->has("select"), function($query) use ($request) {
+                switch($request->input("select")) {
+                    case 1:
+                        $query->orderBy("updated_at", "desc");
+                    case 2:
+                        $query->orderBy("updated_at", "asc");
+                    default:
+                        $query->orderBy("updated_at", "desc");
+                }
+            });
     }
 
     //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
