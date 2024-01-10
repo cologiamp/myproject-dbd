@@ -1,6 +1,5 @@
 <script setup>
-import { defineProps, ref, provide, inject } from "vue";
-import {Link} from '@inertiajs/vue3';
+import { defineProps, ref, provide, inject, onBeforeMount } from "vue";
 
 const props = defineProps({
     sidebarItems: {
@@ -9,10 +8,8 @@ const props = defineProps({
     }
 });
 
-const findSectionKey = (obj, fn) =>
-  Object.keys(obj).find(key => fn(obj[key], key, obj));
-
-const selectedSectionId = ref(findSectionKey(props.sidebarItems, x => x.current == true));
+const initialSectionKey = inject("onloadKey");
+const selectedSectionId = ref(1);
 
 function sectionsClick(index, item) {
     selectedSectionId.value = index
@@ -26,6 +23,10 @@ function sectionsClick(index, item) {
 
 provide("selectedSectionId", selectedSectionId);
 
+onBeforeMount(() => {
+    selectedSectionId.value = initialSectionKey.value
+});
+
 </script>
 
 <template>
@@ -36,14 +37,13 @@ provide("selectedSectionId", selectedSectionId);
                     :key="item.name"
                     :id="index"
                     @click="sectionsClick(index, item)">
-                    <!-- <Link href="/fact-find" :data="{ step: tabIndex, section: index }" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group"> -->
-                    <a href="#" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
+                    <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
                         <div class="rounded-full w-11 h-11 py-2 text-center"
                             :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                                 {{ index }}
                         </div>
                         <span class="ms-3 text-base">{{ item.name }}</span>
-                    </a>
+                    </div>
                 </li>
             </ul>
         </div>

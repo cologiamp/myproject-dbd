@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, inject, provide } from "vue";
+import { defineProps, inject, onBeforeMount } from "vue";
 
 import SectionSidebar from "@/Components/SectionSidebar.vue";
 import SectionContent from "@/Components/SectionContent.vue";
@@ -22,7 +22,18 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits(['setOnloadKey']);
 const selectedMenuId = inject("selectedMenuId");
+
+// Emit function from parent component to set selected section onload
+function setSectionKey() {
+    emit('setOnloadKey', props.tab.sidebaritems, x => x.current == true);
+}
+
+onBeforeMount(() => {
+    setSectionKey();
+});
+
 </script>
 
 <template>
