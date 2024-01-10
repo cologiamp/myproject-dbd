@@ -57,7 +57,7 @@ const circumferance = 15 * 2 * Math.PI
                     cy="20"
                 />
                 <circle
-                    class="text-[#00B3DD] duration-300"
+                    class="text-aaron-400 duration-300"
                     stroke-width="5"
                     :stroke-dasharray="circumferance"
                     :stroke-dashoffset="circumferance - percent / 100 * circumferance"
@@ -76,9 +76,9 @@ const circumferance = 15 * 2 * Math.PI
         >
             <p>Saved</p>
             <div
-                class="bg-[#00B3DD] rounded-full p-2"
+                class="bg-aaron-400 rounded-full p-2"
             >
-                <CheckIcon class="w-5 h-5 text-[#0B0F28]" />
+                <CheckIcon class="w-5 h-5 text-aaron-950" />
             </div>
         </div>
         <ExclamationTriangleIcon v-else class="text-red-500 w-8 h-8" />

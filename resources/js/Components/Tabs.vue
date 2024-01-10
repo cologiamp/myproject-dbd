@@ -30,8 +30,8 @@ provide("selectedTabId", selectedTabId);
 
 <template>
     <div class="tabs">
-        <ul class="tabs__header flex flex-wrap items-start whitespace-nowrap font-medium text-center text-gray-500 border-b border-[#5866CF] dark:text-gray-400 dark:border-gray-700 mb-6">
-            <li v-for="(tab, index) in props.tabTitles" 
+        <ul class="tabs__header flex flex-wrap items-start whitespace-nowrap font-medium text-center text-gray-500 border-b border-aaron-500 dark:text-gray-400 dark:border-gray-700 mb-6">
+            <li v-for="(tab, index) in props.tabTitles"
                 :key="tab.name"
                 :id="index"
                 @click="tabsClick(index, tab)"

@@ -37,7 +37,7 @@ const selectedTabId = inject("selectedTabId");
                 <AutoSaveSpinner />
             </div>
             <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
-                <div class="bg-[#078EBF] w-[50%] rounded-r-md" />
+                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
             </div>
         </div>
         <div class="h-screen">
