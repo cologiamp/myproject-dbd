@@ -27,7 +27,7 @@ watch(select, value => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-8">
+    <div class="flex flex-col gap-8 min-h-[650px]">
         <div class="w-full flex flex-row items-center justify-between">
             <p class="text-[24px] font-medium">Your Clients</p>
             <div class="flex flex-row items-center gap-12">
