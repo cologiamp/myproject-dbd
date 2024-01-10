@@ -29,26 +29,6 @@ provide("selectedSectionId", selectedSectionId);
 </script>
 
 <template>
-    <aside id="default-sidebar" class="hidden md:block h-full md:absolute w-80 transition-transform -translate-x-full" aria-label="Sidebar">
-        <div class="px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-gray-800 text-white">
-            <ul class="font-medium">
-                <li v-for="(item, index) in props.sidebarItems"
-                    :key="item.name"
-                    :id="index"
-                    @click="sectionsClick(index, item)">
-                    <!-- <Link href="/fact-find" :data="{ step: tabIndex, section: index }" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group"> -->
-                    <a href="#" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                        <div class="rounded-full w-11 h-11 py-2 text-center"
-                            :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
-                                {{ index }}
-                        </div>
-                        <span class="ms-3 text-base">{{ item.name }}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
-
     <div class="h-1/4 w-80 transition-transform" aria-label="Sidebar">
         <div class="px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-gray-800 text-white">
             <ul class="font-medium">
