@@ -15,7 +15,7 @@ const findTabKey = (obj, fn) =>
   Object.keys(obj).find(key => fn(obj[key], key, obj));
 
 const selectedMenu = ref(props.titles[findTabKey(props.titles, x => x.current == true)]);
-const selectedMenuId = ref(1);
+const selectedMenuId = ref(findTabKey(props.titles, x => x.current == true));
 
 function itemsClick(index, tab) {
     selectedMenu.value = tab
@@ -31,6 +31,7 @@ function itemsClick(index, tab) {
 provide("selectedMenuId", selectedMenuId);
 
 </script>
+
 <template>
     <Menu as="div" class="relative inline-block w-full text-left mb-8 px-4">
       <div>
