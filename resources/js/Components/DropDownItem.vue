@@ -1,8 +1,8 @@
 <script setup>
 import { defineProps, inject, provide } from "vue";
 
-import TabSidebarMenu from "@/Components/TabSidebarMenu.vue";
-import TabContent from "@/Components/TabContent.vue";
+import SectionSidebar from "@/Components/SectionSidebar.vue";
+import SectionContent from "@/Components/SectionContent.vue";
 
 const props = defineProps({
     tab: {
@@ -31,9 +31,9 @@ const selectedMenuId = inject("selectedMenuId");
             <span class="text-2xl font-medium">{{ tab.name }}</span>
         </div>
         <div class="block">
-            <TabSidebarMenu v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
-                <TabContent v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></TabContent>
-            </TabSidebarMenu>
+            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
+                <SectionContent v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
+            </SectionSidebar>
         </div>
     </div>
 </template>

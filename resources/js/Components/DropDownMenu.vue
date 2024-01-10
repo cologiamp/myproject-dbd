@@ -32,7 +32,7 @@ provide("selectedMenuId", selectedMenuId);
 
 </script>
 <template>
-    <Menu as="div" class="relative inline-block w-full text-left mb-8">
+    <Menu as="div" class="relative inline-block w-full text-left mb-8 px-4">
       <div>
         <MenuButton class="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-[#313FA7] ring-[#4654BE]-300 text-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset hover:bg-[#4654BE]">
           {{ selectedMenu.name }}
