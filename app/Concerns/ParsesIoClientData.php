@@ -17,14 +17,14 @@ trait ParsesIoClientData{
         $cd = collect($data['contactdetails']);
         if($cd->where('type','Telephone')->first() != null)
         {
-            $client['phone_number'] = $cd->where('type','Telephone')->first();
+            $client['phone_number'] = $cd->where('type','Telephone')->first()['value'];
         }
         if($cd->where('type','Email')->first() != null)
         {
-            $client['email_address'] = $data['contactdetails']->where('type','Email')->first();
+            $client['email_address'] = $cd->where('type','Email')->first()['value'];
         }
 
-        $addresses = collect($data->addresses)->map(function ($address){
+        $addresses = collect($data['addresses'])->map(function ($address){
             return $this->parseAddressFields($address);
         });
 

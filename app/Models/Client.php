@@ -39,7 +39,7 @@ class Client extends Model
     public function ioJson():Attribute
     {
         return Attribute::make(
-            get: fn($value) => json_decode($value),
+            get: fn($value) => json_decode($value, 1),
             set: fn($value) => json_encode($value)
         );
     }
@@ -139,22 +139,24 @@ class Client extends Model
     {
         if($this->io_json)
         {
-            $parsed_data = $this->parseClientFields($this->io_json['person']);
-            $diff_data = $this->pluck(
-                'title',
-                'first_name',
-                'last_name',
-                'date_of_birth',
-                'gender',
-                'marital_status',
-                'nationality',
-                'salutation'
-            );
-            dd($parsed_data,$diff_data);
+            $parsed_data = array_merge($this->parseClientData($this->io_json)['client']);
+            $diff_data = Client::whereId($this->id)->select( //THE ELEMENTS THAT ARE PULLED FROM IO INITIALLY
+                [
+                    'title',
+                    'first_name',
+                    'last_name',
+                    'date_of_birth',
+                    'gender',
+                    'marital_status',
+                    'nationality',
+                    'salutation',
+                    'email_address',
+                    'phone_number'
+                ]
+            )->first()->toArray();
             //this needs to list the fields that are different
-
+            return collect(array_keys(array_diff_assoc($parsed_data,$diff_data)));
         }
         else return new Collection();
-
     }
 }

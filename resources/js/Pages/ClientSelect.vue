@@ -1,11 +1,9 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
 import {nextTick, ref} from "vue";
 import FormWell from "@/Components/FormWell.vue";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import {Link, router} from '@inertiajs/vue3'
-
+import Swal from 'sweetalert2'
+import {router} from "@inertiajs/vue3";
 let selectedClient = ref(null);
 
 defineProps({
@@ -14,13 +12,39 @@ defineProps({
     clients: Array
 });
 
+function redirectToSelectedClient()
+{
+    router.visit('/client/' + selectedClient.value + '/dashboard');
+}
+
 function selectClient()
 {
     axios.post('/client/' + selectedClient.value + '/sync').then(() => {
-        alert('post');
-        // router.get('/client/' + selectedClient.value + '/dashboard');
+        redirectToSelectedClient()
     }).catch(error => {
-        alert('something went wrong');
+        Swal.fire({
+            title: 'Warning - data overwrite detected!',
+            text: error.response.data.message,
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Overwrite",
+            denyButtonText: `Proceed without overwriting`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.post('/client/' + selectedClient.value + '/sync',{
+                    'force': true
+                }).then(() => {
+                    redirectToSelectedClient()
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error: Something failed. Please try again later.',
+                        text: error.response.data.message,
+                    })
+                });
+            } else if (result.isDenied) {
+                redirectToSelectedClient()
+            }
+        });
     });
 }
 

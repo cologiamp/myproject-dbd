@@ -17,17 +17,21 @@ class SyncClientController extends Controller
     {
         $this->clientRepository = $clientRepository;
     }
+
     /**
-     * Handle the incoming request.
+     * @param Client $client
+     * @param Request $request
+     * @return true
+     * @throws AuthenticationException
      */
-    public function __invoke(Client $client, Request $request)
+    public function __invoke(Client $client, Request $request): true
     {
         if(!(\Auth::user() && \Auth::user()->can('access IO data'))){
             throw new AuthenticationException('No user found or no permission to execute this');
         }
-        if($client->io_json != null && $cdc = $client->getDirtyChanges()->count() > 0 && !$request->force)
+        if($client->io_json != null && $client->getDirtyChanges()->count() > 0 && !$request->force)
         {
-            throw new \Exception('Do you really want to do this? There are changes to the following fields: ' . implode($cdc,', '));
+            throw new \Exception('Do you really want to do this? There are changes to the following fields: ' . implode(', ',$client->getDirtyChanges()->toArray()));
         }
         //They can do this
          $dis = App::make(\App\Services\DataIngestService::class);
