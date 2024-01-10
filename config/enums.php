@@ -16,7 +16,7 @@ return [
            'health-details',
            'address-and-contact-details',
            'family',
-           'employment-details'
+           'employment-details',
        ],
        'income-and-expenditure' => [
 
@@ -31,7 +31,6 @@ return [
 
        ],
     ],
-
     'client' => [
         'title' => [
             0 => 'Miss',

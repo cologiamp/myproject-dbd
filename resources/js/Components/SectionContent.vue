@@ -14,6 +14,9 @@ const props = defineProps({
     }
 });
 
+// need to send the section
+// the input fields
+
 const selectedSectionId = inject("selectedSectionId");
 
 </script>
