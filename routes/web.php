@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\SyncClientController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientDashboardController;
+use App\Http\Controllers\DataIntoIoController;
 use App\Http\Controllers\FactFindController;
 use App\Http\Controllers\ExampleController;
 use Illuminate\Foundation\Application;
@@ -69,6 +70,7 @@ Route::middleware([
 
         //"API" style requests
         Route::post('/sync',SyncClientController::class)->name('sync');
+        Route::post('/commit-to-io',DataIntoIoController::class)->name('commit-to-io');
 
 
     });

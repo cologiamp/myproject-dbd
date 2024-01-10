@@ -9,7 +9,7 @@ defineEmits(['update:modelValue']);
 
 const input = ref(null);
 
-onMounted(() => {
+onMounted( ()=> {
     if (input.value.hasAttribute('autofocus')) {
         input.value.focus();
     }

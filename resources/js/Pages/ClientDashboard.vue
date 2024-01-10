@@ -2,13 +2,29 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import FormWell from "@/Components/FormWell.vue";
 
-import {QuestionMarkCircleIcon, LightBulbIcon, TicketIcon} from "@heroicons/vue/24/solid/index.js";
+import {QuestionMarkCircleIcon, LightBulbIcon, GlobeAsiaAustraliaIcon} from "@heroicons/vue/24/solid/index.js";
+import Swal from "sweetalert2";
 
-defineProps({
+const props = defineProps({
     title: String,
     breadcrumbs: Array,
-    contentTitle: String
+    contentTitle: String,
+    clientId: String,
 });
+
+function syncToIo()
+{
+    axios.post('/client/' + props.clientId + '/commit-to-io').then(() => {
+
+    }).catch(error => {
+        Swal.fire({
+            title: 'Error!',
+            text: error.response.data.message,
+            showCancelButton: true,
+            confirmButtonText: "Fine",
+        })
+    });
+}
 
 </script>
 
@@ -32,10 +48,10 @@ defineProps({
                         <div class="text-3xl">Example</div>
                     </div>
                 </a>
-                <a href="#" class="p-8 h-64 bg-orange-500 rounded-2xl items-center justify-center flex">
+                <a @click="syncToIo()" href="#" class="p-8 h-64 bg-orange-500 rounded-2xl items-center justify-center flex">
                     <div class="flex items-center flex-col">
-                        <ticket-icon class="h-32 w-32 flex-1"></ticket-icon>
-                        <div class="text-3xl">Other</div>
+                        <globe-asia-australia-icon class="h-32 w-32 flex-1"></globe-asia-australia-icon>
+                        <div class="text-3xl">Submit to IO</div>
                     </div>
                 </a>
             </div>

@@ -190,7 +190,11 @@ const sidebarOpen = ref(false)
                                 </li>
                             </ol>
                         </div>
+                        <div class="flex mx-auto pt-4 justify-end xl:mr-16 lg:mr-12 sm:mr-6 mt-[-30px]">
+                            <slot name="buttons-section" />
+                        </div>
                     </div>
+
 
                 </aside>
                 <main class="py-10">

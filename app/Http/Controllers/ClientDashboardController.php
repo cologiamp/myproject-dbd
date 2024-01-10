@@ -22,7 +22,8 @@ class ClientDashboardController extends Controller
         return Inertia::render('ClientDashboard',[
             'title' => 'Client Dashboard',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
-            'content-title' => 'Welcome to ' . $client->name . "'s dashboard"
+            'content-title' => 'Welcome to ' . $client->name . "'s dashboard",
+            'clientId' => $client->io_id
         ]);
     }
 }

@@ -12,10 +12,16 @@ defineProps({
     tabs: Object
 });
 
+function syncToIo()
+{
+    alert('clicked');
+}
+
 </script>
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
+
         <div class="sections flex flex-col">
                 <Tabs :tabTitles="tabs">
                     <Tab v-for="(tab, index) in tabs" v-bind:key="index" :tab="tab" :tabIndex="index"></Tab>

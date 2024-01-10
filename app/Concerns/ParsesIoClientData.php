@@ -5,6 +5,68 @@ namespace App\Concerns;
 use Illuminate\Support\Collection;
 
 trait ParsesIoClientData{
+
+    /**
+     * The reverse of ParseClientData. Take in a Client, return it formatted for use in IO
+     * @param $client
+     * @return array
+     */
+    public function unparseClientData($client):array
+    {
+        $data = [];
+        if($client->title != null)
+        {
+            $data['title'] = config('enums.client.title')[$client->title];
+        }
+        $data['firstName'] = $client->first_name;
+        $data['lastName'] = $client->last_name;
+        if($client->date_of_birth != null)
+        {
+            $data['dateOfBirth'] = $client->date_of_birth;
+        }
+        if($client->gender != null)
+        {
+            $data['gender'] = config('enums.client.gender')[$client->gender];
+        }
+        if($client->marital_status != null)
+        {
+            $data['maritalStatus'] = config('enums.client.marital_status')[$client->marital_status];
+        }
+        if($client->nationality != null)
+        {
+            $data['NationalityCountry']['isoCode'] = config('enums.client.isoCodes')[$client->nationality];
+        }
+        if($client->salutation != null)
+        {
+            $data['salutation'] = $client->salutation;
+        }
+        return $data;
+
+        return [
+            'salutation' => $client->,
+                'title' => ,
+                'firstName' => ,
+                'lastName' => ,
+                'dateOfBirth' => ,
+                'gender' => ,
+                'niNumber' => '',
+                'maritalStatus' => ,
+                'nationalityContry' => [
+                    'isoCode' => ,
+                ],
+                'healthProfile' => [
+                    'isSmoker' => ,
+                    'smokedInLast12Months' => ,
+                    'inGoodHealth' => ,
+                ],
+                'hasWill' => ,
+                'isWillUptoDate' => ,
+                'isPowerOfAttorneyGranted' => ,
+            ]
+    }
+
+
+
     /**
      * Taking in a parsed data array of IO Json, map it, determine what fields associate
      * where in our Database schema and isolate them into Eloquent Model clusters
