@@ -25,7 +25,7 @@ const props = defineProps({
         <div class="flex flex-row items-center w-full justify-between pt-3">
             <div class="flex flex-row items-center gap-2">
                 <p>Status</p>
-                <div class="bg-orange-600 px-2 text-sm py-1 rounded-md">{{ client.status }}</div>
+                <div class="bg-orange-600 px-2 text-sm py-1 rounded-md">{{ client.status_text }}</div>
             </div>
         </div>
 

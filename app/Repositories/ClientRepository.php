@@ -68,7 +68,7 @@ class ClientRepository extends BaseRepository
             })
             ->when($request->has("select"), function($query) use ($request) {
                 switch($request->input("select")) {
-                    case 1:
+                    case 1: // chore: refactor this into an enum
                         $query->orderBy("updated_at", "desc");
                     case 2:
                         $query->orderBy("updated_at", "asc");

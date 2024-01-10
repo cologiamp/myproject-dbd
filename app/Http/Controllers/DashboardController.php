@@ -6,17 +6,17 @@ use App\Repositories\BaseRepository;
 use App\Repositories\ClientRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Features;
 use Laravel\Jetstream\Jetstream;
 use Waw\Io\Io;
 
 class DashboardController extends Controller
 {
-    protected BaseRepository $repository;
     protected ClientRepository $clientRepository;
-    public function __construct(BaseRepository $br, ClientRepository $cr)
+
+    public function __construct(ClientRepository $cr)
     {
-        $this->repository = $br;
         $this->clientRepository = $cr;
     }
     /**
@@ -27,14 +27,14 @@ class DashboardController extends Controller
         if ($request->has("search") || $request->has("select")) {
             $clients = $this->clientRepository->filterIndexQuery($request)->get();
         } else {
-            $clients = auth()->user()->clients;
+            $clients = Auth::user()->clients;
         }
 
         return Inertia::render('Dashboard',[
             'title' => 'Clients',
             'clients' => $clients->map(fn ($client) => $client->presenter()->formatForClientsIndex()),
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
-            'filters' => request()->only(["search", "select"])
+            'filters' => $request()->only(["search", "select"])
         ]);
     }
 }

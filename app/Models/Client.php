@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\BaseModels\Model;
+use Illuminate\Support\Facades\Log;
 use App\Models\Presenters\ClientPresenter;
 use App\Models\Presenters\LayoutPresenter;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Client extends Model
 {
@@ -39,7 +40,7 @@ class Client extends Model
 
     public function advice_case():BelongsTo
     {
-        return $this->belongsTo(AdviceCase::class);
+        return $this->belongsTo(AdviceCase::class, "case_id");
     }
 
     public function assets():BelongsToMany
@@ -74,10 +75,9 @@ class Client extends Model
         return "To Be Implemented";
     }
 
-    public function getStatusAttribute()
+    public function getStatusTextAttribute()
     {
-        // chore: can we get this from IO
-        return "To Be Implemented";
+        return $this->advice_case?->status_text ?? "Fact Find";
     }
 
 

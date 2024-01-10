@@ -26,14 +26,14 @@ class ClientController extends Controller
         if ($request->has("search") || $request->has("select")) {
             $clients = $this->clientRepository->filterIndexQuery($request)->get();
         } else {
-            $clients = auth()->user()->clients;
+            $clients = Auth::user()->clients;
         }
 
         return Inertia::render('ClientSelect',[
             'title' => 'Clients',
             'clients' => $clients->map(fn ($client) => $client->presenter()->formatForClientsIndex()),
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
-            'filters' => request()->only(["search", "select"])
+            'filters' => $request->only(["search", "select"])
         ]);
     }
 }

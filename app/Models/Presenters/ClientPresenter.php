@@ -29,7 +29,7 @@ class ClientPresenter extends BasePresenter
           'age'=> $this->model->age,
           'job_title' => $this->model->job_title,
           'last_contact'=> $this->model->last_contact,
-          'status' => $this->model->status
+          'status_text' => $this->model->status_text
         ]);
     }
 }

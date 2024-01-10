@@ -27,15 +27,6 @@ const props = defineProps({
             {title: "Processed clients", value: 35},
         ]
     },
-    meetings: {
-        type: Array,
-        default: [
-            { name: "liam", date: "24th Jan", location: "Manchester" },
-            { name: "liam", date: "24th Jan", location: "Manchester" },
-            { name: "liam", date: "24th Jan", location: "Manchester" },
-            { name: "liam", date: "24th Jan", location: "Manchester" },
-        ]
-    },
 });
 
 const handleSearchClients = filters => {
@@ -52,9 +43,6 @@ const handleSearchClients = filters => {
             <StatsContent>
                 <Stats :stats="stats" />
             </StatsContent>
-            <CalendarContent>
-                <CalendarMeetings :meetings="meetings" />
-            </CalendarContent>
             <ClientsContent @search-clients="handleSearchClients" :filters="filters">
                 <Clients :clients="clients"/>
             </ClientsContent>
