@@ -66,15 +66,15 @@ class ClientRepository extends BaseRepository
 
     public function createOrUpdateAddress(mixed $data):void
     {
-        if($data::class == Request::class)
+        if(!is_array($data) && $data::class == Request::class)
         {
             $data = $data->safe();
         }
         $addr = $this->client->addresses()->where('address_line_1',$data['address_line_1'])->first();
         if(!$addr){
-            $addr = new Address();
-            $addr->create($data);
-            $addr->clients()->attach($addr);
+            $addr = Address::create($data);
+
+            $this->client->addresses()->attach($addr->fresh());
         }
         else{
             $addr->update($data);
