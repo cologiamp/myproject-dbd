@@ -41,7 +41,7 @@ onBeforeMount(() => {
 <template>
     <Menu as="div" class="relative inline-block w-full text-left mb-8 px-7">
       <div>
-        <MenuButton class="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-aaron-700 ring-aaron-600 text-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset hover:bg-aaron-600">
+        <MenuButton class="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-aaron-700 ring-aaron-600 text-white p-3 text-sm font-semibold shadow-sm ring-1 ring-inset hover:bg-aaron-600 h-11">
           {{ selectedMenu }}
           <ChevronDownIcon class="-mr-1 h-5 w-5 text-white" aria-hidden="true" />
         </MenuButton>
