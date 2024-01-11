@@ -3,7 +3,6 @@ import { defineProps, inject, onBeforeMount } from "vue";
 
 import SectionSidebar from "@/Components/SectionSidebar.vue";
 import SectionContent from "@/Components/SectionContent.vue";
-import AutoSaveSpinner from "./AutoSaveSpinner.vue";
 
 const props = defineProps({
     tab: {
@@ -24,7 +23,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['setOnloadKey']);
-const selectedTabId = inject("selectedTabId");
+const selectedMenuId = inject("selectedMenuId");
 
 // Emit function from parent component to set selected section onload
 function setSectionKey() {
@@ -38,27 +37,14 @@ onBeforeMount(() => {
 </script>
 
 <template>
-
-       <div class="bg-aaron-900 sm:rounded-[20px] p-8" v-show="tabIndex == selectedTabId">
-        <div class="w-full flex flex-col gap-6 mb-14">
-            <div class="w-full flex flex-row items-center justify-between">
-<!--                <div class="my-6 pl-6"> @gentessaquino added this, Liam did not -->
-                <h1 class="text-2xl font-medium">
-                    {{ tab.name }}
-                </h1>
-                <AutoSaveSpinner />
-            </div>
-            <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
-                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
-            </div>
+    <div class="bg-aaron-900 sm:rounded-lg p-8 h-full" v-show="tabIndex == selectedMenuId">
+        <div class="my-4 px-4">
+            <span class="text-2xl font-medium">{{ tab.name }}</span>
         </div>
-        <div class="h-screen">
+        <div class="block">
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
                 <SectionContent v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
             </SectionSidebar>
         </div>
     </div>
 </template>
-
-<style scoped>
-</style>

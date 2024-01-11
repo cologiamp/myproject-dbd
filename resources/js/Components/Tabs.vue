@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, provide } from "vue"
+import { ref, defineProps, provide, onBeforeMount, inject } from "vue"
 
 const props = defineProps({
     tabTitles: {
@@ -8,11 +8,9 @@ const props = defineProps({
     }
 });
 
-
-const findTabKey = (obj, fn) =>
-  Object.keys(obj).find(key => fn(obj[key], key, obj));
-
-const selectedTabId = ref(findTabKey(props.tabTitles, x => x.current == true));
+const emit = defineEmits(['setOnloadKey', 'testEmit']);
+const initialTabKey = inject("onloadKey");
+const selectedTabId = ref(1);
 
 function tabsClick(index, tab) {
     selectedTabId.value = index
@@ -26,11 +24,18 @@ function tabsClick(index, tab) {
 
 provide("selectedTabId", selectedTabId);
 
+onBeforeMount(() => {
+    // Emit function from parent component to set selected section onload
+    emit('setOnloadKey', props.tabTitles, x => x.current == true);
+    selectedTabId.value = initialTabKey.value;
+});
+
 </script>
 
 <template>
     <div class="tabs">
-        <ul class="tabs__header flex flex-wrap items-start whitespace-nowrap font-medium text-center text-gray-500 border-b border-aaron-500 dark:text-gray-400 dark:border-gray-700 mb-6">
+        <ul class="tabs__header flex flex-wrap items-start whitespace-nowrap font-medium text-center text-gray-500 border-b border-aaron-500 dark:text-gray-400 dark:border-gray-700 mb-8">
+<!--            chore: @gentessaquino check if mb-8 or mb-6 here-->
             <li v-for="(tab, index) in props.tabTitles"
                 :key="tab.name"
                 :id="index"
