@@ -37,10 +37,9 @@ provide("selectedTabId", selectedTabId);
                 @click="tabsClick(index, tab)"
                 class="list-item !w-auto"
                 >
-                <p class="text-white p-4">{{ tab.name }}</p>
+                <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4">{{ tab.name }}</p>
                 <!-- tab progress bar -->
-                <div v-if="tab.current" class="flex w-full h-1.5 bg-gray-200 overflow-hidden dark:bg-gray-700" role="progressbar">
-                    <div :class="tab.progress < 100 ? 'bg-blue-600' : 'bg-green-400'" :style="{width: tab.progress + '%'}"></div>
+                <div v-if="tab.current" class="flex w-full h-1.5 bg-aaron-400 dark:bg-aaron-400 overflow-hidden" role="progressbar">
                 </div>
             </li>
         </ul>
