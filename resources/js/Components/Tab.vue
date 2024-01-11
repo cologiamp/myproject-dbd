@@ -42,7 +42,6 @@ onBeforeMount(() => {
        <div class="bg-aaron-900 sm:rounded-[20px] p-8" v-show="tabIndex == selectedTabId">
         <div class="w-full flex flex-col gap-6 mb-14">
             <div class="w-full flex flex-row items-center justify-between">
-<!--                <div class="my-6 pl-6"> @gentessaquino added this, Liam did not -->
                 <h1 class="text-2xl font-medium">
                     {{ tab.name }}
                 </h1>
@@ -59,6 +58,3 @@ onBeforeMount(() => {
         </div>
     </div>
 </template>
-
-<style scoped>
-</style>

@@ -47,7 +47,7 @@ const handlePageChange = paginationParams => {
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
-        <div class="w-full h-full min-h-screen flex flex-col gap-12">
+        <div class="w-full h-full min-h-screen flex flex-col gap-12 px-6 md:px-0">
             <ClientsContent @search-clients="handleSearchClients" :filters="filters">
                 <Clients :clients="clients"/>
                 <template #paginator>

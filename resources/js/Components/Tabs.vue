@@ -35,7 +35,6 @@ onBeforeMount(() => {
 <template>
     <div class="tabs">
         <ul class="tabs__header flex flex-wrap items-start whitespace-nowrap font-medium text-center text-gray-500 border-b border-aaron-500 dark:text-gray-400 dark:border-gray-700 mb-8">
-<!--            chore: @gentessaquino check if mb-8 or mb-6 here-->
             <li v-for="(tab, index) in props.tabTitles"
                 :key="tab.name"
                 :id="index"
