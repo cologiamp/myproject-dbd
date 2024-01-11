@@ -28,8 +28,15 @@ const selectedTabId = inject("selectedTabId");
 
 <template>
     <div class="bg-aaron-900 sm:rounded-lg p-8" v-show="tabIndex == selectedTabId">
-        <div class="my-6 pl-6">
-            <span class="text-2xl font-medium">{{ tab.name }}</span>
+        <div class="w-full flex flex-col gap-6 mb-14">
+            <div class="w-full flex flex-row items-center justify-between">
+                <h1 class="text-2xl font-medium">
+                    {{ tab.name }}
+                </h1>
+            </div>
+            <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
+                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
+            </div>
         </div>
         <div class="h-screen">
             <TabSidebarMenu v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
