@@ -37,4 +37,10 @@ class AdviceCase extends Model
         return $this->hasMany(IncomeChange::class);
     }
 
+    public function getStatusTextAttribute()
+    {
+        // chore: need to add status column to advice_cases table
+        return "To Be Implemented";
+    }
+
 }
