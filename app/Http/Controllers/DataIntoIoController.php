@@ -19,7 +19,7 @@ class DataIntoIoController extends Controller
     }
     public function __invoke(Client $client, Request $request)
     {
-       //chore: this needs to be more modular, might involve a queue job etc. For now, just make it quick and dirty to prove it works:
-        return $this->clientRepository->submitDataIntoIO();
+       //chore: this needs to be more modular, might involve a queue job etc.
+        return $this->dataEgressService->updateClient($client);
     }
 }

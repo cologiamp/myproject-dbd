@@ -40,29 +40,13 @@ trait ParsesIoClientData{
         {
             $data['salutation'] = $client->salutation;
         }
-        return $data;
+        if($client->ni_number != null)
+        {
+            $data['niNumber'] = $client->ni_number;
+        }
+        //Chore:: Simon checking if we need the Health Profile and will fields
 
-        return [
-            'salutation' => $client->,
-                'title' => ,
-                'firstName' => ,
-                'lastName' => ,
-                'dateOfBirth' => ,
-                'gender' => ,
-                'niNumber' => '',
-                'maritalStatus' => ,
-                'nationalityContry' => [
-                    'isoCode' => ,
-                ],
-                'healthProfile' => [
-                    'isSmoker' => ,
-                    'smokedInLast12Months' => ,
-                    'inGoodHealth' => ,
-                ],
-                'hasWill' => ,
-                'isWillUptoDate' => ,
-                'isPowerOfAttorneyGranted' => ,
-            ]
+        return $data;
     }
 
 
