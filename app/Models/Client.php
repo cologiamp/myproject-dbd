@@ -115,6 +115,11 @@ class Client extends Model
         return $this->hasOne(Retirement::class);
     }
 
+    public function adviser(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'adviser_id');
+    }
+
 
     //Presenter
     public function presenter() : ClientPresenter

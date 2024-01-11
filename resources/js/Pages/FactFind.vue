@@ -12,10 +12,6 @@ defineProps({
     tabs: Object
 });
 
-function syncToIo()
-{
-    alert('clicked');
-}
 
 </script>
 

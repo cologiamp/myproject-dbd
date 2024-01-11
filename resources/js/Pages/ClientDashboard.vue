@@ -15,7 +15,12 @@ const props = defineProps({
 function syncToIo()
 {
     axios.post('/client/' + props.clientId + '/commit-to-io').then(() => {
-
+        Swal.fire({
+            title: 'Success!',
+            text: "Client synced to IO.",
+            showCancelButton: true,
+            confirmButtonText: "Good",
+        })
     }).catch(error => {
         Swal.fire({
             title: 'Error!',
