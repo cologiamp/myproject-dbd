@@ -1,11 +1,18 @@
 <script setup>
+import { router } from '@inertiajs/vue3';
+
 const props = defineProps({
     client: Object,
 })
+
+const navigateToClientPage = client => {
+    router.get(route("client.dashboard", {client: client.io_id}));
+}
+
 </script>
 
 <template>
-    <div class="rounded-[20px] bg-aaron-900 min-h-24 min-w-24 p-6 hover:cursor-pointer hover:scale-105 duration-300">
+    <div @click="navigateToClientPage(client)" class="rounded-[20px] bg-aaron-900 min-h-24 min-w-24 p-6 hover:cursor-pointer hover:scale-105 duration-300">
 
         <div class="flex flex-row items-center w-full justify-between mb-6">
             <div class="flex flex-row items-center justify-start gap-2">
