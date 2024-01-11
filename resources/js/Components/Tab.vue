@@ -3,6 +3,7 @@ import { defineProps, inject, provide } from "vue";
 
 import TabSidebarMenu from "@/Components/TabSidebarMenu.vue";
 import TabContent from "@/Components/TabContent.vue";
+import AutoSaveSpinner from "./AutoSaveSpinner.vue";
 
 const props = defineProps({
     tab: {
@@ -33,6 +34,7 @@ const selectedTabId = inject("selectedTabId");
                 <h1 class="text-2xl font-medium">
                     {{ tab.name }}
                 </h1>
+                <AutoSaveSpinner />
             </div>
             <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
                 <div class="bg-aaron-400 w-[50%] rounded-r-md" />
