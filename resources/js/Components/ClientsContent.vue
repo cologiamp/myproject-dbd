@@ -17,11 +17,11 @@ const emits = defineEmits([
 ])
 
 watch(search, value => {
-    emits("searchClients", {search: value, select: select.value})
+    emits("searchClients", { search: value, select: select.value, searching: true })
 })
 
 watch(select, value => {
-    emits("searchClients", {search: search.value, select: value})
+    emits("searchClients", { search: search.value, select: value, searching: false })
 })
 
 </script>
@@ -49,5 +49,6 @@ watch(select, value => {
             </div>
         </div>
         <slot />
+        <slot name="paginator" />
     </div>
 </template>

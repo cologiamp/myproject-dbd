@@ -9,9 +9,11 @@ use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Input\Input;
 
 class ClientRepository extends BaseRepository
 {
@@ -58,16 +60,16 @@ class ClientRepository extends BaseRepository
         select('clients.*');//Limit query here
     }
 
-    public function filterIndexQuery(Request $request): Builder
+    public function filterIndexQuery(Request $request): LengthAwarePaginator
     {
-        return $this->constructIndexQuery($request)
+        return Client::query()
             ->where("adviser_id", auth()->user()->id)
-            ->when($request->has("search"), function($query) use ($request) {
-                $query->where("first_name", "like", "%" . $request->input("search") . "%")
-                    ->orWhere("last_name", "like", "%" . $request->input("search") . "%");
+            ->when($request->input("search"), function($query, $search)  {
+                $query->where("first_name", "like", "%{$search}%")
+                    ->orWhere("last_name", "like",  "%{$search}%");
             })
-            ->when($request->has("select"), function($query) use ($request) {
-                switch($request->input("select")) {
+            ->when($request->input("select"), function($query, $select)  {
+                switch($select) {
                     case 1: // chore: refactor this into an enum
                         $query->orderBy("updated_at", "desc");
                     case 2:
@@ -75,7 +77,11 @@ class ClientRepository extends BaseRepository
                     default:
                         $query->orderBy("updated_at", "desc");
                 }
-            });
+            })
+            ->paginate(
+                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1 ,
+                perPage: $request->filled("perPage") ? $request->input("perPage") : 9
+            );
     }
 
     //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
