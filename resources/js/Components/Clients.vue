@@ -3,7 +3,6 @@ import Client from './Client.vue';
 
 const prop = defineProps({
     clients: Array,
-    testers: Array
 })
 </script>
 
@@ -15,7 +14,6 @@ const prop = defineProps({
             v-for="(client, index) in clients"
             :key="index"
             :client="client"
-            :testers="testers"
         />
     </div>
 </template>
