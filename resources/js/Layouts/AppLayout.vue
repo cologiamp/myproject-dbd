@@ -194,7 +194,7 @@ const sidebarOpen = ref(false)
 
                 </aside>
                 <main class="py-10">
-                    <div class="mx-auto max-w-7xl md:px-4 lg:px-8 text-aaron-50">
+                    <div class="mx-auto max-w-7xl px-6 md:px-4 lg:px-8 text-aaron-50">
                         <slot />
                     </div>
                 </main>

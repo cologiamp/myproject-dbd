@@ -9,7 +9,7 @@ const prop = defineProps({
 
 <template>
     <!-- clients lozenge -->
-    <div class="w-full h-full grid grid-cols-3 gap-6">
+    <div class="w-full h-full grid grid-cols-2 md:grid-cols-3 gap-6">
         <!-- client panel -->
         <Client
             v-for="(client, index) in clients"
