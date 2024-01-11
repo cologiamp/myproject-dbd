@@ -23,4 +23,13 @@ class ClientPresenter extends BasePresenter
         ];
     }
 
+    public function formatForClientsIndex(): array
+    {
+        return array_merge($this->default(), [
+          'age'=> $this->model->age,
+          'job_title' => $this->model->job_title,
+          'last_contact'=> $this->model->last_contact,
+          'status_text' => $this->model->status_text
+        ]);
+    }
 }
