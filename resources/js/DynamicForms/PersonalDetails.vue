@@ -3,6 +3,10 @@
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
+import VueDatePicker from "@vuepic/vue-datepicker";
+
+import '@vuepic/vue-datepicker/dist/main.css'
+import {onMounted, ref} from "vue";
 
 const props = defineProps({
     formData: {
@@ -23,10 +27,23 @@ const props = defineProps({
     errors: Object,
 });
 
+let dateRef = ref();
+function saveDate(value){
+    dateRef.value = value;
+    stepForm.date_of_birth = value;
+    autosaveT(stepForm,props.formData.submit_url)
+}
+
+onMounted(()=>{
+    dateRef.value = props.formData.model.date_of_birth;
+})
+
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     first_name: props.formData.model.first_name,
     last_name: props.formData.model.last_name,
-    title: props.formData.model.title
+    title: props.formData.model.title,
+    date_of_birth: props.formData.model.date_of_birth,
+    gender: props.formData.model.gender
 })
 
 </script>
@@ -60,11 +77,53 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.last_name">{{ stepForm.errors.last_name }}</p>
                 </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="last_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date of Birth </label>
+                    <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                        <VueDatePicker text-input  @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="date_of_birth" id="date_of_birth"  placeholder="dd/mm/yyyy"/>
+                    </div>
+
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_of_birth">{{ stepForm.errors.date_of_birth }}</p>
+                </div>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="gender" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Gender</label>
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.gender" id="unit" name="gender"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="gender" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(gender, id) in formData.enums.genders">{{ gender }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.gender">{{ stepForm.errors.gender }}</p>
+                </div>
+
+
+
+                <!--                if(array_key_exists('gender',$person) && $person['gender'] != null)-->
+<!--                {-->
+<!--                $data['gender'] =  array_flip(config('enums.client.gender'))[$person['gender']] ;-->
+<!--                }-->
+<!--                if(array_key_exists('maritalStatus',$person) && $person['maritalStatus'] != null)-->
+<!--                {-->
+<!--                $data['marital_status'] = array_flip(config('enums.client.marital_status'))[$person['maritalStatus']];-->
+<!--                }-->
+<!--                if(array_key_exists('NationalityCountry',$person) && $person['NationalityCountry']['name'] != null)-->
+<!--                {-->
+<!--                $data['nationality'] = array_flip(config('enums.client.nationality'))[$person['NationalityCountry']['name']];-->
+<!--                }-->
+<!--                if(array_key_exists('salutation',$person) && $person['salutation'] != null)-->
+<!--                {-->
+<!--                $data['salutation'] = $person['salutation'];-->
+<!--                }-->
             </div>
         </div>
     </dynamic-form-wrapper>
 </template>
 
 <style scoped>
+    .aaron-datepicker{
+        --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));
+        --dp-text-color: rgb(236 245 255 / var(--tw-text-opacity));
+        --dp-border-radius: 6px;
+        --dp-border-color: rgb(70 84 190 / var(--tw-ring-opacity));
+    }
 
 </style>

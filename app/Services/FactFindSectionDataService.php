@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Client;
 use App\Repositories\ClientRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,6 +55,11 @@ class FactFindSectionDataService
      */
     private function _11(array $validatedData):void
     {
+        //define any explicit mutators that are not handled
+        if(array_key_exists('date_of_birth',$validatedData))
+        {
+            $validatedData['date_of_birth'] = Carbon::parse($validatedData['date_of_birth']);
+        }
         //This example only has data from one table. This would be different if not the case. May need multiple repositories.
         $this->cr->updateFromValidated($validatedData);
     }

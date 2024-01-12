@@ -31,7 +31,9 @@ class Client extends Model
     public function date_of_birth():Attribute
     {
         return Attribute::make(
-            set: fn($value) => Carbon::parse($value),
+            set: function ($value){
+                return Carbon::parse($value);
+            }
         );
     }
 
@@ -133,7 +135,8 @@ class Client extends Model
     {
         return match ($section.'.'.$step){
             '1.1' => [
-                'titles' => config('enums.client.title')
+                'titles' => config('enums.client.title'),
+                'genders' => config('enums.client.gender')
             ],
             default => [
 

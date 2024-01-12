@@ -23,7 +23,9 @@ return [
                         'fields' => [
                             "clients.date_of_birth",
                             "clients.first_name",
-                            "clients.last_name"
+                            "clients.last_name",
+                            'clients.date_of_birth',
+                            'clients.gender',
                         ],
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
@@ -34,6 +36,13 @@ return [
                                 'integer',
                                 Rule::in(array_keys(config('enums.client.title'))),
                             ],
+                            'gender' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys(config('enums.client.gender'))),
+                            ],
+                            'date_of_birth' => 'sometimes|date'
                         ]
                     ],
                     2 => [
