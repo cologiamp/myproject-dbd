@@ -83,8 +83,8 @@ const sidebarOpen = ref(false)
                                     </div>
                                 </TransitionChild>
                                 <!-- Sidebar component, swap this element with another sidebar if you like -->
-                                <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                                    <div class="flex h-16 shrink-0 items-center">
+                                <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-aaron-900 px-6 py-8">
+                                    <div class="flex h-fit shrink-0 items-center mb-4">
                                         <AuthenticationCardLogo/>
                                     </div>
                                     <nav class="flex flex-1 flex-col">
@@ -100,8 +100,8 @@ const sidebarOpen = ref(false)
                                                 </ul>
                                             </li>
                                             <li class="mt-auto">
-                                                <a href="#" class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600">
-                                                    <Cog6ToothIcon class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600" aria-hidden="true" />
+                                                <a href="#" class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-white hover:bg-gray-50 hover:text-indigo-600">
+                                                    <Cog6ToothIcon class="h-6 w-6 shrink-0 text-white group-hover:text-indigo-600" aria-hidden="true" />
                                                     Settings
                                                 </a>
                                             </li>
@@ -139,7 +139,7 @@ const sidebarOpen = ref(false)
             </div>
 
             <div class="lg:pl-52 xl:pl-72">
-                <div class="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8">
+                <div class="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8 bg-aaron-950">
                     <div class="flex h-16 items-center gap-x-4 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
                         <button type="button" class="-m-2.5 p-2.5 text-gray-200 lg:hidden" @click="sidebarOpen = true">
                             <span class="sr-only">Open sidebar</span>
@@ -194,7 +194,7 @@ const sidebarOpen = ref(false)
 
                 </aside>
                 <main class="py-10">
-                    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-aaron-50">
+                    <div class="mx-auto max-w-7xl md:px-4 lg:px-8 text-aaron-50">
                         <slot />
                     </div>
                 </main>

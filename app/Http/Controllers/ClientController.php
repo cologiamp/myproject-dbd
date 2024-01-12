@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Repositories\ClientRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
-use Laravel\Jetstream\Jetstream;
-use Waw\Io\Io;
 
 class ClientController extends Controller
 {
     protected ClientRepository $clientRepository;
+
     public function __construct(ClientRepository $cr)
     {
         $this->clientRepository = $cr;
@@ -22,10 +19,14 @@ class ClientController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $clients = $this->clientRepository->filterIndexQuery($request);
+
         return Inertia::render('ClientSelect',[
             'title' => 'Clients',
-            'clients' => $this->clientRepository->getIndexOptions()['models'],
-            'breadcrumbs' => $this->clientRepository->loadBreadcrumbs()
+            'clients' => $clients->map(fn ($client) => $client->presenter()->formatForClientsIndex()),
+            'pagination' => collect($clients->toArray())->except("data"),
+            'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
+            'filters' => $request->only(["search", "select", "page", "perPage"])
         ]);
     }
 }
