@@ -15,7 +15,7 @@ defineProps({
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
         <form-well>
-            <h3 class="text-aaron-50 text-2xl">{{contentTitle}}</h3>
+            <h3 class="text-aaron-50 text-2xl px-4 md:p-0">{{contentTitle}}</h3>
         </form-well>
         <div class="overflow-hidden bg-aaron-950 pt-5 rounded-lg ">
             <div class="px-4 py-5 sm:p-6 w-full grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" >

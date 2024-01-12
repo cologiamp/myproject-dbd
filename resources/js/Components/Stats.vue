@@ -7,7 +7,7 @@ const props = defineProps({
 
 <template>
     <!-- stats lozenge -->
-    <div class="w-full h-full flex flex-row items-center bg-aaron-900 rounded-[20px]">
+    <div class="w-full h-full flex flex-wrap md:flex-row items-center bg-aaron-900 rounded-[20px]">
         <!-- stat panel -->
         <Stat
             v-for="(stat, index) in stats"

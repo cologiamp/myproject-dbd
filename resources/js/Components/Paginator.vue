@@ -35,13 +35,13 @@ const perPageChange = () => {
 
 <template>
     <div class="w-full flex flex-row items-center justify-end">
-        <div class="w-full flex flex-row items-center justify-end gap-12">
-            <div class="flex flex-row items-center gap-4">
+        <div class="w-full flex flex-wrap items-center justify-center gap-4 md:flex-row md:justify-end md:gap-12">
+            <div class="flex flex-row items-center gap-4 justify-center w-full md:w-fit md:justify-normal">
                 <div v-for="(link, index) in pagination.links">
                     <button
                         v-if="link.url"
                         v-html="link.label.includes('Previous') ? 'previous' : link.label.includes('Next') ? 'next' : link.label"
-                        :class="link.active ? 'bg-aaron-400 px-3 py-1 rounded-[20px]' : ''"
+                        :class="link.active ? 'bg-aaron-400 px-3 py-1 rounded-[20px]' : ''" 
                         @click="pageChange(link)"
                     />
                     <span
