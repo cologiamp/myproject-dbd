@@ -14,6 +14,7 @@ return [
     */
 
     'factfind' => [
+        //FACTFIND:// you need to make one of these for every step
         1 => [
             'name' => 'Basic Details',
             'sections' => [
