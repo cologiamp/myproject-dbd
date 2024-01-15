@@ -26,10 +26,10 @@ class ClientPresenter extends BasePresenter
     //FactFind:// Need to do this for every section/step
     public function formatForStep($section,$step)
     {
-        return match($section.'.'.$step){
+        return match ($section . '.' . $step) {
             '1.1' => [
-                'first_name'=> $this->model->first_name,
-                'last_name'=> $this->model->last_name,
+                'first_name' => $this->model->first_name,
+                'last_name' => $this->model->last_name,
                 'title' => $this->model->title,
                 'date_of_birth' => $this->model->date_of_birth,
                 'gender' => $this->model->gender,
@@ -38,5 +38,15 @@ class ClientPresenter extends BasePresenter
 
             ]
         };
+    }
+
+    public function formatForClientsIndex(): array
+    {
+        return array_merge($this->default(), [
+          'age'=> $this->model->age,
+          'job_title' => $this->model->job_title,
+          'last_contact'=> $this->model->last_contact,
+          'status_text' => $this->model->status_text
+        ]);
     }
 }

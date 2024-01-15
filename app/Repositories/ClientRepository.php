@@ -11,10 +11,13 @@ use App\Models\Client;
 use App\Services\FactFindSectionDataService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Input\Input;
 
 class ClientRepository extends BaseRepository
 {
@@ -97,11 +100,40 @@ class ClientRepository extends BaseRepository
         select('clients.*');//Limit query here
     }
 
+    public function filterIndexQuery(Request $request): LengthAwarePaginator
+    {
+        return Client::query()
+            ->where("adviser_id", auth()->user()->id)
+            ->when($request->input("search"), function($query, $search)  {
+                $query->where("first_name", "like", "%{$search}%")
+                    ->orWhere("last_name", "like",  "%{$search}%");
+            })
+            ->when($request->input("select"), function($query, $select)  {
+                switch($select) {
+                    case 1: // chore: refactor this into an enum
+                        $query->orderBy("updated_at", "desc");
+                    case 2:
+                        $query->orderBy("updated_at", "asc");
+                    default:
+                        $query->orderBy("updated_at", "desc");
+                }
+            })
+            ->paginate(
+                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1 ,
+                perPage: $request->filled("perPage") ? $request->input("perPage") : 9
+            );
+    }
 
-    public function getIndexOptions(): array
+    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
+    public function getExampleFormOptions():array
     {
         return [
-            'models' => Auth::user()->clients->map(fn($c) => $c->presenter()->index())
+            'enums' => [
+                'titles' => config('enums.client.title')
+            ],
+            'model' => $this->client->presenter()->formatForExampleForm(),
+            'submit_method' => 'put',
+            'submit_url' => '/client/' . $this->client->io_id . '/example'
         ];
     }
 
@@ -172,6 +204,7 @@ class ClientRepository extends BaseRepository
         })->toArray();
     }
 
+    //FactFind://to do - make sure this works for your form
     /**
      * Function to work out the progress % for each section.
      * @param $key

@@ -1,73 +1,58 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import {nextTick, ref} from "vue";
-import FormWell from "@/Components/FormWell.vue";
-import Swal from 'sweetalert2'
-import {router} from "@inertiajs/vue3";
-let selectedClient = ref(null);
+import { router } from '@inertiajs/vue3'
+import ClientsContent from "@/Components/ClientsContent.vue"
+import Clients from "@/Components/Clients.vue"
+import Paginator from "@/Components/Paginator.vue"
 
-defineProps({
+import AppLayout from '@/Layouts/AppLayout.vue';
+
+const props = defineProps({
     title: String,
     breadcrumbs: Array,
-    clients: Array
+    clients: Array,
+    pagination: Object,
+    filters: {
+        type: Object,
+        default: {}
+    }
 });
 
-function redirectToSelectedClient()
-{
-    router.visit('/client/' + selectedClient.value + '/dashboard');
+const handleSearchClients = searchParams => {
+    const queryParams = {
+        ...searchParams,
+        page: props.filters.page,
+        perPage: props.filters.perPage,
+    }
+    router.get("/clients", queryParams, {
+        preserveScroll: true,
+        preserveState: true,
+    })
 }
 
-function selectClient()
-{
-    axios.post('/client/' + selectedClient.value + '/sync').then(() => {
-        redirectToSelectedClient()
-    }).catch(error => {
-        Swal.fire({
-            title: 'Warning - data overwrite detected!',
-            text: error.response.data.message,
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Overwrite",
-            denyButtonText: `Proceed without overwriting`
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axios.post('/client/' + selectedClient.value + '/sync',{
-                    'force': true
-                }).then(() => {
-                    redirectToSelectedClient()
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error: Something failed. Please try again later.',
-                        text: error.response.data.message,
-                    })
-                });
-            } else if (result.isDenied) {
-                redirectToSelectedClient()
-            }
-        });
-    });
-}
+const handlePageChange = paginationParams => {
+    const queryParams = {
+        search: props.filters.search,
+        select: props.filters.select,
+        ...paginationParams,
+    }
 
+    router.get("/clients", queryParams, {
+        preserveScroll: true,
+        preserveState: true
+    })
+}
 
 </script>
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
-        <form-well>
-            <div class="form-row flex-1">
-                <label for="client" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 required">Client</label>
-                <div class="mt-2 sm:col-span-2 sm:mt-0 md:pr-2">
-                    <select v-model="selectedClient" id="client" name="client"  class="block w-full  border-aaron-300 py-1.5 bg-aaron-950 ring-aaron-300 rounded-md text-aaron-50 shadow-sm focus:ring-aaron-400 sm:max-w-xs sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="client" :value="null">-</option>
-                        <option :id="id" :value="client.io_id" v-for="(client, id) in clients">{{ client.name }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="button-holder">
-                <button class="rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-aaron-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" v-if="selectedClient" type="button" @click="selectClient">Select </button>
-                <button v-else disabled class="disabled rounded-md bg-slate-300 text-slate-500 border-slate-200 disabled:shadow-none px-3 py-2 text-sm font-semibold shadow-sm">Select </button>
-            </div>
-        </form-well>
-
+        <div class="w-full h-full min-h-screen flex flex-col gap-12 px-6 md:px-0">
+            <ClientsContent @search-clients="handleSearchClients" :filters="filters">
+                <Clients :clients="clients"/>
+                <template #paginator>
+                    <Paginator @page-change="handlePageChange" :pagination="pagination" />
+                </template>
+            </ClientsContent>
+        </div>
     </AppLayout>
 </template>
