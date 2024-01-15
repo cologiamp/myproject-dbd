@@ -31,6 +31,13 @@ return [
 
        ],
     ],
+    'health' => [
+        'smoker' => [
+            0 => 'Unknown',
+            1 => 'Yes',
+            2 => 'No'
+        ]
+    ],
     'client' => [
         'title' => [
             0 => 'Miss',

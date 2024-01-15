@@ -33,7 +33,7 @@ const testSavingSpinner = () => {
 
 };
 
-const circumferance = 15 * 2 * Math.PI
+const circumference = 15 * 2 * Math.PI
 </script>
 
 <template>
@@ -59,8 +59,8 @@ const circumferance = 15 * 2 * Math.PI
                 <circle
                     class="text-aaron-400 duration-300"
                     stroke-width="5"
-                    :stroke-dasharray="circumferance"
-                    :stroke-dashoffset="circumferance - percent / 100 * circumferance"
+                    :stroke-dasharray="circumference"
+                    :stroke-dashoffset="circumference - percent / 100 * circumference"
                     stroke-linecap="flat"
                     stroke="currentColor"
                     fill="transparent"
