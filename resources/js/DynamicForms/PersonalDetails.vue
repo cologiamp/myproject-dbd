@@ -65,7 +65,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
-            <div class="md:grid  md:grid-cols-6 md:items-start gap-y-8 gap-x-4">
+            <div class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="title" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Title</label>
                     <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.title" id="unit" name="title"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
@@ -154,9 +154,9 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
                 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="mb-8">
+                    <div class="mb-4 md:mb-8">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Do you have a valid will?</label>
-                        <div class="pt-1 space-y-4 md:mt-0 md:pr-2 md:col-span-2 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
+                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                             <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" id="true" :value="true" :checked="stepForm.valid_will == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                             <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                             <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" id="false" :value="false" :checked="stepForm.valid_will == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -166,7 +166,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </div>
                     <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Power of Attorney Granted?</label>
-                        <div class="pt-1 space-y-4 md:mt-0 md:pr-2 md:col-span-2 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
+                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                             <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_granted" type="radio" id="true" :value="true" :checked="stepForm.poa_granted == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                             <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                             <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_granted" type="radio" id="false" :value="false" :checked="stepForm.poa_granted == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -178,7 +178,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
                 <div v-if="stepForm.valid_will == true" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is it up to date?</label>
-                    <div class="pt-1 space-y-4 md:mt-0 md:pr-2 md:col-span-2 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
+                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.will_up_to_date" type="radio" id="true" :value="true" :checked="stepForm.will_up_to_date == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.will_up_to_date" type="radio" id="false" :value="false" :checked="stepForm.will_up_to_date == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
