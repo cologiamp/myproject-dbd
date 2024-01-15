@@ -18,7 +18,7 @@ function redirectToSelectedClient()
 
 function selectClient(client)
 {
-    selectedClient.value = client;
+    selectedClient.value = client.io_id;
     axios.post('/client/' + selectedClient.value + '/sync').then(() => {
         redirectToSelectedClient()
     }).catch(error => {

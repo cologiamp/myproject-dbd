@@ -26,7 +26,6 @@ const props = defineProps({
 const emit = defineEmits(['setOnloadKey']);
 const selectedTabId = inject("selectedTabId");
 
-
 // Emit function from parent component to set selected section onload
 function setSectionKey() {
     emit('setOnloadKey', props.tab.sidebaritems, x => x.current == true);
@@ -53,7 +52,11 @@ function handleAutosave(val){
                 <AutoSaveSpinner :autosave="autosaveState" />
             </div>
             <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
-                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
+                <div
+                    :class="tab.progress === 100 ? `bg-green-400` : `bg-aaron-400`"
+                    :style="{ width: `${tab.progress}%`}"
+                    class="rounded-r-md duration-300"
+                />
             </div>
         </div>
         <div class="h-screen">
