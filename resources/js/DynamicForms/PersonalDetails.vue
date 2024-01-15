@@ -6,8 +6,13 @@ import {useForm} from "laravel-precognition-vue-inertia";
 import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 
+const emit = defineEmits(['autosaveStateChange'])
+
+watch(autoS,(newValue,oldValue) => {
+    emit('autosaveStateChange',newValue)
+})
 const props = defineProps({
     formData: {
         type: Object,
@@ -45,6 +50,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     date_of_birth: props.formData.model.date_of_birth,
     gender: props.formData.model.gender
 })
+
 
 </script>
 
