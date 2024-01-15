@@ -1,5 +1,5 @@
 <script setup>
-import { inject, onBeforeMount } from "vue";
+import { inject, onBeforeMount, ref } from "vue";
 
 import SectionSidebar from "@/Components/SectionSidebar.vue";
 import SectionContent from "@/Components/SectionContent.vue";
@@ -26,6 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['setOnloadKey']);
 const selectedTabId = inject("selectedTabId");
 
+
 // Emit function from parent component to set selected section onload
 function setSectionKey() {
     emit('setOnloadKey', props.tab.sidebaritems, x => x.current == true);
@@ -34,6 +35,10 @@ function setSectionKey() {
 onBeforeMount(() => {
     setSectionKey();
 });
+let autosaveState = ref(1);
+function handleAutosave(val){
+    autosaveState.value = val;
+}
 
 </script>
 
@@ -45,7 +50,7 @@ onBeforeMount(() => {
                 <h1 class="text-2xl font-medium">
                     {{ tab.name }}
                 </h1>
-                <AutoSaveSpinner />
+                <AutoSaveSpinner :autosave="autosaveState" />
             </div>
             <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
                 <div class="bg-aaron-400 w-[50%] rounded-r-md" />
@@ -53,7 +58,7 @@ onBeforeMount(() => {
         </div>
         <div class="h-screen">
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
-                <SectionContent v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
+                <SectionContent @auto-save-up="handleAutosave"  v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
             </SectionSidebar>
         </div>
     </div>

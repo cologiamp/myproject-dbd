@@ -1,6 +1,7 @@
 <script setup>
 import { defineAsyncComponent, inject } from "vue";
 
+const emit = defineEmits(['autoSaveUp'])
 
 const props = defineProps({
     item: {
@@ -29,7 +30,7 @@ const selectedSectionId = inject("selectedSectionId");
 
 <template>
     <div class="tab-content h-full" v-show="sectionIndex == selectedSectionId">
-        <component :is="dynamicComponent(item.renderable)" :formData="item.dynamicData" />
+        <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)" :is="dynamicComponent(item.renderable)" :formData="item.dynamicData" />
     </div>
 </template>
 

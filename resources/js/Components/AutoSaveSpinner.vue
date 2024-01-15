@@ -1,15 +1,26 @@
 <script setup>
 import {CheckIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/solid/index.js";
-import { ref } from "vue";
-const saving = ref(1);
-const percent = ref(5);
+import {computed, onMounted, ref} from "vue";
+
+const percent = computed(() => {
+    return 5;
+})
 
 let index = 0;
 const states = [5, 25, 50, 75, 100]
 
+
+defineProps({
+    autosave: {
+        type: Number,
+        default: 1,
+    },
+});
+
+
+
 const testSavingSpinner = () => {
-    // saving has started
-    saving.value = 2
+
 
     // make animation of progress play for 2 seconds
     const intervalId = setInterval(() => {
@@ -20,7 +31,7 @@ const testSavingSpinner = () => {
             clearInterval(intervalId)
             index = 0
             percent.value = states[0]
-            saving.value = 1
+            autosave.value = 1
         }
         // for checking error state
         // if (index == 4) {
@@ -38,13 +49,7 @@ const circumference = 15 * 2 * Math.PI
 
 <template>
     <div class="flex flex-row items-center gap-4">
-        <button
-            @click="testSavingSpinner"
-            class="bg-blue-600 px-2 py-1 rounded-md hover:scale-105 duration-300"
-        >
-            Test
-        </button>
-        <div v-if="saving == 2" class="flex flex-row items-center gap-2">
+        <div v-if="autosave === 2" class="flex flex-row items-center gap-2">
             <p>Saving</p>
             <svg class="w-10 h-10">
                 <circle
@@ -71,7 +76,7 @@ const circumference = 15 * 2 * Math.PI
             </svg>
         </div>
         <div
-            v-else-if="saving === 1"
+            v-else-if="autosave === 1"
             class="flex flex-row items-center gap-2"
         >
             <p>Saved</p>
