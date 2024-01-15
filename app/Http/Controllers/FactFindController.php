@@ -45,8 +45,8 @@ class FactFindController extends Controller
      */
     public function update(Client $client, $section, $step, Request $request): \Illuminate\Http\RedirectResponse
     {
+        ray($request);
         $ffsds = App::make(FactFindSectionDataService::class);
-       ;
         $ffsds->store(
             $client, $section, $step,
             $ffsds->validate($step,$section,$request)

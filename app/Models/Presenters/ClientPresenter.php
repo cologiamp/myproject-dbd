@@ -2,6 +2,7 @@
 
 namespace App\Models\Presenters;
 
+use phpDocumentor\Reflection\Types\Boolean;
 
 class ClientPresenter extends BasePresenter
 {
@@ -33,6 +34,14 @@ class ClientPresenter extends BasePresenter
                 'title' => $this->model->title,
                 'date_of_birth' => $this->model->date_of_birth,
                 'gender' => $this->model->gender,
+                'marital_status' => $this->model->marital_status,
+                'nationality' => $this->model->nationality,
+                'ni_number' => $this->model->ni_number,
+                'country_of_domicile' => $this->model->country_of_domicile,
+                'country_of_residence' => $this->model->country_of_residence,
+                'valid_will' => (boolean)$this->model->valid_will,
+                // 'will_up_to_date' => $this->model->will_up_to_date,
+                // 'poa_granted' => $this->model->poa_granted
             ],
             default => [
 

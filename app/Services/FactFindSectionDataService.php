@@ -18,6 +18,7 @@ class FactFindSectionDataService
     //get the data for a single section of a factfind from a single client
     public static function get($client,$section,$step):array
     {
+        // dd($client->presenter()->formatForStep($section, $step));
         return [
             'enums' => $client->loadEnumsForStep($section,$step),
             'model' => $client->presenter()->formatForStep($section, $step), //here we load the data for that part of the form

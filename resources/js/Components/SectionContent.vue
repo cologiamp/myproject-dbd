@@ -1,5 +1,5 @@
 <script setup>
-import {defineAsyncComponent, defineProps, inject} from "vue";
+import { defineAsyncComponent, inject } from "vue";
 
 
 const props = defineProps({

@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, inject, onBeforeMount } from "vue";
+import { inject, onBeforeMount } from "vue";
 
 import SectionSidebar from "@/Components/SectionSidebar.vue";
 import SectionContent from "@/Components/SectionContent.vue";

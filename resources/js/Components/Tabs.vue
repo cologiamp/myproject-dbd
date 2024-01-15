@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, provide, onBeforeMount, inject } from "vue"
+import { ref, provide, onBeforeMount, inject } from "vue"
 
 const props = defineProps({
     tabTitles: {

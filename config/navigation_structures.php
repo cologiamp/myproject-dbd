@@ -26,6 +26,14 @@ return [
                             "clients.last_name",
                             'clients.date_of_birth',
                             'clients.gender',
+                            'clients.marital_status',
+                            'clients.nationality',
+                            'clients.ni_number',
+                            'clients.country_of_domicile',
+                            'clients.country_of_residence',
+                            'clients.valid_will',
+                            // 'clients.will_up_to_date',
+                            // 'clients.poa_granted'
                         ],
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
@@ -42,7 +50,35 @@ return [
                                 'integer',
                                 Rule::in(array_keys(config('enums.client.gender'))),
                             ],
-                            'date_of_birth' => 'sometimes|date'
+                            'date_of_birth' => 'sometimes|date',
+                            'marital_status' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys(config('enums.client.marital_status')))
+                            ],
+                            'nationality' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.client.nationality'))))
+                            ],
+                            'ni_number' => 'sometimes|max:9',
+                            'country_of_domicile' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.client.nationalityISO'))))
+                            ],
+                            'country_of_residence' => [
+                                'sometimes',
+                                'string',
+                                'string',
+                                Rule::in(array_keys((config('enums.client.iso_2'))))
+                            ],
+                            'valid_will' => 'sometimes|boolean',
+                            // 'will_up_to_date' => 'boolean',
+                            // 'poa_granted' => 'boolean'
                         ]
                     ],
                     2 => [

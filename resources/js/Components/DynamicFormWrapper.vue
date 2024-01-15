@@ -5,8 +5,8 @@ import SavingSpinner from "@/Components/SavingSpinner.vue";
 
 const props = defineProps({
     saving: {
-        type: Boolean,
-        default: false,
+        type: Number,
+        // default: false,
     },
 });
 </script>
