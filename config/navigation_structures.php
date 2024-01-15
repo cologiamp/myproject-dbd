@@ -32,8 +32,8 @@ return [
                             'clients.country_of_domicile',
                             'clients.country_of_residence',
                             'clients.valid_will',
-                            // 'clients.will_up_to_date',
-                            // 'clients.poa_granted'
+                            'clients.will_up_to_date',
+                            'clients.poa_granted'
                         ],
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
@@ -71,8 +71,8 @@ return [
                                 'sometimes',
                             ],
                             'valid_will' => 'sometimes|boolean',
-                            // 'will_up_to_date' => 'boolean',
-                            // 'poa_granted' => 'boolean'
+                            'will_up_to_date' => 'sometimes|boolean',
+                            'poa_granted' => 'sometimes|boolean'
                         ]
                     ],
                     2 => [

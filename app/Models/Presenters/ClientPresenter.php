@@ -40,8 +40,8 @@ class ClientPresenter extends BasePresenter
                 'country_of_domicile' => config('enums.client.iso_2_int')[$this->model->country_of_domicile],
                 'country_of_residence' => config('enums.client.iso_2_int')[$this->model->country_of_residence],
                 'valid_will' => (boolean)$this->model->valid_will,
-                // 'will_up_to_date' => $this->model->will_up_to_date,
-                // 'poa_granted' => $this->model->poa_granted
+                'will_up_to_date' => (boolean)$this->model->will_up_to_date,
+                'poa_granted' => (boolean)$this->model->poa_granted
             ],
             default => [
 
