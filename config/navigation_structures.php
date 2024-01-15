@@ -66,15 +66,9 @@ return [
                             'ni_number' => 'sometimes|max:9',
                             'country_of_domicile' => [
                                 'sometimes',
-                                'numeric',
-                                'integer',
-                                Rule::in(array_keys((config('enums.client.nationalityISO'))))
                             ],
                             'country_of_residence' => [
                                 'sometimes',
-                                'string',
-                                'string',
-                                Rule::in(array_keys((config('enums.client.iso_2'))))
                             ],
                             'valid_will' => 'sometimes|boolean',
                             // 'will_up_to_date' => 'boolean',

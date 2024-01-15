@@ -6,8 +6,13 @@ import {useForm} from "laravel-precognition-vue-inertia";
 import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 
+const emit = defineEmits(['autosaveStateChange'])
+
+watch(autoS,(newValue,oldValue) => {
+    emit('autosaveStateChange',newValue)
+})
 const props = defineProps({
     formData: {
         type: Object,
@@ -18,7 +23,7 @@ const props = defineProps({
             model: {
                 first_name: null,
                 last_name: null,
-                title: null
+                title: null,
             },
             submit_method: 'post',
             submit_url: '/',
@@ -43,16 +48,9 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     last_name: props.formData.model.last_name,
     title: props.formData.model.title,
     date_of_birth: props.formData.model.date_of_birth,
-    gender: props.formData.model.gender,
-    marital_status: props.formData.model.marital_status,
-    nationality: props.formData.model.nationality,
-    ni_number: props.formData.model.ni_number,
-    country_of_domicile: props.formData.model.country_of_domicile,
-    country_of_residence: props.formData.model.country_of_residence,
-    valid_will: props.formData.model.valid_will,
-    // will_up_to_date: props.formData.model.will_up_to_date,
-    // poa_granted: props.formData.model.poa_granted
+    gender: props.formData.model.gender
 })
+
 
 </script>
 
@@ -102,84 +100,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.gender">{{ stepForm.errors.gender }}</p>
                 </div>
-
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="marital_status" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Marital Status</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.marital_status" id="unit" name="marital_status"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="marital_status" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(marital_status, id) in formData.enums.marital_statuses">{{ marital_status }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.marital_status">{{ stepForm.errors.marital_status }}</p>
-                </div>
-
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="nationality" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Nationality</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.nationality" id="unit" name="nationality"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="nationality" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(nationality, id) in formData.enums.nationalities">{{ nationality }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.nationality">{{ stepForm.errors.nationality }}</p>
-                </div>
-
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="ni_number" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> National Insurance Number </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.ni_number" type="text" name="ni_number" id="ni_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="National Insurance Number" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ni_number">{{ stepForm.errors.ni_number }}</p>
-                </div>
-
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="country_of_domicile" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Country of Domicile</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.country_of_domicile" id="unit" name="country_of_domicile"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="country_of_domicile" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(domicile, id) in formData.enums.country_of_domiciles">{{ domicile }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.country_of_domicile">{{ stepForm.errors.country_of_domicile }}</p>
-                </div>
-
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="country_of_residence" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Country of Residence</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.country_of_residence" id="unit" name="country_of_residence"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="country_of_residence" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(residence, id) in formData.enums.country_of_residences">{{ residence }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.country_of_residence">{{ stepForm.errors.country_of_residence }}</p>
-                </div>
-                
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    {{ stepForm.valid_will }}
-                    <label for="valid_will" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Do you have a valid will?</label>
-                    <div class="pt-1 space-y-4 md:mt-0 md:pr-2 md:col-span-2 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" name="valid_will" id="true" :value="true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" name="valid_will" id="false" :value="false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.valid_will">{{ stepForm.errors.valid_will }}</p>
-                </div>
-
-                <!-- <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="will_up_to_date" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is it up to date?</label>
-                    <div class="pt-1 space-y-4 md:mt-0 md:pr-2 md:col-span-2 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
-                        <input id="true" :value="true" v-model="stepForm.will_up_to_date" name="will_up_to_date" type="radio" :checked="stepForm.will_up_to_date != null && stepForm.will_up_to_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label id="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input id="false" :value="false" v-model="stepForm.will_up_to_date" name="will_up_to_date" type="radio" :checked="stepForm.will_up_to_date != null && !stepForm.will_up_to_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label id="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.will_up_to_date">{{ stepForm.errors.will_up_to_date }}</p>
-                </div>
-
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="poa_granted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Power of Attorney Granted?</label>
-                    <div class="pt-1 space-y-4 md:mt-0 md:pr-2 md:col-span-2 sm:flex sm:items-center sm:space-x-4 sm:space-y-0">
-                        <input id="true" :value="true" v-model="stepForm.poa_granted" name="poa_granted" type="radio" :checked="stepForm.poa_granted != null && stepForm.poa_granted" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label id="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input id="false" :value="false" v-model="stepForm.poa_granted" name="poa_granted" type="radio" :checked="stepForm.poa_granted != null && !stepForm.poa_granted" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label id="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.poa_granted">{{ stepForm.errors.poa_granted }}</p>
-                </div> -->
 
 
 

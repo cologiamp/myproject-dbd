@@ -38,7 +38,7 @@ provide("onloadKey", onloadKey);
                 </Tabs>
             </div>
             <div class="md:hidden">
-                <DropDownMenu :titles="tabs" @setOnloadKey="setOnloadKey" class="px-7">
+                <DropDownMenu :titles="tabs" key="tabs.name" @setOnloadKey="setOnloadKey">
                     <DropDownItem v-for="(tab, index) in tabs"
                         v-bind:key="index"
                         :tab="tab"

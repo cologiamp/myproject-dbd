@@ -37,8 +37,8 @@ class ClientPresenter extends BasePresenter
                 'marital_status' => $this->model->marital_status,
                 'nationality' => $this->model->nationality,
                 'ni_number' => $this->model->ni_number,
-                'country_of_domicile' => $this->model->country_of_domicile,
-                'country_of_residence' => $this->model->country_of_residence,
+                'country_of_domicile' => config('enums.client.iso_2_int')[$this->model->country_of_domicile],
+                'country_of_residence' => config('enums.client.iso_2_int')[$this->model->country_of_residence],
                 'valid_will' => (boolean)$this->model->valid_will,
                 // 'will_up_to_date' => $this->model->will_up_to_date,
                 // 'poa_granted' => $this->model->poa_granted
