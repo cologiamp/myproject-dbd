@@ -78,33 +78,65 @@ return [
                     2 => [
                         'name' => 'Health Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "health.date_of_birth",
+                            "health.health_details",
+                            "health.has_life_expectancy_concerns",
+                            "health.life_expectancy_details",
+                            "health.medical_conditions",
+                            "health.smoker",
+                            "health.smoked_in_last_12_months"
+                        ],
+                        'rules' => [
+                            'is_in_good_health' => 'sometimes|boolean',
+                            'health_details' => 'sometimes|max:1024',
+                            'has_life_expectancy_concerns' => 'sometimes|boolean',
+                            'life_expectancy_details' => 'sometimes|max:1024',
+                            'medical_conditions' => 'sometimes|max:1024',
+                            'smoker' => 'sometimes|smoker',
+                            'smoked_in_last_12_months' => 'sometimes|boolean'
                         ]
                     ],
                     3 => [
                         'name' => 'Address and Contact Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "address.line_1",
+                            "address.line_2",
+                            "address.county",
+                            "address.postcode",
+                            "address.country",
+                            "address.residency_status",
+                            "address.date_from",
+                            "clients.phone_number",
+                            "clients.email_address"
+                        ],
+                        'rules' => [
+
                         ]
                     ],
                     4 => [
                         'name' => 'Family',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "client_dependant.relationship_type",
+                            "dependents.born_at",
+                            "dependents.financial_dependant",
+                            "dependents.is_living_with_clients"
+                        ],
+                        'rules' => [
+                            
                         ]
                     ],
                     5 => [
                         'name' => 'Employment Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "employment_details.employment_status",
+                            "employment_details.intended_retirement_date",
+                            "employment_details.occupation",
+                            "employment_details.employer",
+                            "employment_details.start_at",
+                            "employment_details.end_at"
+                        ],
+                        'rules' => [
+                            
                         ]
                     ],
                 ],

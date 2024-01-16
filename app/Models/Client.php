@@ -164,6 +164,18 @@ class Client extends Model
                 'country_of_domiciles' => config('enums.client.iso_2'),
                 'country_of_residences' => config('enums.client.iso_2')
             ],
+            '1.2' => [
+                
+            ],
+            '1.3' => [
+                
+            ],
+            '1.4' => [
+                
+            ],
+            '1.5' => [
+                
+            ],
             default => [
 
             ]
