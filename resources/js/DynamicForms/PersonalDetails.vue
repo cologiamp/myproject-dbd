@@ -152,39 +152,37 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.country_of_residence">{{ stepForm.errors.country_of_residence }}</p>
                 </div>
-                
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="mb-4 md:mb-8">
-                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Do you have a valid will?</label>
-                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" id="true" :value="true" :checked="stepForm.valid_will == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" id="false" :value="false" :checked="stepForm.valid_will == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                        </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.valid_will">{{ stepForm.errors.valid_will }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Power of Attorney Granted?</label>
-                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_granted" type="radio" id="true" :value="true" :checked="stepForm.poa_granted == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_granted" type="radio" id="false" :value="false" :checked="stepForm.poa_granted == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                        </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.poa_granted">{{ stepForm.errors.poa_granted }}</p>
-                    </div>
-                </div>
-
-                <div v-if="stepForm.valid_will == true" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is it up to date?</label>
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Do you have a valid will?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.will_up_to_date" type="radio" id="true" :value="true" :checked="stepForm.will_up_to_date == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" id="true" :value="true" :checked="stepForm.valid_will == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.will_up_to_date" type="radio" id="false" :value="false" :checked="stepForm.will_up_to_date == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.valid_will" type="radio" id="false" :value="false" :checked="stepForm.valid_will == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.will_up_to_date">{{ stepForm.errors.will_up_to_date }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.valid_will">{{ stepForm.errors.valid_will }}</p>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div v-if="stepForm.valid_will == true">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is it up to date?</label>
+                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.will_up_to_date" type="radio" id="true" :value="true" :checked="stepForm.will_up_to_date == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                            <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.will_up_to_date" type="radio" id="false" :value="false" :checked="stepForm.will_up_to_date == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                            <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                        </div>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.will_up_to_date">{{ stepForm.errors.will_up_to_date }}</p>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Power of Attorney Granted?</label>
+                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_granted" type="radio" id="true" :value="true" :checked="stepForm.poa_granted == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_granted" type="radio" id="false" :value="false" :checked="stepForm.poa_granted == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.poa_granted">{{ stepForm.errors.poa_granted }}</p>
                 </div>
 
 
