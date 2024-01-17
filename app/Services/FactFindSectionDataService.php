@@ -4,21 +4,26 @@ namespace App\Services;
 
 use App\Models\Client;
 use App\Repositories\ClientRepository;
+use App\Repositories\HealthRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+
+use Throwable;
 
 class FactFindSectionDataService
 {
     protected ClientRepository $cr;
-    public function __construct(ClientRepository $clientRepository)
+    protected HealthRepository $healthRepository;
+    public function __construct(ClientRepository $clientRepository, HealthRepository $healthRepository)
     {
         $this->cr = $clientRepository;
+        $this->healthRepository = $healthRepository;
     }
     //get the data for a single section of a factfind from a single client
     public static function get($client,$section,$step):array
     {
-        // dd($client->presenter()->formatForStep($section, $step));
         return [
             'enums' => $client->loadEnumsForStep($section,$step),
             'model' => $client->presenter()->formatForStep($section, $step), //here we load the data for that part of the form
@@ -29,7 +34,7 @@ class FactFindSectionDataService
 
     public function validate(int $section,int $step,Request $request)
     {
-        return Validator::make($request->all(),config('navigation_structures.factfind.'.$section.'.sections.'.$step.'.rules'))->validated();
+        return Validator::make($request->all(),config('navigation_structures.factfind.'.$step.'.sections.'.$section.'.rules'))->validated();
     }
 
     /**
@@ -56,8 +61,6 @@ class FactFindSectionDataService
      */
     private function _11(array $validatedData):void
     {
-
-//        ray($validatedData['country_of_domicile'])->purple();
         //define any explicit mutators that are not handled
         if(array_key_exists('date_of_birth',$validatedData))
         {
@@ -73,5 +76,20 @@ class FactFindSectionDataService
         }
         //This example only has data from one table. This would be different if not the case. May need multiple repositories.
         $this->cr->updateFromValidated($validatedData);
+    }
+
+    /**
+     * Section: 1
+     * Step: 2
+     * @param array $validatedData
+     * @return void
+     */
+    private function _12(array $validatedData):void
+    {
+        try {
+            $this->healthRepository->updateFromValidated($validatedData);
+        } catch (Throwable $e) {
+            dd($e);
+        }
     }
 }

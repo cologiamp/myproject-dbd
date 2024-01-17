@@ -44,6 +44,7 @@ class ClientPresenter extends BasePresenter
                 'poa_granted' => (boolean)$this->model->poa_granted
             ],
             '1.2' => [
+                'client_id' => $this->model->client_id,
                 'is_in_good_health' => $this->model->is_in_good_health,
                 'health_details' => $this->model->health_details,
                 'has_life_expectancy_concerns' => $this->model->has_life_expectancy_concerns,

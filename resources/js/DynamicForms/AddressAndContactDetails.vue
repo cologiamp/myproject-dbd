@@ -26,8 +26,8 @@ const props = defineProps({
                 postcode: null,
                 country: null,
                 residency_status: null,
-                date_from: nulll,
-                phone_number: nulll,
+                date_from: null,
+                phone_number: null,
                 email_address: null
             },
             submit_method: 'post',

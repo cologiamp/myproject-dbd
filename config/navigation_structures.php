@@ -78,7 +78,8 @@ return [
                     2 => [
                         'name' => 'Health Details',
                         'fields' => [
-                            "health.date_of_birth",
+                            "health.client_id",
+                            "health.is_in_good_health",
                             "health.health_details",
                             "health.has_life_expectancy_concerns",
                             "health.life_expectancy_details",
@@ -87,12 +88,13 @@ return [
                             "health.smoked_in_last_12_months"
                         ],
                         'rules' => [
+                            'client_id' => 'required|integer',
                             'is_in_good_health' => 'sometimes|boolean',
                             'health_details' => 'sometimes|max:1024',
                             'has_life_expectancy_concerns' => 'sometimes|boolean',
                             'life_expectancy_details' => 'sometimes|max:1024',
                             'medical_conditions' => 'sometimes|max:1024',
-                            'smoker' => 'sometimes|smoker',
+                            'smoker' => 'sometimes|integer',
                             'smoked_in_last_12_months' => 'sometimes|boolean'
                         ]
                     ],

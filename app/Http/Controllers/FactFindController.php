@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Repositories\ClientRepository;
 use App\Services\FactFindSectionDataService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class FactFindController extends Controller
@@ -16,7 +18,7 @@ class FactFindController extends Controller
     public function __construct(ClientRepository $cr)
     {
         $this->clientRepository = $cr;
-    }
+            }
     public function show(Client $client, Request $request) //fact-find?step=1&section=6
     {
         //$req->step - which tab to use
@@ -47,10 +49,19 @@ class FactFindController extends Controller
     {
         $ffsds = App::make(FactFindSectionDataService::class);
 
-        $ffsds->store(
-            $client, $section, $step,
-            $ffsds->validate($step,$section,$request)
-        );
+        // $ffsds->store(
+        //     $client, $section, $step,
+        //     $ffsds->validate($step,$section,$request)
+        // );
+        
+        try {
+            $ffsds->store(
+                $client, $section, $step,
+                $ffsds->validate($step,$section,$request)
+            );
+        } catch (Exception $e) {
+            dd($e);
+        }
 
         return to_route('client.factfind', ['client' => $client]);
     }
