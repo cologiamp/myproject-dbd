@@ -99,9 +99,9 @@ class Client extends Model
         return $this->belongsToMany(Address::class);
     }
 
-    public function health():BelongsToMany
+    public function health():HasOne
     {
-        return $this->belongsToMany(Health::class);
+        return $this->hasOne(Health::class);
     }
 
     public function dependents():HasMany

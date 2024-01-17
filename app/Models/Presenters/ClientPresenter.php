@@ -44,16 +44,18 @@ class ClientPresenter extends BasePresenter
                 'poa_granted' => (boolean)$this->model->poa_granted
             ],
             '1.2' => [
-                'client_id' => $this->model->client_id,
-                'is_in_good_health' => $this->model->is_in_good_health,
-                'health_details' => $this->model->health_details,
-                'has_life_expectancy_concerns' => $this->model->has_life_expectancy_concerns,
-                'life_expectancy_details' => $this->model->life_expectancy_details,
-                'medical_conditions' => $this->model->medical_conditions,
-                'smoker' => $this->model->smoker,
-                'smoked_in_last_12_months' => $this->model->smoked_in_last_12_months
+                'client_id' => $this->model->id,
+                'is_in_good_health' => $this->model->health->is_in_good_health,
+                'health_details' => $this->model->health->health_details,
+                'has_life_expectancy_concerns' => $this->model->health->has_life_expectancy_concerns,
+                'life_expectancy_details' => $this->model->health->life_expectancy_details,
+                'medical_conditions' => $this->model->health->medical_conditions,
+                'smoker' => $this->model->health->smoker,
+                'smoked_in_last_12_months' => $this->model->health->smoked_in_last_12_months
             ],
             '1.3' => [
+                // 'client_id' => $this->model->id,
+                // 'addresses' => $this->model->addresses->map(),
                 'line_1' => $this->model->line_1,
                 'line_2' => $this->model->line_2,
                 'county' => $this->model->county,

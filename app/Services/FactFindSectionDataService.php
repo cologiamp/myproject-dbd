@@ -86,8 +86,23 @@ class FactFindSectionDataService
      */
     private function _12(array $validatedData):void
     {
+
+        if(array_key_exists('is_in_good_health',$validatedData))
+        {
+            if($validatedData['is_in_good_health'] == true){
+                $validatedData['health_details'] = '';
+            }
+        }
+
+        if(array_key_exists('has_life_expectancy_concerns',$validatedData))
+        {
+            if($validatedData['has_life_expectancy_concerns'] == false){
+                $validatedData['health_details'] = '';
+            }
+        }
+
         try {
-            $this->healthRepository->updateFromValidated($validatedData);
+            $this->healthRepository->createOrUpdateHealthDetails($validatedData);
         } catch (Throwable $e) {
             dd($e);
         }
