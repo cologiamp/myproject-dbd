@@ -54,17 +54,20 @@ class ClientPresenter extends BasePresenter
                 'smoked_in_last_12_months' => $this->model->health->smoked_in_last_12_months
             ],
             '1.3' => [
-                // 'client_id' => $this->model->id,
-                // 'addresses' => $this->model->addresses->map(),
-                'line_1' => $this->model->line_1,
-                'line_2' => $this->model->line_2,
-                'county' => $this->model->county,
-                'postcode' => $this->model->postcode,
-                'country' => $this->model->country,
-                'residency_status' => $this->model->residency_status,
-                'date_from' => $this->model->date_from,
-                'phone_number' => $this->model->phone_number,
-                'email_address' => $this->model->email_address
+                'client_id' => $this->model->id,
+                'addresses' => collect($this->model->addresses->map(function ($address){
+                    return [
+                        'address_line_1' => $address['address_line_1'],
+                        'address_line_2' => $address['address_line_2'],
+                        'city' => $address['city'],
+                        'county' => $address['county'],
+                        'postcode' => $address['postcode'],
+                        'country' => $address['country'],
+                        'residency_status' => $address['residency_status'],
+                        'date_from' => $address['date_from']
+                    ];})),
+                    'phone_number' => $this->model->phone_number,
+                    'email_address' => $this->model->email_address
             ],
             '1.4' => [
                 'relationship_type' => $this->model->relationship_type,

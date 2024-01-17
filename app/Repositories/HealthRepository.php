@@ -2,7 +2,6 @@
 namespace App\Repositories;
 
 use App\Concerns\ParsesIoClientData;
-use App\Http\Requests\CreateHealthRequest;
 use App\Models\Client;
 use App\Models\Health;
 use Exception;

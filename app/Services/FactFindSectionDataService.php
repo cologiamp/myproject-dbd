@@ -46,7 +46,7 @@ class FactFindSectionDataService
      */
     public function store(Client $client, int $section, int $step, array $validatedData): true
     {
-        $this->cr->setClient($client);
+                $this->cr->setClient($client);
         $this->{"_".$section.$step}($validatedData);
         return true;
     }
@@ -104,7 +104,27 @@ class FactFindSectionDataService
         try {
             $this->healthRepository->createOrUpdateHealthDetails($validatedData);
         } catch (Throwable $e) {
-            dd($e);
+            Log::warning($e);
+        }
+    }
+
+    /**
+     * Section: 1
+     * Step: 3
+     * @param array $validatedData
+     * @return void
+     */
+    private function _13(array $validatedData):void
+    {
+        try {
+            collect($validatedData['addresses'])->each(function ($item){
+                $this->cr->createOrUpdateAddress($item);
+            });
+
+            $this->cr->updateFromValidated([$validatedData['phone_number'], $validatedData['email_address']]);
+
+        } catch (Throwable $e) {
+            Log::warning($e);
         }
     }
 }

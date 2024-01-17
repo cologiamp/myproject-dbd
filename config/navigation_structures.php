@@ -101,18 +101,22 @@ return [
                     3 => [
                         'name' => 'Address and Contact Details',
                         'fields' => [
-                            "address.line_1",
-                            "address.line_2",
-                            "address.county",
-                            "address.postcode",
-                            "address.country",
-                            "address.residency_status",
-                            "address.date_from",
+                            'addresses' => [
+                                'address_line_1',
+                                'address_line_2',
+                                'county',
+                                'postcode',
+                                'country',
+                                'residency_status',
+                                'date_from'
+                            ],
                             "clients.phone_number",
                             "clients.email_address"
                         ],
                         'rules' => [
-
+                            'addresses' => 'sometimes|array',
+                            'phone_number' => 'sometimes|max:1024',
+                            'email_address' => 'sometimes|max:1024'
                         ]
                     ],
                     4 => [
