@@ -25,7 +25,7 @@ class FactFindController extends Controller
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
         $tabs = $this->clientRepository->loadFactFindTabs($request->step != null ? $request->step : 1, $request->section != null ? $request->section : 1);
-
+        
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
         return Inertia::render('FactFind',[
@@ -49,19 +49,10 @@ class FactFindController extends Controller
     {
         $ffsds = App::make(FactFindSectionDataService::class);
 
-        // $ffsds->store(
-        //     $client, $section, $step,
-        //     $ffsds->validate($step,$section,$request)
-        // );
-        
-        try {
-            $ffsds->store(
-                $client, $section, $step,
-                $ffsds->validate($step,$section,$request)
-            );
-        } catch (Exception $e) {
-            dd($e);
-        }
+        $ffsds->store(
+            $client, $section, $step,
+            $ffsds->validate($step,$section,$request)
+        );
 
         return to_route('client.factfind', ['client' => $client]);
     }

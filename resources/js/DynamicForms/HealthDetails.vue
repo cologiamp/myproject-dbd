@@ -5,13 +5,14 @@ import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
 watch(autoS,(newValue,oldValue) => {
     emit('autosaveStateChange',newValue)
 })
+
 const props = defineProps({
     formData: {
         type: Object,
@@ -35,16 +36,6 @@ const props = defineProps({
     errors: Object,
 });
 
-let dateRef = ref();
-function saveDate(value){
-    dateRef.value = value;
-    stepForm.date_of_birth = value;
-    autosaveT(stepForm,props.formData.submit_url)
-}
-
-onMounted(()=>{
-})
-
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     client_id: props.formData.model.client_id,
     is_in_good_health: props.formData.model.is_in_good_health,
@@ -55,7 +46,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     smoker: props.formData.model.smoker,
     smoked_in_last_12_months: props.formData.model.smoked_in_last_12_months
 })
-
 
 </script>
 
