@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, provide, inject, onBeforeMount } from "vue";
+import { ref, provide, inject, onBeforeMount } from "vue";
 
 const props = defineProps({
     sidebarItems: {

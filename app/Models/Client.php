@@ -158,7 +158,11 @@ class Client extends Model
         return match ($section.'.'.$step){
             '1.1' => [
                 'titles' => config('enums.client.title'),
-                'genders' => config('enums.client.gender')
+                'genders' => config('enums.client.gender'),
+                'marital_statuses' => config('enums.client.marital_status'),
+                'nationalities' => config('enums.client.nationality') ,
+                'country_of_domiciles' => config('enums.client.iso_2'),
+                'country_of_residences' => config('enums.client.iso_2')
             ],
             default => [
 

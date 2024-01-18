@@ -1,5 +1,13 @@
 <script setup>
 
+import {autoS} from "@/autosave.js";
+import SavingSpinner from "@/Components/SavingSpinner.vue";
+
+const props = defineProps({
+    saving: {
+        type: Number
+    },
+});
 </script>
 
 <template>

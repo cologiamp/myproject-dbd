@@ -1,5 +1,5 @@
 <script setup>
-import {defineProps, inject, onBeforeMount, ref} from "vue";
+import { inject, onBeforeMount, ref } from "vue";
 
 import SectionSidebar from "@/Components/SectionSidebar.vue";
 import SectionContent from "@/Components/SectionContent.vue";
@@ -49,7 +49,7 @@ function handleAutosave(val){
                 <h1 class="text-2xl font-medium">
                     {{ tab.name }}
                 </h1>
-                <AutoSaveSpinner :saving="autosaveState" />
+                <AutoSaveSpinner :autosave="autosaveState" />
             </div>
             <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
                 <div class="bg-aaron-400 w-[50%] rounded-r-md" />

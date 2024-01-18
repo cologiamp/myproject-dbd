@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, provide, onBeforeMount, inject } from "vue"
+import { ref, provide, onBeforeMount, inject } from "vue"
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
