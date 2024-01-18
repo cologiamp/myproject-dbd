@@ -1,48 +1,42 @@
 <script setup>
 import {CheckIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/solid/index.js";
-import {computed, onMounted, ref} from "vue";
+import {ref, watch} from "vue";
 
-const percent = computed(() => {
-    return 5;
-})
 
 let index = 0;
-const states = [5, 25, 50, 75, 100]
+let animationInterval;
+const animationStates = [5, 25, 50, 75, 100]
 
-
-defineProps({
-    autosave: {
-        type: Number,
-        default: 1,
-    },
+const props = defineProps({
+    autosave: Number
 });
 
+const circumferenceOffset = ref(5);
 
+watch(() => props.autosave, newValue => {
+    newValue === 2 ? animationCallback() : clearAnimationCallback()
+})
 
-const testSavingSpinner = () => {
+const animationCallback = () => {
 
+    circumferenceOffset.value = animationStates[0]
 
-    // make animation of progress play for 2 seconds
-    const intervalId = setInterval(() => {
+    animationInterval = setInterval(() => {
         index++
-        if (index < states.length) {
-            percent.value = states[index]
+        if (index < animationStates.length) {
+            circumferenceOffset.value = animationStates[index]
         } else {
-            clearInterval(intervalId)
+            clearInterval(animationInterval)
+            circumferenceOffset.value = animationStates[animationStates.length - 1]
             index = 0
-            percent.value = states[0]
-            autosave.value = 1
         }
-        // for checking error state
-        // if (index == 4) {
-        //     clearInterval(intervalId)
-        //     index = 0
-        //     percent.value = states[0]
-        //     saving.value = 3
-        // }
-    }, 300)
+    }, 200)
 
-};
+}
+
+const clearAnimationCallback = () => {
+    clearInterval(animationInterval)
+}
 
 const circumference = 15 * 2 * Math.PI
 </script>
@@ -65,7 +59,7 @@ const circumference = 15 * 2 * Math.PI
                     class="text-aaron-400 duration-300"
                     stroke-width="5"
                     :stroke-dasharray="circumference"
-                    :stroke-dashoffset="circumference - percent / 100 * circumference"
+                    :stroke-dashoffset="circumference - circumferenceOffset / 100 * circumference"
                     stroke-linecap="flat"
                     stroke="currentColor"
                     fill="transparent"
