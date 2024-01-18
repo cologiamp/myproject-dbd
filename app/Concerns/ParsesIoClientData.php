@@ -34,7 +34,15 @@ trait ParsesIoClientData{
         }
         if($client->nationality != null)
         {
-            $data['NationalityCountry']['isoCode'] = config('enums.client.isoCodes')[$client->nationality];
+            $data['nationalityCountry']['isoCode'] = config('enums.client.nationalityISO')[$client->nationality];
+        }
+        if($client->country_of_residence != null)
+        {
+            $data['territorialProfile']['countryOfResidence']['code'] = config('enums.client.iso_2_int')[$client->country_of_residence];
+        }
+        if($client->country_of_domicile != null)
+        {
+            $data['territorialProfile']['countryOfDomicile']['code'] = config('enums.client.iso_2_int')[$client->country_of_domicile];
         }
         if($client->salutation != null)
         {
@@ -44,7 +52,18 @@ trait ParsesIoClientData{
         {
             $data['niNumber'] = $client->ni_number;
         }
-        //Chore:: Simon checking if we need the Health Profile and will fields
+        if($client->valid_will !== null) //Chore: Boolean fields can't use != null if false
+        {
+            $data['hasWill'] = $client->valid_will;
+        }
+        if($client->will_up_to_date !== null)
+        {
+            $data['isWillUptoDate'] = $client->will_up_to_date;
+        }
+        if($client->poa_granted !== null)
+        {
+            $data['isPowerOfAttorneyGranted'] = $client->poa_granted;
+        }
 
         return $data;
     }

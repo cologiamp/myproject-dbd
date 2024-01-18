@@ -29,7 +29,7 @@ class FactFindSectionDataService
 
     public function validate(int $section,int $step,Request $request)
     {
-        return Validator::make($request->all(),config('navigation_structures.factfind.'.$section.'.sections.'.$step.'.rules'))->validated();
+        return Validator::make($request->except('autosave'),config('navigation_structures.factfind.'.$section.'.sections.'.$step.'.rules'))->valid();
     }
 
     /**
