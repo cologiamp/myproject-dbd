@@ -1297,8 +1297,15 @@ return [
             251  => 'Zambia',
             252  => 'Zimbabwe'
         ]
+    ],
+    'dependent' => [
+        'relationship_type' => [
+            0 => 'Son',
+            1 => 'Daughther',
+            2 => 'Partner',
+            3 => 'Husband',
+            4 => 'Wife',
+            5 => 'Other'
+        ],
     ]
-
-
-
 ];

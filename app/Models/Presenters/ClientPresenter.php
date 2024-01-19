@@ -3,6 +3,8 @@
 namespace App\Models\Presenters;
 
 use phpDocumentor\Reflection\Types\Boolean;
+use App\Models\Dependent;
+use PHPUnit\Framework\Attributes\Depends;
 
 class ClientPresenter extends BasePresenter
 {
@@ -70,10 +72,16 @@ class ClientPresenter extends BasePresenter
                     'email_address' => $this->model->email_address
             ],
             '1.4' => [
-                'relationship_type' => $this->model->relationship_type,
-                'born_at' => $this->model->born_at,
-                'financial_dependant' => $this->model->financial_dependant,
-                'is_living_with_clients' => $this->model->is_living_with_clients
+                'client_id' => $this->model->id,
+                'dependents' => collect($this->model->clientDependents->map(function ($clientDependent){
+                    $dependentDetails = Dependent::where('id',$clientDependent->dependent_id)->first();
+                    
+                    return [
+                        'relationship_type' => $clientDependent['relationship_type'],
+                        'born_at' => $dependentDetails->born_at,
+                        'financial_dependent' => $dependentDetails->financial_dependent,
+                        'is_living_with_clients' => $dependentDetails->is_living_with_clients
+                ];}))
             ],
             '1.5' => [
                 'employment_status' => $this->model->employment_status,

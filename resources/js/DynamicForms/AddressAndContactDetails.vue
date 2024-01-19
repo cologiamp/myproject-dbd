@@ -21,13 +21,7 @@ const props = defineProps({
                 titles: []
             },
             model: {
-                line_1: null,
-                line_2: null,
-                city: null,
-                postcode: null,
-                country: null,
-                residency_status: null,
-                date_from: null,
+                address: null,
                 phone_number: null,
                 email_address: null
             },
@@ -41,11 +35,12 @@ const props = defineProps({
 let dateRef = ref();
 function saveDate(value){
     dateRef.value = value;
-    stepForm.date_from = value;
+    stepForm.addresses[0].date_from = value;
     autosaveT(stepForm,props.formData.submit_url)
 }
 
 onMounted(()=>{
+    dateRef.value = props.formData.model.addresses[0].date_from;
 })
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
@@ -61,7 +56,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
-            <div v-for="(address, id) in stepForm.addresses" class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
+            <div v-for="(address, index) in stepForm.addresses" class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="line_1" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Address Line 1 </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">

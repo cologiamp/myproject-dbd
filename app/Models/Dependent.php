@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Dependent extends Model
 {
-    public function client():BelongsTo
+    protected $guarded = [];
+    protected $table = 'dependents';
+
+    public function clientDepent():BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(ClientDependent::class);
     }
 }

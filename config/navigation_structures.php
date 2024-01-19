@@ -115,20 +115,51 @@ return [
                         ],
                         'rules' => [
                             'addresses' => 'sometimes|array',
-                            'phone_number' => 'sometimes|max:1024',
-                            'email_address' => 'sometimes|max:1024'
+                            'addresses.*.address_line_1' => 'sometimes|max:320',
+                            'addresses.*.address_line_2' => 'sometimes|max:320',
+                            'addresses.*.city' => 'sometimes|max:320',
+                            'addresses.*.county' => 'sometimes|max:320',
+                            'addresses.*.postcode' => 'sometimes|max:320',
+                            'addresses.*.country' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.country'))))
+                            ],
+                            'addresses.*.residency_status' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.residency_status'))))
+                            ],
+                            'addresses.*.date_from' => 'sometimes|date',
+                            'phone_number' => 'sometimes|max:20',
+                            'email_address' => 'sometimes|max:120'
                         ]
                     ],
                     4 => [
                         'name' => 'Family',
                         'fields' => [
-                            "client_dependant.relationship_type",
-                            "dependents.born_at",
-                            "dependents.financial_dependant",
-                            "dependents.is_living_with_clients"
+                            'clientDependent.client_id',
+                            'dependents' => [
+                                'relationship_type',
+                                'born_at',
+                                'financial_dependent',
+                                'is_living_with_clients'
+                            ]
                         ],
                         'rules' => [
-                            
+                            'client_id' => 'required|integer',
+                            'dependents' => 'sometimes|array',
+                            // 'dependents.*.relationship_type' => [
+                            //     'sometimes',
+                            //     'numeric',
+                            //     'integer',
+                            //     Rule::in(array_keys((config('enums.dependent.relationship_type'))))
+                            // ],
+                            // 'dependents.*.born_at' => 'sometimes|date',
+                            // 'dependents.*.financial_dependent' => 'sometimes|boolean',
+                            // 'dependents.*.is_living_with_clients' => 'sometimes|boolean'
                         ]
                     ],
                     5 => [

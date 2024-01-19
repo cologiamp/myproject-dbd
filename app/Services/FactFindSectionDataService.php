@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Client;
 use App\Repositories\ClientRepository;
+use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,10 +16,16 @@ use Throwable;
 class FactFindSectionDataService
 {
     protected ClientRepository $cr;
+    protected DependentRepository $dependentRepository;
     protected HealthRepository $healthRepository;
-    public function __construct(ClientRepository $clientRepository, HealthRepository $healthRepository)
+    
+    public function __construct(
+        ClientRepository $clientRepository,
+        DependentRepository $dependentRepository, 
+        HealthRepository $healthRepository)
     {
         $this->cr = $clientRepository;
+        $this->dependentRepository = $dependentRepository;
         $this->healthRepository = $healthRepository;
     }
     //get the data for a single section of a factfind from a single client
@@ -117,11 +124,48 @@ class FactFindSectionDataService
     private function _13(array $validatedData):void
     {
         try {
-            collect($validatedData['addresses'])->each(function ($item){
-                $this->cr->createOrUpdateAddress($item);
-            });
+            if(array_key_exists('addresses',$validatedData)){
+                collect($validatedData['addresses'])->each(function ($item){
+                    if($item['date_from'])
+                    {
+                        $item['date_from'] = Carbon::parse($item['date_from']);
+                    }
+                    
+                    $this->cr->createOrUpdateAddress($item);
+                });
+            }
 
-            $this->cr->updateFromValidated([$validatedData['phone_number'], $validatedData['email_address']]);
+            $contactDetails = array(
+                'phone_number' => $validatedData['phone_number'],
+                'email_address' => $validatedData['email_address']
+            );
+
+            $this->cr->updateFromValidated($contactDetails);
+
+        } catch (Throwable $e) {
+            Log::warning($e);
+        }
+    }
+
+    /**
+     * Section: 1
+     * Step: 3
+     * @param array $validatedData
+     * @return void
+     */
+    private function _14(array $validatedData):void
+    {
+        try {
+            if(array_key_exists('dependents',$validatedData)){
+                collect($validatedData['dependents'])->each(function ($dependent) use ($validatedData){
+                    if($dependent['born_at'])
+                    {
+                        $dependent['born_at'] = Carbon::parse($dependent['born_at']);
+                    }
+                    
+                    $this->dependentRepository->createOrUpdateDependentDetails($validatedData['client_id'], $dependent);
+                });
+            }
 
         } catch (Throwable $e) {
             Log::warning($e);

@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Concerns\ParsesIoClientData;
 use App\Models\Client;
 use App\Models\Health;
 use Exception;
@@ -11,7 +10,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class HealthRepository extends BaseRepository 
 {
-    use ParsesIoClientData;
     protected Client $client;
     protected Health $health;
 

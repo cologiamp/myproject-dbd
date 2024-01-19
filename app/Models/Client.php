@@ -104,9 +104,9 @@ class Client extends Model
         return $this->hasOne(Health::class);
     }
 
-    public function dependents():HasMany
+    public function clientDependents():HasMany
     {
-        return $this->hasMany(Dependent::class);
+        return $this->hasMany(ClientDependent::class);
     }
 
     public function employment_details():HasMany
@@ -171,6 +171,9 @@ class Client extends Model
             '1.3' => [
                 'residency_status' => config('enums.address.residency_status'),
                 'countries' => config('enums.address.country')
+            ],
+            '1.4' => [
+                'relationship_type' => config('enums.dependent.relationship_type')
             ],
             default => [
 
