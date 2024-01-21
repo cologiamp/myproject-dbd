@@ -4,7 +4,8 @@ import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 import VueDatePicker from "@vuepic/vue-datepicker";
-import { PlusCircleIcon } from '@heroicons/vue/24/solid';
+import {PlusCircleIcon} from '@heroicons/vue/24/solid';
+import {XCircleIcon} from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
@@ -46,9 +47,13 @@ function addDependent(){
     stepForm.dependents.push({
         relationship_type: null,
         born_at: null,
-        financial_dependent: 0,
-        is_living_with_clients: 0
+        financial_dependent: false,
+        is_living_with_clients: false
     });
+}
+
+function removeDependent(index){
+    stepForm.dependents.splice(index, 1);
 }
 
 onMounted(()=>{
@@ -66,7 +71,13 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
-            <div v-for="(dependent, index) in stepForm.dependents" class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
+            <div v-for="(dependent, index) in stepForm.dependents" class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4">
+                <div class="col-span-6 flex flex-row justify-between">
+                    <label class="font-bold">Dependent {{ index + 1 }}</label>
+                    <button type="button" @click="removeDependent(index)" class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <XCircleIcon class="w-4 h-4" />Remove Dependent
+                    </button>
+                </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="relationship_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Relationship</label>
                     <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.relationship_type" id="relationship_type" name="relationship_type" class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">

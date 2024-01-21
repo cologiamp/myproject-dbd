@@ -83,83 +83,99 @@ class DependentRepository extends BaseRepository
         $this->dependent->delete();
     }
 
-    public function createOrUpdateDependentDetails(int $client_id, mixed $data):void
+    public function createOrUpdateDependentDetails(mixed $data):void
     {
         if(!is_array($data) && $data::class == Request::class)
         {
             $data = $data->safe();
         }
 
-        $clientsDependent = ClientDependent::where('client_id',$client_id)->get();
-        ray($clientsDependent);
+        $clientsDependent = ClientDependent::where('client_id', $data['client_id'])->get();
 
         if($clientsDependent->count() > 0){
-            $clientsDependent->each(function ($cdependent) use ($data) {
-                $dependentData = Dependent::where('id',$cdependent->dependent_id)->first();
+            collect($data['dependents'])->each(function ($dependent) use ($data) {
+                if(array_key_exists('dependent_id', $dependent)) {
+                    //update dependents
+                    $dependentData = Dependent::where('id', $dependent['dependent_id'])->first();
+                    $clientDependetData = ClientDependent::where('dependent_id', $dependent['dependent_id'])->first();
 
-                DB::beginTransaction();
+                    DB::beginTransaction();
 
-                try {
-                    //register new dependent on [dependents] table
-                    $formatData = array(
-                        'name' => null,
-                        'born_at' => $data['born_at'],
-                        'financial_dependent' => $data['financial_dependent'],
-                        'is_living_with_clients' => $data['is_living_with_clients']
-                    );
-        
-                    $dependentData->update($formatData);
+                    try {
+                        //update dependent on [dependents] table
+                        $formatDependentData = array(
+                            'name' => null,
+                            'born_at' => $dependent['born_at'],
+                            'financial_dependent' => $dependent['financial_dependent'],
+                            'is_living_with_clients' => $dependent['is_living_with_clients']
+                        );
 
-                    $cformatData = array(
-                        'client_id' => $cdependent->client_id,
-                        'dependent_id' => $cdependent->dependent_id,
-                        'relationship_type' => $data['relationship_type']
-                    );
+                        $dependentData->update($formatDependentData);
 
-                    $cdependent->update($cformatData);
+                        //update dependent on [client_dependent] table
+                        $formatClientDependentData = array(
+                            'client_id' => $data['client_id'],
+                            'dependent_id' => $dependent['dependent_id'],
+                            'relationship_type' => $dependent['relationship_type']
+                        );
 
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    throw new \Exception($e);
+                        $clientDependetData->update($formatClientDependentData);
+
+                    } catch (\Exception $e) {
+                        DB::rollback();
+                        throw new \Exception($e);
+                    }
+
+                    DB::commit();
+                } else {
+                    //register dependent
+                    $this->registerDependent($data['client_id'], $dependent);
                 }
 
-                DB::commit();
+                
             });
-        }
-        else {
-            $this->createNewDependentRecord($client_id, $data);
+
+        } else {
+            //register dependent
+            $this->createNewDependentRecord($data);
         }
     }
 
-    public function createNewDependentRecord(int $client_id, mixed $data):void
+    public function createNewDependentRecord(mixed $data):void
     {
+        collect($data['dependents'])->each((function ($dependent) use ($data){
+            $this->registerDependent($data['client_id'], $dependent);
+        }));
+    }
+
+    public function registerDependent(int $client_id, array $dependent) {
         DB::beginTransaction();
 
-            try {
-                //register new dependent on [dependents] table
-                $dependentData = array(
-                    'born_at' => $data['born_at'],
-                    'financial_dependent' => $data['financial_dependent'],
-                    'is_living_with_clients' => $data['is_living_with_clients']
-                );
+        try {
+            $dependentData = array(
+                'born_at' => $dependent['born_at'],
+                'financial_dependent' => $dependent['financial_dependent'],
+                'is_living_with_clients' => $dependent['is_living_with_clients']
+            );
     
-                $newDependentId = $this->dependent->create($dependentData)->id;
+            $newDependentId = $this->dependent->create($dependentData)->id;
     
-                //register new dependent on [client_dependent] table
-                $clientDependentData = array(
-                    'client_id' => $client_id,
-                    'dependent_id' => $newDependentId,
-                    'relationship_type' => $data['relationship_type']
-                );
-                
-                $this->clientDependent->create($clientDependentData)->id;
+            //register new dependent on [client_dependent] table
+            $clientDependentData = array(
+                'client_id' => $client_id,
+                'dependent_id' => $newDependentId,
+                'relationship_type' => $dependent['relationship_type']
+            );
+            
+            $this->clientDependent->create($clientDependentData)->id;
 
-            } catch (\Exception $e) {
-                DB::rollback();
-                throw new \Exception($e);
-            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
 
-            DB::commit();
+        DB::commit();
+        
     }
 
     //FactFind://to do - make sure this works for your form

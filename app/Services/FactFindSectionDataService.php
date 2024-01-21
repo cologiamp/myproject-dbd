@@ -157,15 +157,18 @@ class FactFindSectionDataService
     {
         try {
             if(array_key_exists('dependents',$validatedData)){
-                collect($validatedData['dependents'])->each(function ($dependent) use ($validatedData){
+                $dependents = collect($validatedData['dependents'])->map(function ($dependent){
                     if($dependent['born_at'])
                     {
                         $dependent['born_at'] = Carbon::parse($dependent['born_at']);
                     }
-                    
-                    $this->dependentRepository->createOrUpdateDependentDetails($validatedData['client_id'], $dependent);
+                    return $dependent;
                 });
+
+                $validatedData['dependents'] = $dependents->toArray();
             }
+
+            $this->dependentRepository->createOrUpdateDependentDetails($validatedData);
 
         } catch (Throwable $e) {
             Log::warning($e);

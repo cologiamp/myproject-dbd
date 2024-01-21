@@ -77,6 +77,7 @@ class ClientPresenter extends BasePresenter
                     $dependentDetails = Dependent::where('id',$clientDependent->dependent_id)->first();
                     
                     return [
+                        'dependent_id' => $dependentDetails['id'],
                         'relationship_type' => $clientDependent['relationship_type'],
                         'born_at' => $dependentDetails->born_at,
                         'financial_dependent' => $dependentDetails->financial_dependent,
