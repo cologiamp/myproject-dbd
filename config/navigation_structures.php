@@ -150,7 +150,6 @@ return [
                             ]
                         ],
                         'rules' => [
-                            'currentStep' => 'required|integer',
                             'client_id' => 'required|integer',
                             'dependents' => 'sometimes|array',
                             // 'dependents.*.relationship_type' => [

@@ -24,7 +24,6 @@ class FactFindController extends Controller
         //$req->step - which tab to use
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
-        ray($request->all())->purple();
         $tabs = $this->clientRepository->loadFactFindTabs($request->step != null ? $request->step : 1, $request->section != null ? $request->section : 1);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
@@ -45,14 +44,11 @@ class FactFindController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    // public function update(Client $client, $section, $step, Request $request): \Illuminate\Http\RedirectResponse
     public function update(Client $client, $step, $section, Request $request): \Illuminate\Http\RedirectResponse
     {
         $ffsds = App::make(FactFindSectionDataService::class);
 
-        ray($step .'' .$section)->purple();
         $ffsds->store(
-            // $client, $section, $step,
             $client,
             $step,
             $section,

@@ -149,7 +149,7 @@ class FactFindSectionDataService
 
     /**
      * Section: 1
-     * Step: 3
+     * Step: 4
      * @param array $validatedData
      * @return void
      */
