@@ -140,8 +140,6 @@ return [
                     4 => [
                         'name' => 'Family',
                         'fields' => [
-                            'currentStep',
-                            'clientDependent.client_id',
                             'dependents' => [
                                 'relationship_type',
                                 'born_at',
@@ -150,17 +148,17 @@ return [
                             ]
                         ],
                         'rules' => [
-                            'client_id' => 'required|integer',
                             'dependents' => 'sometimes|array',
-                            // 'dependents.*.relationship_type' => [
-                            //     'sometimes',
-                            //     'numeric',
-                            //     'integer',
-                            //     Rule::in(array_keys((config('enums.dependent.relationship_type'))))
-                            // ],
-                            // 'dependents.*.born_at' => 'sometimes|date',
-                            // 'dependents.*.financial_dependent' => 'sometimes|boolean',
-                            // 'dependents.*.is_living_with_clients' => 'sometimes|boolean'
+                            'dependents.name' => 'sometimes|string',
+                            'dependents.relationship_type' => [
+                                'required',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
+                            ],
+                            'dependents.born_at' => 'sometimes|date',
+                            'dependents.financial_dependent' => 'sometimes|boolean',
+                            'dependents.is_living_with_clients' => 'sometimes|boolean'
                         ]
                     ],
                     5 => [

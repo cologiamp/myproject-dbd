@@ -74,13 +74,13 @@ class ClientPresenter extends BasePresenter
             '1.4' => [
                 'client_id' => $this->model->id,
                 'dependents' => collect($this->model->dependents->map(function ($dependent){
-                    return [
+                                        return [
                         'dependent_id' => $dependent->id,
                         'relationship_type' => $dependent->relationship_type,
                         'born_at' => $dependent->born_at,
                         'financial_dependent' => $dependent->financial_dependent,
                         'is_living_with_clients' => $dependent->is_living_with_clients
-                    ];
+                ];
                 }))
             ],
             '1.5' => [

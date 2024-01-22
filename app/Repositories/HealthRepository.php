@@ -80,7 +80,7 @@ class HealthRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $healthInfo = Health::where('client_id',$data['client_id'])->first();
+        $healthInfo = Health::where('client_id',$this->client->id)->first();
 
         if(!$healthInfo){
             $healthInfo = Health::create($data);
@@ -101,15 +101,15 @@ class HealthRepository extends BaseRepository
         $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
         if(array_key_exists('fields',$section) && count($section['fields']) > 0)
         {
-                        return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-        return match ($key) {
-        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray(),
-        //                        '//todo write join query here for other places data ends up'.
-        default => collect([]),
-        };
-        });
+            return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                return match ($key) {
+                    'health' => Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray(),
+                    //todo write join query here for other places data ends up'.
+                    default => collect([]),
+                };
+            });
         }
-                    else return collect([]);
+        else return collect([]);
         })->flatten();
         if ($progress->count() === 0) return 0;
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;

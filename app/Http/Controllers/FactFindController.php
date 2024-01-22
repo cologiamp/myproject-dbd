@@ -48,11 +48,20 @@ class FactFindController extends Controller
     {
         $ffsds = App::make(FactFindSectionDataService::class);
 
+        try{
+            $ffsds->validate($step, $section, $request); //throws exception if validation fails
+        }
+        catch(Exception $e)
+        {
+            dd($e);
+        }
+
+
         $ffsds->store(
             $client,
             $step,
             $section,
-            $ffsds->validate($step,$section,$request)
+            $ffsds->validated($step, $section, $request)
         );
 
         return to_route('client.factfind', ['client' => $client, 'step' => $step, 'section' => $section]);

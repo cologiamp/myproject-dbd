@@ -1,19 +1,21 @@
 <script setup>
 //FACTFIND:// you need to make one of these for every step
-import {autoS, autosaveT} from "@/autosave.js";
+import { autoS, autosaveT } from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
-import {useForm} from "laravel-precognition-vue-inertia";
+import { useForm } from "laravel-precognition-vue-inertia";
 import VueDatePicker from "@vuepic/vue-datepicker";
-import {PlusCircleIcon} from '@heroicons/vue/24/solid';
-import {XCircleIcon} from '@heroicons/vue/24/solid';
+import { PlusCircleIcon } from '@heroicons/vue/24/solid';
+import { XCircleIcon } from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref, watch} from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
-watch(autoS,(newValue,oldValue) => {
-    emit('autosaveStateChange',newValue)
+// const clientId = ;
+
+watch(autoS, (newValue, oldValue) => {
+    emit('autosaveStateChange', newValue)
 })
 const props = defineProps({
     formData: {
@@ -34,36 +36,37 @@ const props = defineProps({
             submit_url: '/',
         },
     },
-        errors: Object,
+    errors: Object,
 });
 
 let dateRef = ref();
-function saveDate(index, value){
+function saveDate(index, value) {
     stepForm.dependents[index].born_at = value;
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveT(stepForm, props.formData.submit_url)
 }
 
-function addDependent(){
+function addDependent() {
     stepForm.dependents.push({
-        relationship_type: null,
+        relationship_type: 5,
         born_at: null,
         financial_dependent: false,
         is_living_with_clients: false
     });
 }
 
-function removeDependent(index){
+function removeDependent(index) {
     stepForm.dependents.splice(index, 1);
 }
 
-onMounted(()=>{
+onMounted(() => {
     dateRef.value = props.formData.model.born_at;
 })
 
-const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
-    client_id: props.formData.model.client_id,
-    dependents: props.formData.model.dependents
-})
+const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`,
+    { props.formData.submit_method, props.formData.submit_url,{
+        dependents: props.formData.model.dependents
+    }}
+)
 
 
 </script>
@@ -71,66 +74,92 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
-            <div v-for="(dependent, index) in stepForm.dependents" class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4">
+            <div v-for="(dependent, index) in stepForm.dependents"
+                class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4">
                 <div class="col-span-6 flex flex-row justify-between">
                     <label class="font-bold">Dependent {{ index + 1 }}</label>
-                    <button type="button" @click="removeDependent(index)" class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <button type="button" @click="removeDependent(index)"
+                        class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <XCircleIcon class="w-4 h-4" />Remove Dependent
                     </button>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="relationship_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Relationship</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.relationship_type" id="relationship_type" name="relationship_type" class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <label for="relationship_type"
+                        class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Relationship</label>
+                    <select @change="autosaveT(stepForm, props.formData.submit_url)" v-model="dependent.relationship_type"
+                        id="relationship_type" name="relationship_type"
+                        class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="relationship_type" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(relationshipType, id) in formData.enums.relationship_type">{{ relationshipType }}</option>
+                        <option :id="id" :value="id" v-for="(relationshipType, id) in formData.enums.relationship_type">{{
+                            relationshipType }}</option>
                     </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.relationship_type">{{ stepForm.errors.relationship_type }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.relationship_type">{{
+                        stepForm.errors.relationship_type }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="born_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date of Birth </label>
-                    <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                    <label for="born_at"
+                        class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date of
+                        Birth </label>
+                    <div
+                        class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
                         <!-- <VueDatePicker text-input @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="born_at" id="born_at"  placeholder="dd/mm/yyyy"/> -->
-                        <VueDatePicker text-input @closed="saveDate(index, dependent.born_at)" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="dependent.born_at" name="born_at" id="born_at"  placeholder="dd/mm/yyyy"/>
+                        <VueDatePicker text-input @closed="saveDate(index, dependent.born_at)"
+                            class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="dependent.born_at"
+                            name="born_at" id="born_at" placeholder="dd/mm/yyyy" />
                     </div>
 
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_of_birth">{{ stepForm.errors.date_of_birth }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_of_birth">{{
+                        stepForm.errors.date_of_birth }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Financially Dependant</label>
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Financially
+                        Dependant</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.financial_dependent" type="radio" id="true" :value="true" :checked="dependent.financial_dependent == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveT(stepForm, props.formData.submit_url)"
+                            v-model="dependent.financial_dependent" type="radio" id="true" :value="true"
+                            :checked="dependent.financial_dependent == true"
+                            class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.financial_dependent" type="radio" id="false" :value="false" :checked="dependent.financial_dependent == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveT(stepForm, props.formData.submit_url)"
+                            v-model="dependent.financial_dependent" type="radio" id="false" :value="false"
+                            :checked="dependent.financial_dependent == false"
+                            class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.financial_dependent">{{ stepForm.errors.financial_dependent }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.financial_dependent">{{
+                        stepForm.errors.financial_dependent }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Lives with Client(s)</label>
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Lives with
+                        Client(s)</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.is_living_with_clients" type="radio" id="true" :value="true" :checked="dependent.is_living_with_clients == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveT(stepForm, props.formData.submit_url)"
+                            v-model="dependent.is_living_with_clients" type="radio" id="true" :value="true"
+                            :checked="dependent.is_living_with_clients == true"
+                            class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.is_living_with_clients" type="radio" id="false" :value="false" :checked="dependent.is_living_with_clients == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.is_living_with_clients">{{ stepForm.errors.is_living_with_clients }}</p>
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        v-model="dependent.is_living_with_clients" type="radio" id="false" :value="false"
+                        :checked="dependent.is_living_with_clients == false"
+                        class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                    <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                 </div>
-            </div>
-            <div class="mt-10 float-right">
-                <button type="button" @click="addDependent" class="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                <PlusCircleIcon class="w-6 h-6" />Add Dependent
-                </button>
+                <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.is_living_with_clients">{{
+                    stepForm.errors.is_living_with_clients }}</p>
             </div>
         </div>
-    </dynamic-form-wrapper>
-</template>
+        <div class="mt-10 float-right">
+            <button type="button" @click="addDependent"
+                class="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <PlusCircleIcon class="w-6 h-6" />Add Dependent
+            </button>
+        </div>
+    </div>
+</dynamic-form-wrapper></template>
 
-<style scoped>
-    .aaron-datepicker{
-        --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));
-        --dp-text-color: rgb(236 245 255 / var(--tw-text-opacity));
-        --dp-border-radius: 6px;
-        --dp-border-color: rgb(70 84 190 / var(--tw-ring-opacity));
-    }
-
-</style>
+<style scoped>.aaron-datepicker {
+    --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));
+    --dp-text-color: rgb(236 245 255 / var(--tw-text-opacity));
+    --dp-border-radius: 6px;
+    --dp-border-color: rgb(70 84 190 / var(--tw-ring-opacity));
+}</style>

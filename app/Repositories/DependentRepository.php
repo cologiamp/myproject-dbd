@@ -3,7 +3,6 @@ namespace App\Repositories;
 
 use App\Concerns\ParsesIoClientData;
 use App\Models\Client;
-use App\Models\ClientDependent;
 use App\Models\Dependent;
 use Exception;
 use Illuminate\Database\Query\Builder;
@@ -14,13 +13,11 @@ use Illuminate\Support\Facades\DB;
 class DependentRepository extends BaseRepository 
 {
     protected Client $client;
-    protected ClientDependent $clientDependent;
     protected Dependent $dependent;
 
-    public function __construct(Client $client, ClientDependent $clientDependent, Dependent $dependent)
+    public function __construct(Client $client, Dependent $dependent)
     {
         $this->client = $client;
-        $this->clientDependent = $clientDependent;
         $this->dependent = $dependent;
     }
 
@@ -32,11 +29,6 @@ class DependentRepository extends BaseRepository
     public function setDependent(Dependent $dependent): void
     {
         $this->dependent = $dependent;
-    }
-
-    public function setClientDependent(ClientDependent $clientDependent): void
-    {
-        $this->clientDependent = $clientDependent;
     }
 
     //Create the model
@@ -85,19 +77,17 @@ class DependentRepository extends BaseRepository
 
     public function createOrUpdateDependentDetails(mixed $data):void
     {
+
         if(!is_array($data) && $data::class == Request::class)
         {
             $data = $data->safe();
         }
-
-        $clientsDependent = ClientDependent::where('client_id', $data['client_id'])->get();
-
-        if($clientsDependent->count() > 0){
-            collect($data['dependents'])->each(function ($dependent) use ($data) {
+        
+            $syncDependents = [];
+            collect($data['dependents'])->each(function ($dependent) use ($data, &$syncDependents) {
                 if(array_key_exists('dependent_id', $dependent)) {
-                    //update dependents
-                    $dependentData = Dependent::where('id', $dependent['dependent_id'])->first();
-                    $clientDependetData = ClientDependent::where('dependent_id', $dependent['dependent_id'])->first();
+
+                    $model = Dependent::where('id', $dependent['dependent_id'])->first();
 
                     DB::beginTransaction();
 
@@ -110,16 +100,7 @@ class DependentRepository extends BaseRepository
                             'is_living_with_clients' => $dependent['is_living_with_clients']
                         );
 
-                        $dependentData->update($formatDependentData);
-
-                        //update dependent on [client_dependent] table
-                        $formatClientDependentData = array(
-                            'client_id' => $data['client_id'],
-                            'dependent_id' => $dependent['dependent_id'],
-                            'relationship_type' => $dependent['relationship_type']
-                        );
-
-                        $clientDependetData->update($formatClientDependentData);
+                        $model->update($formatDependentData);
 
                     } catch (\Exception $e) {
                         DB::rollback();
@@ -127,28 +108,26 @@ class DependentRepository extends BaseRepository
                     }
 
                     DB::commit();
+
+                    $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
                 } else {
                     //register dependent
-                    $this->registerDependent($data['client_id'], $dependent);
+                    $ret = $this->registerDependent($dependent);
+                    $syncDependents[$ret['id']] = $ret['value']; 
                 }
-
-                
+              
             });
 
-        } else {
-            //register dependent
-            $this->createNewDependentRecord($data);
-        }
+            //do sync on all the dependent records updated/registered
+     
+            // $this->client->dependents->sync($syncDependents);
+            $this->client->dependents()->sync($syncDependents);
+
     }
 
-    public function createNewDependentRecord(mixed $data):void
-    {
-        collect($data['dependents'])->each((function ($dependent) use ($data){
-            $this->registerDependent($data['client_id'], $dependent);
-        }));
-    }
 
-    public function registerDependent(int $client_id, array $dependent) {
+
+    public function registerDependent(array $dependent) {
         DB::beginTransaction();
 
         try {
@@ -158,16 +137,7 @@ class DependentRepository extends BaseRepository
                 'is_living_with_clients' => $dependent['is_living_with_clients']
             );
     
-            $newDependentId = $this->dependent->create($dependentData)->id;
-    
-            //register new dependent on [client_dependent] table
-            $clientDependentData = array(
-                'client_id' => $client_id,
-                'dependent_id' => $newDependentId,
-                'relationship_type' => $dependent['relationship_type']
-            );
-            
-            $this->clientDependent->create($clientDependentData)->id;
+            $model = Dependent::create($dependentData);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -176,6 +146,11 @@ class DependentRepository extends BaseRepository
 
         DB::commit();
         
+        return [ 
+            'id' => $model['id'],
+            'value' => ['relationship_type' => $dependent['relationship_type']]
+        ];
+
     }
 
     //FactFind://to do - make sure this works for your form

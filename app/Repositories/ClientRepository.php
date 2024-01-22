@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Concerns\ParsesIoClientData;
+use App\Exceptions\ClientNotFoundException;
 use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Models\Address;
@@ -30,6 +31,14 @@ class ClientRepository extends BaseRepository
     public function setClient(Client $client): void
     {
         $this->client = $client;
+    }
+    
+    public function getClient() : Client
+    {
+        if($this->client){
+            return $this->client;
+        }
+        throw new ClientNotFoundException();
     }
 
     //Create the model
