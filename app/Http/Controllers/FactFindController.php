@@ -18,23 +18,23 @@ class FactFindController extends Controller
     public function __construct(ClientRepository $cr)
     {
         $this->clientRepository = $cr;
-            }
+    }
     public function show(Client $client, Request $request) //fact-find?step=1&section=6
     {
         //$req->step - which tab to use
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
+        ray($request->all())->purple();
         $tabs = $this->clientRepository->loadFactFindTabs($request->step != null ? $request->step : 1, $request->section != null ? $request->section : 1);
-        
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
-        return Inertia::render('FactFind',[
+        return Inertia::render('FactFind', [
             'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($section)
+            'progress' => $this->clientRepository->calculateFactFindElementProgress($step)
         ]);
     }
 
@@ -45,15 +45,20 @@ class FactFindController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Client $client, $section, $step, Request $request): \Illuminate\Http\RedirectResponse
+    // public function update(Client $client, $section, $step, Request $request): \Illuminate\Http\RedirectResponse
+    public function update(Client $client, $step, $section, Request $request): \Illuminate\Http\RedirectResponse
     {
         $ffsds = App::make(FactFindSectionDataService::class);
-        
+
+        ray($step .'' .$section)->purple();
         $ffsds->store(
-            $client, $section, $step,
+            // $client, $section, $step,
+            $client,
+            $step,
+            $section,
             $ffsds->validate($step,$section,$request)
         );
 
-        return to_route('client.factfind', ['client' => $client]);
+        return to_route('client.factfind', ['client' => $client, 'step' => $step, 'section' => $section]);
     }
 }

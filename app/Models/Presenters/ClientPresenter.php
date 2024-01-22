@@ -27,9 +27,9 @@ class ClientPresenter extends BasePresenter
     }
 
     //FactFind:// Need to do this for every section/step
-    public function formatForStep($section,$step)
+    public function formatForStep($step,$section)
     {
-        return match ($section . '.' . $step) {
+        return match ($step . '.' . $section) {
             '1.1' => [
                 'first_name' => $this->model->first_name,
                 'last_name' => $this->model->last_name,

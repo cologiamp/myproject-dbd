@@ -29,17 +29,17 @@ class FactFindSectionDataService
         $this->healthRepository = $healthRepository;
     }
     //get the data for a single section of a factfind from a single client
-    public static function get($client,$section,$step):array
+    public static function get($client,$step,$section):array
     {
         return [
-            'enums' => $client->loadEnumsForStep($section,$step),
-            'model' => $client->presenter()->formatForStep($section, $step), //here we load the data for that part of the form
+            'enums' => $client->loadEnumsForStep($step,$section),
+            'model' => $client->presenter()->formatForStep( $step,$section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-            'submit_url' => '/client/' . $client->io_id . '/fact-find/' . $section .'/' . $step //here we hydrate the autosave URL
+            'submit_url' => '/client/' . $client->io_id . '/fact-find/' . $step .'/' . $section //here we hydrate the autosave URL
         ];
     }
 
-    public function validate(int $section,int $step,Request $request)
+    public function validate(int $step,int $section,Request $request)
     {
         return Validator::make($request->all(),config('navigation_structures.factfind.'.$step.'.sections.'.$section.'.rules'))->validated();
     }
@@ -51,10 +51,10 @@ class FactFindSectionDataService
      * @param array $validatedData
      * @return true
      */
-    public function store(Client $client, int $section, int $step, array $validatedData): true
+    public function store(Client $client,int $step, int $section, array $validatedData): true
     {
                 $this->cr->setClient($client);
-        $this->{"_".$section.$step}($validatedData);
+        $this->{"_".$step.$section}($validatedData);
         return true;
     }
 

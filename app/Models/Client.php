@@ -157,9 +157,9 @@ class Client extends Model
 
     //This is where you load the fact find enums
     //FactFind:// Need to do this for every section/step
-    public function loadEnumsForStep($section,$step)
+    public function loadEnumsForStep($step,$section)
     {
-        return match ($section.'.'.$step){
+        return match ($step.'.'.$section){
             '1.1' => [
                 'titles' => config('enums.client.title'),
                 'genders' => config('enums.client.gender'),

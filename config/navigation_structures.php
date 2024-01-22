@@ -140,6 +140,7 @@ return [
                     4 => [
                         'name' => 'Family',
                         'fields' => [
+                            'currentStep',
                             'clientDependent.client_id',
                             'dependents' => [
                                 'relationship_type',
@@ -149,6 +150,7 @@ return [
                             ]
                         ],
                         'rules' => [
+                            'currentStep' => 'required|integer',
                             'client_id' => 'required|integer',
                             'dependents' => 'sometimes|array',
                             // 'dependents.*.relationship_type' => [

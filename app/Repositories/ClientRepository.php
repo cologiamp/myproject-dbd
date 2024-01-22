@@ -206,16 +206,16 @@ class ClientRepository extends BaseRepository
 
     //FactFind://to do - make sure this works for your form
     /**
-     * Function to work out the progress % for each section.
+     * Function to work out the progress % for each step.
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress(int $section):int
+    public function calculateFactFindElementProgress(int $step):int
     {
-        $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
-            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
+        $progress = collect(config('navigation_structures.factfind.' . $step . '.sections'))->map(function ($step){
+            if(array_key_exists('fields',$step) && count($step['fields']) > 0)
             {
-                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                return collect($step['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
 //                        '//todo write join query here for other places data ends up'.

@@ -34,7 +34,7 @@ const props = defineProps({
             submit_url: '/',
         },
     },
-    errors: Object,
+        errors: Object,
 });
 
 let dateRef = ref();
