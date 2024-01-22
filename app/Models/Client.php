@@ -104,9 +104,9 @@ class Client extends Model
         return $this->hasOne(Health::class);
     }
 
-    public function clientDependents():HasMany
+    public function dependents():BelongsToMany
     {
-        return $this->hasMany(ClientDependent::class);
+        return $this->belongsToMany(Dependent::class)->withPivot('relationship_type');
     }
 
     public function employment_details():HasMany

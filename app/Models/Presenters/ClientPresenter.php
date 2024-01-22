@@ -47,13 +47,13 @@ class ClientPresenter extends BasePresenter
             ],
             '1.2' => [
                 'client_id' => $this->model->id,
-                'is_in_good_health' => $this->model->health->is_in_good_health,
-                'health_details' => $this->model->health->health_details,
-                'has_life_expectancy_concerns' => $this->model->health->has_life_expectancy_concerns,
-                'life_expectancy_details' => $this->model->health->life_expectancy_details,
-                'medical_conditions' => $this->model->health->medical_conditions,
-                'smoker' => $this->model->health->smoker,
-                'smoked_in_last_12_months' => $this->model->health->smoked_in_last_12_months
+                'is_in_good_health' => $this->model->health?->is_in_good_health,
+                'health_details' => $this->model->health?->health_details,
+                'has_life_expectancy_concerns' => $this->model->health?->has_life_expectancy_concerns,
+                'life_expectancy_details' => $this->model->health?->life_expectancy_details,
+                'medical_conditions' => $this->model->health?->medical_conditions,
+                'smoker' => $this->model->health?->smoker,
+                'smoked_in_last_12_months' => $this->model->health?->smoked_in_last_12_months
             ],
             '1.3' => [
                 'client_id' => $this->model->id,
@@ -73,16 +73,15 @@ class ClientPresenter extends BasePresenter
             ],
             '1.4' => [
                 'client_id' => $this->model->id,
-                'dependents' => collect($this->model->clientDependents->map(function ($clientDependent){
-                    $dependentDetails = Dependent::where('id',$clientDependent->dependent_id)->first();
-                    
+                'dependents' => collect($this->model->dependents->map(function ($dependent){
                     return [
-                        'dependent_id' => $dependentDetails['id'],
-                        'relationship_type' => $clientDependent['relationship_type'],
-                        'born_at' => $dependentDetails->born_at,
-                        'financial_dependent' => $dependentDetails->financial_dependent,
-                        'is_living_with_clients' => $dependentDetails->is_living_with_clients
-                ];}))
+                        'dependent_id' => $dependent->id,
+                        'relationship_type' => $dependent->relationship_type,
+                        'born_at' => $dependent->born_at,
+                        'financial_dependent' => $dependent->financial_dependent,
+                        'is_living_with_clients' => $dependent->is_living_with_clients
+                    ];
+                }))
             ],
             '1.5' => [
                 'employment_status' => $this->model->employment_status,

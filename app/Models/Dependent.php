@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Dependent extends Model
 {
     protected $guarded = [];
-    protected $table = 'dependents';
-
-    public function clientDepent():BelongsTo
+    public function clients(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsTo(ClientDependent::class);
+        return $this->belongsToMany(Client::class)->withPivot('relationship_type');
     }
 }
