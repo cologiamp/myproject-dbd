@@ -26,6 +26,7 @@ const props = defineProps({
             },
             model: {
                 dependents: [{
+                    name: null,
                     relationship_type: null,
                     born_at: null,
                     financial_dependent: null,
@@ -50,6 +51,7 @@ function saveDate(index, value) {
 
 function addDependent() {
     stepForm.dependents.push({
+        name: "",
         relationship_type: 5,
         born_at: null,
         financial_dependent: false,
@@ -101,6 +103,13 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                         class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <XCircleIcon class="w-4 h-4" />Remove Dependent
                     </button>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-6">
+                    <label for="name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Name </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.name" type="text" name="name" id="name"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Name" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.name">{{ stepForm.errors.name }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="relationship_type"

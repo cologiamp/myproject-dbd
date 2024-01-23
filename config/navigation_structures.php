@@ -141,6 +141,7 @@ return [
                         'name' => 'Family',
                         'fields' => [
                             'dependents' => [
+                                'name',
                                 'relationship_type',
                                 'born_at',
                                 'financial_dependent',
@@ -149,16 +150,16 @@ return [
                         ],
                         'rules' => [
                             'dependents' => 'sometimes|array',
-                            'dependents.name' => 'sometimes|string',
-                            'dependents.relationship_type' => [
+                            'dependents.*.name' => 'sometimes|string',
+                            'dependents.*.relationship_type' => [
                                 'required',
                                 'numeric',
                                 'integer',
                                 Rule::in(array_keys((config('enums.dependent.relationship_type'))))
                             ],
-                            'dependents.born_at' => 'sometimes|date',
-                            'dependents.financial_dependent' => 'sometimes|boolean',
-                            'dependents.is_living_with_clients' => 'sometimes|boolean'
+                            'dependents.*.born_at' => 'sometimes|nullable|date',
+                            'dependents.*.financial_dependent' => 'sometimes|boolean',
+                            'dependents.*.is_living_with_clients' => 'sometimes|boolean'
                         ]
                     ],
                     5 => [
@@ -172,7 +173,7 @@ return [
                             "employment_details.end_at"
                         ],
                         'rules' => [
-                            
+
                         ]
                     ],
                 ],

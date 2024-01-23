@@ -75,12 +75,13 @@ class ClientPresenter extends BasePresenter
                 'client_id' => $this->model->id,
                 'dependents' => collect($this->model->dependents->map(function ($dependent){
                                         return [
-                        'dependent_id' => $dependent->id,
-                        'relationship_type' => $dependent->relationship_type,
-                        'born_at' => $dependent->born_at,
-                        'financial_dependent' => $dependent->financial_dependent,
-                        'is_living_with_clients' => $dependent->is_living_with_clients
-                ];
+                                                'dependent_id' => $dependent->id,
+                                                'name' => $dependent->name,
+                                                'relationship_type' => $dependent->pivot->relationship_type,
+                                                'born_at' => $dependent->born_at,
+                                                'financial_dependent' => $dependent->financial_dependent,
+                                                'is_living_with_clients' => $dependent->is_living_with_clients
+                                        ];
                 }))
             ],
             '1.5' => [

@@ -161,12 +161,16 @@ class FactFindSectionDataService
                     if ($dependent['born_at']) {
                         $dependent['born_at'] = Carbon::parse($dependent['born_at']);
                     }
+                    if($dependent['is_living_with_clients'] == null)
+                    {
+                        $dependent['is_living_with_clients'] = true;
+                    }
                     return $dependent;
                 });
 
                 $validatedData['dependents'] = $dependents->toArray();
             }
-            $this->dependentRepository->setClient($this->cr->getClient());     
+            $this->dependentRepository->setClient($this->cr->getClient());
             $this->dependentRepository->createOrUpdateDependentDetails($validatedData);
         } catch (Throwable $e) {
             Log::warning($e);

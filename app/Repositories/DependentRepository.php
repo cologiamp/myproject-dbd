@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
-class DependentRepository extends BaseRepository 
+class DependentRepository extends BaseRepository
 {
     protected Client $client;
     protected Dependent $dependent;
@@ -65,7 +65,7 @@ class DependentRepository extends BaseRepository
         } catch (Exception $e){
             dd($e);
         }
-        
+
     }
 
     //Delete the resource from the database, doing any cleanup first
@@ -82,71 +82,69 @@ class DependentRepository extends BaseRepository
         {
             $data = $data->safe();
         }
-        
-            $syncDependents = [];
-            collect($data['dependents'])->each(function ($dependent) use ($data, &$syncDependents) {
-                if(array_key_exists('dependent_id', $dependent)) {
 
-                    $model = Dependent::where('id', $dependent['dependent_id'])->first();
+        $syncDependents = [];
+        collect($data['dependents'])->each(function ($dependent) use ($data, &$syncDependents) {
+            if(array_key_exists('dependent_id', $dependent)) {
 
-                    DB::beginTransaction();
+                $model = Dependent::where('id', $dependent['dependent_id'])->first();
 
-                    try {
-                        //update dependent on [dependents] table
-                        $formatDependentData = array(
-                            'name' => null,
-                            'born_at' => $dependent['born_at'],
-                            'financial_dependent' => $dependent['financial_dependent'],
-                            'is_living_with_clients' => $dependent['is_living_with_clients']
-                        );
+                DB::beginTransaction();
 
-                        $model->update($formatDependentData);
+                try {
+                    //update dependent on [dependents] table
+                    $formatDependentData = array(
+                        'name' => $dependent['name'],
+                        'born_at' => $dependent['born_at'],
+                        'financial_dependent' => $dependent['financial_dependent'],
+                        'is_living_with_clients' => $dependent['is_living_with_clients']
+                    );
 
-                    } catch (\Exception $e) {
-                        DB::rollback();
-                        throw new \Exception($e);
-                    }
+                    $model->update($formatDependentData);
 
-                    DB::commit();
-
-                    $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
-                } else {
-                    //register dependent
-                    $ret = $this->registerDependent($dependent);
-                    $syncDependents[$ret['id']] = $ret['value']; 
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    throw new \Exception($e);
                 }
-              
-            });
 
-            //do sync on all the dependent records updated/registered
-     
-            // $this->client->dependents->sync($syncDependents);
-            $this->client->dependents()->sync($syncDependents);
+                DB::commit();
+
+                $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
+            } else {
+                //register dependent
+                $ret = $this->registerDependent($dependent);
+                $syncDependents[$ret['id']] = $ret['value'];
+            }
+
+        });
+
+        //do sync on all the dependent records updated/registered
+
+        // $this->client->dependents->sync($syncDependents);
+        $this->client->dependents()->sync($syncDependents);
 
     }
 
 
 
     public function registerDependent(array $dependent) {
-        DB::beginTransaction();
 
-        try {
-            $dependentData = array(
-                'born_at' => $dependent['born_at'],
-                'financial_dependent' => $dependent['financial_dependent'],
-                'is_living_with_clients' => $dependent['is_living_with_clients']
-            );
-    
+        $dependentData = array(
+            'name' => $dependent['name'],
+            'born_at' => $dependent['born_at'],
+            'financial_dependent' => $dependent['financial_dependent'],
+            'is_living_with_clients' => $dependent['is_living_with_clients']
+        );
+        try{
             $model = Dependent::create($dependentData);
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new \Exception($e);
+        }catch (Exception $e)
+        {
+            dd($e);
         }
 
-        DB::commit();
-        
-        return [ 
+
+
+        return [
             'id' => $model['id'],
             'value' => ['relationship_type' => $dependent['relationship_type']]
         ];
