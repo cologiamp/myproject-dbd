@@ -48,14 +48,7 @@ class FactFindController extends Controller
     {
         $ffsds = App::make(FactFindSectionDataService::class);
 
-        try{
-            $ffsds->validate($step, $section, $request); //throws exception if validation fails
-        }
-        catch(Exception $e)
-        {
-            dd($e);
-        }
-
+        $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
 
         $ffsds->store(
             $client,

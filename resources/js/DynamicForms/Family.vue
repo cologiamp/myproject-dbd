@@ -1,8 +1,8 @@
 <script setup>
 //FACTFIND:// you need to make one of these for every step
-import { autoS, autosaveT } from "@/autosave.js";
+import {__error, autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
-import { useForm } from "laravel-precognition-vue-inertia";
+import {useForm, usePage} from "@inertiajs/vue3";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
@@ -40,9 +40,12 @@ const props = defineProps({
 });
 
 let dateRef = ref();
+
+
+
 function saveDate(index, value) {
     stepForm.dependents[index].born_at = value;
-    autosaveT(stepForm, props.formData.submit_url)
+    autosaveT(stepForm,props.formData.submit_url);
 }
 
 function addDependent() {
@@ -62,11 +65,9 @@ onMounted(() => {
     dateRef.value = props.formData.model.born_at;
 })
 
-const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`,
-    { props.formData.submit_method, props.formData.submit_url,{
-        dependents: props.formData.model.dependents
-    }}
-)
+const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
+    dependents: props.formData.model.dependents
+})
 
 
 </script>
@@ -74,6 +75,24 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`,
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
+            <div class="rounded-md bg-red-50 p-4 mb-2" v-if="usePage().props.errors && Object.keys(usePage().props.errors).length > 0">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <XCircleIcon class="h-5 w-5 text-red-400" aria-hidden="true" />
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800" v-if="Object.keys(usePage().props.errors).length === 1">There was an error identified</h3>
+                        <h3 class="text-sm font-medium text-red-800" v-else>There were {{Object.keys(usePage().props.errors).length}} errors identified</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul role="list" class="list-disc space-y-1 pl-5">
+                                <li v-for="(key, value) in usePage().props.errors">
+                                    {{key}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div v-for="(dependent, index) in stepForm.dependents"
                 class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4">
                 <div class="col-span-6 flex flex-row justify-between">
@@ -86,7 +105,7 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`,
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="relationship_type"
                         class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Relationship</label>
-                    <select @change="autosaveT(stepForm, props.formData.submit_url)" v-model="dependent.relationship_type"
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.relationship_type"
                         id="relationship_type" name="relationship_type"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="relationship_type" :value="null">-</option>
@@ -115,12 +134,12 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`,
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Financially
                         Dependant</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm, props.formData.submit_url)"
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
                             v-model="dependent.financial_dependent" type="radio" id="true" :value="true"
                             :checked="dependent.financial_dependent == true"
                             class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm, props.formData.submit_url)"
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
                             v-model="dependent.financial_dependent" type="radio" id="false" :value="false"
                             :checked="dependent.financial_dependent == false"
                             class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -133,7 +152,7 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`,
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Lives with
                         Client(s)</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm, props.formData.submit_url)"
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
                             v-model="dependent.is_living_with_clients" type="radio" id="true" :value="true"
                             :checked="dependent.is_living_with_clients == true"
                             class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />

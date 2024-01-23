@@ -1,5 +1,7 @@
 import {ref} from "vue";
 import {useThrottleFn} from "@vueuse/core";
+import Swal from "sweetalert2";
+import {usePage} from "@inertiajs/vue3";
 
 export let autoS = ref(1);
 
@@ -26,6 +28,15 @@ export function autosave(form,submitUrl){
                 setTimeout(() => autoS.value = 3,1000);
             }
         }
-    );
+    )
 }
 
+export function __error(field, errorBag = 'default') {
+    if (!usePage().props.errors.hasOwnProperty(errorBag)) {
+        return null;
+    }
+    if (usePage().props.errors[errorBag].hasOwnProperty(field)) {
+        return usePage().props.errors[errorBag][field][0];
+    }
+    return null;
+}
