@@ -59,7 +59,7 @@ function handleAutosave(val){
                 />
             </div>
         </div>
-        <div class="h-screen">
+        <div class="h-full">
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
                 <SectionContent @auto-save-up="handleAutosave"  v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
             </SectionSidebar>

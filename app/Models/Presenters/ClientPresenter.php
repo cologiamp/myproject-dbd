@@ -74,23 +74,28 @@ class ClientPresenter extends BasePresenter
             '1.4' => [
                 'client_id' => $this->model->id,
                 'dependents' => collect($this->model->dependents->map(function ($dependent){
-                                        return [
-                                                'dependent_id' => $dependent->id,
-                                                'name' => $dependent->name,
-                                                'relationship_type' => $dependent->pivot->relationship_type,
-                                                'born_at' => $dependent->born_at,
-                                                'financial_dependent' => $dependent->financial_dependent,
-                                                'is_living_with_clients' => $dependent->is_living_with_clients
-                                        ];
+                    return [
+                            'dependent_id' => $dependent->id,
+                            'name' => $dependent->name,
+                            'relationship_type' => $dependent->pivot->relationship_type,
+                            'born_at' => $dependent->born_at,
+                            'financial_dependent' => $dependent->financial_dependent,
+                            'is_living_with_clients' => $dependent->is_living_with_clients
+                    ];
                 }))
             ],
             '1.5' => [
-                'employment_status' => $this->model->employment_status,
-                'intended_retirement_date' => $this->model->intended_retirement_date,
-                'occupation' => $this->model->occupation,
-                'employer' => $this->model->employer,
-                'start_at' => $this->model->start_at,
-                'end_at' => $this->model->end_at
+                'employment_details' => collect($this->model->employment_details->map(function ($employment){
+                    return [
+                        'id' => $employment->id,
+                        'employment_status' => $employment->employment_status,
+                        'intended_retirement_age' => $employment->intended_retirement_age,
+                        'occupation' => $employment->occupation,
+                        'employer' => $employment->employer,
+                        'start_at' => $employment->start_at,
+                        'end_at' => $employment->end_at
+                    ];
+                }))
             ],
             default => [
 

@@ -1307,5 +1307,23 @@ return [
             4 => 'Wife',
             5 => 'Other'
         ],
+    ],
+    'employment' => [
+        'employment_status' => [
+            0 => 'Unknown',
+            1 => 'SelfEmployed',
+            2 => 'CompanyDirector',
+            3 => 'Retired',
+            4 => 'Unemployed',
+            5 => 'Houseperson',
+            6 => 'Student',
+            7 => 'MaternityLeave',
+            8 => 'LongTermIllness',
+            9 => 'ContractWorker',
+            10 => 'Employed',
+            11 => 'CarerOfaChildUnder16',
+            12 => 'CarerOfaPersonOver16',
+            13 => 'Other'
+        ],
     ]
 ];

@@ -1,0 +1,140 @@
+<?php
+namespace App\Repositories;
+
+use App\Concerns\ParsesIoClientData;
+use App\Models\Client;
+use App\Models\EmploymentDetail;
+use Exception;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+
+class EmploymentDetailRepository extends BaseRepository 
+{
+    protected Client $client;
+    protected EmploymentDetail $employmentDetail;
+
+    public function __construct(Client $client, EmploymentDetail $employmentDetail)
+    {
+        $this->client = $client;
+        $this->employmentDetail = $employmentDetail;
+    }
+
+    public function setClient(Client $client): void
+    {
+        $this->client = $client;
+    }
+
+    public function setEmploymentDetail(EmploymentDetail $employmentDetail): void
+    {
+        $this->employmentDetail = $employmentDetail;
+    }
+
+    //Create the model
+    public function create(Request $request): EmploymentDetail
+    {
+        return $this->employmentDetail->create(
+            array_merge($request->safe()->all(),
+                []
+        ));
+    }
+
+    //Update the given details
+    /**
+     * This method uses a generecised from request to update the model.
+     * Use updateFromValidate if you have already run a Validator on your data.
+     * @param Request $request
+     * @return void
+     */
+    public function update(Request $request): void
+    {
+        $this->employmentDetail->update($request->safe());
+    }
+
+    /**
+     * This method uses a pre-validated updated data array rather than a formRequest to update the model.
+     * Do not use unless you have validated your data
+     * @param array $array
+     * @return void
+     */
+    public function updateFromValidated(array $array):void
+    {
+        try {
+            $this->employmentDetail->update($array);
+        } catch (Exception $e){
+            dd($e);
+        }
+
+    }
+
+    //Delete the resource from the database, doing any cleanup first
+    public function delete(): void
+    {
+        //handle any cleanup required here
+        $this->employmentDetail->delete();
+    }
+
+    public function createOrUpdateEmploymentDetails(mixed $data):void
+    {
+        if(!is_array($data) && $data::class == Request::class)
+        {
+            $data = $data->safe();
+        }
+
+        $formEmploymentIds = collect($data['employment_details'])->map(function ($employment) {
+            if(array_key_exists('id', $employment)){
+                return $employment['id'];
+            }
+        });
+
+        DB::beginTransaction();
+
+        try {
+            $this->employmentDetail->whereNotIn('id', $formEmploymentIds->toArray())->delete();
+
+            collect($data['employment_details'])->each(function ($employment) {
+                $employment['client_id'] = $this->client->id;
+
+                if(array_key_exists('id', $employment)){
+                    $model = $this->employmentDetail->where('id', $employment['id'])->first();
+                    $model->update($employment);
+                } else {
+                    $this->employmentDetail->create($employment);
+                }
+            });
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
+
+        DB::commit();
+    }
+
+    //FactFind://to do - make sure this works for your form
+    /**
+     * Function to work out the progress % for each section.
+     * @param $key
+     * @return int
+     */
+    public function calculateFactFindElementProgress(int $section):int
+    {
+        $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
+            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
+            {
+                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                    return match ($key) {
+                    'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->first()->toArray(),
+                    //todo write join query here for other places data ends up'.
+                    default => collect([]),
+                    };
+                });
+            }
+            else return collect([]);
+        })->flatten();
+
+        if ($progress->count() === 0) return 0;
+        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
+    }
+}
