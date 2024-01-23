@@ -37,24 +37,56 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $nav1= [
+            [
+                'name' => 'Dashboard',
+                'href' => '/dashboard',
+                'icon' => 'HomeIcon',
+//                    'current' => Str::contains($request->route()->getName(),'dashboard')
+                'current' => $request->route()->getName() === 'dashboard'
+            ],
+            [
+                'name' => 'Clients',
+                'href' => '/clients',
+                'icon' => 'ClientIcon',
+                'current' => $request->route()->getName() === 'clients'
+            ],
+        ];
+        if($request->route()->hasParameter('client'))
+        {
+            $client = $request->client;
+            $nav1 = array_merge($nav1,[
+                [
+                    'name' => 'Client Dashboard',
+                    'href' => '/client/'.$client->io_id.'/dashboard',
+                    'icon' => 'CDIcon',
+                    'current' => $request->route()->getName() === 'client.dashboard'
+                ],
+                [
+                    'name' => 'Fact-Find',
+                    'href' => '/client/'.$client->io_id.'/fact-find',
+                    'icon' => 'FFIcon',
+                    'current' => $request->route()->getName() === 'client.factfind'
+                ],
+                [
+                    'name' => 'Strategy Report',
+                    'href' => '/client/'.$client->io_id.'/strategy-report',
+                    'icon' => 'SRIcon',
+                    'current' => $request->route()->getName() === 'client.strategy'
+                ],
+            ]);
+        }
+//        $client_enabled_nav
         return array_merge(parent::share($request), [
             'logo' => config('constants.logo'),
-            'navigation' => [
-                [
-                    'name' => 'Dashboard',
-                    'href' => '/dashboard',
-                    'icon' => 'HomeIcon',
-//                    'current' => Str::contains($request->route()->getName(),'dashboard')
-                    'current' => $request->route()->getName() === 'dashboard'
-                ],
-                [
-                    'name' => 'Clients',
-                    'href' => '/clients',
-                    'icon' => 'ClientIcon',
-                    'current' => $request->route()->getName() === 'clients'
-                ],
-            ]
+            'navigation' => $nav1
+
+
+
+
             //Chore: make when there's a "client" in the URL that the other tabs appear
+            //Client Dashboard
+
             //Fact Find
             //Strategy Report
 

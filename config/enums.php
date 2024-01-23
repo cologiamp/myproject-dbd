@@ -120,17 +120,17 @@ return [
             2 => 'Female'
         ],
         'marital_status' =>[
-            0 => 'Single',
-            1 => 'Engaged',
-            2 => 'Married',
-            3 => 'Civil Partner',
-            4 => 'Dissolved Civil Partner',
-            5 => 'Surviving Civil Partner',
-            6 => 'Divorced',
-            7 => 'Separated',
-            8 => 'Widowed',
-            9 => 'Living Together',
-            10 => 'Unknown'
+            1 => 'Single',
+            2 => 'Engaged',
+            3 => 'Married',
+            4 => 'Civil Partner',
+            5 => 'Dissolved Civil Partner',
+            6 => 'Surviving Civil Partner',
+            7 => 'Divorced',
+            8 => 'Separated',
+            9 => 'Widowed',
+            10 => 'Living Together',
+            0 => 'Unknown'
         ],
         'nationality' => [
             0 => 'British',
@@ -780,7 +780,7 @@ return [
             'ZW' => 'Zimbabwe'
         ],
         'iso_2_int' => [
-
+            "X",
             "AF",
             "AX",
             "AL",

@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\DataIntoIoController;
 use App\Http\Controllers\FactFindController;
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\StrategyReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -60,6 +61,7 @@ Route::middleware([
 
     Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
+       Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
         Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
 
