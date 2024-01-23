@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Concerns\ParsesIoClientData;
+use App\Exceptions\ClientNotFoundException;
 use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Models\Address;
@@ -30,6 +31,14 @@ class ClientRepository extends BaseRepository
     public function setClient(Client $client): void
     {
         $this->client = $client;
+    }
+    
+    public function getClient() : Client
+    {
+        if($this->client){
+            return $this->client;
+        }
+        throw new ClientNotFoundException();
     }
 
     //Create the model
@@ -167,14 +176,14 @@ class ClientRepository extends BaseRepository
      * Load in factfind sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
      */
-    public function loadFactFindSidebarItems($sections, $currentSection)
+    public function loadFactFindSidebarItems($sections, $currentStep, $currentSection)
     {
-        return collect($sections)->map(function ($value,$key) use ($currentSection){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection){
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => FactFindSectionDataService::get($this->client,$currentSection,$key),
+               'dynamicData' => FactFindSectionDataService::get($this->client,$currentStep,$key),
            ];
         });
     }
@@ -199,23 +208,23 @@ class ClientRepository extends BaseRepository
                 'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
-                }), $currentSection)->toArray()
+                }), $currentStep, $currentSection)->toArray()
             ];
         })->toArray();
     }
 
     //FactFind://to do - make sure this works for your form
     /**
-     * Function to work out the progress % for each section.
+     * Function to work out the progress % for each step.
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress(int $section):int
+    public function calculateFactFindElementProgress(int $step):int
     {
-        $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
-            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
+        $progress = collect(config('navigation_structures.factfind.' . $step . '.sections'))->map(function ($step){
+            if(array_key_exists('fields',$step) && count($step['fields']) > 0)
             {
-                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                return collect($step['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
 //                        '//todo write join query here for other places data ends up'.

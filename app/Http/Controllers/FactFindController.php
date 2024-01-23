@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Repositories\ClientRepository;
 use App\Services\FactFindSectionDataService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class FactFindController extends Controller
@@ -23,16 +25,15 @@ class FactFindController extends Controller
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
         $tabs = $this->clientRepository->loadFactFindTabs($request->step != null ? $request->step : 1, $request->section != null ? $request->section : 1);
-
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
-        return Inertia::render('FactFind',[
+        return Inertia::render('FactFind', [
             'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($section)
+            'progress' => $this->clientRepository->calculateFactFindElementProgress($step)
         ]);
     }
 
@@ -43,15 +44,18 @@ class FactFindController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Client $client, $section, $step, Request $request): \Illuminate\Http\RedirectResponse
+    public function update(Client $client, $step, $section, Request $request): \Illuminate\Http\RedirectResponse
     {
         $ffsds = App::make(FactFindSectionDataService::class);
+        $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
 
         $ffsds->store(
-            $client, $section, $step,
-            $ffsds->validate($step,$section,$request)
+            $client,
+            $step,
+            $section,
+            $ffsds->validated($step, $section, $request)
         );
 
-        return to_route('client.factfind', ['client' => $client]);
+        return to_route('client.factfind', ['client' => $client, 'step' => $step, 'section' => $section]);
     }
 }

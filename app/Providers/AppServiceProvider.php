@@ -3,7 +3,9 @@
 namespace App\Providers;
 use App\Services\DataIngestService;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +25,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(125);
+
+        Inertia::share('errors', function () {
+            if (Session::get('errors')) {
+                $bags = [];
+                foreach (Session::get('errors')->getBags() as $bag => $error) {
+                    $bags[$bag] = $error->getMessages();
+                }
+                return $bags;
+            }
+            return (object)[];
+        });
     }
 }

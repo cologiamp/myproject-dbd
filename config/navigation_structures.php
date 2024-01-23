@@ -78,33 +78,102 @@ return [
                     2 => [
                         'name' => 'Health Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "health.client_id",
+                            "health.is_in_good_health",
+                            "health.health_details",
+                            "health.has_life_expectancy_concerns",
+                            "health.life_expectancy_details",
+                            "health.medical_conditions",
+                            "health.smoker",
+                            "health.smoked_in_last_12_months"
+                        ],
+                        'rules' => [
+                            'client_id' => 'required|integer',
+                            'is_in_good_health' => 'sometimes|boolean',
+                            'health_details' => 'sometimes|max:1024',
+                            'has_life_expectancy_concerns' => 'sometimes|boolean',
+                            'life_expectancy_details' => 'sometimes|max:1024',
+                            'medical_conditions' => 'sometimes|max:1024',
+                            'smoker' => 'sometimes|integer',
+                            'smoked_in_last_12_months' => 'sometimes|boolean'
                         ]
                     ],
                     3 => [
                         'name' => 'Address and Contact Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            'addresses' => [
+                                'address_line_1',
+                                'address_line_2',
+                                'county',
+                                'postcode',
+                                'country',
+                                'residency_status',
+                                'date_from'
+                            ],
+                            "clients.phone_number",
+                            "clients.email_address"
+                        ],
+                        'rules' => [
+                            'addresses' => 'sometimes|array',
+                            'addresses.*.address_line_1' => 'sometimes|max:320',
+                            'addresses.*.address_line_2' => 'sometimes|max:320',
+                            'addresses.*.city' => 'sometimes|max:320',
+                            'addresses.*.county' => 'sometimes|max:320',
+                            'addresses.*.postcode' => 'sometimes|max:320',
+                            'addresses.*.country' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.country'))))
+                            ],
+                            'addresses.*.residency_status' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.residency_status'))))
+                            ],
+                            'addresses.*.date_from' => 'sometimes|date',
+                            'phone_number' => 'sometimes|max:20',
+                            'email_address' => 'sometimes|max:120'
                         ]
                     ],
                     4 => [
                         'name' => 'Family',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            'dependents' => [
+                                'name',
+                                'relationship_type',
+                                'born_at',
+                                'financial_dependent',
+                                'is_living_with_clients'
+                            ]
+                        ],
+                        'rules' => [
+                            'dependents' => 'sometimes|array',
+                            'dependents.*.name' => 'sometimes|string',
+                            'dependents.*.relationship_type' => [
+                                'required',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
+                            ],
+                            'dependents.*.born_at' => 'sometimes|nullable|date',
+                            'dependents.*.financial_dependent' => 'sometimes|boolean',
+                            'dependents.*.is_living_with_clients' => 'sometimes|boolean'
                         ]
                     ],
                     5 => [
                         'name' => 'Employment Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "employment_details.employment_status",
+                            "employment_details.intended_retirement_date",
+                            "employment_details.occupation",
+                            "employment_details.employer",
+                            "employment_details.start_at",
+                            "employment_details.end_at"
+                        ],
+                        'rules' => [
+
                         ]
                     ],
                 ],

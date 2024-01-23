@@ -99,10 +99,14 @@ class Client extends Model
         return $this->belongsToMany(Address::class);
     }
 
-
-    public function dependents():HasMany
+    public function health():HasOne
     {
-        return $this->hasMany(Dependent::class);
+        return $this->hasOne(Health::class);
+    }
+
+    public function dependents():BelongsToMany
+    {
+        return $this->belongsToMany(Dependent::class)->withPivot('relationship_type');
     }
 
     public function employment_details():HasMany
@@ -153,9 +157,9 @@ class Client extends Model
 
     //This is where you load the fact find enums
     //FactFind:// Need to do this for every section/step
-    public function loadEnumsForStep($section,$step)
+    public function loadEnumsForStep($step,$section)
     {
-        return match ($section.'.'.$step){
+        return match ($step.'.'.$section){
             '1.1' => [
                 'titles' => config('enums.client.title'),
                 'genders' => config('enums.client.gender'),
@@ -163,6 +167,13 @@ class Client extends Model
                 'nationalities' => config('enums.client.nationality') ,
                 'country_of_domiciles' => config('enums.client.iso_2'),
                 'country_of_residences' => config('enums.client.iso_2')
+            ],
+            '1.3' => [
+                'residency_status' => config('enums.address.residency_status'),
+                'countries' => config('enums.address.country')
+            ],
+            '1.4' => [
+                'relationship_type' => config('enums.dependent.relationship_type')
             ],
             default => [
 

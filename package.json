@@ -26,7 +26,6 @@
         "laravel-precognition-vue-inertia": "^0.3.2",
         "lodash.debounce": "^4.0.8",
         "sweetalert2": "^11.10.2",
-        "vue-ray": "^1.17.4",
         "vue3-spinner": "^0.0.17"
     }
 }

@@ -14,7 +14,7 @@ const props = defineProps({
 const emit = defineEmits(['setOnloadKey']);
 const initialDropdownKey = inject("onloadKey");
 
-const selectedMenu = ref(props.titles[initialDropdownKey.value].name);
+const selectedMenu = ref(props.titles[1].name);
 const selectedMenuId = ref(1);
 
 function itemsClick(index, tab) {
@@ -34,6 +34,7 @@ onBeforeMount(() => {
     // Emit function from parent component to set selected section onload
     emit('setOnloadKey', props.titles, x => x.current == true)
     selectedMenuId.value = initialDropdownKey.value
+    selectedMenu.value = props.titles[selectedMenuId.value].name
 });
 
 </script>
