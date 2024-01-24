@@ -25,7 +25,7 @@ const props = defineProps({
             },
             model: {
                 employment_details: [{
-                    employment_status: 0,
+                    employment_status: '-',
                     intended_retirement_age: null,
                     occupation: null,
                     employer: null,
@@ -47,7 +47,7 @@ function saveDate(index, value, dateId) {
 
 function addEmployment() {
     stepForm.employment_details.push({
-        employment_status: 0,
+        employment_status: '-',
         intended_retirement_age: null,
         occupation: null,
         employer: null,
@@ -65,6 +65,11 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     employment_details: props.formData.model.employment_details
 })
 
+onMounted(() => {
+    if(props.formData.model.employment_details.length == 0) {
+        addEmployment()
+    }
+})
 
 </script>
 
@@ -90,11 +95,10 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
             </div>
             <div v-for="(employment_detail, index) in stepForm.employment_details"
-                class="grid gap-2 mb-8 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4"
-                id="empdtls">
-                <div class="col-span-6 flex flex-row justify-between">
+                class="grid gap-2 mb-8 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
+                <div class="md:col-span-6 flex flex-row justify-between">
                     <label class="font-bold">Employment {{ index + 1 }}</label>
-                    <button type="button" @click="removeEmployment(index)"
+                    <button type="button" @click="removeEmployment(index)" v-if="index > 0"
                         class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <XCircleIcon class="w-4 h-4" />Remove Employment
                     </button>

@@ -139,7 +139,7 @@ const sidebarOpen = ref(false)
             </div>
 
             <div class="lg:pl-52 xl:pl-72">
-                <div class="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8 bg-aaron-950">
+                <div class="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl lg:px-8 bg-aaron-950 md:bg-transparent">
                     <div class="flex h-16 items-center gap-x-4 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
                         <button type="button" class="-m-2.5 p-2.5 text-gray-200 lg:hidden" @click="sidebarOpen = true">
                             <span class="sr-only">Open sidebar</span>
