@@ -37,7 +37,6 @@ const props = defineProps({
 });
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
-    client_id: props.formData.model.client_id,
     is_in_good_health: props.formData.model.is_in_good_health,
     health_details: props.formData.model.health_details,
     has_life_expectancy_concerns: props.formData.model.has_life_expectancy_concerns,
