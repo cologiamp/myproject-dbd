@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
-class EmploymentDetailRepository extends BaseRepository 
+class EmploymentDetailRepository extends BaseRepository
 {
     protected Client $client;
     protected EmploymentDetail $employmentDetail;
@@ -82,12 +82,10 @@ class EmploymentDetailRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $formEmploymentIds = collect($data['employment_details'])->pluck('id')->filter();
-        
         DB::beginTransaction();
 
         try {
-            $this->employmentDetail->whereNotIn('id', $formEmploymentIds->toArray())->delete();
+            $this->employmentDetail->whereNotIn('id', collect($data['employment_details'])->pluck('id')->filter()->toArray())->delete();
 
             collect($data['employment_details'])->each(function ($employment) {
                 $employment['client_id'] = $this->client->id;
