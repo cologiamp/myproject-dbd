@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Client extends Model
 {
@@ -169,7 +170,7 @@ class Client extends Model
                 'country_of_residences' => config('enums.client.iso_2')
             ],
             '1.3' => [
-                'residency_status' => config('enums.address.residency_status'),
+                'residency_status' => collect(config('enums.address.residency_status_public')),
                 'countries' => config('enums.address.country')
             ],
             '1.4' => [
@@ -185,6 +186,7 @@ class Client extends Model
         if($this->io_json)
         {
             $parsed_data = array_merge($this->parseClientData($this->io_json)['client']);
+
             $diff_data = Client::whereId($this->id)->select( //THE ELEMENTS THAT ARE PULLED FROM IO INITIALLY
                 [
                     'title',
@@ -199,6 +201,8 @@ class Client extends Model
                     'phone_number'
                 ]
             )->first()->toArray();
+
+
             //this needs to list the fields that are different
             return collect(array_keys(array_diff_assoc($parsed_data,$diff_data)));
         }

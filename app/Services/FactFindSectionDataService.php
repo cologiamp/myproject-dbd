@@ -96,7 +96,6 @@ class FactFindSectionDataService
      */
     private function _12(array $validatedData): void
     {
-
         if (array_key_exists('is_in_good_health', $validatedData)) {
             if ($validatedData['is_in_good_health'] == true) {
                 $validatedData['health_details'] = '';
@@ -105,7 +104,7 @@ class FactFindSectionDataService
 
         if (array_key_exists('has_life_expectancy_concerns', $validatedData)) {
             if ($validatedData['has_life_expectancy_concerns'] == false) {
-                $validatedData['health_details'] = '';
+                $validatedData['life_expectancy_details'] = '';
             }
         }
 
@@ -127,11 +126,21 @@ class FactFindSectionDataService
     {
         try {
             if (array_key_exists('addresses', $validatedData)) {
+
+                //addresses can belong to multiple clients, so we don't destroy them, just detach
+                $this->cr->getClient()->addresses()->detach($this->cr->getClient()->addresses->whereNotIn('id',
+                    collect($validatedData['addresses'])->pluck('address_id')->filter())->pluck('id')
+                );
+
+
                 collect($validatedData['addresses'])->each(function ($item) {
-                    if ($item['date_from']) {
+                    if ($item['date_from'] && $item['date_from'] != null) {
                         $item['date_from'] = Carbon::parse($item['date_from']);
                     }
-
+                    if($item['country'] && $item['country'] != null)
+                    {
+                        $item['country'] = (int)$item['country'];
+                    }
                     $this->cr->createOrUpdateAddress($item);
                 });
             }

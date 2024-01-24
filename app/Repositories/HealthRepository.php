@@ -8,7 +8,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class HealthRepository extends BaseRepository 
+class HealthRepository extends BaseRepository
 {
     protected Client $client;
     protected Health $health;
@@ -16,7 +16,7 @@ class HealthRepository extends BaseRepository
     public function __construct(Client $client, Health $health)
     {
         $this->client = $client;
-        $this->health = $health;   
+        $this->health = $health;
     }
 
     public function setClient(Client $client): void
@@ -63,7 +63,7 @@ class HealthRepository extends BaseRepository
         } catch (Exception $e){
             dd($e);
         }
-        
+
     }
 
     //Delete the resource from the database, doing any cleanup first
@@ -82,8 +82,9 @@ class HealthRepository extends BaseRepository
 
         $healthInfo = Health::where('client_id',$this->client->id)->first();
 
+
         if(!$healthInfo){
-            $healthInfo = Health::create($data);
+            Health::create(array_merge($data,['client_id'=> $this->client->id]));
         }
         else{
             $healthInfo->update($data);
@@ -114,5 +115,5 @@ class HealthRepository extends BaseRepository
         if ($progress->count() === 0) return 0;
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
-    
+
 }

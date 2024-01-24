@@ -78,7 +78,6 @@ return [
                     2 => [
                         'name' => 'Health Details',
                         'fields' => [
-                            "health.client_id",
                             "health.is_in_good_health",
                             "health.health_details",
                             "health.has_life_expectancy_concerns",
@@ -88,14 +87,13 @@ return [
                             "health.smoked_in_last_12_months"
                         ],
                         'rules' => [
-                            'client_id' => 'required|integer',
-                            'is_in_good_health' => 'sometimes|boolean',
-                            'health_details' => 'sometimes|max:1024',
-                            'has_life_expectancy_concerns' => 'sometimes|boolean',
-                            'life_expectancy_details' => 'sometimes|max:1024',
-                            'medical_conditions' => 'sometimes|max:1024',
-                            'smoker' => 'sometimes|integer',
-                            'smoked_in_last_12_months' => 'sometimes|boolean'
+                            'is_in_good_health' => 'sometimes|nullable|boolean',
+                            'health_details' => 'sometimes|nullable|max:1024',
+                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
+                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
+                            'medical_conditions' => 'sometimes|nullable|max:1024',
+                            'smoker' => 'sometimes|nullable|integer',
+                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     3 => [
@@ -116,25 +114,28 @@ return [
                         'rules' => [
                             'addresses' => 'sometimes|array',
                             'addresses.*.address_line_1' => 'sometimes|max:320',
-                            'addresses.*.address_line_2' => 'sometimes|max:320',
-                            'addresses.*.city' => 'sometimes|max:320',
-                            'addresses.*.county' => 'sometimes|max:320',
-                            'addresses.*.postcode' => 'sometimes|max:320',
+                            'addresses.*.address_id' => 'sometimes',
+                            'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
+                            'addresses.*.city' => 'sometimes|nullable|max:320',
+                            'addresses.*.county' => 'sometimes|nullable|max:320',
+                            'addresses.*.postcode' => 'sometimes|nullable|max:320',
                             'addresses.*.country' => [
                                 'sometimes',
+                                'nullable',
                                 'numeric',
                                 'integer',
                                 Rule::in(array_keys((config('enums.address.country'))))
                             ],
                             'addresses.*.residency_status' => [
                                 'sometimes',
+                                'nullable',
                                 'numeric',
                                 'integer',
                                 Rule::in(array_keys((config('enums.address.residency_status'))))
                             ],
-                            'addresses.*.date_from' => 'sometimes|date',
-                            'phone_number' => 'sometimes|max:20',
-                            'email_address' => 'sometimes|max:120'
+                            'addresses.*.date_from' => 'sometimes|nullable|date',
+                            'phone_number' => 'sometimes|nullable|max:20',
+                            'email_address' => 'sometimes|nullable|max:120'
                         ]
                     ],
                     4 => [

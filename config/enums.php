@@ -1036,6 +1036,13 @@ return [
             3 => 'TenantLocalAuthorityHousingAssociation',
             4 => 'LivingWithFamilyFriends'
         ],
+        'residency_status_public' => [
+            0 => 'Owner Occupier - Mortgaged',
+            1 => 'Owner Occupier - Unencumbered',
+            2 => 'Tenant - Private',
+            3 => 'Tenant - Local Authority / Housing Association',
+            4 => 'Living with family/friends'
+        ],
         'types' => [
             0 => 'Home',
             1 => 'Business',
@@ -1301,7 +1308,7 @@ return [
     'dependent' => [
         'relationship_type' => [
             0 => 'Son',
-            1 => 'Daughther',
+            1 => 'Daughter',
             2 => 'Partner',
             3 => 'Husband',
             4 => 'Wife',

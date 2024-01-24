@@ -59,6 +59,7 @@ class ClientPresenter extends BasePresenter
                 'client_id' => $this->model->id,
                 'addresses' => collect($this->model->addresses->map(function ($address){
                     return [
+                        'address_id' => $address['id'],
                         'address_line_1' => $address['address_line_1'],
                         'address_line_2' => $address['address_line_2'],
                         'city' => $address['city'],
