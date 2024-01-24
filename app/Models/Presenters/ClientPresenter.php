@@ -46,7 +46,6 @@ class ClientPresenter extends BasePresenter
                 'poa_granted' => (boolean)$this->model->poa_granted
             ],
             '1.2' => [
-                'client_id' => $this->model->id,
                 'is_in_good_health' => $this->model->health?->is_in_good_health,
                 'health_details' => $this->model->health?->health_details,
                 'has_life_expectancy_concerns' => $this->model->health?->has_life_expectancy_concerns,
@@ -56,7 +55,6 @@ class ClientPresenter extends BasePresenter
                 'smoked_in_last_12_months' => $this->model->health?->smoked_in_last_12_months
             ],
             '1.3' => [
-                'client_id' => $this->model->id,
                 'addresses' => collect($this->model->addresses->map(function ($address){
                     return [
                         'address_id' => $address['id'],
@@ -73,7 +71,6 @@ class ClientPresenter extends BasePresenter
                     'email_address' => $this->model->email_address
             ],
             '1.4' => [
-                'client_id' => $this->model->id,
                 'dependents' => collect($this->model->dependents->map(function ($dependent){
                                         return [
                                                 'dependent_id' => $dependent->id,

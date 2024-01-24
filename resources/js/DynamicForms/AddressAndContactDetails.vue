@@ -77,7 +77,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div v-for="(address, index) in stepForm.addresses" class="grid pt-4 gap-2 md:grid md:grid-cols-6  md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
-                <div class="col-span-6 flex flex-row justify-between">
+                <div class="md:col-span-6 flex flex-row justify-between">
                     <label class="font-bold" v-if="index === 0">Primary Address</label>
                     <label class="font-bold" v-else>Address {{ index + 1 }}</label>
                     <button type="button" v-if="index !== 0" @click="removeAddress(index)"
@@ -143,7 +143,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_from">{{ stepForm.errors.date_from }}</p>
                 </div>
             </div>
-<!--            ^v-for-->
             <div class="grid gap-2 md:grid-cols-4 md:gap-y-8 md:gap-x-4 pr-2 pt-6">
                 <button type="button" @click="addAddress"
                         class="inline-flex  items-center gap-x-1.5 rounded-md
