@@ -1311,18 +1311,18 @@ return [
     'employment' => [
         'employment_status' => [
             0 => 'Unknown',
-            1 => 'SelfEmployed',
-            2 => 'CompanyDirector',
+            1 => 'Self Employed',
+            2 => 'Company Director',
             3 => 'Retired',
             4 => 'Unemployed',
             5 => 'Houseperson',
             6 => 'Student',
-            7 => 'MaternityLeave',
-            8 => 'LongTermIllness',
-            9 => 'ContractWorker',
+            7 => 'Maternity Leave',
+            8 => 'Long Term Illness',
+            9 => 'Contract Worker',
             10 => 'Employed',
-            11 => 'CarerOfaChildUnder16',
-            12 => 'CarerOfaPersonOver16',
+            11 => 'Carer Of a Child Under 16',
+            12 => 'Carer Of a Person Over 16',
             13 => 'Other'
         ],
     ]
