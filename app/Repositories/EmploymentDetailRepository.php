@@ -82,12 +82,8 @@ class EmploymentDetailRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $formEmploymentIds = collect($data['employment_details'])->map(function ($employment) {
-            if(array_key_exists('id', $employment)){
-                return $employment['id'];
-            }
-        });
-
+        $formEmploymentIds = collect($data['employment_details'])->pluck('id')->filter();
+        
         DB::beginTransaction();
 
         try {
