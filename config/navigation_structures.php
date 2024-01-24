@@ -165,15 +165,28 @@ return [
                     5 => [
                         'name' => 'Employment Details',
                         'fields' => [
+                            "employment_details.id",
                             "employment_details.employment_status",
-                            "employment_details.intended_retirement_date",
+                            "employment_details.intended_retirement_age",
                             "employment_details.occupation",
                             "employment_details.employer",
                             "employment_details.start_at",
                             "employment_details.end_at"
                         ],
                         'rules' => [
-
+                            'employment_details' => 'sometimes|array',
+                            'employment_details.*.id' => 'sometimes|nullable|integer',
+                            'employment_details.*.employment_status' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.employment.employment_status'))))
+                            ],
+                            'employment_details.*.intended_retirement_age' => 'sometimes|nullable|integer',
+                            'employment_details.*.occupation' => 'sometimes|nullable|string',
+                            'employment_details.*.employer' => 'sometimes|nullable|string',
+                            'employment_details.*.start_at' => 'sometimes|nullable|date',
+                            'employment_details.*.end_at' => 'sometimes|nullable|date'
                         ]
                     ],
                 ],

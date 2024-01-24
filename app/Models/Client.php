@@ -175,6 +175,9 @@ class Client extends Model
             '1.4' => [
                 'relationship_type' => config('enums.dependent.relationship_type')
             ],
+            '1.5' => [
+                'employment_status' => config('enums.employment.employment_status')
+            ],
             default => [
 
             ]
