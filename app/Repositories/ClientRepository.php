@@ -9,6 +9,7 @@ use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Models\Address;
 use App\Models\Client;
+use App\Models\Health;
 use App\Services\FactFindSectionDataService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -225,9 +226,20 @@ class ClientRepository extends BaseRepository
             if(array_key_exists('fields',$step) && count($step['fields']) > 0)
             {
                 return collect($step['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                    $nestedFieldArrays = ['dependents', 'addresses'];
+                    
+                    // process field names for nested field arrays
+                    if(in_array($key, $nestedFieldArrays)){
+                        $value = $value->map(function ($val) {
+                            $keyName = explode('.',$val)[1];
+                            return $keyName;
+                        });
+                    }
+
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
-//                        '//todo write join query here for other places data ends up'.
+                        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray(),
+                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),              
                         default => collect([]),
                     };
                 });
@@ -237,5 +249,4 @@ class ClientRepository extends BaseRepository
         if ($progress->count() === 0) return 0;
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
-
 }

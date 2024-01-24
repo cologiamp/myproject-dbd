@@ -141,11 +141,11 @@ return [
                         'name' => 'Family',
                         'fields' => [
                             'dependents' => [
-                                'name',
-                                'relationship_type',
-                                'born_at',
-                                'financial_dependent',
-                                'is_living_with_clients'
+                                'dependents.name',
+                                'dependents.relationship_type',
+                                'dependents.born_at',
+                                'dependents.financial_dependent',
+                                'dependents.is_living_with_clients'
                             ]
                         ],
                         'rules' => [
