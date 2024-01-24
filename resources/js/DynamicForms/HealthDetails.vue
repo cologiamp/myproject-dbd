@@ -66,7 +66,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <div v-if="stepForm.is_in_good_health == false">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If no, provide details</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.health_details" rows="3" name="health_details" id="health_details" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.health_details" rows="3" name="health_details" id="health_details" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
                 </div>
@@ -84,7 +84,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <div v-if="stepForm.has_life_expectancy_concerns == true">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If yes, please explain why</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.life_expectancy_details" rows="3" name="life_expectancy_details" id="life_expectancy_details" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.life_expectancy_details" rows="3" name="life_expectancy_details" id="life_expectancy_details" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Any medical conditions</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.medical_conditions" rows="3" name="medical_conditions" id="medical_conditions" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.medical_conditions" rows="3" name="medical_conditions" id="medical_conditions" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950  shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
                 </div>
