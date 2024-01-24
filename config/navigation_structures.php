@@ -102,13 +102,14 @@ return [
                         'name' => 'Address and Contact Details',
                         'fields' => [
                             'addresses' => [
-                                'address_line_1',
-                                'address_line_2',
-                                'county',
-                                'postcode',
-                                'country',
-                                'residency_status',
-                                'date_from'
+                                'addresses.address_line_1',
+                                'addresses.address_line_2',
+                                'addresses.city',
+                                'addresses.county',
+                                'addresses.postcode',
+                                'addresses.country',
+                                'addresses.residency_status',
+                                'addresses.date_from'
                             ],
                             "clients.phone_number",
                             "clients.email_address"
