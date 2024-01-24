@@ -182,7 +182,7 @@ const sidebarOpen = ref(false)
                             <ol  class="flex gap-x-0">
                                 <li v-for="(breadcrumb, key) in breadcrumbs" :key="key">
                                     <span v-if="!breadcrumb.is_active">
-                                        <a  :href="breadcrumb.link" class="underline">{{ breadcrumb.title }}</a> /
+                                        <a :href="breadcrumb.url" class="whitespace-pre underline">{{ breadcrumb.title }}</a> /
                                     </span>
                                     <span v-else>
                                           <span>{{ breadcrumb.title }}</span>

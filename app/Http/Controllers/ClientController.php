@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\ClientRepository;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,6 +21,8 @@ class ClientController extends Controller
     public function __invoke(Request $request)
     {
         $clients = $this->clientRepository->filterIndexQuery($request);
+
+        //dd($this->clientRepository->loadBreadcrumbs());
 
         return Inertia::render('ClientSelect',[
             'title' => 'Clients',
