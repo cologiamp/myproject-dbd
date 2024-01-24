@@ -100,13 +100,14 @@ return [
                         'name' => 'Address and Contact Details',
                         'fields' => [
                             'addresses' => [
-                                'address_line_1',
-                                'address_line_2',
-                                'county',
-                                'postcode',
-                                'country',
-                                'residency_status',
-                                'date_from'
+                                'addresses.address_line_1',
+                                'addresses.address_line_2',
+                                'addresses.city',
+                                'addresses.county',
+                                'addresses.postcode',
+                                'addresses.country',
+                                'addresses.residency_status',
+                                'addresses.date_from'
                             ],
                             "clients.phone_number",
                             "clients.email_address"
@@ -142,11 +143,11 @@ return [
                         'name' => 'Family',
                         'fields' => [
                             'dependents' => [
-                                'name',
-                                'relationship_type',
-                                'born_at',
-                                'financial_dependent',
-                                'is_living_with_clients'
+                                'dependents.name',
+                                'dependents.relationship_type',
+                                'dependents.born_at',
+                                'dependents.financial_dependent',
+                                'dependents.is_living_with_clients'
                             ]
                         ],
                         'rules' => [
