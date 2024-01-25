@@ -34,7 +34,7 @@ class ClientRepository extends BaseRepository
     {
         $this->client = $client;
     }
-    
+
     public function getClient() : Client
     {
         if($this->client){
@@ -84,15 +84,22 @@ class ClientRepository extends BaseRepository
         {
             $data = $data->safe();
         }
-        $addr = $this->client->addresses()->where('address_line_1',$data['address_line_1'])->first();
-        if(!$addr){
+        //Chore: Refactor this to use IO_ID?
+        if(array_key_exists('address_id',$data) && $data['address_id'] != null)
+        {
+            $addr = $this->client->addresses()->where('address_id',$data['address_id'])->first();
+        }
+        elseif(array_key_exists('io_id',$data) && $data['io_id'] != null)
+        {
+            $addr = $this->client->addresses()->where('io_id',$data['io_id'])->first();
+        }
+        else{
             $addr = Address::create($data);
 
             $this->client->addresses()->attach($addr->fresh());
+            return;
         }
-        else{
-            $addr->update($data);
-        }
+        $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
     }
 
     //Delete the resource from the database, doing any cleanup first
