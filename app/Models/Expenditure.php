@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\BaseModels\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Expenditure extends Model
 {
-    public function advice_case():BelongsTo
+    public function clients():BelongsToMany
     {
-        return $this->belongsTo(AdviceCase::class);
+        return $this->belongsToMany(Client::class);
     }
 }

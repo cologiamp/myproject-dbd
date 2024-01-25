@@ -125,6 +125,10 @@ class Client extends Model
         return $this->hasMany(PensionScheme::class);
     }
 
+    public function expenditures():BelongsToMany
+    {
+        return $this->belongsToMany(Expenditure::class);
+    }
 
     //Extends (Has One)
     public function current_year_finance():HasOne

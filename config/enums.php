@@ -1333,6 +1333,20 @@ return [
             13 => 'Other'
         ],
     ],
+    'incomes' => [
+        0 => 'Salary',
+        1 => 'Bonus',
+        2 => 'Car Allowance',
+        3 => 'Overtime',
+        4 => 'P11D',
+        5 => 'Self-Employment Annual Profit',
+        6 => 'Regular Pension Income',
+        7 => 'State Pension Income',
+        8 => 'Taxable State Benefits',
+        9 => 'Non-taxable State Benefits',
+        10 => 'Rental Income',
+        11 => 'Other Income'
+    ],
     'expenditures' => [
         'Basic Essential Expenditure' => [
             0 => 'Rent',
