@@ -109,7 +109,7 @@ class FactFindSectionDataService
 
         if (array_key_exists('has_life_expectancy_concerns', $validatedData)) {
             if ($validatedData['has_life_expectancy_concerns'] == false) {
-                $validatedData['health_details'] = '';
+                $validatedData['life_expectancy_details'] = '';
             }
         }
 

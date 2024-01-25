@@ -88,14 +88,14 @@ return [
                             "health.smoked_in_last_12_months"
                         ],
                         'rules' => [
-                            'client_id' => 'required|integer',
-                            'is_in_good_health' => 'sometimes|boolean',
-                            'health_details' => 'sometimes|max:1024',
-                            'has_life_expectancy_concerns' => 'sometimes|boolean',
-                            'life_expectancy_details' => 'sometimes|max:1024',
-                            'medical_conditions' => 'sometimes|max:1024',
-                            'smoker' => 'sometimes|integer',
-                            'smoked_in_last_12_months' => 'sometimes|boolean'
+                            'client_id' => 'required|nullable|integer',
+                            'is_in_good_health' => 'sometimes|nullable|boolean',
+                            'health_details' => 'sometimes|nullable|max:1024',
+                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
+                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
+                            'medical_conditions' => 'sometimes|nullable|max:1024',
+                            'smoker' => 'sometimes|nullable|integer',
+                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     3 => [

@@ -119,8 +119,6 @@ class DependentRepository extends BaseRepository
         });
 
         //do sync on all the dependent records updated/registered
-
-        // $this->client->dependents->sync($syncDependents);
         $this->client->dependents()->sync($syncDependents);
 
     }
