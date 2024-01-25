@@ -41,7 +41,7 @@ onBeforeMount(() => {
                 @click="tabsClick(index, tab)"
                 class="list-item !w-auto cursor-pointer group"
                 >
-                <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4 hover:text-white">{{ tab.name }}</p>
+                <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4 group-hover:text-white">{{ tab.name }}</p>
                 <!-- tab progress bar -->
                 <div class="flex w-full h-1.5 overflow-hidden group-hover:bg-aaron-400" :class="[tab.current ? 'bg-aaron-400 dark:bg-aaron-400' : '']" role="progressbar">
                 </div>
