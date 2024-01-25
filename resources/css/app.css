@@ -5,3 +5,13 @@
 [x-cloak] {
     display: none;
 }
+
+div.new-transition {
+    box-shadow: inset 0 0 0 0 #54b3d6;
+    color: #54b3d6;
+    transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+div.new-transition:hover {
+    box-shadow: inset 100px 0 0 0 #54b3d6;
+    color: white;
+}
