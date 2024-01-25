@@ -183,6 +183,10 @@ class Client extends Model
             '1.5' => [
                 'employment_status' => config('enums.employment.employment_status')
             ],
+            '2.1' => [
+                'income_types' => config('enums.incomes.income_type'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
             default => [
 
             ]

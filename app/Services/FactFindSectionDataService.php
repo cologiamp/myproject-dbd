@@ -8,6 +8,7 @@ use App\Repositories\ClientRepository;
 use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
 use App\Repositories\EmploymentDetailRepository;
+use App\Repositories\IncomeRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,17 +22,20 @@ class FactFindSectionDataService
     protected DependentRepository $dependentRepository;
     protected HealthRepository $healthRepository;
     protected EmploymentDetailRepository $employmentDetailRepository;
+    protected IncomeRepository $incomeRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
         DependentRepository $dependentRepository,
         HealthRepository $healthRepository,
-        EmploymentDetailRepository $employmentDetailRepository
+        EmploymentDetailRepository $employmentDetailRepository,
+        IncomeRepository $incomeRepository
     ) {
         $this->cr = $clientRepository;
         $this->dependentRepository = $dependentRepository;
         $this->healthRepository = $healthRepository;
         $this->employmentDetailRepository = $employmentDetailRepository;
+        $this->incomeRepository = $incomeRepository;
     }
     //get the data for a single section of a factfind from a single client
     public static function get($client, $step, $section): array
@@ -199,25 +203,63 @@ class FactFindSectionDataService
     private function _15(array $validatedData): void
     {
         try {
-            if (array_key_exists('employment_details', $validatedData)) {
-                $employment_details = collect($validatedData['employment_details'])->map(function ($employment) {
-                    if ($employment['start_at']) {
-                        $employment['start_at'] = Carbon::parse($employment['start_at']);
+            if (array_key_exists('incomes', $validatedData)) {
+                $incomes = collect($validatedData['incomes'])->map(function ($income) {
+                    if ($income['end_at']) {
+                        $income['end_at'] = Carbon::parse($income['end_at']);
                     }
-                    if ($employment['end_at']) {
-                        $employment['end_at'] = Carbon::parse($employment['end_at']);
-                    }
-
-                    return $employment;
+                    return $income;
                 });
 
-                $validatedData['employment_details'] = $employment_details->toArray();
+                $validatedData['incomes'] = $incomes->toArray();
             }
-
-            $this->employmentDetailRepository->setClient($this->cr->getClient());
-            $this->employmentDetailRepository->createOrUpdateEmploymentDetails($validatedData);
+            // $this->dependentRepository->setClient($this->cr->getClient());
+            // $this->dependentRepository->createOrUpdateDependentDetails($validatedData);
         } catch (Throwable $e) {
             Log::warning($e);
         }
+    }
+
+    /**
+     * Section: 2
+     * Step: 1
+     * @param array $validatedData
+     * @return void
+     */
+    private function _21(array $validatedData): void
+    {
+        // dd($validatedData);
+        try {
+            if (array_key_exists('incomes', $validatedData)) {
+                $incomes = collect($validatedData['incomes'])->map(function ($income) {
+                    if ($income['ends_at'] && $income['ends_at'] != null) {
+                        $income['ends_at'] = Carbon::parse($income['ends_at']);
+                    }
+                    if ($income['gross_amount'] && $income['gross_amount'] != null) {
+                        $income['gross_amount'] = $this->currencyStringToInt($income['gross_amount']);
+                    }
+                    if ($income['net_amount'] && $income['net_amount'] != null) {
+                        $income['net_amount'] = $this->currencyStringToInt($income['net_amount']);
+                    }
+                    if ($income['expenses'] && $income['expenses'] != null) {
+                        $income['expenses'] = $this->currencyStringToInt($income['expenses']);
+                    }
+
+                    return $income;
+                });
+
+                $validatedData['incomes'] = $incomes->toArray();
+            }
+
+            $this->incomeRepository->setClient($this->cr->getClient());
+            $this->incomeRepository->createOrUpdateIncomeDetails($validatedData);
+        } catch (Throwable $e) {
+            Log::warning($e);
+        }
+    }
+
+    private function currencyStringToInt(string $amount)
+    {
+        return (int)preg_replace('/\D/u','',$amount);
     }
 }
