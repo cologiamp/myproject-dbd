@@ -6,7 +6,10 @@ class BreadcrumbsService
 {
     public static function loadBreadcrumbs():array
     {
-        //dd(Breadcrumbs::generate()->toArray());
-        return Breadcrumbs::generate()->toArray();
+        return Breadcrumbs::generate()->tap(function ($col) use (&$numberOfBreadcrumbs){
+            $numberOfBreadcrumbs = count($col);
+        })->map(function ($item, $key) use ($numberOfBreadcrumbs){
+            return collect($item)->put('is_active',$key + 1 == $numberOfBreadcrumbs);
+        })->toArray();
     }
 }

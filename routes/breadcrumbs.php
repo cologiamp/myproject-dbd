@@ -19,6 +19,8 @@ Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
 // Home > Blog
 Breadcrumbs::for('clients', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
+    $trail->push('fishcake');
+    $trail->push('fishcake3');
     $trail->push('Clients', route('clients'));
 });
 
