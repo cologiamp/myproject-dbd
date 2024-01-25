@@ -11,9 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('dependents','dependants');
-        Schema::table('dependants', function (Blueprint $table) {
-            $table->renameColumn('financial_dependant','financial_dependent');
+        Schema::table('dependents', function (Blueprint $table) {
             $table->boolean('financial_dependent')->nullable()->change();
         });
     }
@@ -23,10 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('dependants', function (Blueprint $table) {
-            $table->renameColumn('financial_dependent','financial_dependant');
+        Schema::table('dependents', function (Blueprint $table) {
             $table->integer('financial_dependent')->nullable()->change();
         });
-        Schema::rename('dependants','dependents');
     }
 };

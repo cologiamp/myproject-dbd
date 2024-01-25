@@ -142,7 +142,7 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Financially
-                        Dependant</label>
+                        Dependent</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)"
                             v-model="dependent.financial_dependent" type="radio" id="true" :value="true"
