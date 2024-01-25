@@ -61,6 +61,7 @@ function addDependent() {
 
 function removeDependent(index) {
     stepForm.dependents.splice(index, 1);
+    autosaveT(stepForm,props.formData.submit_url);
 }
 
 onMounted(() => {
