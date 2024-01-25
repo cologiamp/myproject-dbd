@@ -1332,5 +1332,47 @@ return [
             12 => 'Carer Of a Person Over 16',
             13 => 'Other'
         ],
+    ],
+    'expenditures' => [
+        'Basic Essential Expenditure' => [
+            0 => 'Rent',
+            1 => 'Council Tax',
+            2 => 'Gas',
+            3 => 'Electricity',
+            4 => 'Water',
+            5 => 'Telephone/Mobile',
+            6 => 'Food & Personal Care',
+            7 => 'Car/Travelling Expenses',
+            8 => 'Housekeeping',
+            9 => 'Ground Rent/Service charge',
+            10 => 'Building Insurance',
+            11 => 'Combined Utilities',
+            12 => 'Maintenance/Alimony',
+            13 => 'Other (Basic Essential)'
+        ],
+        'Basic Quality of Living' => [
+            14 => 'Clothing',
+            15 => 'Furniture/Appliances/Repairs',
+            16 => 'TV/Satellite/Internet/Basic Recreation',
+            17 => 'Pension',
+            18 => 'School Fee/Childcare',
+            19 => 'Other (Basic Quality of Living)',
+        ],
+        'Non-Essential Outgoings' => [
+            20 => 'Gym',
+            21 => 'Holidays',
+            22 => 'Entertainment',
+            23 => 'Life/General Assurance Premium',
+            24 => 'Investments',
+            25 => 'Protection Products',
+            26 => 'Other Assets',
+            27 => 'Other (Non-Essential)',
+        ],
+        'Liability Expenditure' => [
+            28 => 'Personal Loans',
+            29 => 'Credit Cards',
+            30 => 'Mortgage',
+            31 => 'Other (Liability)',
+        ],
     ]
 ];
