@@ -185,7 +185,8 @@ class Client extends Model
             ],
             '2.1' => [
                 'income_types' => config('enums.incomes.income_type'),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'belongs_to' => $this->getBelongsToEnums()
             ],
             default => [
 
@@ -218,5 +219,12 @@ class Client extends Model
             return collect(array_keys(array_diff_assoc($parsed_data,$diff_data)));
         }
         else return new Collection();
+    }
+
+    public function getBelongsToEnums():Collection
+    {
+        return collect([
+            $this->id => $this->first_name
+        ]);
     }
 }

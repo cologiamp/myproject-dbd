@@ -199,17 +199,20 @@ return [
                     1 => [
                         'name' => 'Income',
                         'fields' => [
+                            "incomes.income_id",
                             "incomes.income_type",
                             "incomes.gross_amount",
                             "incomes.net_amount",
                             "incomes.expenses",
                             "incomes.frequency",
                             "incomes.ends_at",
+                            "incomes.belongs_to",
                             "incomes.record_exists",
                             "incomes.is_primary"
                         ],
                         'rules' => [
                             'incomes' => 'sometimes|nullable|array',
+                            'incomes.*.income_id' => 'sometimes|nullable|integer',
                             'incomes.*.income_type' => [
                                 'sometimes',
                                 'nullable',
@@ -228,8 +231,9 @@ return [
                                 Rule::in(array_keys((config('enums.incomes.frequency'))))
                             ],
                             'incomes.*.ends_at' => 'sometimes|nullable|date',
+                            'incomes.*.belongs_to' => 'sometimes|nullable|integer',
                             'incomes.*.record_exists' => 'sometimes|nullable|integer',
-                            'incomes.*.is_primary' => 'sometimes|nullable|integer'
+                            'incomes.*.is_primary' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     2 => [

@@ -8,7 +8,7 @@ import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, onBeforeMount } from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -21,7 +21,8 @@ const props = defineProps({
         default: {
             enums: {
                 income_types: [],
-                frequencies: []
+                frequencies: [],
+                belongs_to: []
             },
             model: {
                 incomes: [{
@@ -31,8 +32,9 @@ const props = defineProps({
                     expenses: null,
                     frequency: null,
                     ends_at: null,
-                    record_exists: null,
-                    is_primary: null
+                    belongs_to: null,
+                    record_exists: 0,
+                    is_primary: true
                 }]
             },
             submit_method: 'post',
@@ -55,8 +57,9 @@ function addIncome() {
         expenses: null,
         frequency: null,
         ends_at: null,
-        record_exists: null,
-        is_primary: null
+        belongs_to: null,
+        record_exists: 0,
+        is_primary: true
     });
 }
 
@@ -69,13 +72,39 @@ const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
     incomes: props.formData.model.incomes
 })
 
-// onMounted(() => {
-//     if(props.formData.model.incomes.length == 0) {
-//         addIncome()
-//     }
-// })
+onBeforeMount(() => {
+    formatAmountOnload()
+})
+
+function formatAmountOnload() {
+    Object.entries(stepForm.incomes).forEach(income => {
+        const [key, value] = income;
+
+        if (value['gross_amount'] && value['gross_amount'] != null) {
+            let $formattedValue = changeToCurrency(value['gross_amount'].toString());
+            value['gross_amount'] = $formattedValue
+        }
+        if (value['net_amount'] && value['net_amount'] != null) {
+            let $formattedValue = changeToCurrency(value['net_amount'].toString());
+            value['net_amount'] = $formattedValue
+        }
+        if (value['expenses'] && value['expenses'] != null) {
+            let $formattedValue = changeToCurrency(value['expenses'].toString());
+            value['expenses'] = $formattedValue
+        }
+        
+    });
+}
 
 function formatAmount(e, index, dataField) {
+    stepForm.incomes[index][dataField] = '';
+
+    let $formattedAmountValue = changeToCurrency(e.target.value);
+
+    stepForm.incomes[index][dataField] = $formattedAmountValue;
+}
+
+function changeToCurrency(amount) {
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'GBP',
@@ -83,15 +112,33 @@ function formatAmount(e, index, dataField) {
       });
 
     // Remove non-numeric characters from user input and convert to int
-    let tempAmount = e.target.value.replace(/[^\d.]/g, '');
+    let tempAmount = amount.replace(/[^\d.]/g, '');
     let numberValue = ''
-    stepForm.incomes[index][dataField] = ''
 
     if (tempAmount) {
         numberValue = tempAmount;
         // Format input using Intl.NumberFormat
-        stepForm.incomes[index][dataField] = formatter.format(numberValue);
+        return formatter.format(numberValue)
     }
+}
+
+function changeCheck(index) {
+    let thisKey = stepForm.incomes[index].belongs_to
+    
+    //group incomes by client_id owner
+    const incomeOwner = Object.groupBy(stepForm.incomes, ({ belongs_to }) => belongs_to);
+
+    //set all is_primary to false/uncheck
+    Object.entries(incomeOwner[thisKey]).forEach(owner => {
+        const [key, value] = owner;
+        value['is_primary'] = false;
+        
+    });
+
+    //set is_primary to true/checked
+    stepForm.incomes[index].is_primary = true;
+
+    autosaveT(stepForm,props.formData.submit_url)
 }
 
 </script>
@@ -151,6 +198,7 @@ function formatAmount(e, index, dataField) {
                     <label for="net_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
                     <!-- conditional rendering based on income_type -->
                     <!-- <label for="net_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label> -->
+                    <!-- :value="`£${income.net_amount}`"  -->
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="net_amount" id="net_amount" 
                             :value="income.net_amount" 
@@ -189,11 +237,10 @@ function formatAmount(e, index, dataField) {
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="belongs_to" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Belongs To</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" id="belongs_to" name="belongs_to" v-model="income.record_exists"
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="belongs_to" :value="null">-</option>
-                        <!-- <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.belongs_to">{{
-                            belongs_to }}</option> -->
+                        <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.belongs_to">{{ belongs_to }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
                         stepForm.errors.belongs_to }}</p>
@@ -201,7 +248,7 @@ function formatAmount(e, index, dataField) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-11">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox"  v-model="income.is_primary" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="is_primary" name="is_primary" type="checkbox" v-model="income.is_primary" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Is Primary</label>

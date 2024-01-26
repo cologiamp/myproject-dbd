@@ -228,7 +228,6 @@ class FactFindSectionDataService
      */
     private function _21(array $validatedData): void
     {
-        // dd($validatedData);
         try {
             if (array_key_exists('incomes', $validatedData)) {
                 $incomes = collect($validatedData['incomes'])->map(function ($income) {

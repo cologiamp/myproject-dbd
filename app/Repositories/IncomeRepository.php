@@ -85,7 +85,6 @@ class IncomeRepository extends BaseRepository
         $syncIncomes = [];
         collect($data['incomes'])->each(function ($income) use (&$syncIncomes) {
             if(array_key_exists('income_id', $income)) {
-
                 $model = Income::where('id', $income['income_id'])->first();
 
                 DB::beginTransaction();
@@ -108,9 +107,8 @@ class IncomeRepository extends BaseRepository
                 }
 
                 DB::commit();
-
+                
                 $syncIncomes[$model->id] = [
-                    'record_exists' => $income['record_exists'],
                     'is_primary' => $income['is_primary']
                 ];
             } else {
@@ -122,11 +120,9 @@ class IncomeRepository extends BaseRepository
         });
 
         //do sync on all the income records updated/registered
-        // $this->client->incomes()->sync($syncIncomes);
+        $this->client->incomes()->sync($syncIncomes);
 
     }
-
-
 
     public function registerIncome(array $income) {
 
@@ -146,7 +142,6 @@ class IncomeRepository extends BaseRepository
         return [
             'id' => $model['id'],
             'value' => [
-                'record_exists' => $income['record_exists'],
                 'is_primary' => $income['is_primary']
             ]
         ];
