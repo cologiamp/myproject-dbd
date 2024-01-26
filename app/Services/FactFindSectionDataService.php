@@ -203,18 +203,23 @@ class FactFindSectionDataService
     private function _15(array $validatedData): void
     {
         try {
-            if (array_key_exists('incomes', $validatedData)) {
-                $incomes = collect($validatedData['incomes'])->map(function ($income) {
-                    if ($income['end_at']) {
-                        $income['end_at'] = Carbon::parse($income['end_at']);
+            if (array_key_exists('employment_details', $validatedData)) {
+                $employment_details = collect($validatedData['employment_details'])->map(function ($employment) {
+                    if ($employment['start_at']) {
+                        $employment['start_at'] = Carbon::parse($employment['start_at']);
                     }
-                    return $income;
+                    if ($employment['end_at']) {
+                        $employment['end_at'] = Carbon::parse($employment['end_at']);
+                    }
+
+                    return $employment;
                 });
 
-                $validatedData['incomes'] = $incomes->toArray();
+                $validatedData['employment_details'] = $employment_details->toArray();
             }
-            // $this->dependentRepository->setClient($this->cr->getClient());
-            // $this->dependentRepository->createOrUpdateDependentDetails($validatedData);
+
+            $this->employmentDetailRepository->setClient($this->cr->getClient());
+            $this->employmentDetailRepository->createOrUpdateEmploymentDetails($validatedData);
         } catch (Throwable $e) {
             Log::warning($e);
         }
