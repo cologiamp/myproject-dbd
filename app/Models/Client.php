@@ -68,7 +68,7 @@ class Client extends Model
 
     public function incomes():BelongsToMany
     {
-        return $this->belongsToMany(Income::class);
+        return $this->belongsToMany(Income::class)->withPivot('is_primary');;
     }
 
 

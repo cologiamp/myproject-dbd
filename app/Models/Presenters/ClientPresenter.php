@@ -103,10 +103,11 @@ class ClientPresenter extends BasePresenter
                         'gross_amount' => $income->gross_amount,
                         'net_amount' => $income->net_amount,
                         'expenses' => $income->expenses,
+                        'frequency' => $income->frequency,
                         'ends_at' => $income->ends_at,
                         'belongs_to' => $income->pivot->client_id,
-                        'record_exists' => $income->pivot->client_id ? 1 : 0,
-                        'is_primary' => false
+                        'record_exists' => $income->pivot->client_id ? true : false,
+                        'is_primary' => (bool) $income->pivot->is_primary
                     ];
                 })),
                 

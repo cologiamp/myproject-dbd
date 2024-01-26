@@ -8,7 +8,7 @@ import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import { onMounted, ref, watch, onBeforeMount } from "vue";
+import { onBeforeMount, watch } from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -33,7 +33,7 @@ const props = defineProps({
                     frequency: null,
                     ends_at: null,
                     belongs_to: null,
-                    record_exists: 0,
+                    record_exists: null,
                     is_primary: true
                 }]
             },
@@ -58,8 +58,8 @@ function addIncome() {
         frequency: null,
         ends_at: null,
         belongs_to: null,
-        record_exists: 0,
-        is_primary: true
+        record_exists: null,
+        is_primary: false
     });
 }
 
@@ -123,13 +123,12 @@ function changeToCurrency(amount) {
 }
 
 function changeCheck(index) {
-    let thisKey = stepForm.incomes[index].belongs_to
-    
+    let incomeOwnerId = stepForm.incomes[index].belongs_to
     //group incomes by client_id owner
-    const incomeOwner = Object.groupBy(stepForm.incomes, ({ belongs_to }) => belongs_to);
+    const incomesByOwner = Object.groupBy(stepForm.incomes, ({ belongs_to }) => belongs_to);
 
     //set all is_primary to false/uncheck
-    Object.entries(incomeOwner[thisKey]).forEach(owner => {
+    Object.entries(incomesByOwner[incomeOwnerId]).forEach(owner => {
         const [key, value] = owner;
         value['is_primary'] = false;
         
@@ -195,10 +194,8 @@ function changeCheck(index) {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.gross_amount">{{ stepForm.errors.gross_amount }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="net_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
-                    <!-- conditional rendering based on income_type -->
-                    <!-- <label for="net_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label> -->
-                    <!-- :value="`£${income.net_amount}`"  -->
+                    <label for="net_amount" v-if="income.income_type != 10" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
+                    <label for="net_profit" v-else class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="net_amount" id="net_amount" 
                             :value="income.net_amount" 
@@ -208,14 +205,16 @@ function changeCheck(index) {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.net_amount">{{ stepForm.errors.net_amount }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="expenses" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Valid Expenses </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="expenses" id="expenses" 
-                            :value="income.expenses" 
-                            @input="formatAmount($event, index, 'expenses')"
-                            class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    <div v-if="income.income_type == 10">
+                        <label for="expenses" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Valid Expenses </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="expenses" id="expenses" 
+                                :value="income.expenses" 
+                                @input="formatAmount($event, index, 'expenses')"
+                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.expenses">{{ stepForm.errors.expenses }}</p>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.expenses">{{ stepForm.errors.expenses }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="frequency" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Frequency</label>

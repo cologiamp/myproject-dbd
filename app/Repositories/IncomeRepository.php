@@ -96,6 +96,7 @@ class IncomeRepository extends BaseRepository
                         'gross_amount' => $income['gross_amount'],
                         'net_amount' => $income['net_amount'],
                         'expenses' => $income['expenses'],
+                        'frequency' => $income['frequency'],
                         'ends_at' => $income['ends_at']
                     );
 
@@ -131,6 +132,7 @@ class IncomeRepository extends BaseRepository
             'gross_amount' => $income['gross_amount'],
             'net_amount' => $income['net_amount'],
             'expenses' => $income['expenses'],
+            'frequency' => $income['frequency'],
             'ends_at' => $income['ends_at']
         );
         try {

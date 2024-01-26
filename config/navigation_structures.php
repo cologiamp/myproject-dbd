@@ -232,7 +232,7 @@ return [
                             ],
                             'incomes.*.ends_at' => 'sometimes|nullable|date',
                             'incomes.*.belongs_to' => 'sometimes|nullable|integer',
-                            'incomes.*.record_exists' => 'sometimes|nullable|integer',
+                            'incomes.*.record_exists' => 'sometimes|nullable|boolean',
                             'incomes.*.is_primary' => 'sometimes|nullable|boolean'
                         ]
                     ],
