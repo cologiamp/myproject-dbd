@@ -24,6 +24,7 @@ return [
                             "clients.date_of_birth",
                             "clients.first_name",
                             "clients.last_name",
+                            "clients.salutation",
                             'clients.date_of_birth',
                             'clients.gender',
                             'clients.marital_status',
@@ -38,6 +39,7 @@ return [
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
                             'last_name' => 'sometimes|max:127',
+                            'salutation' => 'sometimes|max:127',
                             'title' => [
                                 'sometimes',
                                 'numeric',
@@ -280,63 +282,5 @@ return [
                 ],
             ],
         ],
-        5 => [
-            'name' => 'Risk',
-            'sections' => [
-                1 => [
-                    'name' => 'Foo',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-            ],
-        ],
-        6 => [
-            'name' => 'Objectives',
-            'sections' => [
-                1 => [
-                    'name' => 'Foo',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-            ],
-        ]
     ]
 ];

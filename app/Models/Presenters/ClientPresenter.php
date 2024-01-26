@@ -33,6 +33,7 @@ class ClientPresenter extends BasePresenter
             '1.1' => [
                 'first_name' => $this->model->first_name,
                 'last_name' => $this->model->last_name,
+                'salutation' => $this->model->salutation,
                 'title' => $this->model->title,
                 'date_of_birth' => $this->model->date_of_birth,
                 'gender' => $this->model->gender,
