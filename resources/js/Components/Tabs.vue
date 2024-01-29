@@ -39,7 +39,7 @@ onBeforeMount(() => {
                 :key="tab.name"
                 :id="index"
                 @click="tabsClick(index, tab)"
-                class="list-item !w-auto"
+                class="list-item !w-auto cursor-pointer"
                 >
                 <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4">{{ tab.name }}</p>
                 <!-- tab progress bar -->
