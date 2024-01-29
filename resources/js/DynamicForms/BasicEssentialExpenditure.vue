@@ -48,10 +48,9 @@ function saveDate(typeIndex, expIndex, value, dateId) {
 }
 
 function addExpenditure(typeIndex) {
-    console.log('typeIndex= ' + typeIndex)
     if (stepForm.expenditures[typeIndex]) {
         stepForm.expenditures[typeIndex].push({
-            expenditure_type: null,
+            expenditure_type: parseInt(typeIndex),
             description: null,
             amount: null,
             frequency: null,
@@ -72,12 +71,10 @@ function addExpenditure(typeIndex) {
             ends_at: null
         }]
     }
-    
-    console.log('test= ' + JSON.stringify(stepForm.expenditures))
 }
 
-function removeExpenditure(index) {
-    stepForm.expenditures.splice(index, 1);
+function removeExpenditure(typeIndex, expIndex) {
+    stepForm.expenditures[typeIndex].splice(expIndex, 1);
     autosaveT(stepForm,props.formData.submit_url);
 }
 
@@ -94,15 +91,15 @@ onBeforeMount(() => {
     });
 })
 
-onMounted(() => {
-})
-
 function formatAmountOnload() {
-    Object.entries(stepForm.expenditures).forEach(expenditure => {
-        const [key, value] = expenditure;
+    Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
+        if(stepForm.expenditures[expType]) {
 
-        if (value['amount'] && value['amount'] != null) {
-            value['amount'] = changeToCurrency(value['amount'].toString());
+            stepForm.expenditures[expType].forEach(expenditure => {
+                if (expenditure['amount'] && expenditure['amount'] != null) {
+                    expenditure['amount'] = changeToCurrency(expenditure['amount'].toString());
+                }
+            });   
         }
     });
 }
@@ -174,6 +171,12 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     <label class="font-bold text-aaron-400 text-lg mb-4">{{ expenditureType }} Expenditure</label>
                 </div>
                 <div v-for="(expenditure, expIndex) in stepForm.expenditures[typeIndex]" class="grid gap-2 mb-8 border-b-2 border-aaron-500 border-dashed pb-12 last-of-type:border-none last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
+                    <div class="flex flex-row justify-end md:col-span-6 md:pr-2">
+                        <button type="button" @click="removeExpenditure(typeIndex, expIndex)"
+                            class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <XCircleIcon class="w-4 h-4" />Remove Expenditure
+                        </button>
+                    </div>
                     <div class="mt-2 md:col-span-3 sm:mt-0 md:pr-2">
                         <label for="expenditure_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Expenditure Type</label>
                         <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="expenditure.expenditure_type"
