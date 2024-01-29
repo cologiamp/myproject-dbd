@@ -24,9 +24,11 @@ class FactFindController extends Controller
         //$req->step - which tab to use
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
-        $tabs = $this->clientRepository->loadFactFindTabs($request->step != null ? $request->step : 1, $request->section != null ? $request->section : 1);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
+
+        $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
+
         return Inertia::render('FactFind', [
             'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),

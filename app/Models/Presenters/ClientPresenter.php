@@ -95,6 +95,23 @@ class ClientPresenter extends BasePresenter
                     ];
                 }))
             ],
+            '2.1' => [
+                'incomes' => collect($this->model->incomes->map(function ($income){
+                    return [
+                        'income_id' => $income->id,
+                        'income_type' => $income->category,
+                        'gross_amount' => $income->gross_amount,
+                        'net_amount' => $income->net_amount,
+                        'expenses' => $income->expenses,
+                        'frequency' => $income->frequency,
+                        'ends_at' => $income->ends_at,
+                        'belongs_to' => $income->pivot->client_id,
+                        'record_exists' => $income->pivot->client_id ? true : false,
+                        'is_primary' => (bool) $income->pivot->is_primary
+                    ];
+                })),
+
+            ],
             default => [
 
             ]

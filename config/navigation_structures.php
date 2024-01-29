@@ -197,11 +197,43 @@ return [
                 'name' => 'Income and Expenditure',
                 'sections' => [
                     1 => [
-                        'name' => 'Foo',
+                        'name' => 'Income',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "incomes.income_id",
+                            "incomes.income_type",
+                            "incomes.gross_amount",
+                            "incomes.net_amount",
+                            "incomes.expenses",
+                            "incomes.frequency",
+                            "incomes.ends_at",
+                            "incomes.belongs_to",
+                            "incomes.record_exists",
+                            "incomes.is_primary"
+                        ],
+                        'rules' => [
+                            'incomes' => 'sometimes|nullable|array',
+                            'incomes.*.income_id' => 'sometimes|nullable|integer',
+                            'incomes.*.income_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.income_type'))))
+                            ],
+                            'incomes.*.gross_amount' => 'sometimes|nullable|string',
+                            'incomes.*.net_amount' => 'sometimes|nullable|string',
+                            'incomes.*.expenses' => 'sometimes|nullable|string',
+                            'incomes.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'incomes.*.ends_at' => 'sometimes|nullable|date',
+                            'incomes.*.belongs_to' => 'sometimes|nullable|integer',
+                            'incomes.*.record_exists' => 'sometimes|nullable|boolean',
+                            'incomes.*.is_primary' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     2 => [
@@ -211,15 +243,7 @@ return [
                             "clients.first_name",
                             "clients.last_name"
                         ]
-                    ],
-                    3 => [
-                        'name' => 'Baz',
-                        'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
-                        ]
-                    ],
+                    ]
                 ],
             ],
         3 => [
