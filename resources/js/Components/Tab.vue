@@ -51,7 +51,7 @@ function handleAutosave(val){
                 </h1>
                 <AutoSaveSpinner :autosave="autosaveState" />
             </div>
-            <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
+            <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
                 <div
                     :class="tab.progress === 100 ? `bg-green-400` : `bg-aaron-400`"
                     :style="{ width: `${tab.progress}%`}"
