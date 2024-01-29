@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Concerns\FormatsCurrency;
 use App\Models\Client;
 use App\Repositories\ClientRepository;
 use App\Repositories\DependentRepository;
@@ -18,6 +19,7 @@ use Throwable;
 
 class FactFindSectionDataService
 {
+    use FormatsCurrency;
     protected ClientRepository $cr;
     protected DependentRepository $dependentRepository;
     protected HealthRepository $healthRepository;
@@ -260,10 +262,5 @@ class FactFindSectionDataService
         } catch (Throwable $e) {
             Log::warning($e);
         }
-    }
-
-    private function currencyStringToInt(string $amount)
-    {
-        return (int)preg_replace('/\D/u','',$amount);
     }
 }
