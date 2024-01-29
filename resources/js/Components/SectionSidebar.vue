@@ -72,24 +72,21 @@ onBeforeMount(() => {
 
 <template>
 
-    <aside id="default-sidebar" class="h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-full md:absolute md:mb-0" aria-label="Sidebar">
-        <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 text-white">
-            <ul class="font-medium">
-                <li class="cursor-pointer" v-for="(item, index) in props.sidebarItems"
-                    :key="item.name"
-                    :id="index"
-                    @click="sectionsClick(index, item)">
-                    <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                        <div class="rounded-full w-11 h-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400"
-                            :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
-                                {{ index }}
-                        </div>
-                        <span class="ms-3 text-base group-hover:text-aaron-50">{{ item.name }}</span>
-                    </div>
-                </li>
-            </ul>
+
+    <div class="sticky top-0 cursor-pointer" v-for="(item, index) in props.sidebarItems"
+        :key="item.name"
+        :id="index"
+        @click="sectionsClick(index, item)">
+        <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group"
+             :class="[item.current ? '' : 'hidden']">
+            <div class="rounded-full w-11 h-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400"
+                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
+                    {{ index }}
+            </div>
+            <span class="ms-3 text-base group-hover:text-aaron-50">{{ item.name }}</span>
         </div>
-    </aside>
+    </div>
+
 
     <div class="sticky top-0 flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
         <div class="rounded-full w-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400 bg-aaron-400">
