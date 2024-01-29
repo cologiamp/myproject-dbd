@@ -56,7 +56,7 @@ onBeforeMount(() => {
 <style>
 
 .scrollable-container {
-    height: 500px;
+    height: 100vh;
     overflow-y: scroll;
 }
 
@@ -90,7 +90,7 @@ onBeforeMount(() => {
             </ul>
         </div>
     </aside>
-    
+
     <div class="sticky top-0 flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
         <div class="rounded-full w-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400 bg-aaron-400">
             9
