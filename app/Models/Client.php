@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Client extends Model
 {
@@ -99,10 +100,14 @@ class Client extends Model
         return $this->belongsToMany(Address::class);
     }
 
-
-    public function dependents():HasMany
+    public function health():HasOne
     {
-        return $this->hasMany(Dependent::class);
+        return $this->hasOne(Health::class);
+    }
+
+    public function dependents():BelongsToMany
+    {
+        return $this->belongsToMany(Dependent::class)->withPivot('relationship_type');
     }
 
     public function employment_details():HasMany
@@ -120,6 +125,10 @@ class Client extends Model
         return $this->hasMany(PensionScheme::class);
     }
 
+    public function expenditures():BelongsToMany
+    {
+        return $this->belongsToMany(Expenditure::class);
+    }
 
     //Extends (Has One)
     public function current_year_finance():HasOne
@@ -153,9 +162,9 @@ class Client extends Model
 
     //This is where you load the fact find enums
     //FactFind:// Need to do this for every section/step
-    public function loadEnumsForStep($section,$step)
+    public function loadEnumsForStep($step,$section)
     {
-        return match ($section.'.'.$step){
+        return match ($step.'.'.$section){
             '1.1' => [
                 'titles' => config('enums.client.title'),
                 'genders' => config('enums.client.gender'),
@@ -163,6 +172,16 @@ class Client extends Model
                 'nationalities' => config('enums.client.nationality') ,
                 'country_of_domiciles' => config('enums.client.iso_2'),
                 'country_of_residences' => config('enums.client.iso_2')
+            ],
+            '1.3' => [
+                'residency_status' => collect(config('enums.address.residency_status_public')),
+                'countries' => config('enums.address.country')
+            ],
+            '1.4' => [
+                'relationship_type' => config('enums.dependent.relationship_type')
+            ],
+            '1.5' => [
+                'employment_status' => config('enums.employment.employment_status')
             ],
             default => [
 
@@ -174,6 +193,7 @@ class Client extends Model
         if($this->io_json)
         {
             $parsed_data = array_merge($this->parseClientData($this->io_json)['client']);
+
             $diff_data = Client::whereId($this->id)->select( //THE ELEMENTS THAT ARE PULLED FROM IO INITIALLY
                 [
                     'title',
@@ -188,6 +208,8 @@ class Client extends Model
                     'phone_number'
                 ]
             )->first()->toArray();
+
+
             //this needs to list the fields that are different
             return collect(array_keys(array_diff_assoc($parsed_data,$diff_data)));
         }

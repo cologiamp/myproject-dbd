@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dependents', function (Blueprint $table) {
-            $table->boolean('financial_dependent')->nullable()->change();
+        Schema::create('client_expenditure', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('client_id');
+            $table->foreignId('expenditure_id');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('dependents', function (Blueprint $table) {
-            $table->integer('financial_dependent')->nullable()->change();
-        });
+        Schema::dropIfExists('client_expenditure');
     }
 };

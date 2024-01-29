@@ -132,7 +132,7 @@ trait ParsesIoClientData{
         }
         if(array_key_exists('country',$address['address']) && $address['address']['country']['name'] != null)
         {
-            $data['country'] = $address['address']['country']['name'];
+            $data['country'] = array_flip(config('enums.address.country'))[$address['address']['country']['name']];
         }
         if(array_key_exists('county',$address['address']) && $address['address']['county']['name'] != null)
         {

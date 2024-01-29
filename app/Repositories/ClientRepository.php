@@ -4,10 +4,13 @@ namespace App\Repositories;
 
 
 use App\Concerns\ParsesIoClientData;
+use App\Exceptions\ClientNotFoundException;
 use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Models\Address;
 use App\Models\Client;
+use App\Models\Health;
+use App\Models\EmploymentDetail;
 use App\Services\FactFindSectionDataService;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -30,6 +33,14 @@ class ClientRepository extends BaseRepository
     public function setClient(Client $client): void
     {
         $this->client = $client;
+    }
+
+    public function getClient() : Client
+    {
+        if($this->client){
+            return $this->client;
+        }
+        throw new ClientNotFoundException();
     }
 
     //Create the model
@@ -73,15 +84,22 @@ class ClientRepository extends BaseRepository
         {
             $data = $data->safe();
         }
-        $addr = $this->client->addresses()->where('address_line_1',$data['address_line_1'])->first();
-        if(!$addr){
+        //Chore: Refactor this to use IO_ID?
+        if(array_key_exists('address_id',$data) && $data['address_id'] != null)
+        {
+            $addr = $this->client->addresses()->where('address_id',$data['address_id'])->first();
+        }
+        elseif(array_key_exists('io_id',$data) && $data['io_id'] != null)
+        {
+            $addr = $this->client->addresses()->where('io_id',$data['io_id'])->first();
+        }
+        else{
             $addr = Address::create($data);
 
             $this->client->addresses()->attach($addr->fresh());
+            return;
         }
-        else{
-            $addr->update($data);
-        }
+        $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
     }
 
     //Delete the resource from the database, doing any cleanup first
@@ -167,14 +185,14 @@ class ClientRepository extends BaseRepository
      * Load in factfind sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
      */
-    public function loadFactFindSidebarItems($sections, $currentSection)
+    public function loadFactFindSidebarItems($sections, $currentStep, $currentSection)
     {
-        return collect($sections)->map(function ($value,$key) use ($currentSection){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection){
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => FactFindSectionDataService::get($this->client,$currentSection,$key),
+               'dynamicData' => FactFindSectionDataService::get($this->client,$currentStep,$key),
            ];
         });
     }
@@ -199,25 +217,39 @@ class ClientRepository extends BaseRepository
                 'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
-                }), $currentSection)->toArray()
+                }), $currentStep, $currentSection)->toArray()
             ];
         })->toArray();
     }
 
     //FactFind://to do - make sure this works for your form
     /**
-     * Function to work out the progress % for each section.
+     * Function to work out the progress % for each step.
      * @param $key
      * @return int
      */
-    public function calculateFactFindElementProgress(int $section):int
+    public function calculateFactFindElementProgress(int $step):int
     {
-        $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
+        $progress = collect(config('navigation_structures.factfind.' . $step . '.sections'))->map(function ($section){
             if(array_key_exists('fields',$section) && count($section['fields']) > 0)
             {
                 return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                    $nestedFieldArrays = ['dependents', 'addresses'];
+
+                    // process field names for nested field arrays
+                    if(in_array($key, $nestedFieldArrays)){
+                        $value = $value->map(function ($val) {
+                            $keyName = explode('.',$val)[1];
+                            return $keyName;
+                        });
+                    }
+
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
+                        'addresses' => $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
+                        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first() ? Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray() : $this->setEmptyFields($value),
+                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
+                        'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get() ? EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get()->toArray() : $this->setEmptyFields($value),
 //                        '//todo write join query here for other places data ends up'.
                         default => collect([]),
                     };
@@ -225,8 +257,19 @@ class ClientRepository extends BaseRepository
             }
             else return collect([]);
         })->flatten();
+
         if ($progress->count() === 0) return 0;
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
 
+    public function setEmptyFields(Collection $value)
+    {
+        $nullFields = new Collection();
+        $value->map(function ($val) use ($nullFields) {
+            $keyName = explode('.',$val)[1];
+            return $nullFields[$keyName] = null;
+        });
+
+        return $nullFields;
+    }
 }

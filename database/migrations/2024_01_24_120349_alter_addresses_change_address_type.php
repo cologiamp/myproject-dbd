@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('dependents', function (Blueprint $table) {
-            $table->boolean('financial_dependent')->nullable()->change();
+        Schema::table('addresses', function (Blueprint $table) {
+            $table->integer('country')->nullable()->change();
+            $table->string('io_id')->after('id')->nullable();
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('dependents', function (Blueprint $table) {
-            $table->integer('financial_dependent')->nullable()->change();
+        Schema::table('addresses', function (Blueprint $table) {
+            $table->string('country')->change();
+            $table->dropColumn(['io_id']);
         });
     }
 };

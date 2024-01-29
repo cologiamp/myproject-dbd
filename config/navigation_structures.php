@@ -24,6 +24,7 @@ return [
                             "clients.date_of_birth",
                             "clients.first_name",
                             "clients.last_name",
+                            "clients.salutation",
                             'clients.date_of_birth',
                             'clients.gender',
                             'clients.marital_status',
@@ -38,6 +39,7 @@ return [
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
                             'last_name' => 'sometimes|max:127',
+                            'salutation' => 'sometimes|max:127',
                             'title' => [
                                 'sometimes',
                                 'numeric',
@@ -78,33 +80,117 @@ return [
                     2 => [
                         'name' => 'Health Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "health.is_in_good_health",
+                            "health.health_details",
+                            "health.has_life_expectancy_concerns",
+                            "health.life_expectancy_details",
+                            "health.medical_conditions",
+                            "health.smoker",
+                            "health.smoked_in_last_12_months"
+                        ],
+                        'rules' => [
+                            'is_in_good_health' => 'sometimes|nullable|boolean',
+                            'health_details' => 'sometimes|nullable|max:1024',
+                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
+                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
+                            'medical_conditions' => 'sometimes|nullable|max:1024',
+                            'smoker' => 'sometimes|nullable|integer',
+                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     3 => [
                         'name' => 'Address and Contact Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            'addresses' => [
+                                'addresses.address_line_1',
+                                'addresses.address_line_2',
+                                'addresses.city',
+                                'addresses.county',
+                                'addresses.postcode',
+                                'addresses.country',
+                                'addresses.residency_status',
+                                'addresses.date_from'
+                            ],
+                            "clients.phone_number",
+                            "clients.email_address"
+                        ],
+                        'rules' => [
+                            'addresses' => 'sometimes|array',
+                            'addresses.*.address_line_1' => 'sometimes|max:320',
+                            'addresses.*.address_id' => 'sometimes',
+                            'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
+                            'addresses.*.city' => 'sometimes|nullable|max:320',
+                            'addresses.*.county' => 'sometimes|nullable|max:320',
+                            'addresses.*.postcode' => 'sometimes|nullable|max:320',
+                            'addresses.*.country' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.country'))))
+                            ],
+                            'addresses.*.residency_status' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.residency_status'))))
+                            ],
+                            'addresses.*.date_from' => 'sometimes|nullable|date',
+                            'phone_number' => 'sometimes|nullable|max:20',
+                            'email_address' => 'sometimes|nullable|max:120'
                         ]
                     ],
                     4 => [
                         'name' => 'Family',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            'dependents' => [
+                                'dependents.name',
+                                'dependents.relationship_type',
+                                'dependents.born_at',
+                                'dependents.financial_dependent',
+                                'dependents.is_living_with_clients'
+                            ]
+                        ],
+                        'rules' => [
+                            'dependents' => 'sometimes|array',
+                            'dependents.*.name' => 'sometimes|string',
+                            'dependents.*.relationship_type' => [
+                                'required',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
+                            ],
+                            'dependents.*.born_at' => 'sometimes|nullable|date',
+                            'dependents.*.financial_dependent' => 'sometimes|boolean',
+                            'dependents.*.is_living_with_clients' => 'sometimes|boolean'
                         ]
                     ],
                     5 => [
                         'name' => 'Employment Details',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "employment_details.id",
+                            "employment_details.employment_status",
+                            "employment_details.intended_retirement_age",
+                            "employment_details.occupation",
+                            "employment_details.employer",
+                            "employment_details.start_at",
+                            "employment_details.end_at"
+                        ],
+                        'rules' => [
+                            'employment_details' => 'sometimes|array',
+                            'employment_details.*.id' => 'sometimes|nullable|integer',
+                            'employment_details.*.employment_status' => [
+                                'sometimes',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.employment.employment_status'))))
+                            ],
+                            'employment_details.*.intended_retirement_age' => 'sometimes|nullable|integer',
+                            'employment_details.*.occupation' => 'sometimes|nullable|string',
+                            'employment_details.*.employer' => 'sometimes|nullable|string',
+                            'employment_details.*.start_at' => 'sometimes|nullable|date',
+                            'employment_details.*.end_at' => 'sometimes|nullable|date'
                         ]
                     ],
                 ],
@@ -196,63 +282,5 @@ return [
                 ],
             ],
         ],
-        5 => [
-            'name' => 'Risk',
-            'sections' => [
-                1 => [
-                    'name' => 'Foo',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-            ],
-        ],
-        6 => [
-            'name' => 'Objectives',
-            'sections' => [
-                1 => [
-                    'name' => 'Foo',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-            ],
-        ]
     ]
 ];

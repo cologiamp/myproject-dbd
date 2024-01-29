@@ -28,10 +28,6 @@ class AdviceCase extends Model
     }
 
 
-    public function expenditure():HasMany
-    {
-        return $this->hasMany(Expenditure::class);
-    }
     public function income_changes():HasMany
     {
         return $this->hasMany(IncomeChange::class);

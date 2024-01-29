@@ -39,11 +39,11 @@ onBeforeMount(() => {
                     :id="index"
                     @click="sectionsClick(index, item)">
                     <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                        <div class="rounded-full w-11 h-11 py-2 text-center"
+                        <div class="rounded-full w-11 h-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400"
                             :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                                 {{ index }}
                         </div>
-                        <span class="ms-3 text-base">{{ item.name }}</span>
+                        <span class="ms-3 text-base group-hover:text-aaron-50">{{ item.name }}</span>
                     </div>
                 </li>
             </ul>
@@ -51,7 +51,7 @@ onBeforeMount(() => {
     </aside>
 
     <div class="md:p-4 sm:ml-80">
-        <div class="p-4 h-full">
+        <div class="p-4">
             <slot></slot>
         </div>
     </div>
