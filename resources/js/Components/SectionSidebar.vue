@@ -34,7 +34,7 @@ onBeforeMount(() => {
     <aside id="default-sidebar" class="h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-full md:absolute md:mb-0" aria-label="Sidebar">
         <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 text-white">
             <ul class="font-medium">
-                <li v-for="(item, index) in props.sidebarItems"
+                <li class="cursor-pointer" v-for="(item, index) in props.sidebarItems"
                     :key="item.name"
                     :id="index"
                     @click="sectionsClick(index, item)">

@@ -54,7 +54,7 @@ function handleAutosave(val){
             <hr class="-mx-32 h-1 mt-2 mb-6 bg-aaron-950 border-0">
 
             <span class="-mb-3">{{ tab.name + ' progress: ' + tab.progress + '%' }} </span>
-            <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md
+            <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
                 <div
                     :class="tab.progress === 100 ? `bg-green-400` : `bg-aaron-400`"
                     :style="{ width: `${tab.progress}%`}"
