@@ -237,12 +237,7 @@ return [
                         ]
                     ],
                     2 => [
-                        'name' => 'Bar',
-                        'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
-                        ]
+                        'name' => 'Basic Essential Expenditure'
                     ]
                 ],
             ],

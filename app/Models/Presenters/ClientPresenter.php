@@ -109,8 +109,22 @@ class ClientPresenter extends BasePresenter
                         'record_exists' => $income->pivot->client_id ? true : false,
                         'is_primary' => (bool) $income->pivot->is_primary
                     ];
-                })),
-
+                }))
+            ],
+            '2.2' => [
+                'expenditures' => collect($this->model->expenditures->map(function ($expenditure){
+                    return [
+                        'expenditure_id' => $expenditure->id,
+                        'expenditure_type' => $expenditure->type,
+                        'description' => $expenditure->description,
+                        'amount' => $expenditure->amount,
+                        'frequency' => $expenditure->frequency,
+                        'starts_at' => $expenditure->starts_at,
+                        'ends_at' => $expenditure->ends_at,
+                        'currently_active' => $expenditure->starts_at ? false : true,
+                        'known_end_date' => $expenditure->ends_at ? true : false
+                    ];
+                }))->groupBy('expenditure_type')
             ],
             default => [
 

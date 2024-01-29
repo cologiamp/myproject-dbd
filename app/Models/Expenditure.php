@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Expenditure extends Model
 {
+    protected $guarded = [];
+
     public function clients():BelongsToMany
     {
-        return $this->belongsToMany(Client::class);
+        return $this->belongsToMany(Client::class)->withPivot('expenditure_id');
     }
 }

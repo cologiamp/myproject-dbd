@@ -68,7 +68,7 @@ class Client extends Model
 
     public function incomes():BelongsToMany
     {
-        return $this->belongsToMany(Income::class)->withPivot('is_primary');;
+        return $this->belongsToMany(Income::class)->withPivot('is_primary');
     }
 
 
@@ -127,7 +127,7 @@ class Client extends Model
 
     public function expenditures():BelongsToMany
     {
-        return $this->belongsToMany(Expenditure::class);
+        return $this->belongsToMany(Expenditure::class)->withPivot('expenditure_id');
     }
 
     //Extends (Has One)
@@ -187,6 +187,10 @@ class Client extends Model
                 'income_types' => config('enums.incomes.income_type'),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'belongs_to' => $this->getBelongsToEnums()
+            ],
+            '2.2' => [
+                'expenditure_types' => config('enums.expenditures.Basic Essential Expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             default => [
 
