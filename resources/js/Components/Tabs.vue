@@ -44,10 +44,6 @@ onBeforeMount(() => {
                 <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4 group-hover:text-white transition-all">{{ tab.name }}</p>
                 <!-- tab progress bar -->
                 <div class="flex w-full h-1.5 overflow-hidden group-hover:bg-aaron-400 transition-all" :class="[tab.current ? 'bg-aaron-400 dark:bg-aaron-400' : '']" role="progressbar">
-                    <!--
-                    <div class="flex w-full h-1.5 overflow-hidden group-hover:bg-aaron-400 scale-x-100 transition duration-300 origin-center" :class="[tab.current ? 'bg-aaron-400 dark:bg-aaron-400' : '']" role="progressbar">
-                    </div>
-                    -->
                 </div>
             </li>
         </ul>
