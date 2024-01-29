@@ -43,7 +43,6 @@ onBeforeMount(() => {
                             :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                                 {{ index }}
                         </div>
-                        <!-- Change colour on the line below if you would like a aaron-400 hove on link -->
                         <span class="ms-3 text-base group-hover:text-aaron-50">{{ item.name }}</span>
                     </div>
                 </li>
