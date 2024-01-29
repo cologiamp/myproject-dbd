@@ -197,7 +197,7 @@ const sidebarOpen = ref(false)
 
 
                 </aside>
-                <main class="py-10">
+                <main class="py-10 scrollable-container">
                     <div class="mx-auto max-w-7xl md:px-4 lg:px-8 text-aaron-50">
                         <slot />
                     </div>
