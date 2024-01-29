@@ -62,7 +62,7 @@ function removeEmployment(index) {
 }
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
-    employment_details: props.formData.model.employment_details
+    employment_details: props.formData.model.employment_details != null ? props.formData.model.employment_details : []
 })
 
 onMounted(() => {
@@ -156,7 +156,7 @@ onMounted(() => {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_of_birth">{{ stepForm.errors.date_of_birth }}</p>
                 </div>
             </div>
-            <button type="button" @click="addEmployment" 
+            <button type="button" @click="addEmployment"
                     class="float-right inline-flex items-center gap-x-1.5 mt-4 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 <PlusCircleIcon class="w-6 h-6" />Add Employment
             </button>

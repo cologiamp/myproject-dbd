@@ -69,7 +69,7 @@ function removeIncome(index) {
 }
 
 const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
-    incomes: props.formData.model.incomes
+    incomes: props.formData.model.incomes != null ? props.formData.model.incomes : []
 })
 
 onBeforeMount(() => {
@@ -81,27 +81,21 @@ function formatAmountOnload() {
         const [key, value] = income;
 
         if (value['gross_amount'] && value['gross_amount'] != null) {
-            let $formattedValue = changeToCurrency(value['gross_amount'].toString());
-            value['gross_amount'] = $formattedValue
+            value['gross_amount'] = changeToCurrency(value['gross_amount'].toString());
         }
         if (value['net_amount'] && value['net_amount'] != null) {
-            let $formattedValue = changeToCurrency(value['net_amount'].toString());
-            value['net_amount'] = $formattedValue
+            value['net_amount'] = changeToCurrency(value['net_amount'].toString());
         }
         if (value['expenses'] && value['expenses'] != null) {
-            let $formattedValue = changeToCurrency(value['expenses'].toString());
-            value['expenses'] = $formattedValue
+            value['expenses'] = changeToCurrency(value['expenses'].toString());
         }
-        
+
     });
 }
 
 function formatAmount(e, index, dataField) {
     stepForm.incomes[index][dataField] = '';
-
-    let $formattedAmountValue = changeToCurrency(e.target.value);
-
-    stepForm.incomes[index][dataField] = $formattedAmountValue;
+    stepForm.incomes[index][dataField] = changeToCurrency(e.target.value);
 }
 
 function changeToCurrency(amount) {
@@ -131,7 +125,7 @@ function changeCheck(index) {
     Object.entries(incomesByOwner[incomeOwnerId]).forEach(owner => {
         const [key, value] = owner;
         value['is_primary'] = false;
-        
+
     });
 
     //set is_primary to true/checked
@@ -186,8 +180,8 @@ function changeCheck(index) {
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Amount </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="gross_amount" id="gross_amount" 
-                            :value="income.gross_amount" 
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="gross_amount" id="gross_amount"
+                            :value="income.gross_amount"
                             @input="formatAmount($event, index, 'gross_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
@@ -197,8 +191,8 @@ function changeCheck(index) {
                     <label for="net_amount" v-if="income.income_type != 10" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
                     <label for="net_profit" v-else class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="net_amount" id="net_amount" 
-                            :value="income.net_amount" 
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="net_amount" id="net_amount"
+                            :value="income.net_amount"
                             @input="formatAmount($event, index, 'net_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
@@ -208,8 +202,8 @@ function changeCheck(index) {
                     <div v-if="income.income_type == 10">
                         <label for="expenses" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Valid Expenses </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="expenses" id="expenses" 
-                                :value="income.expenses" 
+                            <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="expenses" id="expenses"
+                                :value="income.expenses"
                                 @input="formatAmount($event, index, 'expenses')"
                                 class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                         </div>

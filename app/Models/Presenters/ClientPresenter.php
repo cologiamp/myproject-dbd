@@ -110,7 +110,7 @@ class ClientPresenter extends BasePresenter
                         'is_primary' => (bool) $income->pivot->is_primary
                     ];
                 })),
-                
+
             ],
             default => [
 
