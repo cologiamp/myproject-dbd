@@ -84,44 +84,42 @@ class ExpenditureRepository extends BaseRepository
 
         $syncExpenditures = [];
         collect($data['expenditures'])->each(function ($expenditure) use (&$syncExpenditures) {
-            collect($expenditure)->each(function ($item) use (&$syncExpenditures) {
-                if(array_key_exists('expenditure_id', $item)) {
-                    $model = Expenditure::where('id', $item['expenditure_id'])->first();
-    
-                    DB::beginTransaction();
-    
-                    try {
-                        //update expenditure on [expenditures] table
-                        $formatExpenditureData = array(
-                            'type' => $item['expenditure_type'],
-                            'description' => $item['description'],
-                            'amount' => $item['amount'],
-                            'frequency' => $item['frequency'],
-                            'starts_at' => $item['starts_at'],
-                            'ends_at' => $item['ends_at']
-                        );
-    
-                        $model->update($formatExpenditureData);
-    
-                    } catch (\Exception $e) {
-                        DB::rollback();
-                        throw new \Exception($e);
-                    }
-    
-                    DB::commit();
-                    
-                    $syncExpenditures[$model->id] = [
-                        'expenditure_id' => $item['expenditure_id']
-                    ];
-                } else {
-                    //register income
-                    $ret = $this->registerExpenditure($item);
-                    $syncExpenditures[$ret['id']] = $ret['value'];
-                }
-            });
-        });
+            if(array_key_exists('expenditure_id', $expenditure)) {
+                $model = Expenditure::where('id', $expenditure['expenditure_id'])->first();
 
-        //do sync on all the income records updated/registered
+                DB::beginTransaction();
+
+                try {
+                    //update expenditure on [expenditures] table
+                    $formatExpenditureData = array(
+                        'type' => $expenditure['expenditure_type'],
+                        'description' => $expenditure['description'],
+                        'amount' => $expenditure['amount'],
+                        'frequency' => $expenditure['frequency'],
+                        'starts_at' => $expenditure['starts_at'],
+                        'ends_at' => $expenditure['ends_at']
+                    );
+
+                    $model->update($formatExpenditureData);
+
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    throw new \Exception($e);
+                }
+
+                DB::commit();
+                
+                $syncExpenditures[$model->id] = [
+                    'expenditure_id' => $expenditure['expenditure_id']
+                ];
+            } else {
+                //register expenditure
+                $ret = $this->registerExpenditure($expenditure);
+                $syncExpenditures[$ret['id']] = $ret['value'];
+            }
+        });
+        
+        //do sync on all the expenditure records updated/registered
         $this->client->expenditures()->sync($syncExpenditures);
 
     }

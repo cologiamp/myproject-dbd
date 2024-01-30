@@ -237,7 +237,44 @@ return [
                         ]
                     ],
                     2 => [
-                        'name' => 'Basic Essential Expenditure'
+                        'name' => 'Basic Essential Expenditure',
+                        'fields' => [
+                            'expenditures' => [
+                                'expenditures.expenditure_id',
+                                'expenditures.expenditure_type',
+                                'expenditures.description',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.currently_active',
+                                'expenditures.known_end_date',
+                                'expenditures.starts_at',
+                                'expenditures.ends_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.Basic Essential Expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
+                            'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                        ]
                     ]
                 ],
             ],

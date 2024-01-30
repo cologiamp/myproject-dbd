@@ -57,66 +57,11 @@ class FactFindSectionDataService
 
     public function validate(int $step, int $section, Request $request)
     {
-        if($step == 2 && $section == 2) {
-            return Validator::make($request->all(), [
-                    'expenditures' => 'sometimes|nullable|array',
-                    'expenditures.*.*.expenditure_id' => 'sometimes|nullable|integer',
-                    'expenditures.*.*.expenditure_type' => [
-                        'sometimes',
-                        'nullable',
-                        'numeric',
-                        'integer',
-                        Rule::in(array_keys((config('enums.expenditures.Basic Essential Expenditure'))))
-                    ],
-                    'expenditures.*.*.description' => 'sometimes|nullable|string',
-                    'expenditures.*.*.amount' => 'sometimes|nullable|string',
-                    'expenditures.*.*.frequency' => [
-                        'sometimes',
-                        'nullable',
-                        'numeric',
-                        'integer',
-                        Rule::in(array_keys((config('enums.incomes.frequency'))))
-                    ],
-                    'expenditures.*.*.currently_active' => 'sometimes|nullable|boolean',
-                    'expenditures.*.*.known_end_date' => 'sometimes|nullable|boolean',
-                    'expenditures.*.*.starts_at' => 'sometimes|nullable|date',
-                    'expenditures.*.*.ends_at' => 'sometimes|nullable|date'
-                ]
-            )->validate();
-        }
-
         return Validator::make($request->all(), config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules'))->validate();
     }
 
     public function validated(int $step, int $section, Request $request)
     {
-        if($step == 2 && $section == 2) {
-            return Validator::make($request->all(), [
-                'expenditures' => 'sometimes|nullable|array',
-                'expenditures.*.*.expenditure_id' => 'sometimes|nullable|integer',
-                'expenditures.*.*.expenditure_type' => [
-                    'sometimes',
-                    'nullable',
-                    'numeric',
-                    'integer',
-                    Rule::in(array_keys((config('enums.expenditures.Basic Essential Expenditure'))))
-                ],
-                'expenditures.*.*.description' => 'sometimes|nullable|string',
-                'expenditures.*.*.amount' => 'sometimes|nullable|string',
-                'expenditures.*.*.frequency' => [
-                    'sometimes',
-                    'nullable',
-                    'numeric',
-                    'integer',
-                    Rule::in(array_keys((config('enums.incomes.frequency'))))
-                ],
-                'expenditures.*.*.currently_active' => 'sometimes|nullable|boolean',
-                'expenditures.*.*.known_end_date' => 'sometimes|nullable|boolean',
-                'expenditures.*.*.starts_at' => 'sometimes|nullable|date',
-                'expenditures.*.*.ends_at' => 'sometimes|nullable|date'
-            ]
-            )->validate();
-        }
         return Validator::make($request->all(), config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules'))->validated();
     }
 
@@ -335,21 +280,17 @@ class FactFindSectionDataService
         try {
             if (array_key_exists('expenditures', $validatedData)) {
                 $expenditures = collect($validatedData['expenditures'])->map(function ($expenditure) {
-                    $test = collect($expenditure)->map(function ($item) {
-                        if ($item['amount'] && $item['amount'] != null) {
-                            $item['amount'] = $this->currencyStringToInt($item['amount']);
-                        }
-                        if ($item['starts_at'] && $item['starts_at'] != null) {
-                            $item['starts_at'] = Carbon::parse($item['starts_at']);
-                        }
-                        if ($item['ends_at'] && $item['ends_at'] != null) {
-                            $item['ends_at'] = Carbon::parse($item['ends_at']);
-                        }
-    
-                        return $item;
-                    });
-                    
-                    return $test->toArray();
+                    if ($expenditure['amount'] && $expenditure['amount'] != null) {
+                        $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
+                    }
+                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
+                        $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
+                    }
+                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
+                        $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
+                    }
+
+                    return $expenditure;
                 });
 
                 $validatedData['expenditures'] = $expenditures->toArray();

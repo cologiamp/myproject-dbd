@@ -179,9 +179,9 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     </div>
                     <div class="mt-2 md:col-span-3 sm:mt-0 md:pr-2">
                         <label for="expenditure_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Expenditure Type</label>
-                        <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="expenditure.expenditure_type"
+                        <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="expenditure.expenditure_type" :disabled="true"
                             id="expenditure_type" name="expenditure_type"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-aaron-700 disabled:text-aaron-50 disabled:border-slate-200 disabled:shadow-none">
                             <option id="expenditure_type" :value="null">-</option>
                             <option :id="id" :value="id" v-for="(expenditure_type, id) in formData.enums.expenditure_types">{{ expenditure_type }}</option>
                         </select>
@@ -261,105 +261,6 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     <PlusCircleIcon class="w-6 h-6" />Add {{ expenditureType }} Expenditure
                 </button>
             </div>
-            <!-- <div v-for="(expenditure, index) in stepForm.expenditures"
-                class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
-                <div class="flex flex-row justify-between md:col-span-6 md:pr-2">
-                    <label class="font-bold">Expenditure</label>
-                    <button type="button" @click="removeExpenditure(index)"
-                        class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        <XCircleIcon class="w-4 h-4" />Remove Expenditure
-                    </button>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="expenditure_type"
-                        class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Expenditure Type</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="expenditure.expenditure_type"
-                        id="expenditure_type" name="expenditure_type"
-                        class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="expenditure_type" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(expenditure_type, id) in formData.enums.expenditure_types">{{ expenditure_type }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.expenditure_type">{{ stepForm.errors.expenditure_type }}</p>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="description" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Description </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="description" id="description" v-model="expenditure.description"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Description" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.description">{{ stepForm.errors.description }}</p>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Amount </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="amount" id="amount"
-                            :value="expenditure.amount"
-                            @input="formatAmount($event, index, 'amount')"
-                            class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="frequency" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Frequency</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" id="frequency" name="frequency" v-model="expenditure.frequency"
-                        class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="frequency" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(frequency, id) in formData.enums.frequencies">{{ frequency }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.frequency">{{ stepForm.errors.frequency }}</p>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="currently_active" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Currently Active</label>
-                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="expenditureStatus($event, index, 'currently_active')" type="radio" id="true" :value="true" :checked="expenditure.currently_active == true" v-model="expenditure.currently_active" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="expenditureStatus($event, index, 'currently_active')" type="radio" id="false" :value="false" :checked="expenditure.currently_active == false" v-model="expenditure.currently_active" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.currently_active">{{ stepForm.errors.currently_active }}</p>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="known_end_date" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Known End Date</label>
-                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="expenditureStatus($event, index, 'known_end_date')" type="radio" id="true" :value="true" :checked="expenditure.known_end_date == true" v-model="expenditure.known_end_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="expenditureStatus($event, index, 'known_end_date')" type="radio" id="false" :value="false" :checked="expenditure.known_end_date == false" v-model="expenditure.known_end_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.known_end_date">{{ stepForm.errors.known_end_date }}</p>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <div v-if="expenditure.currently_active == false">
-                        <label for="starts_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Start Date </label>
-                        <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                            <VueDatePicker text-input @closed="saveDate(index, expenditure.starts_at, 'starts_at')" 
-                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.starts_at"
-                                name="starts_at" id="starts_at" placeholder="dd/mm/yyyy" />
-                        </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.starts_at">{{ stepForm.errors.starts_at }}</p>
-                    </div>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <div v-if="expenditure.known_end_date == true">
-                        <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
-                        <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                            <VueDatePicker text-input @closed="saveDate(index, expenditure.ends_at, 'ends_at')"
-                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
-                                name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" />
-                        </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
-                    </div>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-6">
-                <button type="button" @click="addExpenditure"
-                    class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add Expenditure
-                </button>
-                </div> -->
-        <!-- </div> -->
-        <!-- <button type="button" @click="addIncome"
-            class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            <PlusCircleIcon class="w-6 h-6" />Add Expenditure
-        </button> -->
     </div>
 </dynamic-form-wrapper></template>
 
