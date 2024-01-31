@@ -12,6 +12,6 @@ class Expenditure extends Model
 
     public function clients():BelongsToMany
     {
-        return $this->belongsToMany(Client::class)->withPivot('expenditure_id');
+        return $this->belongsToMany(Client::class);
     }
 }

@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\SyncClientController;
+use App\Http\Controllers\Api\ExpenditureController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,4 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
+});
 

@@ -51,9 +51,7 @@ class FactFindController extends Controller
         $ffsds = App::make(FactFindSectionDataService::class);
         
         if ($step == 2 && $section >= 2) {
-            if ($request['expenditures'] && $request['expenditures'] != null) {
-                $request['expenditures'] = collect($request['expenditures'])->flatten(1)->toArray();
-            }
+            $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
         }
 
         
@@ -62,7 +60,7 @@ class FactFindController extends Controller
         }
         catch (Exception $e)
         {
-            dd($e);
+            Log::warning($e);
         }
 
         $ffsds->store(

@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ExpenditureRepository extends BaseRepository
 {
@@ -63,7 +64,7 @@ class ExpenditureRepository extends BaseRepository
         try {
             $this->expenditure->update($array);
         } catch (Exception $e){
-            dd($e);
+            Log::warning($e);
         }
 
     }
@@ -71,8 +72,14 @@ class ExpenditureRepository extends BaseRepository
     //Delete the resource from the database, doing any cleanup first
     public function delete(): void
     {
-        //handle any cleanup required here
+        //detach expenditure from client_expenditure and delete from model
+        $this->expenditure->clients()->each(function ($item) {
+            $item->expenditures()->detach([$this->expenditure->id]);
+        });
+
         $this->expenditure->delete();
+
+        
     }
 
     public function createOrUpdateExpenditureDetails(mixed $data):void
@@ -82,8 +89,7 @@ class ExpenditureRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $syncExpenditures = [];
-        collect($data['expenditures'])->each(function ($expenditure) use (&$syncExpenditures) {
+        collect($data['expenditures'])->each(function ($expenditure) {
             if(array_key_exists('expenditure_id', $expenditure)) {
                 $model = Expenditure::where('id', $expenditure['expenditure_id'])->first();
 
@@ -108,20 +114,18 @@ class ExpenditureRepository extends BaseRepository
                 }
 
                 DB::commit();
-                
-                $syncExpenditures[$model->id] = [
-                    'expenditure_id' => $expenditure['expenditure_id']
-                ];
             } else {
                 //register expenditure
-                $ret = $this->registerExpenditure($expenditure);
-                $syncExpenditures[$ret['id']] = $ret['value'];
+                $model = $this->registerExpenditure($expenditure);
             }
-        });
-        
-        //do sync on all the expenditure records updated/registered
-        $this->client->expenditures()->sync($syncExpenditures);
 
+            $client = Client::with('expenditures')->where('id', $this->client->id)->first();
+            
+            if(collect($client->expenditures->pluck('id'))->doesntContain($model->id)){
+                $this->client->expenditures()->attach($model->id);
+            }
+
+        });
     }
 
     public function registerExpenditure(array $expenditure) 
@@ -137,15 +141,9 @@ class ExpenditureRepository extends BaseRepository
         try {
             $model = $this->expenditure->create($expenditureData);
         } catch (Exception $e) {
-            dd($e);
+            Log::warning($e);
         }
 
-        return [
-            'id' => $model['id'],
-            'value' => [
-                'expenditure_id' => $model['id']
-            ]
-        ];
-
+        return $model;
     }
 }

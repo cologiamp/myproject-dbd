@@ -2,13 +2,14 @@
 //FACTFIND:// you need to make one of these for every step
 import {__error, autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
-import {useForm, usePage} from "@inertiajs/vue3";
+import {useForm, usePage, router } from "@inertiajs/vue3";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
+import Swal from "sweetalert2";
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import { onBeforeMount, onMounted, watch } from "vue";
+import { onBeforeMount, watch } from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -20,7 +21,7 @@ const props = defineProps({
         type: Object,
         default: {
             enums: {
-                expenditure_type: [],
+                expenditure_types: [],
                 frequencies: []
             },
             model: {
@@ -39,6 +40,7 @@ const props = defineProps({
             submit_url: '/',
         },
     },
+    sectionIndex: String,
     errors: Object,
 });
 
@@ -74,34 +76,43 @@ function addExpenditure(typeIndex) {
 }
 
 function removeExpenditure(typeIndex, expIndex) {
+    let expenditureId = stepForm.expenditures[typeIndex][expIndex]['expenditure_id'] ? stepForm.expenditures[typeIndex][expIndex]['expenditure_id'] : props.formData.model.expenditures[typeIndex][expIndex]['expenditure_id']
+    let deleteURL = `/api/expenditures/${ expenditureId }`;
+
+    axios.delete(deleteURL).then(response=>{
+        console.log(response.data.message);
+    }).catch(error=>{
+        Swal.fire({
+            title: 'Error: Something failed. Please try again later.',
+            text: error.response.data.message,
+        })
+    });
+    
     stepForm.expenditures[typeIndex].splice(expIndex, 1);
     autosaveT(stepForm,props.formData.submit_url);
 }
 
-const stepForm = useForm(`EditExpenditures${ props.formData.model.client_id }`, {
+const stepForm = useForm(`EditExpenditures${ props.sectionIndex }${ props.formData.model.client_id }`, {
     expenditures: props.formData.model.expenditures != null ? props.formData.model.expenditures : []
 })
 
 onBeforeMount(() => {
-    formatAmountOnload()
-    Object.keys(props.formData.enums.expenditure_types).forEach(key => {
-        if(!stepForm.expenditures[key]) {
-            addExpenditure(key)
-        }
-    });
+    formatAmountOnload();
 })
 
 function formatAmountOnload() {
-    Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
-        if(stepForm.expenditures[expType]) {
+    if (stepForm.expenditures != null) {
+        Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
+            if(stepForm.expenditures[expType]) {
 
-            stepForm.expenditures[expType].forEach(expenditure => {
-                if (expenditure['amount'] && expenditure['amount'] != null) {
-                    expenditure['amount'] = changeToCurrency(expenditure['amount'].toString());
-                }
-            });   
-        }
-    });
+                stepForm.expenditures[expType].forEach(expenditure => {
+                    if (expenditure['amount'] && expenditure['amount'] != null) {
+                        expenditure['amount'] = changeToCurrency(expenditure['amount'].toString());
+                    }
+                });   
+            }
+        });
+    }
 }
 
 function formatAmount(e, typeIndex, expIndex, dataField) {
@@ -142,7 +153,6 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
 
     autosaveT(stepForm,props.formData.submit_url);
 }
-
 </script>
 
 <template>
