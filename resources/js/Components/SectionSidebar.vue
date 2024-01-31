@@ -1,9 +1,6 @@
 <script setup>
 import { ref, provide, inject, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
 
-//SCROLL HIDE/SHOW CONST
-const OFFSET = 10
-
 const props = defineProps({
     sidebarItems: {
         type: Object,
