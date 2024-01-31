@@ -1,5 +1,8 @@
 <script setup>
-import { ref, provide, inject, onBeforeMount } from "vue";
+import { ref, provide, inject, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
+
+//SCROLL HIDE/SHOW CONST
+const OFFSET = 10
 
 const props = defineProps({
     sidebarItems: {
@@ -26,7 +29,6 @@ provide("selectedSectionId", selectedSectionId);
 onBeforeMount(() => {
     selectedSectionId.value = initialSectionKey.value
 });
-
 
 //Dropdown Ignacio
 const currentSelectedSection = ref(1);
@@ -104,7 +106,7 @@ const toggleDropdown = (index) => {
     </div>
 -->
 
-        <div v-bind:class="{'hidden detail-header-hide': !formShow, 'block detail-header': formShow }" class="md:p-4 sm:ml-80">
+        <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 sm:ml-80">
             <div class="p-4">
                 <slot></slot>
             </div>
