@@ -185,8 +185,12 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     <label class="font-bold text-white text-lg">{{ expenditureType }} Expenditure</label>
                     <PlusCircleIcon v-if="!stepForm.expenditures[typeIndex]" @click="addExpenditure(typeIndex)" class="w-8 h-8 fill-indigo-600"/>
                 </div>
-                <div v-for="(expenditure, expIndex) in stepForm.expenditures[typeIndex]" class="grid gap-2 mb-8 border-b-2 border-aaron-500 border-dashed pb-12 last-of-type:border-none last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
-                    <div class="flex flex-row justify-end md:col-span-6 md:pr-2">
+                <div v-for="(expenditure, expIndex) in stepForm.expenditures[typeIndex]" class="grid gap-2 border-b-2 border-aaron-500 border-dashed pb-12 last-of-type:border-none last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
+                    <div class="flex flex-row justify-end md:col-span-3 md:pr-2">
+                        
+                    </div>
+                    <div class="md:col-span-6 flex flex-row justify-between">
+                        <label class="font-bold">Rent {{ expIndex + 1 }}</label>
                         <button type="button" @click="removeExpenditure(typeIndex, expIndex)"
                             class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             <XCircleIcon class="w-4 h-4" />Remove Expenditure
