@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Concerns\ParsesIoClientData;
+use App\Models\Asset;
 use App\Models\Client;
 use App\Models\EmploymentDetail;
 use Exception;
@@ -10,15 +11,15 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
-class EmploymentDetailRepository extends BaseRepository
+class AssetRepository extends BaseRepository
 {
     protected Client $client;
-    protected EmploymentDetail $employmentDetail;
+    protected Asset $asset;
 
-    public function __construct(Client $client, EmploymentDetail $employmentDetail)
+    public function __construct(Client $client, Asset $asset)
     {
         $this->client = $client;
-        $this->employmentDetail = $employmentDetail;
+        $this->asset = $asset;
     }
 
     public function setClient(Client $client): void
@@ -26,15 +27,15 @@ class EmploymentDetailRepository extends BaseRepository
         $this->client = $client;
     }
 
-    public function setEmploymentDetail(EmploymentDetail $employmentDetail): void
+    public function setAsset(Asset $asset): void
     {
-        $this->employmentDetail = $employmentDetail;
+        $this->asset = $asset;
     }
 
     //Create the model
-    public function create(Request $request): EmploymentDetail
+    public function create(Request $request): Asset
     {
-        return $this->employmentDetail->create(
+        return $this->asset->create(
             array_merge($request->safe()->all(),
                 []
         ));
@@ -49,7 +50,7 @@ class EmploymentDetailRepository extends BaseRepository
      */
     public function update(Request $request): void
     {
-        $this->employmentDetail->update($request->safe());
+        $this->asset->update($request->safe());
     }
 
     /**
@@ -61,7 +62,7 @@ class EmploymentDetailRepository extends BaseRepository
     public function updateFromValidated(array $array):void
     {
         try {
-            $this->employmentDetail->update($array);
+            $this->asset->update($array);
         } catch (Exception $e){
             dd($e);
         }
@@ -72,34 +73,46 @@ class EmploymentDetailRepository extends BaseRepository
     public function delete(): void
     {
         //handle any cleanup required here
-        $this->employmentDetail->delete();
+        $this->asset->clients()->each(function ($item){
+            $item->assets()->detach([$this->asset->id]); //remove all of that asset's client attachments
+        });
+        $this->asset->delete();
     }
 
-    public function createOrUpdateEmploymentDetails(mixed $data):void
+    public function createOrUpdateAssets(mixed $assets):void
     {
-        if(!is_array($data) && $data::class == Request::class)
+        if(!is_array($assets) && $assets::class == Request::class)
         {
-            $data = $data->safe();
+            $assets = $assets->safe();
         }
+        $fixed_assets = $assets['fixed_assets'];
 
         DB::beginTransaction();
 
         try {
-            $this->employmentDetail->whereNotIn('id', collect($data['employment_details'])->pluck('id')->filter()->toArray())->delete();
-
-            collect($data['employment_details'])->each(function ($employment) {
-                $employment['client_id'] = $this->client->id;
-
-                if(array_key_exists('id', $employment)){
-                    $model = $this->employmentDetail->where('id', $employment['id'])->first();
-                    $model->update($employment);
+            collect($fixed_assets)->each(function ($asset)  {
+                ray($asset)->red();
+                $percents = $asset['percent_ownership'];
+                unset($asset['owner']);
+                unset($asset['percent_ownership']);
+                if(array_key_exists('id', $asset) && $asset['id'] != null){
+                    $model = Asset::where('id', $asset['id'])->first();
+                    $model->update($asset);
                 } else {
-                    $this->employmentDetail->create($employment);
+                    $model = Asset::create($asset);
                 }
+                collect($percents)->each(function ($item,$key) use ($model){
+                    $client = Client::with('assets')->where('io_id',$key)->first();
+                    if(collect($client->assets->pluck('id'))->doesntContain($model->id))
+                    {
+                        $client->assets()->attach($model->id,['percent_ownership' => $item]);
+                    }
+                });
             });
 
         } catch (\Exception $e) {
             DB::rollback();
+            dd($e);
             throw new \Exception($e);
         }
 

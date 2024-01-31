@@ -226,15 +226,42 @@ return [
             'name' => 'Assets',
             'sections' => [
                 1 => [
-                    'name' => 'Foo',
+                    'name' => 'Fixed Assets',
                     'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                        'assets' => [
+                            'assets.owner',
+                            'assets.type',
+                            'assets.description',
+                            'assets.percent_ownership',
+                            'assets.original_value',
+                            'assets.start_at',
+                            'assets.current_value',
+                            'assets.is_retained',
+                            'assets.retained_value',
+
+                        ]
+                    ],
+                    'rules' => [
+                        'fixed_assets' => 'sometimes|array',
+                        'fixed_assets.*.id' => 'sometimes|nullable|integer',
+                        'fixed_assets.*.asset_type' => [
+                            'sometimes',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.types'))))
+                        ],
+                        'fixed_assets.*.description' => 'sometimes|nullable|max:1024',
+                        'fixed_assets.*.owner' => 'sometimes|nullable',
+                        'fixed_assets.*.percent_ownership' => 'sometimes|nullable|array',
+                        'fixed_assets.*.original_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.current_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
+                        'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
                     ]
                 ],
                 2 => [
-                    'name' => 'Bar',
+                    'name' => 'Savings',
                     'fields' => [
                         "clients.date_of_birth",
                         "clients.first_name",
@@ -242,75 +269,20 @@ return [
                     ]
                 ],
                 3 => [
-                    'name' => 'Baz',
+                    'name' => 'Investments',
                     'fields' => [
                         "clients.date_of_birth",
                         "clients.first_name",
                         "clients.last_name"
                     ]
                 ],
+                4=> [
+                    'name' => 'Pensions',
+                ]
             ],
         ],
         4 => [
             'name' => 'Liabilities',
-            'sections' => [
-                1 => [
-                    'name' => 'Foo',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-            ],
-        ],
-        5 => [
-            'name' => 'Risk',
-            'sections' => [
-                1 => [
-                    'name' => 'Foo',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-            ],
-        ],
-        6 => [
-            'name' => 'Objectives',
             'sections' => [
                 1 => [
                     'name' => 'Foo',

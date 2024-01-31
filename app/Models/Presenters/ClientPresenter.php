@@ -2,12 +2,15 @@
 
 namespace App\Models\Presenters;
 
+use App\Concerns\FormatsCurrency;
+use App\Models\Asset;
 use phpDocumentor\Reflection\Types\Boolean;
 use App\Models\Dependent;
 use PHPUnit\Framework\Attributes\Depends;
 
 class ClientPresenter extends BasePresenter
 {
+    use FormatsCurrency;
     public function index():array
     {
         return array_merge($this->default(),
@@ -27,6 +30,7 @@ class ClientPresenter extends BasePresenter
     }
 
     //FactFind:// Need to do this for every section/step
+    //Chore: this should probably be refactored to take some of the non-client stuff out of the client model.
     public function formatForStep($step,$section)
     {
         return match ($step . '.' . $section) {
@@ -92,6 +96,22 @@ class ClientPresenter extends BasePresenter
                         'employer' => $employment->employer,
                         'start_at' => $employment->start_at,
                         'end_at' => $employment->end_at
+                    ];
+                }))
+            ],
+            '3.1' => [
+                'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'))->get()->map(function ($asset){
+                    return [
+                        'id' => $asset->id,
+                        'owner' => $asset->clients->count() > 1 ? 'Both' : $asset->clients->first()->io_id,
+                        'asset_type' => $asset->type,
+                        'percent_ownership' => $asset->clients->mapWithKeys(fn($i) => [$i->io_id => $i->pivot->percent_ownership]),
+                        'description' => $asset->description,
+                        'purchased_at' => $asset->start_at,
+                        'original_value' => $asset->original_value != null ? $this->currencyIntToString($asset->original_value) : null,
+                        'current_value' =>  $asset->current_value != null ? $this->currencyIntToString($asset->current_value): null,
+                        'is_retained' => $asset->is_retained,
+                        'retained_value' =>  $asset->retained_value != null ? $this->currencyIntToString($asset->retained_value): null,
                     ];
                 }))
             ],

@@ -3,7 +3,9 @@
 namespace App\Services;
 
 
+use App\Concerns\FormatsCurrency;
 use App\Models\Client;
+use App\Repositories\AssetRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
@@ -17,21 +19,26 @@ use Throwable;
 
 class FactFindSectionDataService
 {
+    use FormatsCurrency;
     protected ClientRepository $cr;
     protected DependentRepository $dependentRepository;
     protected HealthRepository $healthRepository;
     protected EmploymentDetailRepository $employmentDetailRepository;
 
+    protected AssetRepository $assetRepository;
+
     public function __construct(
         ClientRepository $clientRepository,
         DependentRepository $dependentRepository,
         HealthRepository $healthRepository,
-        EmploymentDetailRepository $employmentDetailRepository
+        EmploymentDetailRepository $employmentDetailRepository,
+        AssetRepository $assetRepository
     ) {
         $this->cr = $clientRepository;
         $this->dependentRepository = $dependentRepository;
         $this->healthRepository = $healthRepository;
         $this->employmentDetailRepository = $employmentDetailRepository;
+        $this->assetRepository = $assetRepository;
     }
     //get the data for a single section of a factfind from a single client
     public static function get($client, $step, $section): array
@@ -63,6 +70,7 @@ class FactFindSectionDataService
      */
     public function store(Client $client, int $step, int $section, array $validatedData): true
     {
+
         $this->cr->setClient($client);
         $this->{"_" . $step . $section}($validatedData);
         return true;
@@ -217,6 +225,43 @@ class FactFindSectionDataService
             $this->employmentDetailRepository->setClient($this->cr->getClient());
             $this->employmentDetailRepository->createOrUpdateEmploymentDetails($validatedData);
         } catch (Throwable $e) {
+            Log::warning($e);
+        }
+    }
+
+
+    private function _31(array $validatedData): void
+    {
+        $client= $this->cr->getClient();
+        try{
+            if (array_key_exists('fixed_assets', $validatedData)) {
+                $fixed_assets = collect($validatedData['fixed_assets'])->map(function ($asset) use ($client) {
+                    if (array_key_exists('purchased_at',$asset)){
+                        $asset['start_at'] = Carbon::parse($asset['purchased_at']);
+                        unset($asset['purchased_at']);
+                    }
+                    $asset['category'] = array_flip(config('enums.assets.categories'))['fixed_assets'];
+                    $asset['type'] = $asset['asset_type'];
+                    if (array_key_exists('original_value',$asset) && $asset['original_value'] != null){
+                        $asset['original_value'] = $this->currencyStringToInt($asset['original_value']);
+                    }
+                    if (array_key_exists('retained_value',$asset) && $asset['retained_value'] != null){
+                        $asset['retained_value'] = $this->currencyStringToInt($asset['retained_value']);
+                    }
+                    if (array_key_exists('current_value',$asset) && $asset['current_value'] != null){
+                        $asset['current_value'] = $this->currencyStringToInt($asset['current_value']);
+                    }
+                    unset($asset['asset_type']);//remove
+                    return $asset;
+                });
+                $validatedData['fixed_assets'] = $fixed_assets->toArray();
+
+            }
+            $this->assetRepository->setClient($client);
+            $this->assetRepository->createOrUpdateAssets($validatedData);
+
+        }
+        catch(Throwable $e){
             Log::warning($e);
         }
     }

@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\SyncClientController;
+use App\Http\Controllers\Api\AssetController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +17,13 @@ use App\Http\Controllers\Api\SyncClientController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::middleware('auth:sanctum')->group(function (){
+
+    Route::delete('/assets/{asset}',[AssetController::class,'delete']);
+
 });
 
 

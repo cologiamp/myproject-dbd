@@ -185,14 +185,14 @@ class ClientRepository extends BaseRepository
      * Load in factfind sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
      */
-    public function loadFactFindSidebarItems($sections, $currentStep, $currentSection)
+    public function loadFactFindSidebarItems($sections, $step, $currentStep, $currentSection)
     {
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => FactFindSectionDataService::get($this->client,$currentStep,$key),
+               'dynamicData' => FactFindSectionDataService::get($this->client,$step,$key),
            ];
         });
     }
@@ -217,7 +217,7 @@ class ClientRepository extends BaseRepository
                 'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
-                }), $currentStep, $currentSection)->toArray()
+                }), $key, $currentStep, $currentSection)->toArray()
             ];
         })->toArray();
     }
@@ -235,7 +235,7 @@ class ClientRepository extends BaseRepository
             {
                 return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
                     $nestedFieldArrays = ['dependents', 'addresses'];
-                    
+
                     // process field names for nested field arrays
                     if(in_array($key, $nestedFieldArrays)){
                         $value = $value->map(function ($val) {
@@ -243,12 +243,12 @@ class ClientRepository extends BaseRepository
                             return $keyName;
                         });
                     }
-                    
+
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
                         'addresses' => $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
                         'health' => Health::where("client_id", $this->client->id)->select([...$value])->first() ? Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray() : $this->setEmptyFields($value),
-                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),              
+                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
                         'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get() ? EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get()->toArray() : $this->setEmptyFields($value),
 //                        '//todo write join query here for other places data ends up'.
                         default => collect([]),
@@ -257,12 +257,12 @@ class ClientRepository extends BaseRepository
             }
             else return collect([]);
         })->flatten();
-        
+
         if ($progress->count() === 0) return 0;
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
 
-    public function setEmptyFields(Collection $value) 
+    public function setEmptyFields(Collection $value)
     {
         $nullFields = new Collection();
         $value->map(function ($val) use ($nullFields) {
