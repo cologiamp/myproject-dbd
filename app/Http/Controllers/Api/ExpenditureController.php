@@ -17,6 +17,9 @@ class ExpenditureController extends Controller
         $this->expenditureRepository = $expenditureRepository;
     }
 
+    /**
+     * @param Expenditure $expenditure
+     */
     public function delete(Expenditure $expenditure)
     {
         $this->expenditureRepository->setExpenditure($expenditure);

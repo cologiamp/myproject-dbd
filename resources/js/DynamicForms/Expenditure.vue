@@ -76,18 +76,22 @@ function addExpenditure(typeIndex) {
 }
 
 function removeExpenditure(typeIndex, expIndex) {
-    let expenditureId = stepForm.expenditures[typeIndex][expIndex]['expenditure_id'] ? stepForm.expenditures[typeIndex][expIndex]['expenditure_id'] : props.formData.model.expenditures[typeIndex][expIndex]['expenditure_id']
+    let expenditureId = stepForm.expenditures[typeIndex][expIndex]['expenditure_id']
     let deleteURL = `/api/expenditures/${ expenditureId }`;
 
-    axios.delete(deleteURL).then(response=>{
+    // delete expenditure record
+    if(expenditureId) {
+        axios.delete(deleteURL).then(response=>{
         console.log(response.data.message);
-    }).catch(error=>{
-        Swal.fire({
-            title: 'Error: Something failed. Please try again later.',
-            text: error.response.data.message,
-        })
-    });
+        }).catch(error=>{
+            Swal.fire({
+                title: 'Error: Something failed. Please try again later.',
+                text: error.response.data.message,
+            })
+        });
+    }
     
+    //remove expenditure from props array
     stepForm.expenditures[typeIndex].splice(expIndex, 1);
     autosaveT(stepForm,props.formData.submit_url);
 }
@@ -176,9 +180,10 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     </div>
                 </div>
             </div>
-            <div v-for="(expenditureType, typeIndex) in formData.enums.expenditure_types" class="border-b-2 mb-10 pb-20 last-of-type:border-b-0 last-of-type:mb-10">
-                <div class="flex flex-row justify-between md:col-span-6 md:pr-2">
-                    <label class="font-bold text-aaron-400 text-lg mb-4">{{ expenditureType }} Expenditure</label>
+            <div v-for="(expenditureType, typeIndex) in formData.enums.expenditure_types" class="border-b-2 mb-6 last-of-type:border-b-0 last-of-type:mb-10" :class="stepForm.expenditures[typeIndex] ? 'pb-20' : 'pb-6'">
+                <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
+                    <label class="font-bold text-white text-lg">{{ expenditureType }} Expenditure</label>
+                    <PlusCircleIcon v-if="!stepForm.expenditures[typeIndex]" @click="addExpenditure(typeIndex)" class="w-8 h-8 fill-indigo-600"/>
                 </div>
                 <div v-for="(expenditure, expIndex) in stepForm.expenditures[typeIndex]" class="grid gap-2 mb-8 border-b-2 border-aaron-500 border-dashed pb-12 last-of-type:border-none last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
                     <div class="flex flex-row justify-end md:col-span-6 md:pr-2">
@@ -266,8 +271,8 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                         </div>
                     </div>
                 </div>
-                <button type="button" @click="addExpenditure(typeIndex)"
-                    class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <button type="button" @click="addExpenditure(typeIndex)" v-if="stepForm.expenditures[typeIndex]"
+                    class="float-right inline-flex items-center gap-x-1.5 mb-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     <PlusCircleIcon class="w-6 h-6" />Add {{ expenditureType }} Expenditure
                 </button>
             </div>

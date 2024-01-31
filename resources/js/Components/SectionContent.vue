@@ -13,15 +13,20 @@ const props = defineProps({
             'dynamicData': null
         }
     },
+    tabIndex: {
+        type: String
+    },
     sectionIndex: {
         type: String
     }
 });
 
 function dynamicComponent(component){
-    if(component.includes('Expenditure')) {
+    // For Expenditure sections
+    if ((parseInt(props.tabIndex) == 2 && parseInt(props.sectionIndex) >= 2) || component.includes('Expenditure')) {
        component = 'Expenditure'
     }
+    
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
 // need to send the section

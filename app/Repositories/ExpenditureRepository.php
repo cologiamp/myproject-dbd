@@ -120,7 +120,7 @@ class ExpenditureRepository extends BaseRepository
             }
 
             $client = Client::with('expenditures')->where('id', $this->client->id)->first();
-            
+
             if(collect($client->expenditures->pluck('id'))->doesntContain($model->id)){
                 $this->client->expenditures()->attach($model->id);
             }
