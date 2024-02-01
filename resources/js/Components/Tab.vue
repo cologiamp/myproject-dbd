@@ -47,7 +47,7 @@ function handleAutosave(val){
         <div class="w-full flex flex-col gap-6 mb-14">
             <div class="w-full flex flex-row items-center justify-between">
                 <h1 class="text-2xl font-medium">
-                    {{ tab.name }} Hola
+                    {{ tab.name }}
                 </h1>
                 <AutoSaveSpinner :autosave="autosaveState" />
             </div>

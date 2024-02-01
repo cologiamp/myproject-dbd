@@ -47,16 +47,11 @@ function handleAutosave(val){
         <div class="w-full flex flex-col gap-6">
             <div class="w-full flex flex-row items-center justify-between">
                 <h1 class="text-2xl font-medium">
-                    {{ tab.name }} Chau
+                    {{ tab.name }}
                 </h1>
                 <AutoSaveSpinner :autosave="autosaveState" />
             </div>
             <hr class="-mx-32 h-1 mt-2 mb-6 bg-aaron-950 border-0">
-            <!--
-            <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
-                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
-            </div>
-            -->
         </div>
         <div class="block">
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
