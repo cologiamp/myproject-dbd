@@ -183,6 +183,18 @@ class Client extends Model
             '1.5' => [
                 'employment_status' => config('enums.employment.employment_status')
             ],
+            '3.1' => [
+                'owners' => $this->client_two != null ? [
+                    $this->io_id => $this->name,
+                    $this->client_two->io_id => $this->client_two->name,
+                    'Both' => 'Both'
+                ] :
+                [
+                    $this->io_id => $this->name,
+                ],
+                'asset_types' => config('enums.assets.types_public')
+
+            ],
             default => [
 
             ]

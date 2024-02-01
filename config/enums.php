@@ -1388,5 +1388,47 @@ return [
             30 => 'Mortgage',
             31 => 'Other (Liability)',
         ],
+    ],
+    'assets' => [
+        'categories' => [
+            1 => 'fixed_assets',
+            2 => 'savings',
+            3 => 'investments',
+            4 => 'pensions'
+        ],
+        'types' => [
+            0 => 'Cash',
+            1 => 'Collectibles',
+            2 => 'HolidayHome',
+            3 => 'HomeContents',
+            4 => 'InvestmentProperty',
+            5 => 'MainResidence',
+            6 => 'MotorVehicles',
+            7 => 'NonIncomeProducingRealEstate',
+            8 => 'OverseasProperty',
+            9 => 'OwnBusiness',
+            10 => 'RentalOrOtherProperty',
+            11 => 'Investments',
+            12 => 'Other',
+            13 => 'Boat',
+            14 => 'BuyToLetProperty'
+        ],
+        'types_public' => [
+            0 => 'Cash',
+            1 => 'Collectibles',
+            2 => 'Holiday Home',
+            3 => 'Home Contents',
+            4 => 'Investment Property',
+            5 => 'Main Residence',
+            6 => 'Motor Vehicles',
+            7 => 'Non Income-Producing Real Estate',
+            8 => 'Overseas Property',
+            9 => 'Own Business',
+            10 => 'Rental Or Other Property',
+            11 => 'Investments',
+            12 => 'Other',
+            13 => 'Boat',
+            14 => 'Buy-to-Let Property'
+        ],
     ]
 ];
