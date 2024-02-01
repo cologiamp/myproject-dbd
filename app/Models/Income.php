@@ -11,6 +11,6 @@ class Income extends Model
     
     public function clients():BelongsToMany
     {
-        return $this->belongsToMany(Client::class)->withPivot('is_primary');;
+        return $this->belongsToMany(Client::class)->withPivot('is_primary');
     }
 }

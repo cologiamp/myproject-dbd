@@ -49,13 +49,18 @@ class FactFindController extends Controller
     public function update(Client $client, $step, $section, Request $request): \Illuminate\Http\RedirectResponse
     {
         $ffsds = App::make(FactFindSectionDataService::class);
+        
+        if ($step == 2 && $section >= 2) {
+            $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
+        }
 
+        
         try{
             $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
-            dd($e);
+            Log::warning($e);
         }
 
         $ffsds->store(

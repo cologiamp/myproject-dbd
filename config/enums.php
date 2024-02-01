@@ -1368,7 +1368,7 @@ return [
         ]
     ],
     'expenditures' => [
-        'Basic Essential Expenditure' => [
+        'basic_essential_expenditure' => [
             0 => 'Rent',
             1 => 'Council Tax',
             2 => 'Gas',
@@ -1384,7 +1384,7 @@ return [
             12 => 'Maintenance/Alimony',
             13 => 'Other (Basic Essential)'
         ],
-        'Basic Quality of Living' => [
+        'basic_quality_of_living_expenditure' => [
             14 => 'Clothing',
             15 => 'Furniture/Appliances/Repairs',
             16 => 'TV/Satellite/Internet/Basic Recreation',
@@ -1392,7 +1392,7 @@ return [
             18 => 'School Fee/Childcare',
             19 => 'Other (Basic Quality of Living)',
         ],
-        'Non-Essential Outgoings' => [
+        'non_essential_outgoings_expenditure' => [
             20 => 'Gym',
             21 => 'Holidays',
             22 => 'Entertainment',
@@ -1402,7 +1402,7 @@ return [
             26 => 'Other Assets',
             27 => 'Other (Non-Essential)',
         ],
-        'Liability Expenditure' => [
+        'liability_expenditure' => [
             28 => 'Personal Loans',
             29 => 'Credit Cards',
             30 => 'Mortgage',
