@@ -113,71 +113,26 @@ class ClientPresenter extends BasePresenter
             ],
             '2.2' => [
                 'client_id' => $this->model->io_id,
-                'expenditures' => collect($this->model->expenditures->filter(function($item){
-                    return in_array($item->type, collect(config('enums.expenditures.basic_essential_expenditure'))->keys()->all());
-                })->map(function ($expenditure){
-                    return [
-                        'expenditure_id' => $expenditure->id,
-                        'expenditure_type' => $expenditure->type,
-                        'description' => $expenditure->description,
-                        'amount' => $expenditure->amount,
-                        'frequency' => $expenditure->frequency,
-                        'starts_at' => $expenditure->starts_at,
-                        'ends_at' => $expenditure->ends_at,
-                        'currently_active' => $expenditure->starts_at ? false : true,
-                        'known_end_date' => $expenditure->ends_at ? true : false
-                    ];
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
                 }))->groupBy('expenditure_type')
             ],
             '2.3' => [
-                'expenditures' => collect($this->model->expenditures->filter(function($item){
-                        return in_array($item->type, collect(config('enums.expenditures.basic_quality_of_living_expenditure'))->keys()->all());
-                    })->map(function ($expenditure){
-                        return [
-                            'expenditure_id' => $expenditure->id,
-                            'expenditure_type' => $expenditure->type,
-                            'description' => $expenditure->description,
-                            'amount' => $expenditure->amount,
-                            'frequency' => $expenditure->frequency,
-                            'starts_at' => $expenditure->starts_at,
-                            'ends_at' => $expenditure->ends_at,
-                            'currently_active' => $expenditure->starts_at ? false : true,
-                            'known_end_date' => $expenditure->ends_at ? true : false
-                        ];
-                    }))->groupBy('expenditure_type')
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
+                }))->groupBy('expenditure_type')
             ],
             '2.4' => [
-                'expenditures' => collect($this->model->expenditures->filter(function($item){
-                    return in_array($item->type, collect(config('enums.expenditures.non_essential_outgoings_expenditure'))->keys()->all());
-                })->map(function ($expenditure){
-                    return [
-                        'expenditure_id' => $expenditure->id,
-                        'expenditure_type' => $expenditure->type,
-                        'description' => $expenditure->description,
-                        'amount' => $expenditure->amount,
-                        'frequency' => $expenditure->frequency,
-                        'starts_at' => $expenditure->starts_at,
-                        'ends_at' => $expenditure->ends_at,
-                        'currently_active' => $expenditure->starts_at ? false : true,
-                        'known_end_date' => $expenditure->ends_at ? true : false
-                    ];
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
                 }))->groupBy('expenditure_type')
             ],
             '2.5' => [
-                'expenditures' => collect($this->model->expenditures->filter(function($item){
-                    return in_array($item->type, collect(config('enums.expenditures.liability_expenditure'))->keys()->all());
-                })->map(function ($expenditure){
-                    return [
-                        'expenditure_id' => $expenditure->id,
-                        'expenditure_type' => $expenditure->type,
-                        'description' => $expenditure->description,
-                        'amount' => $expenditure->amount,
-                        'frequency' => $expenditure->frequency,
-                        'starts_at' => $expenditure->starts_at,
-                        'ends_at' => $expenditure->ends_at,
-                        'currently_active' => $expenditure->starts_at ? false : true,
-                        'known_end_date' => $expenditure->ends_at ? true : false
-                    ];
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
                 }))->groupBy('expenditure_type')
             ],
             default => [

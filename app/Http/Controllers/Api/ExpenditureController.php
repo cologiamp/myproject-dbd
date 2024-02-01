@@ -20,7 +20,7 @@ class ExpenditureController extends Controller
     /**
      * @param Expenditure $expenditure
      */
-    public function delete(Expenditure $expenditure)
+    public function delete(Expenditure $expenditure): string
     {
         $this->expenditureRepository->setExpenditure($expenditure);
 

@@ -277,30 +277,7 @@ class FactFindSectionDataService
      */
     private function _22(array $validatedData): void
     {
-        try {
-            if (array_key_exists('expenditures', $validatedData)) {
-                $expenditures = collect($validatedData['expenditures'])->map(function ($expenditure) {
-                    if ($expenditure['amount'] && $expenditure['amount'] != null) {
-                        $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
-                    }
-                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
-                        $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
-                    }
-                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
-                        $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
-                    }
-
-                    return $expenditure;
-                });
-
-                $validatedData['expenditures'] = $expenditures->toArray();
-            }
-        
-            $this->expenditureRepository->setClient($this->cr->getClient());
-            $this->expenditureRepository->createOrUpdateExpenditureDetails($validatedData);
-        } catch (Throwable $e) {
-            Log::warning($e);
-        }
+        $this->parseAndUpdateExpenditure($validatedData);
     }
 
     /**
@@ -311,30 +288,7 @@ class FactFindSectionDataService
      */
     private function _23(array $validatedData): void
     {
-        try {
-            if (array_key_exists('expenditures', $validatedData)) {
-                $expenditures = collect($validatedData['expenditures'])->map(function ($expenditure) {
-                    if ($expenditure['amount'] && $expenditure['amount'] != null) {
-                        $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
-                    }
-                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
-                        $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
-                    }
-                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
-                        $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
-                    }
-
-                    return $expenditure;
-                });
-
-                $validatedData['expenditures'] = $expenditures->toArray();
-            }
-        
-            $this->expenditureRepository->setClient($this->cr->getClient());
-            $this->expenditureRepository->createOrUpdateExpenditureDetails($validatedData);
-        } catch (Throwable $e) {
-            Log::warning($e);
-        }
+        $this->parseAndUpdateExpenditure($validatedData);
     }
 
     /**
@@ -345,30 +299,7 @@ class FactFindSectionDataService
      */
     private function _24(array $validatedData): void
     {
-        try {
-            if (array_key_exists('expenditures', $validatedData)) {
-                $expenditures = collect($validatedData['expenditures'])->map(function ($expenditure) {
-                    if ($expenditure['amount'] && $expenditure['amount'] != null) {
-                        $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
-                    }
-                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
-                        $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
-                    }
-                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
-                        $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
-                    }
-
-                    return $expenditure;
-                });
-
-                $validatedData['expenditures'] = $expenditures->toArray();
-            }
-        
-            $this->expenditureRepository->setClient($this->cr->getClient());
-            $this->expenditureRepository->createOrUpdateExpenditureDetails($validatedData);
-        } catch (Throwable $e) {
-            Log::warning($e);
-        }
+        $this->parseAndUpdateExpenditure($validatedData);
     }
 
     /**
@@ -378,6 +309,16 @@ class FactFindSectionDataService
      * @return void
      */
     private function _25(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
+    /**
+     * Parse and update expenditure data
+     * @param array $validatedData
+     * @return void
+     */
+    private function parseAndUpdateExpenditure(array $validatedData): void
     {
         try {
             if (array_key_exists('expenditures', $validatedData)) {
