@@ -52,7 +52,7 @@ onBeforeMount(() => {
 
     <div class="md:hidden">
         <div class="mb-4">
-            <span>{{ props.sidebarItems[selectedSectionId].name + ' progress: %' }} </span>
+            <span>{{ props.sidebarItems[selectedSectionId].name + ' progress: '+ props.tab.progress + '%' }} </span>
         </div>
         <div class="flex w-full mb-16 h-2.5 overflow-hidden bg-gray-700 rounded-md">
             <div class="bg-aaron-400 w-[50%] rounded-r-md" />
