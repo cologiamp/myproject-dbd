@@ -35,6 +35,27 @@ export default {
                 'pink': colors.pink,
                 'slate': colors.slate
 
+            },
+            keyframes: {
+                'fade-from-bottom-50': {
+                    '0%, 100%': {transform: 'translateY(50px)'},
+                    '0%': {opacity: '0', transform: 'translateY(50px)'},
+                    '100%': {opacity: '100', transform: 'translateY(0px)'}
+                },
+                'fade-from-bottom-30': {
+                    '0%, 100%': {transform: 'translateY(30px)'},
+                    '0%': {opacity: '0', transform: 'translateY(30px)'},
+                    '100%': {opacity: '100', transform: 'translateY(0px)'}
+                },
+                'scale-inwards': {
+                    '0%': {opacity: '0', transform: 'scale(0.5)'},
+                    '100%': {opacity: '100', transform: 'scale(1)'}
+                }
+            },
+            animation:{
+                'fade-from-bottom-50': 'fade-from-bottom-50 1s ease-in 0s 1 normal forwards',
+                'fade-from-bottom-30': 'fade-from-bottom-30 1.5s ease-in 0s 1 normal forwards',
+                'scale-inwards': 'scale-inwards 1.5s ease-in 0s 1 normal forwards'
             }
         },
     },
