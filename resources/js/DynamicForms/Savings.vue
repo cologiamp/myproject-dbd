@@ -233,8 +233,7 @@ function removeAsset(index) {
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Interest Rate </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="number" min="0" max="1000" step="0.01" name="interest_rate" id="interest_rate"
-                               :value="asset.interest_rate"
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"  v-model="asset.interest_rate"  type="number" min="0" max="1000" step="0.01" name="interest_rate" id="interest_rate"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="%" />
                     </div>
                 </div>

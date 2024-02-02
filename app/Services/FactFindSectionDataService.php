@@ -254,7 +254,7 @@ class FactFindSectionDataService
                     unset($asset['asset_type']);//remove
                     return $asset;
                 });
-                $validatedData['fixed_assets'] = $fixed_assets->toArray();
+                $validatedData['assets'] = $fixed_assets->toArray();
 
             }
             $this->assetRepository->setClient($client);
@@ -270,26 +270,50 @@ class FactFindSectionDataService
         $client = $this->cr->getClient();
         try{
             if (array_key_exists('saving_assets', $validatedData)) {
-                $fixed_assets = collect($validatedData['saving_assets'])->map(function ($asset) use ($client) {
+                $saving_assets = collect($validatedData['saving_assets'])->map(function ($asset) use ($client) {
                     if (array_key_exists('start_date',$asset)){
-                        $asset['start_at'] = Carbon::parse($asset['start_date']);
+                        if( $asset['start_date'] != null)
+                        {
+                            $asset['start_at'] = Carbon::parse($asset['start_date']);
+                        }
+                        else
+                        {
+                            $asset['start_at'] = null;
+                        }
                         unset($asset['start_date']);
                     }
                     if (array_key_exists('end_date',$asset)){
-                        $asset['end_date'] = Carbon::parse($asset['end_date']);
+                        if( $asset['end_date'] != null)
+                        {
+                            $asset['end_at'] = Carbon::parse($asset['end_date']);
+                        }
+                        else
+                        {
+                            $asset['end_at'] = null;
+                        }
                         unset($asset['end_date']);
                     }
+                    if (array_key_exists('name',$asset)){
+                        $asset['product_name'] = $asset['name'];
+                        unset($asset['name']);
+                    }
                     $asset['category'] = array_flip(config('enums.assets.categories'))['savings'];
-                    $asset['type'] = $asset['asset_type'];
+                    $asset['type'] = array_flip(config('enums.assets.types'))['Cash'];
                     unset($asset['asset_type']);//remove
-                    if (array_key_exists('current_balance',$asset) && $asset['current_balance'] != null){
-                        $asset['current_value'] = $this->currencyStringToInt($asset['current_balance']);
+                    if (array_key_exists('current_balance',$asset)){
+                        if( $asset['current_balance'] != null)
+                        {
+                            $asset['current_value'] = $this->currencyStringToInt($asset['current_balance']);
+                        }
                         unset($asset['current_balance']);
                     }
+                    if (array_key_exists('retained_value',$asset) && $asset['retained_value'] != null){
+                        $asset['retained_value'] = $this->currencyStringToInt($asset['retained_value']);
+                    }
+
                     return $asset;
                 });
-                $validatedData['fixed_assets'] = $fixed_assets->toArray();
-
+                $validatedData['assets'] = $saving_assets->toArray();
             }
             $this->assetRepository->setClient($client);
             $this->assetRepository->createOrUpdateAssets($validatedData);

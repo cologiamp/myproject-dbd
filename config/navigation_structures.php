@@ -294,13 +294,14 @@ return [
                             'integer',
                             Rule::in(array_keys((config('enums.assets.account_types'))))
                         ],
-                        'fixed_assets.*.name' => 'sometimes|nullable|max:1024',
-                        'fixed_assets.*.owner' => 'sometimes|nullable',
-                        'fixed_assets.*.current_balance' => 'sometimes|nullable|string',
-                        'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
-                        'fixed_assets.*.start_date' => 'sometimes|nullable|date',
-                        'fixed_assets.*.interest_rate' => 'sometimes|nullable|double',
-                        'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
+                        'saving_assets.*.name' => 'sometimes|nullable|max:1024',
+                        'saving_assets.*.owner' => 'sometimes|nullable',
+                        'saving_assets.*.current_balance' => 'sometimes|nullable|string',
+                        'saving_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'saving_assets.*.start_date' => 'sometimes|nullable|date',
+                        'saving_assets.*.end_date' => 'sometimes|nullable|date',
+                        'saving_assets.*.interest_rate' => 'sometimes|nullable',
+                        'saving_assets.*.is_retained' => 'sometimes|nullable|boolean'
                     ]
                 ],
                 3 => [
