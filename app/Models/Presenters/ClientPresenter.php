@@ -101,19 +101,19 @@ class ClientPresenter extends BasePresenter
             ],
             '3.1' => [
                 'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'))->get()->map(function ($asset){
-                    return [
-                        'id' => $asset->id,
-                        'owner' => $asset->clients->count() > 1 ? 'Both' : $asset->clients->first()->io_id,
-                        'asset_type' => $asset->type,
-                        'percent_ownership' => $asset->clients->mapWithKeys(fn($i) => [$i->io_id => $i->pivot->percent_ownership]),
-                        'description' => $asset->description,
-                        'purchased_at' => $asset->start_at,
-                        'original_value' => $asset->original_value != null ? $this->currencyIntToString($asset->original_value) : null,
-                        'current_value' =>  $asset->current_value != null ? $this->currencyIntToString($asset->current_value): null,
-                        'is_retained' => $asset->is_retained,
-                        'retained_value' =>  $asset->retained_value != null ? $this->currencyIntToString($asset->retained_value): null,
-                    ];
+                    return $asset->presenter()->formatForFactFind('fixed');
                 }))
+            ],
+            '3.2' => [
+                'saving_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id'))->get()->map(function ($asset){
+                    return $asset->presenter()->formatForFactFind('savings');
+                }))
+            ],
+            '3.3' => [
+                //todo investments table
+            ],
+            '3.4' => [
+                //todo pensions tables
             ],
             default => [
 

@@ -265,4 +265,38 @@ class FactFindSectionDataService
             Log::warning($e);
         }
     }
+    private function _32(array $validatedData): void
+    {
+        $client = $this->cr->getClient();
+        try{
+            if (array_key_exists('saving_assets', $validatedData)) {
+                $fixed_assets = collect($validatedData['saving_assets'])->map(function ($asset) use ($client) {
+                    if (array_key_exists('start_date',$asset)){
+                        $asset['start_at'] = Carbon::parse($asset['start_date']);
+                        unset($asset['start_date']);
+                    }
+                    if (array_key_exists('end_date',$asset)){
+                        $asset['end_date'] = Carbon::parse($asset['end_date']);
+                        unset($asset['end_date']);
+                    }
+                    $asset['category'] = array_flip(config('enums.assets.categories'))['savings'];
+                    $asset['type'] = $asset['asset_type'];
+                    unset($asset['asset_type']);//remove
+                    if (array_key_exists('current_balance',$asset) && $asset['current_balance'] != null){
+                        $asset['current_value'] = $this->currencyStringToInt($asset['current_balance']);
+                        unset($asset['current_balance']);
+                    }
+                    return $asset;
+                });
+                $validatedData['fixed_assets'] = $fixed_assets->toArray();
+
+            }
+            $this->assetRepository->setClient($client);
+            $this->assetRepository->createOrUpdateAssets($validatedData);
+
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+        }
+    }
 }

@@ -263,9 +263,44 @@ return [
                 2 => [
                     'name' => 'Savings',
                     'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                        'assets' => [
+                            'assets.owner',
+                            'assets.type',
+                            'assets.provider',
+                            'assets.account_type',
+                            'assets.name',
+                            'assets.current_balance',
+                            'assets.start_date',
+                            'assets.end_date',
+                            'assets.interest_rate',
+                            'assets.is_retained',
+                            'assets.retained_value',
+                        ]
+                    ],
+                    'rules' => [
+                        'saving_assets' => 'sometimes|array',
+                        'saving_assets.*.id' => 'sometimes|nullable|integer',
+                        'saving_assets.*.provider' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.providers'))))
+                        ],
+                        'saving_assets.*.account_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.account_types'))))
+                        ],
+                        'fixed_assets.*.name' => 'sometimes|nullable|max:1024',
+                        'fixed_assets.*.owner' => 'sometimes|nullable',
+                        'fixed_assets.*.current_balance' => 'sometimes|nullable|string',
+                        'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.start_date' => 'sometimes|nullable|date',
+                        'fixed_assets.*.interest_rate' => 'sometimes|nullable|double',
+                        'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
                     ]
                 ],
                 3 => [

@@ -1430,5 +1430,30 @@ return [
             13 => 'Boat',
             14 => 'Buy-to-Let Property'
         ],
+        'types_public_no_cash_invest' => [
+            1 => 'Collectibles',
+            2 => 'Holiday Home',
+            3 => 'Home Contents',
+            4 => 'Investment Property',
+            5 => 'Main Residence',
+            6 => 'Motor Vehicles',
+            7 => 'Non Income-Producing Real Estate',
+            8 => 'Overseas Property',
+            9 => 'Own Business',
+            10 => 'Rental Or Other Property',
+            12 => 'Other',
+            13 => 'Boat',
+            14 => 'Buy-to-Let Property'
+        ],
+        'account_types' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'providers' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ]
     ]
 ];

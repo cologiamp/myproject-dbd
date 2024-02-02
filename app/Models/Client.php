@@ -184,16 +184,29 @@ class Client extends Model
                 'employment_status' => config('enums.employment.employment_status')
             ],
             '3.1' => [
-                'owners' => $this->client_two != null ? [
-                    $this->io_id => $this->name,
-                    $this->client_two->io_id => $this->client_two->name,
-                    'Both' => 'Both'
-                ] :
-                [
-                    $this->io_id => $this->name,
-                ],
-                'asset_types' => config('enums.assets.types_public')
-
+                'owners' => $this->getOwnersForForm(),
+                'asset_types' => config('enums.assets.types_public_no_cash_invest')
+            ],
+            '3.2' => [
+                'owners' => $this->getOwnersForForm(),
+                'providers' => config('enums.assets.providers'),
+                'account_types' => config('enums.assets.account_types'),
+            ],
+            '3.3' => [
+                'owners' => $this->getOwnersForForm(),
+                'providers' => config('enums.assets.investment_providers'),
+                'account_types' => config('enums.assets.investment_account_types'),
+            ],
+            '3.4' => [
+                'owners' => $this->getOwnersForForm(),
+                'pension_statuses' => config('enums.assets.db_pension_status'),
+                'pension_types' => config('enums.assets.dc_pension_types'),
+                'administrators' => config('enums.assets.dc_pension_administrators'),
+            ],
+            '4.1' => [
+                'owners' => $this->getOwnersForForm(),
+                'type' => config('enums.liabilities.types'),
+                'repayment_or_interest' => config('enums.liabilities.repayment_or_interest'),
             ],
             default => [
 
@@ -227,4 +240,15 @@ class Client extends Model
         }
         else return new Collection();
     }
+    private function getOwnersForForm():array
+    {
+        return $this->client_two != null ? [
+            $this->io_id => $this->name,
+            $this->client_two->io_id => $this->client_two->name,
+            'Both' => 'Both'
+        ] :
+        [
+            $this->io_id => $this->name,
+        ];
+}
 }
