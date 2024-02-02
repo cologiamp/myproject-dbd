@@ -1472,9 +1472,9 @@ return [
             3 => 'Status 3',
         ],
         'dc_pension_types' => [
-            0 => 'Foo',
-            1 => 'Bar',
-            2 => 'Baz'
+            0 => 'Occupational',
+            1 => 'Personal',
+            2 => 'SIPP'
         ],
         'dc_pension_administrators' => [
             0 => 'Foo',
