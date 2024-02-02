@@ -47,6 +47,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     first_name: props.formData.model.first_name,
     last_name: props.formData.model.last_name,
     title: props.formData.model.title,
+    salutation: props.formData.model.salutation,
     date_of_birth: props.formData.model.date_of_birth,
     gender: props.formData.model.gender,
     marital_status: props.formData.model.marital_status,
@@ -91,6 +92,16 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.last_name">{{ stepForm.errors.last_name }}</p>
                 </div>
+
+
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="salutation" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> What should we call you? </label>
+                    <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.salutation" type="text" name="salutation" id="salutation"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md  bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Salutation" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.salutation">{{ stepForm.errors.salutation }}</p>
+                </div>
+
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="last_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date of Birth </label>
                     <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
@@ -185,23 +196,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.poa_granted">{{ stepForm.errors.poa_granted }}</p>
                 </div>
 
-
-                <!--                if(array_key_exists('gender',$person) && $person['gender'] != null)-->
-<!--                {-->
-<!--                $data['gender'] =  array_flip(config('enums.client.gender'))[$person['gender']] ;-->
-<!--                }-->
-<!--                if(array_key_exists('maritalStatus',$person) && $person['maritalStatus'] != null)-->
-<!--                {-->
-<!--                $data['marital_status'] = array_flip(config('enums.client.marital_status'))[$person['maritalStatus']];-->
-<!--                }-->
-<!--                if(array_key_exists('NationalityCountry',$person) && $person['NationalityCountry']['name'] != null)-->
-<!--                {-->
-<!--                $data['nationality'] = array_flip(config('enums.client.nationality'))[$person['NationalityCountry']['name']];-->
-<!--                }-->
-<!--                if(array_key_exists('salutation',$person) && $person['salutation'] != null)-->
-<!--                {-->
-<!--                $data['salutation'] = $person['salutation'];-->
-<!--                }-->
             </div>
         </div>
     </dynamic-form-wrapper>
