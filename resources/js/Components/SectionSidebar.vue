@@ -5,6 +5,13 @@ const props = defineProps({
     sidebarItems: {
         type: Object,
         required: true
+    },
+    progress: {
+        type: Number,
+        default: 0
+    },
+    tabName: {
+        type: String,
     }
 });
 
@@ -49,6 +56,15 @@ onBeforeMount(() => {
             </ul>
         </div>
     </aside>
+
+    <div class="md:hidden">
+        <div class="mb-4">
+            <span>{{ props.tabName + ' progress: '+ props.progress + '%' }} </span>
+        </div>
+        <div class="flex w-full mb-16 h-2.5 overflow-hidden bg-gray-700 rounded-md">
+            <div class="bg-aaron-400 w-[50%] rounded-r-md" />
+        </div>
+    </div>
 
     <div class="md:p-4 sm:ml-80">
         <div class="p-4">

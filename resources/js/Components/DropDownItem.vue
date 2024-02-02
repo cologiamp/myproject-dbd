@@ -51,12 +51,10 @@ function handleAutosave(val){
                 </h1>
                 <AutoSaveSpinner :autosave="autosaveState" />
             </div>
-            <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
-                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
-            </div>
+            <hr class="-mx-32 h-1 mt-2 mb-6 bg-aaron-950 border-0">
         </div>
         <div class="block">
-            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
+            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :progress="tab.progress" :tabName="tab.name" >
                 <SectionContent @auto-save-up="handleAutosave" v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
             </SectionSidebar>
         </div>
