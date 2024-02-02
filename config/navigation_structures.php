@@ -199,29 +199,205 @@ return [
                 'name' => 'Income and Expenditure',
                 'sections' => [
                     1 => [
-                        'name' => 'Foo',
+                        'name' => 'Income',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            "incomes.income_id",
+                            "incomes.income_type",
+                            "incomes.gross_amount",
+                            "incomes.net_amount",
+                            "incomes.expenses",
+                            "incomes.frequency",
+                            "incomes.ends_at",
+                            "incomes.belongs_to",
+                            "incomes.record_exists",
+                            "incomes.is_primary"
+                        ],
+                        'rules' => [
+                            'incomes' => 'sometimes|nullable|array',
+                            'incomes.*.income_id' => 'sometimes|nullable|integer',
+                            'incomes.*.income_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.income_type'))))
+                            ],
+                            'incomes.*.gross_amount' => 'sometimes|nullable|string',
+                            'incomes.*.net_amount' => 'sometimes|nullable|string',
+                            'incomes.*.expenses' => 'sometimes|nullable|string',
+                            'incomes.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'incomes.*.ends_at' => 'sometimes|nullable|date',
+                            'incomes.*.belongs_to' => 'sometimes|nullable|integer',
+                            'incomes.*.record_exists' => 'sometimes|nullable|boolean',
+                            'incomes.*.is_primary' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     2 => [
-                        'name' => 'Bar',
+                        'name' => 'Basic Essential Expenditure',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            'expenditures' => [
+                                'expenditures.expenditure_id',
+                                'expenditures.expenditure_type',
+                                'expenditures.description',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.currently_active',
+                                'expenditures.known_end_date',
+                                'expenditures.starts_at',
+                                'expenditures.ends_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.basic_essential_expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
+                            'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ]
                     ],
                     3 => [
-                        'name' => 'Baz',
+                        'name' => 'Basic Quality Of Living Expenditure',
                         'fields' => [
-                            "clients.date_of_birth",
-                            "clients.first_name",
-                            "clients.last_name"
+                            'expenditures' => [
+                                'expenditures.expenditure_id',
+                                'expenditures.expenditure_type',
+                                'expenditures.description',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.currently_active',
+                                'expenditures.known_end_date',
+                                'expenditures.starts_at',
+                                'expenditures.ends_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.basic_quality_of_living_expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
+                            'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ]
                     ],
+                    4 => [
+                        'name' => 'Non Essential Outgoings Expenditure',
+                        'fields' => [
+                            'expenditures' => [
+                                'expenditures.expenditure_id',
+                                'expenditures.expenditure_type',
+                                'expenditures.description',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.currently_active',
+                                'expenditures.known_end_date',
+                                'expenditures.starts_at',
+                                'expenditures.ends_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.non_essential_outgoings_expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
+                            'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                        ]
+                    ],
+                    5 => [
+                        'name' => 'Liability Expenditure',
+                        'fields' => [
+                            'expenditures' => [
+                                'expenditures.expenditure_id',
+                                'expenditures.expenditure_type',
+                                'expenditures.description',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.currently_active',
+                                'expenditures.known_end_date',
+                                'expenditures.starts_at',
+                                'expenditures.ends_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.liability_expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
+                            'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                        ]
+                    ]
                 ],
             ],
         3 => [

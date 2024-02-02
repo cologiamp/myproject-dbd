@@ -13,12 +13,20 @@ const props = defineProps({
             'dynamicData': null
         }
     },
+    tabIndex: {
+        type: String
+    },
     sectionIndex: {
         type: String
     }
 });
 
 function dynamicComponent(component){
+    // For Expenditure sections
+    if ((parseInt(props.tabIndex) == 2 && parseInt(props.sectionIndex) >= 2) || component.includes('Expenditure')) {
+       component = 'Expenditure'
+    }
+    
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
 // need to send the section
@@ -30,7 +38,7 @@ const selectedSectionId = inject("selectedSectionId");
 
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
-        <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)" :is="dynamicComponent(item.renderable)" :formData="item.dynamicData" />
+        <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)" :is="dynamicComponent(item.renderable)" :formData="item.dynamicData" :sectionIndex="sectionIndex"/>
     </div>
 </template>
 

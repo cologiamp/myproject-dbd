@@ -24,9 +24,11 @@ class FactFindController extends Controller
         //$req->step - which tab to use
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
-        $tabs = $this->clientRepository->loadFactFindTabs($request->step != null ? $request->step : 1, $request->section != null ? $request->section : 1);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
+
+        $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
+
         return Inertia::render('FactFind', [
             'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
@@ -47,13 +49,18 @@ class FactFindController extends Controller
     public function update(Client $client, $step, $section, Request $request): \Illuminate\Http\RedirectResponse
     {
         $ffsds = App::make(FactFindSectionDataService::class);
+        
+        if ($step == 2 && $section >= 2) {
+            $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
+        }
 
+        
         try{
             $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
-            dd($e);
+            Log::warning($e);
         }
 
         $ffsds->store(

@@ -46,15 +46,15 @@ onBeforeMount(() => {
                     :id="index"
                     @click="sectionsClick(index, item)">
                     <Link :href="`?step=${ props.tabIndex }&section=${ index }`" >
-                        <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                            <div>
-                                <div class="rounded-full w-11 h-11 py-2 text-center"
-                                    :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
-                                        {{ index }}
-                                </div>
-                            </div>
-                            <span class="ml-3 text-base">{{ item.name }}</span>
-                        </div>
+                        <div class="flex items-center p-2 text-aaron-50 gap-x-3 text-sm leading-6 font-semibold group">
+                          <div>
+                              <div class="rounded-full w-11 h-11 py-2 text-center"
+                                  :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
+                                      {{ index }}
+                              </div>
+                          </div>
+                        <span class="ml-3 text-base">{{ item.name }}</span>
+                    </div>
                     </Link>
                 </li>
             </ul>

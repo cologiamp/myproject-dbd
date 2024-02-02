@@ -18,7 +18,7 @@ export function autosave(form,submitUrl){
     })).put(submitUrl,
         {
             preserveScroll: true,
-            preserveState: true,
+            preserveState: false,
             onSuccess: () => {
                 //Autosave actually takes a fraction of a second, but we delay to 1s to make it clear to user it actually happened
                 setTimeout(() => autoS.value = 1,1000);

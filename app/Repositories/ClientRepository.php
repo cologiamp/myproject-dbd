@@ -185,14 +185,14 @@ class ClientRepository extends BaseRepository
      * Load in factfind sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
      */
-    public function loadFactFindSidebarItems($sections, $currentStep, $currentSection)
+    public function loadFactFindSidebarItems($sections, $step, $currentStep, $currentSection)
     {
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => FactFindSectionDataService::get($this->client,$currentStep,$key),
+               'dynamicData' => FactFindSectionDataService::get($this->client,$step,$key),
            ];
         });
     }
@@ -210,6 +210,7 @@ class ClientRepository extends BaseRepository
      */
     public function loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
     {
+
         return collect(config('navigation_structures.factfind'))->map(function ($value,$key) use ($currentSection,$currentStep){
             return [
                 'name' => $value['name'],
@@ -217,7 +218,7 @@ class ClientRepository extends BaseRepository
                 'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
-                }), $currentStep, $currentSection)->toArray()
+                }), $key, $currentStep, $currentSection)->toArray()
             ];
         })->toArray();
     }
