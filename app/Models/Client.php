@@ -120,6 +120,11 @@ class Client extends Model
         return $this->hasMany(ExistingAccount::class);
     }
 
+    public function other_investments():HasMany
+    {
+        return $this->hasMany(OtherInvestment::class);
+    }
+
     public function pension_scheme():HasMany
     {
         return $this->hasMany(PensionScheme::class);
@@ -193,12 +198,13 @@ class Client extends Model
                 'account_types' => config('enums.assets.account_types'),
             ],
             '3.3' => [
-                'owners' => $this->getOwnersForForm(),
+                'owners' => $this->getOwnersForForm(true),
                 'providers' => config('enums.assets.investment_providers'),
                 'account_types' => config('enums.assets.investment_account_types'),
+                'frequencies' => config('enums.assets.frequency_public'),
             ],
             '3.4' => [
-                'owners' => $this->getOwnersForForm(),
+                'owners' => $this->getOwnersForForm(true),
                 'pension_statuses' => config('enums.assets.db_pension_status'),
                 'pension_types' => config('enums.assets.dc_pension_types'),
                 'administrators' => config('enums.assets.dc_pension_administrators'),
@@ -240,15 +246,22 @@ class Client extends Model
         }
         else return new Collection();
     }
-    private function getOwnersForForm():array
+    private function getOwnersForForm($noBoth = false):array
     {
-        return $this->client_two != null ? [
-            $this->io_id => $this->name,
-            $this->client_two->io_id => $this->client_two->name,
-            'Both' => 'Both'
-        ] :
-        [
+        if($this->client_two)
+        {
+            $arr = [
+                $this->io_id => $this->name,
+                $this->client_two->io_id => $this->client_two->name
+            ];
+            if(!$noBoth)
+            {
+                $arr['Both'] = 'Both';
+            }
+            return $arr;
+        }
+        return [
             $this->io_id => $this->name,
         ];
-}
+    }
 }

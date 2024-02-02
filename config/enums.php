@@ -1454,6 +1454,50 @@ return [
             0 => 'Foo',
             1 => 'Bar',
             2 => 'Baz'
+        ],
+        'investment_providers' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'investment_account_types' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'db_pension_statuses' => [
+            0 => 'Status 0',
+            1 => 'Status 1',
+            2 => 'Status 2',
+            3 => 'Status 3',
+        ],
+        'dc_pension_types' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'dc_pension_administrators' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
         ]
     ]
 ];

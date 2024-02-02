@@ -4,6 +4,7 @@ namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\Asset;
+use App\Models\OtherInvestment;
 use phpDocumentor\Reflection\Types\Boolean;
 use App\Models\Dependent;
 use PHPUnit\Framework\Attributes\Depends;
@@ -110,7 +111,23 @@ class ClientPresenter extends BasePresenter
                 }))
             ],
             '3.3' => [
-                //todo investments table
+                'investments' => $this->model->other_investments->map(function ($investment){
+                  return [
+                      'id' => $investment->id,
+                      'owner' => $investment->client->io_id,
+                      'provider' => $investment->provider,
+                      'account_type' => $investment->contract_type,
+                      'product_name' => $investment->product_name,
+                      'is_retained' => $investment->is_retained,
+                      'retained_value' =>  $investment->retained_value != null ? $this->currencyIntToString($investment->retained_value): null,
+                      'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
+                      'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
+                      'frequency' => $investment->frequency,
+                      'start_date' =>  $investment->start_date,
+                      'maturity_date' =>  $investment->maturity_date,
+                      'valuation_at' =>  $investment->valuation_at,
+                  ];
+                })
             ],
             '3.4' => [
                 //todo pensions tables

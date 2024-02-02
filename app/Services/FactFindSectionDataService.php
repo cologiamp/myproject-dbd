@@ -10,8 +10,10 @@ use App\Repositories\ClientRepository;
 use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
 use App\Repositories\EmploymentDetailRepository;
+use App\Repositories\InvestmentRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -321,6 +323,67 @@ class FactFindSectionDataService
         }
         catch(Throwable $e){
             Log::warning($e);
+        }
+    }
+
+    private function _33(array $validatedData): void
+    {
+
+
+        $validatedData = collect($validatedData['investments'])->map(function ($item){
+
+            if(array_key_exists('owner',$item) && $item['owner'] != null)
+            {
+                $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
+            }
+            else{
+                $item['client_id'] = $this->cr->getClient()->id;
+            }
+
+            unset($item['owner']);
+            if(array_key_exists('account_type',$item)){
+                $item['contract_type'] = $item['account_type'];
+                unset($item['account_type']);
+            }
+            if (array_key_exists('start_date',$item)  && $item['start_date'] != null){
+                $item['start_date'] = Carbon::parse($item['start_date']);
+            }
+            else{
+                unset($item['start_date']);
+            }
+            if (array_key_exists('maturity_date',$item) && $item['maturity_date'] != null){
+                $item['maturity_date'] = Carbon::parse($item['maturity_date']);
+            }
+            else{
+                unset($item['maturity_date']);
+            }
+            if (array_key_exists('valuation_at',$item) && $item['valuation_at'] != null){
+                $item['valuation_at'] = Carbon::parse($item['valuation_at']);
+            }
+            else{
+                unset($item['valuation_at']);
+            }
+
+            if (array_key_exists('current_value',$item) && $item['current_value'] != null){
+                $item['current_value'] = $this->currencyStringToInt($item['current_value']);
+            }
+            if (array_key_exists('regular_contribution',$item) && $item['regular_contribution'] != null){
+                $item['regular_contribution'] = $this->currencyStringToInt($item['regular_contribution']);
+            }
+            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
+                $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
+            }
+
+            return $item;
+        });
+
+        $ir = App::make(InvestmentRepository::class);
+        try{
+            $ir->createOrUpdateInvestments($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
         }
     }
 }

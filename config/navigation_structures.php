@@ -306,10 +306,39 @@ return [
                 ],
                 3 => [
                     'name' => 'Investments',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                    'rules' => [
+                        'investments' => 'sometimes|array',
+                        'investments.*.id' => 'sometimes|nullable|integer',
+                        'investments.*.owner' => 'sometimes|nullable',
+                        'investments.*.provider' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.investment_providers'))))
+                        ],
+                        'investments.*.account_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.investment_account_types'))))
+                        ],
+                        'investments.*.product_name' => 'sometimes|nullable|max:1024',
+                        'investments.*.is_retained' => 'sometimes|nullable|boolean',
+                        'investments.*.retained_value' => 'sometimes|nullable|string',
+                        'investments.*.current_value' => 'sometimes|nullable|string',
+                        'investments.*.regular_contribution' => 'sometimes|nullable|string',
+                        'investments.*.frequency' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.frequency'))))
+                        ],
+                        'investments.*.valuation_at' => 'sometimes|nullable|date',
+                        'investments.*.start_date' => 'sometimes|nullable|date',
+                        'investments.*.maturity_date' => 'sometimes|nullable|date',
                     ]
                 ],
                 4=> [
