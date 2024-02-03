@@ -4,10 +4,7 @@ namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\Asset;
-use App\Models\OtherInvestment;
-use phpDocumentor\Reflection\Types\Boolean;
-use App\Models\Dependent;
-use PHPUnit\Framework\Attributes\Depends;
+use App\Models\PensionScheme;
 
 class ClientPresenter extends BasePresenter
 {
@@ -130,7 +127,42 @@ class ClientPresenter extends BasePresenter
                 })
             ],
             '3.4' => [
-                //todo pensions tables
+                'dc_pensions' => PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'pt' => 'DC',
+                        'owner' => $item->client->io_id,
+                        'type' => $item->defined_contribution_pension->type,
+                        'employer' => $item->employer,
+                        'administrator' => $item->defined_contribution_pension->administrator,
+                        'policy_starts_at' => $item->defined_contribution_pension->policy_start_at,
+                        'policy_number' => $item->defined_contribution_pension->policy_number,
+                        'gross_contribution_percent' => $item->defined_contribution_pension->gross_contribution_percent,
+                        'gross_contribution_absolute' => $item->defined_contribution_pension->gross_contribution_absolute,
+                        'employer_contribution_percent' => $item->defined_contribution_pension->employer_contribution_percent,
+                        'employer_contribution_absolute' => $item->defined_contribution_pension->employer_contribution_absolute,
+                        'valuation_at' => $item->defined_contribution_pension->valuation_at,
+                        'value' => $item->defined_contribution_pension->value,
+                        'retained_value'=> $item->defined_contribution_pension->retained_value,
+                        'is_retained'=> $item->defined_contribution_pension->is_retained,
+                    ];
+                }),
+                'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'pt' => 'DB',
+                        'owner' => $item->client->io_id,
+                        'status' => $item->defined_benefit_pension->status,
+                        'employer' => $item->employer,
+                        'retirement_age' => $item->retirement_age,
+                        'prospective_pension_standard' => $item->defined_benefit_pension->prospective_pension_standard,
+                        'prospective_pension_max' => $item->defined_benefit_pension->prospective_pension_max,
+                        'prospective_pcls_standard' => $item->defined_benefit_pension->prospective_pcls_standard,
+                        'prospective_pcls_max' => $item->defined_benefit_pension->prospective_pcls_max,
+                        'cetv' => $item->defined_benefit_pension->cetv,
+                        'cetv_ends_at' => $item->defined_benefit_pension->cetv_ends_at
+                    ];
+                })
             ],
             default => [
 

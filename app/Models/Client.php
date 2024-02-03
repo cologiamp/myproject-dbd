@@ -125,7 +125,7 @@ class Client extends Model
         return $this->hasMany(OtherInvestment::class);
     }
 
-    public function pension_scheme():HasMany
+    public function pension_schemes():HasMany
     {
         return $this->hasMany(PensionScheme::class);
     }
