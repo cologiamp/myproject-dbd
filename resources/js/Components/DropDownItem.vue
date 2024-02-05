@@ -55,12 +55,11 @@ function handleAutosave(val){
                 <div class="hidden flex w-full h-2.5 bg-gray-700 rounded-md">
                     <div class="bg-aaron-400 w-[50%] rounded-r-md" />
                 </div>
-                <!--
-                <hr class="-mx-32 h-1 mt-2 mb-6 bg-aaron-950 border-0">
-                -->
+
+                <!-- HIDE ON START, DISPLAY ON SCROLL DOWN AND WHEN MENU IS STICKED -->
                 <div class="px-8 mb-8 w-full">
                     <div class="mb-4">
-                        <span>{{ props.tabName + ' progress: '+ props.progress + '%' }} </span>
+                        <span>{{ tab.name + ' progress: '+ tab.progress + '%' }} </span>
                     </div>
                     <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
                         <div class="bg-aaron-400 w-[50%] rounded-r-md" />

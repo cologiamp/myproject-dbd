@@ -34,19 +34,11 @@ onBeforeMount(() => {
     selectedSectionId.value = initialSectionKey.value
 });
 
-//Dropdown Ignacio
 const currentSelectedSection = ref(1);
 const menuShow = ref(true);
 const formShow = ref(true);
-//const isDropped = ref(true);
-const toggleDropdown = (index) => {
 
-    console.log("Clicked: " + index);
-    console.log("currentSelectedSection: " + currentSelectedSection.value);
-    console.log("Menu Show: " + menuShow.value);
-    console.log("Form Show: " + formShow.value);
-    //document.getElementById("txt").classList.toggle("max-h-[300px]");
-    //document.getElementById("txt").classList.toggle("max-h-0");
+const toggleDropdown = (index) => {
 
     if (currentSelectedSection.value !== index) {
         menuShow.value = false;
@@ -63,12 +55,6 @@ const toggleDropdown = (index) => {
     }
 
     currentSelectedSection.value = index;
-
-    console.log("Clicked: " + index);
-    console.log("currentSelectedSection: " + currentSelectedSection.value);
-    console.log("Menu Show: " + menuShow.value);
-    console.log("Form Show: " + formShow.value);
-
 }
 </script>
 
@@ -94,7 +80,8 @@ const toggleDropdown = (index) => {
         </div>
     </aside>
 
-    <div class="md:hidden">
+    <!-- DISPLAY ON START, HIDE ONSCROLL DOWN AND WHEN MENU IS STICKED -->
+    <div class="hidden md:hidden">
         <div class="mb-4">
             <span>{{ props.tabName + ' progress: '+ props.progress + '%' }} </span>
         </div>
