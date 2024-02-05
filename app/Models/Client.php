@@ -68,7 +68,7 @@ class Client extends Model
 
     public function incomes():BelongsToMany
     {
-        return $this->belongsToMany(Income::class);
+        return $this->belongsToMany(Income::class)->withPivot('is_primary');
     }
 
 
@@ -188,6 +188,27 @@ class Client extends Model
             '1.5' => [
                 'employment_status' => config('enums.employment.employment_status')
             ],
+            '2.1' => [
+                'income_types' => config('enums.incomes.income_type'),
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'belongs_to' => $this->getBelongsToEnums()
+            ],
+            '2.2' => [
+                'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '2.3' => [
+                'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '2.4' => [
+                'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '2.5' => [
+                'expenditure_types' => config('enums.expenditures.liability_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
             '3.1' => [
                 'owners' => $this->getOwnersForForm(),
                 'asset_types' => config('enums.assets.types_public_no_cash_invest')
@@ -213,7 +234,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(true),
                 'types' => config('enums.liabilities.types_public'),
                 'repayment_or_interest' => config('enums.liabilities.repayment_or_interest'),
-            ],
+            ]
             default => [
 
             ]
@@ -263,5 +284,12 @@ class Client extends Model
         return [
             $this->io_id => $this->name,
         ];
+    }
+
+    public function getBelongsToEnums():Collection
+    {
+        return collect([
+            $this->id => $this->first_name
+        ]);
     }
 }

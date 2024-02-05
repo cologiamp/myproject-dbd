@@ -35,6 +35,7 @@ class ClientPresenter extends BasePresenter
             '1.1' => [
                 'first_name' => $this->model->first_name,
                 'last_name' => $this->model->last_name,
+                'salutation' => $this->model->salutation,
                 'title' => $this->model->title,
                 'date_of_birth' => $this->model->date_of_birth,
                 'gender' => $this->model->gender,
@@ -96,6 +97,46 @@ class ClientPresenter extends BasePresenter
                         'end_at' => $employment->end_at
                     ];
                 }))
+            ],
+             '2.1' => [
+                'incomes' => collect($this->model->incomes->map(function ($income){
+                    return [
+                        'income_id' => $income->id,
+                        'income_type' => $income->category,
+                        'gross_amount' => $income->gross_amount,
+                        'net_amount' => $income->net_amount,
+                        'expenses' => $income->expenses,
+                        'frequency' => $income->frequency,
+                        'ends_at' => $income->ends_at,
+                        'belongs_to' => $income->pivot->client_id,
+                        'record_exists' => $income->pivot->client_id ? true : false,
+                        'is_primary' => (bool) $income->pivot->is_primary
+                    ];
+                }))
+            ],
+            '2.2' => [
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
+                }))->groupBy('expenditure_type')
+            ],
+            '2.3' => [
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
+                }))->groupBy('expenditure_type')
+            ],
+            '2.4' => [
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
+                }))->groupBy('expenditure_type')
+            ],
+            '2.5' => [
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
+                }))->groupBy('expenditure_type')
             ],
             '3.1' => [
                 'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'))->get()->map(function ($asset){

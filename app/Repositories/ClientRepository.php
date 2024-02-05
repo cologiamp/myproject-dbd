@@ -210,6 +210,7 @@ class ClientRepository extends BaseRepository
      */
     public function loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
     {
+
         return collect(config('navigation_structures.factfind'))->map(function ($value,$key) use ($currentSection,$currentStep){
             return [
                 'name' => $value['name'],

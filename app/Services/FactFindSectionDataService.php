@@ -13,11 +13,14 @@ use App\Repositories\EmploymentDetailRepository;
 use App\Repositories\InvestmentRepository;
 use App\Repositories\PensionRepository;
 use App\Repositories\LiabilityRepository;
+use App\Repositories\IncomeRepository;
+use App\Repositories\ExpenditureRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use Throwable;
 
@@ -29,8 +32,9 @@ class FactFindSectionDataService
     protected HealthRepository $healthRepository;
     protected EmploymentDetailRepository $employmentDetailRepository;
     protected LiabilityRepository $liabilityRepository;
-
     protected AssetRepository $assetRepository;
+    protected IncomeRepository $incomeRepository;
+    protected ExpenditureRepository $expenditureRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
@@ -39,6 +43,8 @@ class FactFindSectionDataService
         EmploymentDetailRepository $employmentDetailRepository,
         AssetRepository $assetRepository,
         LiabilityRepository $liabilityRepository
+        IncomeRepository $incomeRepository,
+        ExpenditureRepository $expenditureRepository
     ) {
         $this->cr = $clientRepository;
         $this->dependentRepository = $dependentRepository;
@@ -46,6 +52,8 @@ class FactFindSectionDataService
         $this->employmentDetailRepository = $employmentDetailRepository;
         $this->assetRepository = $assetRepository;
         $this->liabilityRepository = $liabilityRepository;
+        $this->incomeRepository = $incomeRepository;
+        $this->expenditureRepository = $expenditureRepository;
     }
     //get the data for a single section of a factfind from a single client
     public static function get($client, $step, $section): array
@@ -235,9 +243,89 @@ class FactFindSectionDataService
             Log::warning($e);
         }
     }
+  
+    /**
+     * Section: 2
+     * Step: 1
+     * @param array $validatedData
+     * @return void
+     */
+    private function _21(array $validatedData): void
+    {
+        try {
+            if (array_key_exists('incomes', $validatedData)) {
+                $incomes = collect($validatedData['incomes'])->map(function ($income) {
+                    if ($income['ends_at'] && $income['ends_at'] != null) {
+                        $income['ends_at'] = Carbon::parse($income['ends_at']);
+                    }
+                    if ($income['gross_amount'] && $income['gross_amount'] != null) {
+                        $income['gross_amount'] = $this->currencyStringToInt($income['gross_amount']);
+                    }
+                    if ($income['net_amount'] && $income['net_amount'] != null) {
+                        $income['net_amount'] = $this->currencyStringToInt($income['net_amount']);
+                    }
+                    if ($income['expenses'] && $income['expenses'] != null) {
+                        $income['expenses'] = $this->currencyStringToInt($income['expenses']);
+                    }
 
+                    return $income;
+                });
 
-    private function _31(array $validatedData): void
+                $validatedData['incomes'] = $incomes->toArray();
+            }
+
+            $this->incomeRepository->setClient($this->cr->getClient());
+            $this->incomeRepository->createOrUpdateIncomeDetails($validatedData);
+        } catch (Throwable $e) {
+            Log::warning($e);
+        }
+    }
+
+    /**
+     * Section: 2
+     * Step: 2
+     * @param array $validatedData
+     * @return void
+     */
+    private function _22(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
+    /**
+     * Section: 2
+     * Step: 3
+     * @param array $validatedData
+     * @return void
+     */
+    private function _23(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
+    /**
+     * Section: 2
+     * Step: 4
+     * @param array $validatedData
+     * @return void
+     */
+    private function _24(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
+    /**
+     * Section: 2
+     * Step: 5
+     * @param array $validatedData
+     * @return void
+     */
+    private function _25(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+  
+     private function _31(array $validatedData): void
     {
         $client= $this->cr->getClient();
         try{
@@ -511,6 +599,36 @@ class FactFindSectionDataService
             
             $this->liabilityRepository->setClient($this->cr->getClient());
             $this->liabilityRepository->createOrUpdateLiabilityDetails($validatedData);
+    }
+
+    /**
+     * Parse and update expenditure data
+     * @param array $validatedData
+     * @return void
+     */
+    private function parseAndUpdateExpenditure(array $validatedData): void
+    {
+        try {
+            if (array_key_exists('expenditures', $validatedData)) {
+                $expenditures = collect($validatedData['expenditures'])->map(function ($expenditure) {
+                    if ($expenditure['amount'] && $expenditure['amount'] != null) {
+                        $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
+                    }
+                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
+                        $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
+                    }
+                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
+                        $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
+                    }
+
+                    return $expenditure;
+                });
+
+                $validatedData['expenditures'] = $expenditures->toArray();
+            }
+        
+            $this->expenditureRepository->setClient($this->cr->getClient());
+            $this->expenditureRepository->createOrUpdateExpenditureDetails($validatedData);
         } catch (Throwable $e) {
             Log::warning($e);
         }

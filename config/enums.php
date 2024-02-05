@@ -1334,21 +1334,41 @@ return [
         ],
     ],
     'incomes' => [
-        0 => 'Salary',
-        1 => 'Bonus',
-        2 => 'Car Allowance',
-        3 => 'Overtime',
-        4 => 'P11D',
-        5 => 'Self-Employment Annual Profit',
-        6 => 'Regular Pension Income',
-        7 => 'State Pension Income',
-        8 => 'Taxable State Benefits',
-        9 => 'Non-taxable State Benefits',
-        10 => 'Rental Income',
-        11 => 'Other Income'
+        'income_type' => [
+            0 => 'Salary',
+            1 => 'Bonus',
+            2 => 'Car Allowance',
+            3 => 'Overtime',
+            4 => 'P11D',
+            5 => 'Self-Employment Annual Profit',
+            6 => 'Regular Pension Income',
+            7 => 'State Pension Income',
+            8 => 'Taxable State Benefits',
+            9 => 'Non-taxable State Benefits',
+            10 => 'Rental Income',
+            11 => 'Other Income'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
+        ]
     ],
     'expenditures' => [
-        'Basic Essential Expenditure' => [
+        'basic_essential_expenditure' => [
             0 => 'Rent',
             1 => 'Council Tax',
             2 => 'Gas',
@@ -1364,7 +1384,7 @@ return [
             12 => 'Maintenance/Alimony',
             13 => 'Other (Basic Essential)'
         ],
-        'Basic Quality of Living' => [
+        'basic_quality_of_living_expenditure' => [
             14 => 'Clothing',
             15 => 'Furniture/Appliances/Repairs',
             16 => 'TV/Satellite/Internet/Basic Recreation',
@@ -1372,7 +1392,7 @@ return [
             18 => 'School Fee/Childcare',
             19 => 'Other (Basic Quality of Living)',
         ],
-        'Non-Essential Outgoings' => [
+        'non_essential_outgoings_expenditure' => [
             20 => 'Gym',
             21 => 'Holidays',
             22 => 'Entertainment',
@@ -1382,7 +1402,7 @@ return [
             26 => 'Other Assets',
             27 => 'Other (Non-Essential)',
         ],
-        'Liability Expenditure' => [
+        'liability_expenditure' => [
             28 => 'Personal Loans',
             29 => 'Credit Cards',
             30 => 'Mortgage',

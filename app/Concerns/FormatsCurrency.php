@@ -26,5 +26,4 @@ trait FormatsCurrency{
         return '£' . number_format($amount/100,2);
     }
 
-
 }

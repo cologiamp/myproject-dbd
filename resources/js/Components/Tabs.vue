@@ -1,5 +1,6 @@
 <script setup>
 import { ref, provide, onBeforeMount, inject } from "vue"
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
     tabTitles: {
@@ -11,6 +12,9 @@ const props = defineProps({
 const emit = defineEmits(['setOnloadKey', 'testEmit']);
 const initialTabKey = inject("onloadKey");
 const selectedTabId = ref(1);
+const cachedSectionForStep = ref(1);
+
+let urlWithFragment = '';
 
 function tabsClick(index, tab) {
     selectedTabId.value = index
@@ -20,6 +24,14 @@ function tabsClick(index, tab) {
     });
 
     tab.current = true;
+
+    // retrieve saved section for equivalent step from localsession
+    if (localStorage.getItem('step' + selectedTabId.value + 'section')) { 
+        cachedSectionForStep.value = localStorage.getItem('step' + selectedTabId.value + 'section');
+    }
+    
+    urlWithFragment = `${location.pathname}?step=${ index }&section=${ cachedSectionForStep.value }`;
+    router.visit(urlWithFragment);
 }
 
 provide("selectedTabId", selectedTabId);
