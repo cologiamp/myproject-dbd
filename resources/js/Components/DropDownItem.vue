@@ -44,7 +44,7 @@ function handleAutosave(val){
 
 <template>
     <div class="bg-aaron-900 sm:rounded-lg h-full" v-show="tabIndex == selectedMenuId">
-        <div class="sticky top-0 z-[450] h-36 pt-8 px-8 w-full flex flex-col gap-6 mb-14 bg-aaron-900">
+        <div class="sticky top-0 z-[450] h-36 pt-8 px-8 w-full flex flex-col gap-6 mb-2 bg-aaron-900">
                 <div class="w-full flex flex-row items-center justify-between">
                 <h1 class="text-2xl font-medium">
                     {{ tab.name }}
