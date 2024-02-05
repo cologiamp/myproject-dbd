@@ -40,16 +40,18 @@ const formShow = ref(true);
 
 const toggleDropdown = (index) => {
 
-    if (currentSelectedSection.value !== index) {
-        menuShow.value = false;
-        formShow.value = true;
-    } else {
-        if(formShow.value) {
-            menuShow.value = true;
-            formShow.value = false;
-        } else {
+    if(window.innerWidth < 768) {
+        if (currentSelectedSection.value !== index) {
             menuShow.value = false;
             formShow.value = true;
+        } else {
+            if(formShow.value) {
+                menuShow.value = true;
+                formShow.value = false;
+            } else {
+                menuShow.value = false;
+                formShow.value = true;
+            }
         }
     }
 
@@ -63,10 +65,10 @@ const toggleDropdown = (index) => {
         <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
                 <ul class="font-medium">
                     <li v-for="(item, index) in props.sidebarItems"
-                        v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" v-on:click="toggleDropdown(index)" ref="btnMenuRef"
+                        v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" ref="btnMenuRef"
                         :key="item.name"
                         :id="index"
-                        @click="sectionsClick(index, item)">
+                        @click="toggleDropdown(index); sectionsClick(index, item)">
                         <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
                             <div class="rounded-full w-11 h-11 py-2 text-center"
                                  :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
