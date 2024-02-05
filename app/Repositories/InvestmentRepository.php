@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
-class InvestmentRepository extends BaseRepository
+class  InvestmentRepository extends BaseRepository
 {
     protected Client $client;
     protected OtherInvestment $oi;
