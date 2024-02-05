@@ -56,6 +56,10 @@ export default {
                 'fade-from-bottom-50': 'fade-from-bottom-50 1s ease-in 0s 1 normal forwards',
                 'fade-from-bottom-30': 'fade-from-bottom-30 1.5s ease-in 0s 1 normal forwards',
                 'scale-inwards': 'scale-inwards 1.5s ease-in 0s 1 normal forwards'
+            },
+            screens: {
+                '3xl': '1980px',
+                ...defaultTheme.screens
             }
         },
     },
