@@ -40,14 +40,14 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <Menu as="div" class="relative inline-block w-full text-left mb-8 px-7">
+    <Menu as="div" class="z-[600] relative inline-block w-full text-left mb-8 px-7">
       <div>
         <MenuButton class="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-aaron-700 ring-aaron-600 text-white p-3 text-sm font-semibold shadow-sm ring-1 ring-inset hover:bg-aaron-600 h-11">
           {{ selectedMenu }}
           <ChevronDownIcon class="-mr-1 h-5 w-5 text-white" aria-hidden="true" />
         </MenuButton>
       </div>
-  
+
       <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
         <MenuItems class="absolute w-full left-0 z-10 mt-2 origin-top-right rounded-md border-aaron-300 py-1.5 bg-aaron-950 ring-aaron-300 shadow-lg ring-1 ring-opacity-5 focus:outline-none">
           <div class="py-1">
