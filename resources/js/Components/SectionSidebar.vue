@@ -67,8 +67,7 @@ const toggleDropdown = (index) => {
 
 <template>
 
-
-    <aside id="default-sidebar" class="h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
+    <aside id="default-sidebar" class="sticky top-36 z-[400] h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
         <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
                 <ul class="font-medium">
                     <li v-for="(item, index) in props.sidebarItems"
@@ -87,21 +86,6 @@ const toggleDropdown = (index) => {
                 </ul>
         </div>
     </aside>
-
-<!--
-    <div class="sticky top-0 cursor-pointer" v-for="(item, index) in props.sidebarItems"
-        :key="item.name"
-        :id="index"
-        @click="sectionsClick(index, item)">
-        <div v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" v-on:click="toggleDropdown(index)" ref="btnMenuRef" class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-            <div class="rounded-full w-11 h-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400"
-                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
-                    {{ index }}
-            </div>
-            <span class="ms-3 text-base group-hover:text-aaron-50">{{ item.name }}</span>
-        </div>
-    </div>
--->
 
         <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 sm:ml-80">
             <div class="p-4">
