@@ -1,8 +1,5 @@
 
 export function changeToCurrency(amount) {
-
-    alert('test');
-
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'GBP',

@@ -25,5 +25,8 @@ return new class extends Migration
             $table->integer('pensionable_type');
             $table->integer('pensionable_id');
         });
+        Schema::table('defined_benefit_pensions', function (Blueprint $table) {
+            $table->integer('status')->nullable(false)->change();
+        });
     }
 };

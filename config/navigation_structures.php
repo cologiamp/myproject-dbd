@@ -301,7 +301,7 @@ return [
                         'saving_assets.*.is_retained' => 'sometimes|nullable|boolean',
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
-                        'saving_assets.*.interest_rate' => 'sometimes|nullable'
+                        'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
                     ]
                 ],
                 3 => [

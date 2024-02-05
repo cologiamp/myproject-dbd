@@ -26,7 +26,7 @@ class PensionRepository extends BaseRepository
 
 
     //Private
-    private function createOrUpdateDC($pension,$item): void
+    private function createOrUpdateDC(PensionScheme $pension,array $item): void
     {
         if($pension->has('defined_contribution_pension') && $pension->defined_contribution_pension != null)
         {
@@ -133,7 +133,7 @@ class PensionRepository extends BaseRepository
 
     }
 
-    private function createOrUpdateDB($pension,$item): void
+    private function createOrUpdateDB(PensionScheme $pension, array $item): void
     {
         if($pension->has('defined_benefit_pension') && $pension->defined_benefit_pension != null)
         {
@@ -219,7 +219,7 @@ class PensionRepository extends BaseRepository
         return $pension;
     }
 
-    private function updateBP(PensionScheme $pension,$item):PensionScheme
+    private function updateBP(PensionScheme $pension, array $item):PensionScheme
     {
         if(array_key_exists('client_id',$item))
         {
@@ -245,7 +245,7 @@ class PensionRepository extends BaseRepository
         return $pension;
     }
 
-    public function deletePension($pension):bool
+    public function deletePension(PensionScheme $pension):bool
     {
         if($pension->defined_benefit_pension)
         {
