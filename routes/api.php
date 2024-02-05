@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function (){
 
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
-    Route::delete('/assets/{asset}',[PensionController::class,'delete']);
+    Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
     Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
 });
 
