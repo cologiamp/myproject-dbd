@@ -22,8 +22,6 @@ class ClientController extends Controller
     {
         $clients = $this->clientRepository->filterIndexQuery($request);
 
-        //dd($this->clientRepository->loadBreadcrumbs());
-
         return Inertia::render('ClientSelect',[
             'title' => 'Clients',
             'clients' => $clients->map(fn ($client) => $client->presenter()->formatForClientsIndex()),
