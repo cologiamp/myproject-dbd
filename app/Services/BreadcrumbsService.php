@@ -1,29 +1,15 @@
 <?php
 namespace App\Services;
+use Diglactic\Breadcrumbs\Breadcrumbs;
+
 class BreadcrumbsService
 {
     public static function loadBreadcrumbs():array
     {
-        return [
-            [
-                'title' => 'Hardcoded',
-                'link' => '#',
-                'is_active' => false
-            ],
-            [
-                'title' => 'As Required',
-                'link' => '#',
-                'is_active' => false
-            ],
-            [
-                'title' => 'In The',
-                'link' => '#',
-                'is_active' => false
-            ], [
-                'title' => 'Designs',
-                'link' => '#',
-                'is_active' => true
-            ],
-        ];
+        return Breadcrumbs::generate()->tap(function ($col) use (&$numberOfBreadcrumbs){
+            $numberOfBreadcrumbs = count($col);
+        })->map(function ($item, $key) use ($numberOfBreadcrumbs){
+            return collect($item)->put('is_active',$key + 1 == $numberOfBreadcrumbs);
+        })->toArray();
     }
 }
