@@ -11,21 +11,57 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 //  with `$trail`. This is nice for IDE type checking and completion.
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
-// Home
+// Dashboard
 Breadcrumbs::for('dashboard', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
+//Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
+Breadcrumbs::for('/client/{client:io_id}/fact-find', function (BreadcrumbTrail $trail) {
+    $trail->push('Fact Find', route('factfind'));
+});
 
-// Home > Blog
+//Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
+Breadcrumbs::for('/client/{client:io_id}/strategy-report', function (BreadcrumbTrail $trail) {
+    $trail->push('Strategy Report', route('strategy-report'));
+});
+
+//Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
+Breadcrumbs::for('/client/{client:io_id}/example', function (BreadcrumbTrail $trail) {
+    $trail->push('Example', route('client.example'));
+});
+
+// Dashboard > Clients
 Breadcrumbs::for('clients', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('fishcake');
-    $trail->push('fishcake3');
     $trail->push('Clients', route('clients'));
 });
 
-// Home > Blog > [Category]
-Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category) {
-    $trail->parent('blog');
-    $trail->push($category->title, route('category', $category));
+
+//CLIENT MANAGEMENT/SELECTION BREADCRUMBS
+Breadcrumbs::for('client.dashboard', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.dashboard', $client));
 });
+
+// Dashboard > Clients > "Client Name" > Fact Find
+Breadcrumbs::for('client.factfind', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push('Fact Find');
+});
+
+// Dashboard > Clients > "Client Name" > Strategy
+Breadcrumbs::for('client.strategy', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push('Strategy Report');
+});
+
+// Dashboard > Clients > "Client Name" > Example
+Breadcrumbs::for('client.example.edit', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.example.edit', $client));
+    $trail->push('Example');
+});
+
+

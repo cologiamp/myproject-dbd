@@ -14,6 +14,7 @@ class BaseRepository
 {
     public function loadBreadcrumbs(): array
     {
+        //dd(BreadcrumbsService::loadBreadcrumbs());
         return BreadcrumbsService::loadBreadcrumbs();
     }
 }
