@@ -103,17 +103,18 @@ onMounted( ()=> {
                         <AuthenticationCardLogo id="logo" class="max-w-2xl" />
                         <div id="login-form" class="mt-10 w-96 mx-auto opacity-0">
                             <form @submit.prevent="submit" class="mt-4">
-                                <h2 class="mt-8 text-2xl leading-9 tracking-tight text-white">Two Factor <span class="text-teal-500 font-bold">CHALLENGE</span></h2>
+                                <h2 class="mt-8 text-2xl leading-9 tracking-tight text-white">Two factor challenge</h2>
                         
                                 <div v-if="! recovery">
-                                    <InputLabel class="text-aaron-50" for="code" value="Enter the 2FA Code displayed on your authenticator app" />
+                                    <InputLabel class="text-aaron-50 w-48 font-normal my-8" for="code" value="Enter the 2FA Code displayed on your authenticator app" />
+                                    <span class="text-aaron-50 mb-4">Code</span>
                                     <TextInput
                                         id="code"
                                         ref="codeInput"
                                         v-model="form.code"
                                         type="text"
                                         inputmode="numeric"
-                                        class="mt-1 block w-full"
+                                        class="mt-4 block w-full"
                                         autofocus
                                         autocomplete="one-time-code"
                                     />
@@ -134,7 +135,7 @@ onMounted( ()=> {
                                 </div>
 
                                 <div class="flex items-center justify-end mt-4">
-                                    <button type="button" class="text-sm text-aaron-400 hover:text-teal-500 underline cursor-pointer" @click.prevent="toggleRecovery">
+                                    <button type="button" class="text-sm text-teal-500 hover:text-teal-500 cursor-pointer" @click.prevent="toggleRecovery">
                                         <template v-if="! recovery">
                                             Use a recovery code
                                         </template>
@@ -144,7 +145,7 @@ onMounted( ()=> {
                                         </template>
                                     </button>
 
-                                    <PrimaryButton class="ms-4 bg-teal-500 hover:bg-teal-700" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                    <PrimaryButton class="ms-4 bg-teal-500 hover:bg-teal-700 w-[155px] h-[49px] justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                         Log in
                                     </PrimaryButton>
                                 </div>

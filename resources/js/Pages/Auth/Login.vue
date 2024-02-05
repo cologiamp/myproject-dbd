@@ -151,11 +151,11 @@ onMounted( ()=> {
         <div class="w-1/2">
             <div class="h-screen flex justify-center">
                 <div class="z-0 absolute top-1/2 transform -translate-y-1/2">
-                    <img src="/images/MAN1-550.png" id="round-elem-1" class="w-[550px] h-[550px] scale-0"/>
+                    <img src="/images/MAN1-550.png" id="round-elem-1" class="2xl:w-[450px] 2xl:h-[450px] 3xl:w-[550px] 3xl:h-[550px] scale-0"/>
                 </div> 
                 <!-- top group elements -->
                 <div class="z-20 absolute top-[35%] right-[40%] transform -translate-x-[38%] -translate-y-full">
-                    <img src="/images/LOCK.svg" id="round-elem-2" class="w-[83px] h-[83px] scale-0"/>
+                    <img src="/images/LOCK.svg" id="round-elem-2" class="2xl:w-[73px] 2xl:h-[73px] 3xl:w-[83px] 3xl:h-[83px] scale-0"/>
                 </div>
                 <div class="z-20 absolute top-[20%] right-[33%] transform -translate-x-[38%] -translate-y-full">
                     <img src="/images/LADY1-150.png" id="round-elem-3" class="w-[150px] h-[150px] scale-0"/>
