@@ -132,6 +132,22 @@ class ClientPresenter extends BasePresenter
             '3.4' => [
                 //todo pensions tables
             ],
+            '4.1' => [
+                'liabilities' => $this->model->liabilities->map(function ($liability){
+                  return [
+                      'id' => $liability->id,
+                      'owner' => $liability->clients->count() > 1 ? 'Both' : $liability->clients->first()->io_id,
+                      'type' => $liability->type,
+                      'repayment' => $liability->is_repayment,
+                      'amount_outstanding' =>  $liability->amount_outstanding != null ? $this->currencyIntToString($liability->amount_outstanding): null,
+                      'monthly_repayment' => $liability->monthly_repayment != null ? $this->currencyIntToString($liability->monthly_repayment): null,
+                      'lender' => $liability->lender,
+                      'ends_at' =>  $liability->ends_at,
+                      'is_to_be_repaid' => $liability->is_to_be_repaid,
+                      'repay_details' => $liability->repay_details
+                  ];
+                })
+            ],
             default => [
 
             ]
