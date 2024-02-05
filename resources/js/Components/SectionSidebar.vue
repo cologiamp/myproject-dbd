@@ -74,7 +74,7 @@ const toggleDropdown = (index) => {
 
 <template>
 
-    <aside id="default-sidebar" class="sticky top-36 z-[400] h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
+    <aside id="default-sidebar" class="sticky top-48 z-[400] h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
         <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
                 <ul class="font-medium">
                     <li v-for="(item, index) in props.sidebarItems"
@@ -107,5 +107,6 @@ const toggleDropdown = (index) => {
         <div class="p-4">
             <slot></slot>
         </div>
+    </div>
 
 </template>
