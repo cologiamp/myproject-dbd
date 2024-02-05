@@ -12,8 +12,6 @@ import {computed, onMounted, ref, watch} from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
-// const clientId = ;
-
 watch(autoS, (newValue, oldValue) => {
     emit('autosaveStateChange', newValue)
 })
@@ -145,10 +143,10 @@ function removeAsset(index) {
             <div v-for="(asset, index) in stepForm.saving_assets"
                  class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
-                    <label class="font-bold">Asset {{ index + 1 }}</label>
+                    <label class="font-bold">Savings Account {{ index + 1 }}</label>
                     <button type="button" @click="removeAsset(index)"
                             class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        <XCircleIcon class="w-4 h-4" />Delete Asset
+                        <XCircleIcon class="w-4 h-4" />Delete Savings Account
                     </button>
                 </div>
 <!--                Asset Type-->

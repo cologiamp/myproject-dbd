@@ -125,7 +125,7 @@ class Client extends Model
         return $this->hasMany(OtherInvestment::class);
     }
 
-    public function pension_scheme():HasMany
+    public function pension_schemes():HasMany
     {
         return $this->hasMany(PensionScheme::class);
     }
@@ -205,7 +205,7 @@ class Client extends Model
             ],
             '3.4' => [
                 'owners' => $this->getOwnersForForm(true),
-                'pension_statuses' => config('enums.assets.db_pension_status'),
+                'pension_statuses' => config('enums.assets.db_pension_statuses'),
                 'pension_types' => config('enums.assets.dc_pension_types'),
                 'administrators' => config('enums.assets.dc_pension_administrators'),
             ],

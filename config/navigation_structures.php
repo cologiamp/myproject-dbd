@@ -298,10 +298,10 @@ return [
                         'saving_assets.*.owner' => 'sometimes|nullable',
                         'saving_assets.*.current_balance' => 'sometimes|nullable|string',
                         'saving_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'saving_assets.*.is_retained' => 'sometimes|nullable|boolean',
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
-                        'saving_assets.*.interest_rate' => 'sometimes|nullable',
-                        'saving_assets.*.is_retained' => 'sometimes|nullable|boolean'
+                        'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
                     ]
                 ],
                 3 => [
@@ -343,6 +343,54 @@ return [
                 ],
                 4=> [
                     'name' => 'Pensions',
+                    'rules' => [
+                        'db_pensions' => 'sometimes|array',
+                            'db_pensions.*.id' => 'sometimes|nullable|integer',
+                            'db_pensions.*.owner' => 'sometimes|nullable',
+                            'db_pensions.*.status' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.db_pension_statuses'))))
+                            ],
+                            'db_pensions.*.employer' => 'sometimes|nullable|max:255',
+                            'db_pensions.*.retirement_age' => 'sometimes|nullable|integer',
+                            'db_pensions.*.prospective_pension_standard' => 'sometimes|nullable|string',
+                            'db_pensions.*.prospective_pension_max' => 'sometimes|nullable|string',
+                            'db_pensions.*.prospective_pcls_standard' => 'sometimes|nullable|string',
+                            'db_pensions.*.prospective_pcls_max' => 'sometimes|nullable|string',
+                            'db_pensions.*.cetv' => 'sometimes|nullable|string',
+                            'db_pensions.*.cetv_ends_at' => 'sometimes|nullable|date',
+                        'dc_pensions' => 'sometimes|array',
+                            'dc_pensions.*.id' => 'sometimes|nullable|integer',
+                            'dc_pensions.*.owner' => 'sometimes|nullable',
+                            'dc_pensions.*.type' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.dc_pension_types'))))
+                            ],
+                            'dc_pensions.*.employer' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.administrator' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.dc_pension_administrators'))))
+                            ],
+                            'dc_pensions.*.policy_starts_at' => 'sometimes|nullable|date',
+                            'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.gross_contribution_percent' => 'sometimes|nullable',
+                            'dc_pensions.*.gross_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.employer_contribution_percent' => 'sometimes|nullable',
+                            'dc_pensions.*.employer_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
+                            'dc_pensions.*.value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean'
+                    ]
                 ]
             ],
         ],

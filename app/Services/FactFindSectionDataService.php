@@ -11,6 +11,7 @@ use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
 use App\Repositories\EmploymentDetailRepository;
 use App\Repositories\InvestmentRepository;
+use App\Repositories\PensionRepository;
 use App\Repositories\LiabilityRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -391,6 +392,94 @@ class FactFindSectionDataService
         }
     }
 
+    private function _34(array $validatedData): void
+    {
+        $dc = collect($validatedData['dc_pensions'])->map(function ($item){
+
+            if(array_key_exists('owner',$item) && $item['owner'] != null)
+            {
+                $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
+            }
+            else{
+                $item['client_id'] = $this->cr->getClient()->id;
+            }
+            unset($item['owner']);
+
+            if (array_key_exists('policy_starts_at',$item)  && $item['policy_starts_at'] != null){
+                $item['policy_start_at'] = Carbon::parse($item['policy_starts_at']);
+            }
+            unset($item['policy_starts_at']);
+
+            if (array_key_exists('valuation_at',$item) && $item['valuation_at'] != null){
+                $item['valuation_at'] = Carbon::parse($item['valuation_at']);
+            }
+            else{
+                unset($item['valuation_at']);
+            }
+
+            if (array_key_exists('gross_contribution_absolute',$item) && $item['gross_contribution_absolute'] != null){
+                $item['gross_contribution_absolute'] = $this->currencyStringToInt($item['gross_contribution_absolute']);
+            }
+            if (array_key_exists('employer_contribution_absolute',$item) && $item['employer_contribution_absolute'] != null){
+                $item['employer_contribution_absolute'] = $this->currencyStringToInt($item['employer_contribution_absolute']);
+            }
+            if (array_key_exists('value',$item) && $item['value'] != null){
+                $item['value'] = $this->currencyStringToInt($item['value']);
+            }
+            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
+                $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
+            }
+
+            return $item;
+        });
+
+        $db = collect($validatedData['db_pensions'])->map(function ($item){
+
+            if(array_key_exists('owner',$item) && $item['owner'] != null)
+            {
+                $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
+            }
+            else{
+                $item['client_id'] = $this->cr->getClient()->id;
+            }
+            unset($item['owner']);
+
+            if (array_key_exists('cetv_ends_at',$item) && $item['cetv_ends_at'] != null){
+                $item['cetv_ends_at'] = Carbon::parse($item['cetv_ends_at']);
+            }
+            else{
+                unset($item['cetv_ends_at']);
+            }
+
+            if (array_key_exists('prospective_pension_standard',$item) && $item['prospective_pension_standard'] != null){
+                $item['prospective_pension_standard'] = $this->currencyStringToInt($item['prospective_pension_standard']);
+            }
+            if (array_key_exists('prospective_pension_max',$item) && $item['prospective_pension_max'] != null){
+                $item['prospective_pension_max'] = $this->currencyStringToInt($item['prospective_pension_max']);
+            }
+            if (array_key_exists('prospective_pcls_standard',$item) && $item['prospective_pcls_standard'] != null){
+                $item['prospective_pcls_standard'] = $this->currencyStringToInt($item['prospective_pcls_standard']);
+            }
+            if (array_key_exists('prospective_pcls_max',$item) && $item['prospective_pcls_max'] != null){
+                $item['prospective_pcls_max'] = $this->currencyStringToInt($item['prospective_pcls_max']);
+            }
+            if (array_key_exists('cetv',$item) && $item['cetv'] != null){
+                $item['cetv'] = $this->currencyStringToInt($item['cetv']);
+            }
+
+            return $item;
+        });
+
+        $pr = App::make(PensionRepository::class);
+        try{
+            $pr->createOrUpdateDCPensions($dc);
+            $pr->createOrUpdateDBPensions($db);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
+}
     /**
      * Section: 4
      * Step: 1
