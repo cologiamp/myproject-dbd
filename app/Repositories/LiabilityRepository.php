@@ -82,12 +82,6 @@ class LiabilityRepository extends BaseRepository
 
     public function createOrUpdateLiabilityDetails(mixed $data):void
     {
-
-        if(!is_array($data) && $data::class == Request::class)
-        {
-            $data = $data->safe();
-        }
-
         if(!is_array($data) && $data::class == Request::class)
         {
             $data = $data->safe();
