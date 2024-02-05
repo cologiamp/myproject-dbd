@@ -398,29 +398,45 @@ return [
             'name' => 'Liabilities',
             'sections' => [
                 1 => [
-                    'name' => 'Foo',
+                    'name' => 'Liabilities',
                     'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                        "liabilities.id",
+                        "liabilities.owner",
+                        "liabilities.type",
+                        "liabilities.repayment",
+                        "liabilities.amount_outstanding",
+                        "liabilities.monthly_repayment",
+                        "liabilities.lender",
+                        "liabilities.ends_at",
+                        "liabilities.is_to_be_repaid",
+                        "liabilities.repay_details",
+                    ],
+                    'rules' => [
+                        'liabilities' => 'sometimes|array',
+                        'liabilities.*.id' => 'sometimes|nullable|integer',
+                        'liabilities.*.owner' => 'sometimes|nullable',
+                        'liabilities.*.type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.liabilities.types'))))
+                        ],
+                        'liabilities.*.repayment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.liabilities.repayment_or_interest'))))
+                        ],
+                        'liabilities.*.amount_outstanding' => 'sometimes|nullable|string',
+                        'liabilities.*.monthly_repayment' => 'sometimes|nullable|string',
+                        'liabilities.*.lender' => 'sometimes|nullable|string',
+                        'liabilities.*.ends_at' => 'sometimes|nullable|date',
+                        'liabilities.*.is_to_be_repaid' => 'sometimes|nullable|boolean',
+                        'liabilities.*.repay_details' => 'sometimes|nullable|max:1024'
                     ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
+                ]
             ],
         ]
     ]

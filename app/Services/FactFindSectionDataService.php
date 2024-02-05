@@ -12,6 +12,7 @@ use App\Repositories\HealthRepository;
 use App\Repositories\EmploymentDetailRepository;
 use App\Repositories\InvestmentRepository;
 use App\Repositories\PensionRepository;
+use App\Repositories\LiabilityRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -27,6 +28,7 @@ class FactFindSectionDataService
     protected DependentRepository $dependentRepository;
     protected HealthRepository $healthRepository;
     protected EmploymentDetailRepository $employmentDetailRepository;
+    protected LiabilityRepository $liabilityRepository;
 
     protected AssetRepository $assetRepository;
 
@@ -35,13 +37,15 @@ class FactFindSectionDataService
         DependentRepository $dependentRepository,
         HealthRepository $healthRepository,
         EmploymentDetailRepository $employmentDetailRepository,
-        AssetRepository $assetRepository
+        AssetRepository $assetRepository,
+        LiabilityRepository $liabilityRepository
     ) {
         $this->cr = $clientRepository;
         $this->dependentRepository = $dependentRepository;
         $this->healthRepository = $healthRepository;
         $this->employmentDetailRepository = $employmentDetailRepository;
         $this->assetRepository = $assetRepository;
+        $this->liabilityRepository = $liabilityRepository;
     }
     //get the data for a single section of a factfind from a single client
     public static function get($client, $step, $section): array
@@ -388,7 +392,6 @@ class FactFindSectionDataService
         }
     }
 
-
     private function _34(array $validatedData): void
     {
         $dc = collect($validatedData['dc_pensions'])->map(function ($item){
@@ -475,6 +478,41 @@ class FactFindSectionDataService
         catch(Throwable $e){
             Log::warning($e);
             dd($e);
+        }
+}
+    /**
+     * Section: 4
+     * Step: 1
+     * @param array $validatedData
+     * @return void
+     */
+    private function _41(array $validatedData): void
+    {
+        try {
+            if (array_key_exists('liabilities', $validatedData)) {
+                $liabilities = collect($validatedData['liabilities'])->map(function ($liability) {
+                    if ($liability['ends_at'] && $liability['ends_at'] != null) {
+                        $liability['ends_at'] = Carbon::parse($liability['ends_at']);
+                    }
+                    if (array_key_exists('amount_outstanding',$liability) && $liability['amount_outstanding'] != null) {
+                        $liability['amount_outstanding'] = $this->currencyStringToInt($liability['amount_outstanding']);
+                    }
+                    if (array_key_exists('monthly_repayment',$liability) && $liability['monthly_repayment'] != null) {
+                        $liability['monthly_repayment'] = $this->currencyStringToInt($liability['monthly_repayment']);
+                    }
+                    if ($liability['is_to_be_repaid'] == false) {
+                        $liability['repay_details'] = '';
+                    }
+                    return $liability;
+                });
+
+                $validatedData['liabilities'] = $liabilities->toArray();
+            }
+            
+            $this->liabilityRepository->setClient($this->cr->getClient());
+            $this->liabilityRepository->createOrUpdateLiabilityDetails($validatedData);
+        } catch (Throwable $e) {
+            Log::warning($e);
         }
     }
 }

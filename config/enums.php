@@ -1499,5 +1499,37 @@ return [
             5 => 'Every 6 months',
             6 => 'Annually'
         ]
+    ],
+    'liabilities' => [
+        'types' => [
+            0 => 'MainResidence',
+            1 => 'CreditStoreCards',
+            2 => 'PersonalLoans',
+            3 => 'MortgageRepaymentVehicle',
+            4 => 'StudentLoans',
+            5 => 'CarLoan',
+            6 => 'HirePurchase',
+            7 => 'MaintenanceAlimony',
+            8 => 'OtherStructuredLoans',
+            9 => 'OtherMortgages',
+            10 => 'Other'
+        ],
+        'types_public' => [
+            0 => 'Main Residence',
+            1 => 'Credit/Store Cards',
+            2 => 'Personal Loans',
+            3 => 'Mortgage Repayment Vehicle',
+            4 => 'Student Loans',
+            5 => 'Car Loan',
+            6 => 'Hire Purchase',
+            7 => 'Maintenance Alimony',
+            8 => 'Other Structured Loans',
+            9 => 'Other Mortgages',
+            10 => 'Other'
+        ],
+        'repayment_or_interest' => [ 
+            0 => 'Repayment',
+            1 => 'Interest Only'
+        ]
     ]
 ];

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AssetController;
 use App\Http\Controllers\Api\PensionController;
+use App\Http\Controllers\Api\LiabilityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
     Route::delete('/assets/{asset}',[PensionController::class,'delete']);
-
+    Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
 });
 
 

@@ -210,8 +210,8 @@ class Client extends Model
                 'administrators' => config('enums.assets.dc_pension_administrators'),
             ],
             '4.1' => [
-                'owners' => $this->getOwnersForForm(),
-                'type' => config('enums.liabilities.types'),
+                'owners' => $this->getOwnersForForm(true),
+                'types' => config('enums.liabilities.types_public'),
                 'repayment_or_interest' => config('enums.liabilities.repayment_or_interest'),
             ],
             default => [
