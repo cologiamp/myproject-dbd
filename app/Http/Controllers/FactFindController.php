@@ -26,7 +26,6 @@ class FactFindController extends Controller
         $this->clientRepository->setClient($client);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
-
         $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
 
         return Inertia::render('FactFind', [
@@ -54,7 +53,6 @@ class FactFindController extends Controller
             $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
         }
 
-        
         try{
             $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
         }
@@ -62,7 +60,6 @@ class FactFindController extends Controller
         {
             Log::warning($e);
         }
-
         $ffsds->store(
             $client,
             $step,

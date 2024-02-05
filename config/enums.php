@@ -1408,5 +1408,148 @@ return [
             30 => 'Mortgage',
             31 => 'Other (Liability)',
         ],
+    ],
+    'assets' => [
+        'categories' => [
+            1 => 'fixed_assets',
+            2 => 'savings',
+            3 => 'investments',
+            4 => 'pensions'
+        ],
+        'types' => [
+            0 => 'Cash',
+            1 => 'Collectibles',
+            2 => 'HolidayHome',
+            3 => 'HomeContents',
+            4 => 'InvestmentProperty',
+            5 => 'MainResidence',
+            6 => 'MotorVehicles',
+            7 => 'NonIncomeProducingRealEstate',
+            8 => 'OverseasProperty',
+            9 => 'OwnBusiness',
+            10 => 'RentalOrOtherProperty',
+            11 => 'Investments',
+            12 => 'Other',
+            13 => 'Boat',
+            14 => 'BuyToLetProperty'
+        ],
+        'types_public' => [
+            0 => 'Cash',
+            1 => 'Collectibles',
+            2 => 'Holiday Home',
+            3 => 'Home Contents',
+            4 => 'Investment Property',
+            5 => 'Main Residence',
+            6 => 'Motor Vehicles',
+            7 => 'Non Income-Producing Real Estate',
+            8 => 'Overseas Property',
+            9 => 'Own Business',
+            10 => 'Rental Or Other Property',
+            11 => 'Investments',
+            12 => 'Other',
+            13 => 'Boat',
+            14 => 'Buy-to-Let Property'
+        ],
+        'types_public_no_cash_invest' => [
+            1 => 'Collectibles',
+            2 => 'Holiday Home',
+            3 => 'Home Contents',
+            4 => 'Investment Property',
+            5 => 'Main Residence',
+            6 => 'Motor Vehicles',
+            7 => 'Non Income-Producing Real Estate',
+            8 => 'Overseas Property',
+            9 => 'Own Business',
+            10 => 'Rental Or Other Property',
+            12 => 'Other',
+            13 => 'Boat',
+            14 => 'Buy-to-Let Property'
+        ],
+        'account_types' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'providers' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'investment_providers' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'investment_account_types' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'db_pension_statuses' => [
+            0 => 'Status 0',
+            1 => 'Status 1',
+            2 => 'Status 2',
+            3 => 'Status 3',
+        ],
+        'dc_pension_types' => [
+            0 => 'Occupational',
+            1 => 'Personal',
+            2 => 'SIPP'
+        ],
+        'dc_pension_administrators' => [
+            0 => 'Foo',
+            1 => 'Bar',
+            2 => 'Baz'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
+        ]
+    ],
+    'liabilities' => [
+        'types' => [
+            0 => 'MainResidence',
+            1 => 'CreditStoreCards',
+            2 => 'PersonalLoans',
+            3 => 'MortgageRepaymentVehicle',
+            4 => 'StudentLoans',
+            5 => 'CarLoan',
+            6 => 'HirePurchase',
+            7 => 'MaintenanceAlimony',
+            8 => 'OtherStructuredLoans',
+            9 => 'OtherMortgages',
+            10 => 'Other'
+        ],
+        'types_public' => [
+            0 => 'Main Residence',
+            1 => 'Credit/Store Cards',
+            2 => 'Personal Loans',
+            3 => 'Mortgage Repayment Vehicle',
+            4 => 'Student Loans',
+            5 => 'Car Loan',
+            6 => 'Hire Purchase',
+            7 => 'Maintenance Alimony',
+            8 => 'Other Structured Loans',
+            9 => 'Other Mortgages',
+            10 => 'Other'
+        ],
+        'repayment_or_interest' => [ 
+            0 => 'Repayment',
+            1 => 'Interest Only'
+        ]
     ]
 ];

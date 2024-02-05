@@ -137,8 +137,8 @@ class ClientRepository extends BaseRepository
                 }
             })
             ->paginate(
-                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1 ,
-                perPage: $request->filled("perPage") ? $request->input("perPage") : 9
+                perPage: $request->filled("perPage") ? $request->input("perPage") : 9,
+                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1
             );
     }
 
@@ -155,7 +155,7 @@ class ClientRepository extends BaseRepository
         ];
     }
 
-    public function syncIoForAdviser(int $adviser_id,Collection $ioClientCollection)
+    public function syncIoForAdviser(int $adviser_id,Collection $ioClientCollection): void
     {
         //Note: This will make N database queries. Refactor when extra time.
         $ioClientCollection->each(function ($item) use ($adviser_id){
@@ -185,7 +185,7 @@ class ClientRepository extends BaseRepository
      * Load in factfind sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
      */
-    public function loadFactFindSidebarItems($sections, $step, $currentStep, $currentSection)
+    public function loadFactFindSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
         return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
            return  [

@@ -404,59 +404,218 @@ return [
             'name' => 'Assets',
             'sections' => [
                 1 => [
-                    'name' => 'Foo',
+                    'name' => 'Fixed Assets',
                     'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                        'assets' => [
+                            'assets.owner',
+                            'assets.type',
+                            'assets.description',
+                            'assets.percent_ownership',
+                            'assets.original_value',
+                            'assets.start_at',
+                            'assets.current_value',
+                            'assets.is_retained',
+                            'assets.retained_value',
+
+                        ]
+                    ],
+                    'rules' => [
+                        'fixed_assets' => 'sometimes|array',
+                        'fixed_assets.*.id' => 'sometimes|nullable|integer',
+                        'fixed_assets.*.asset_type' => [
+                            'sometimes',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.types'))))
+                        ],
+                        'fixed_assets.*.description' => 'sometimes|nullable|max:1024',
+                        'fixed_assets.*.owner' => 'sometimes|nullable',
+                        'fixed_assets.*.percent_ownership' => 'sometimes|nullable|array',
+                        'fixed_assets.*.original_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.current_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
+                        'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
                     ]
                 ],
                 2 => [
-                    'name' => 'Bar',
+                    'name' => 'Savings',
                     'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                        'assets' => [
+                            'assets.owner',
+                            'assets.type',
+                            'assets.provider',
+                            'assets.account_type',
+                            'assets.name',
+                            'assets.current_balance',
+                            'assets.start_date',
+                            'assets.end_date',
+                            'assets.interest_rate',
+                            'assets.is_retained',
+                            'assets.retained_value',
+                        ]
+                    ],
+                    'rules' => [
+                        'saving_assets' => 'sometimes|array',
+                        'saving_assets.*.id' => 'sometimes|nullable|integer',
+                        'saving_assets.*.provider' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.providers'))))
+                        ],
+                        'saving_assets.*.account_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.account_types'))))
+                        ],
+                        'saving_assets.*.name' => 'sometimes|nullable|max:1024',
+                        'saving_assets.*.owner' => 'sometimes|nullable',
+                        'saving_assets.*.current_balance' => 'sometimes|nullable|string',
+                        'saving_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'saving_assets.*.is_retained' => 'sometimes|nullable|boolean',
+                        'saving_assets.*.start_date' => 'sometimes|nullable|date',
+                        'saving_assets.*.end_date' => 'sometimes|nullable|date',
+                        'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
                     ]
                 ],
                 3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                    'name' => 'Investments',
+                    'rules' => [
+                        'investments' => 'sometimes|array',
+                        'investments.*.id' => 'sometimes|nullable|integer',
+                        'investments.*.owner' => 'sometimes|nullable',
+                        'investments.*.provider' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.investment_providers'))))
+                        ],
+                        'investments.*.account_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.investment_account_types'))))
+                        ],
+                        'investments.*.product_name' => 'sometimes|nullable|max:1024',
+                        'investments.*.is_retained' => 'sometimes|nullable|boolean',
+                        'investments.*.retained_value' => 'sometimes|nullable|string',
+                        'investments.*.current_value' => 'sometimes|nullable|string',
+                        'investments.*.regular_contribution' => 'sometimes|nullable|string',
+                        'investments.*.frequency' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.frequency'))))
+                        ],
+                        'investments.*.valuation_at' => 'sometimes|nullable|date',
+                        'investments.*.start_date' => 'sometimes|nullable|date',
+                        'investments.*.maturity_date' => 'sometimes|nullable|date',
                     ]
                 ],
+                4=> [
+                    'name' => 'Pensions',
+                    'rules' => [
+                        'db_pensions' => 'sometimes|array',
+                            'db_pensions.*.id' => 'sometimes|nullable|integer',
+                            'db_pensions.*.owner' => 'sometimes|nullable',
+                            'db_pensions.*.status' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.db_pension_statuses'))))
+                            ],
+                            'db_pensions.*.employer' => 'sometimes|nullable|max:255',
+                            'db_pensions.*.retirement_age' => 'sometimes|nullable|integer',
+                            'db_pensions.*.prospective_pension_standard' => 'sometimes|nullable|string',
+                            'db_pensions.*.prospective_pension_max' => 'sometimes|nullable|string',
+                            'db_pensions.*.prospective_pcls_standard' => 'sometimes|nullable|string',
+                            'db_pensions.*.prospective_pcls_max' => 'sometimes|nullable|string',
+                            'db_pensions.*.cetv' => 'sometimes|nullable|string',
+                            'db_pensions.*.cetv_ends_at' => 'sometimes|nullable|date',
+                        'dc_pensions' => 'sometimes|array',
+                            'dc_pensions.*.id' => 'sometimes|nullable|integer',
+                            'dc_pensions.*.owner' => 'sometimes|nullable',
+                            'dc_pensions.*.type' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.dc_pension_types'))))
+                            ],
+                            'dc_pensions.*.employer' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.administrator' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.dc_pension_administrators'))))
+                            ],
+                            'dc_pensions.*.policy_starts_at' => 'sometimes|nullable|date',
+                            'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.gross_contribution_percent' => 'sometimes|nullable',
+                            'dc_pensions.*.gross_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.employer_contribution_percent' => 'sometimes|nullable',
+                            'dc_pensions.*.employer_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
+                            'dc_pensions.*.value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean'
+                    ]
+                ]
             ],
         ],
         4 => [
             'name' => 'Liabilities',
             'sections' => [
                 1 => [
-                    'name' => 'Foo',
+                    'name' => 'Liabilities',
                     'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
+                        "liabilities.id",
+                        "liabilities.owner",
+                        "liabilities.type",
+                        "liabilities.repayment",
+                        "liabilities.amount_outstanding",
+                        "liabilities.monthly_repayment",
+                        "liabilities.lender",
+                        "liabilities.ends_at",
+                        "liabilities.is_to_be_repaid",
+                        "liabilities.repay_details",
+                    ],
+                    'rules' => [
+                        'liabilities' => 'sometimes|array',
+                        'liabilities.*.id' => 'sometimes|nullable|integer',
+                        'liabilities.*.owner' => 'sometimes|nullable',
+                        'liabilities.*.type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.liabilities.types'))))
+                        ],
+                        'liabilities.*.repayment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.liabilities.repayment_or_interest'))))
+                        ],
+                        'liabilities.*.amount_outstanding' => 'sometimes|nullable|string',
+                        'liabilities.*.monthly_repayment' => 'sometimes|nullable|string',
+                        'liabilities.*.lender' => 'sometimes|nullable|string',
+                        'liabilities.*.ends_at' => 'sometimes|nullable|date',
+                        'liabilities.*.is_to_be_repaid' => 'sometimes|nullable|boolean',
+                        'liabilities.*.repay_details' => 'sometimes|nullable|max:1024'
                     ]
-                ],
-                2 => [
-                    'name' => 'Bar',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
-                3 => [
-                    'name' => 'Baz',
-                    'fields' => [
-                        "clients.date_of_birth",
-                        "clients.first_name",
-                        "clients.last_name"
-                    ]
-                ],
+                ]
             ],
-        ],
+        ]
     ]
 ];

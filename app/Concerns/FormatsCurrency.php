@@ -12,7 +12,18 @@ trait FormatsCurrency{
      */
     private function currencyStringToInt(string $amount): int
     {
-        return (int)preg_replace('/\D/u','',$amount);
+        $amount = (int)preg_replace('/\D/u','',$amount);
+
+        return $amount ;
+    }
+    /**
+     * Formats currency as required
+     * @param int $amount
+     * @return string
+     */
+    private function currencyIntToString(int $amount): string
+    {
+        return '£' . number_format($amount/100,2);
     }
 
 }

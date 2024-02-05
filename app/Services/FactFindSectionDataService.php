@@ -5,14 +5,19 @@ namespace App\Services;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\Client;
+use App\Repositories\AssetRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
 use App\Repositories\EmploymentDetailRepository;
+use App\Repositories\InvestmentRepository;
+use App\Repositories\PensionRepository;
+use App\Repositories\LiabilityRepository;
 use App\Repositories\IncomeRepository;
 use App\Repositories\ExpenditureRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -26,6 +31,8 @@ class FactFindSectionDataService
     protected DependentRepository $dependentRepository;
     protected HealthRepository $healthRepository;
     protected EmploymentDetailRepository $employmentDetailRepository;
+    protected LiabilityRepository $liabilityRepository;
+    protected AssetRepository $assetRepository;
     protected IncomeRepository $incomeRepository;
     protected ExpenditureRepository $expenditureRepository;
 
@@ -34,6 +41,8 @@ class FactFindSectionDataService
         DependentRepository $dependentRepository,
         HealthRepository $healthRepository,
         EmploymentDetailRepository $employmentDetailRepository,
+        AssetRepository $assetRepository,
+        LiabilityRepository $liabilityRepository
         IncomeRepository $incomeRepository,
         ExpenditureRepository $expenditureRepository
     ) {
@@ -41,6 +50,8 @@ class FactFindSectionDataService
         $this->dependentRepository = $dependentRepository;
         $this->healthRepository = $healthRepository;
         $this->employmentDetailRepository = $employmentDetailRepository;
+        $this->assetRepository = $assetRepository;
+        $this->liabilityRepository = $liabilityRepository;
         $this->incomeRepository = $incomeRepository;
         $this->expenditureRepository = $expenditureRepository;
     }
@@ -74,6 +85,7 @@ class FactFindSectionDataService
      */
     public function store(Client $client, int $step, int $section, array $validatedData): true
     {
+
         $this->cr->setClient($client);
         $this->{"_" . $step . $section}($validatedData);
         return true;
@@ -231,7 +243,7 @@ class FactFindSectionDataService
             Log::warning($e);
         }
     }
-
+  
     /**
      * Section: 2
      * Step: 1
@@ -311,6 +323,282 @@ class FactFindSectionDataService
     private function _25(array $validatedData): void
     {
         $this->parseAndUpdateExpenditure($validatedData);
+    }
+  
+     private function _31(array $validatedData): void
+    {
+        $client= $this->cr->getClient();
+        try{
+            if (array_key_exists('fixed_assets', $validatedData)) {
+                $fixed_assets = collect($validatedData['fixed_assets'])->map(function ($asset) use ($client) {
+                    if (array_key_exists('purchased_at',$asset)){
+                        $asset['start_at'] = Carbon::parse($asset['purchased_at']);
+                        unset($asset['purchased_at']);
+                    }
+                    $asset['category'] = array_flip(config('enums.assets.categories'))['fixed_assets'];
+                    $asset['type'] = $asset['asset_type'];
+                    if (array_key_exists('original_value',$asset) && $asset['original_value'] != null){
+                        $asset['original_value'] = $this->currencyStringToInt($asset['original_value']);
+                    }
+                    if (array_key_exists('retained_value',$asset) && $asset['retained_value'] != null){
+                        $asset['retained_value'] = $this->currencyStringToInt($asset['retained_value']);
+                    }
+                    if (array_key_exists('current_value',$asset) && $asset['current_value'] != null){
+                        $asset['current_value'] = $this->currencyStringToInt($asset['current_value']);
+                    }
+                    unset($asset['asset_type']);//remove
+                    return $asset;
+                });
+                $validatedData['assets'] = $fixed_assets->toArray();
+
+            }
+            $this->assetRepository->setClient($client);
+            $this->assetRepository->createOrUpdateAssets($validatedData);
+
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+        }
+    }
+    private function _32(array $validatedData): void
+    {
+        $client = $this->cr->getClient();
+        try{
+            if (array_key_exists('saving_assets', $validatedData)) {
+                $saving_assets = collect($validatedData['saving_assets'])->map(function ($asset) use ($client) {
+                    if (array_key_exists('start_date',$asset)){
+                        if( $asset['start_date'] != null)
+                        {
+                            $asset['start_at'] = Carbon::parse($asset['start_date']);
+                        }
+                        else
+                        {
+                            $asset['start_at'] = null;
+                        }
+                        unset($asset['start_date']);
+                    }
+                    if (array_key_exists('end_date',$asset)){
+                        if( $asset['end_date'] != null)
+                        {
+                            $asset['end_at'] = Carbon::parse($asset['end_date']);
+                        }
+                        else
+                        {
+                            $asset['end_at'] = null;
+                        }
+                        unset($asset['end_date']);
+                    }
+                    if (array_key_exists('name',$asset)){
+                        $asset['product_name'] = $asset['name'];
+                        unset($asset['name']);
+                    }
+                    $asset['category'] = array_flip(config('enums.assets.categories'))['savings'];
+                    $asset['type'] = array_flip(config('enums.assets.types'))['Cash'];
+                    unset($asset['asset_type']);//remove
+                    if (array_key_exists('current_balance',$asset)){
+                        if( $asset['current_balance'] != null)
+                        {
+                            $asset['current_value'] = $this->currencyStringToInt($asset['current_balance']);
+                        }
+                        unset($asset['current_balance']);
+                    }
+                    if (array_key_exists('retained_value',$asset) && $asset['retained_value'] != null){
+                        $asset['retained_value'] = $this->currencyStringToInt($asset['retained_value']);
+                    }
+
+                    return $asset;
+                });
+                $validatedData['assets'] = $saving_assets->toArray();
+            }
+            $this->assetRepository->setClient($client);
+            $this->assetRepository->createOrUpdateAssets($validatedData);
+
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+        }
+    }
+
+    private function _33(array $validatedData): void
+    {
+
+
+        $validatedData = collect($validatedData['investments'])->map(function ($item){
+
+            if(array_key_exists('owner',$item) && $item['owner'] != null)
+            {
+                $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
+            }
+            else{
+                $item['client_id'] = $this->cr->getClient()->id;
+            }
+
+            unset($item['owner']);
+            if(array_key_exists('account_type',$item)){
+                $item['contract_type'] = $item['account_type'];
+                unset($item['account_type']);
+            }
+            if (array_key_exists('start_date',$item)  && $item['start_date'] != null){
+                $item['start_date'] = Carbon::parse($item['start_date']);
+            }
+            else{
+                unset($item['start_date']);
+            }
+            if (array_key_exists('maturity_date',$item) && $item['maturity_date'] != null){
+                $item['maturity_date'] = Carbon::parse($item['maturity_date']);
+            }
+            else{
+                unset($item['maturity_date']);
+            }
+            if (array_key_exists('valuation_at',$item) && $item['valuation_at'] != null){
+                $item['valuation_at'] = Carbon::parse($item['valuation_at']);
+            }
+            else{
+                unset($item['valuation_at']);
+            }
+
+            if (array_key_exists('current_value',$item) && $item['current_value'] != null){
+                $item['current_value'] = $this->currencyStringToInt($item['current_value']);
+            }
+            if (array_key_exists('regular_contribution',$item) && $item['regular_contribution'] != null){
+                $item['regular_contribution'] = $this->currencyStringToInt($item['regular_contribution']);
+            }
+            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
+                $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
+            }
+
+            return $item;
+        });
+
+        $ir = App::make(InvestmentRepository::class);
+        try{
+            $ir->createOrUpdateInvestments($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
+    }
+
+    private function _34(array $validatedData): void
+    {
+        $dc = collect($validatedData['dc_pensions'])->map(function ($item){
+
+            if(array_key_exists('owner',$item) && $item['owner'] != null)
+            {
+                $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
+            }
+            else{
+                $item['client_id'] = $this->cr->getClient()->id;
+            }
+            unset($item['owner']);
+
+            if (array_key_exists('policy_starts_at',$item)  && $item['policy_starts_at'] != null){
+                $item['policy_start_at'] = Carbon::parse($item['policy_starts_at']);
+            }
+            unset($item['policy_starts_at']);
+
+            if (array_key_exists('valuation_at',$item) && $item['valuation_at'] != null){
+                $item['valuation_at'] = Carbon::parse($item['valuation_at']);
+            }
+            else{
+                unset($item['valuation_at']);
+            }
+
+            if (array_key_exists('gross_contribution_absolute',$item) && $item['gross_contribution_absolute'] != null){
+                $item['gross_contribution_absolute'] = $this->currencyStringToInt($item['gross_contribution_absolute']);
+            }
+            if (array_key_exists('employer_contribution_absolute',$item) && $item['employer_contribution_absolute'] != null){
+                $item['employer_contribution_absolute'] = $this->currencyStringToInt($item['employer_contribution_absolute']);
+            }
+            if (array_key_exists('value',$item) && $item['value'] != null){
+                $item['value'] = $this->currencyStringToInt($item['value']);
+            }
+            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
+                $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
+            }
+
+            return $item;
+        });
+
+        $db = collect($validatedData['db_pensions'])->map(function ($item){
+
+            if(array_key_exists('owner',$item) && $item['owner'] != null)
+            {
+                $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
+            }
+            else{
+                $item['client_id'] = $this->cr->getClient()->id;
+            }
+            unset($item['owner']);
+
+            if (array_key_exists('cetv_ends_at',$item) && $item['cetv_ends_at'] != null){
+                $item['cetv_ends_at'] = Carbon::parse($item['cetv_ends_at']);
+            }
+            else{
+                unset($item['cetv_ends_at']);
+            }
+
+            if (array_key_exists('prospective_pension_standard',$item) && $item['prospective_pension_standard'] != null){
+                $item['prospective_pension_standard'] = $this->currencyStringToInt($item['prospective_pension_standard']);
+            }
+            if (array_key_exists('prospective_pension_max',$item) && $item['prospective_pension_max'] != null){
+                $item['prospective_pension_max'] = $this->currencyStringToInt($item['prospective_pension_max']);
+            }
+            if (array_key_exists('prospective_pcls_standard',$item) && $item['prospective_pcls_standard'] != null){
+                $item['prospective_pcls_standard'] = $this->currencyStringToInt($item['prospective_pcls_standard']);
+            }
+            if (array_key_exists('prospective_pcls_max',$item) && $item['prospective_pcls_max'] != null){
+                $item['prospective_pcls_max'] = $this->currencyStringToInt($item['prospective_pcls_max']);
+            }
+            if (array_key_exists('cetv',$item) && $item['cetv'] != null){
+                $item['cetv'] = $this->currencyStringToInt($item['cetv']);
+            }
+
+            return $item;
+        });
+
+        $pr = App::make(PensionRepository::class);
+        try{
+            $pr->createOrUpdateDCPensions($dc);
+            $pr->createOrUpdateDBPensions($db);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
+}
+    /**
+     * Section: 4
+     * Step: 1
+     * @param array $validatedData
+     * @return void
+     */
+    private function _41(array $validatedData): void
+    {
+        try {
+            if (array_key_exists('liabilities', $validatedData)) {
+                $liabilities = collect($validatedData['liabilities'])->map(function ($liability) {
+                    if ($liability['ends_at'] && $liability['ends_at'] != null) {
+                        $liability['ends_at'] = Carbon::parse($liability['ends_at']);
+                    }
+                    if (array_key_exists('amount_outstanding',$liability) && $liability['amount_outstanding'] != null) {
+                        $liability['amount_outstanding'] = $this->currencyStringToInt($liability['amount_outstanding']);
+                    }
+                    if (array_key_exists('monthly_repayment',$liability) && $liability['monthly_repayment'] != null) {
+                        $liability['monthly_repayment'] = $this->currencyStringToInt($liability['monthly_repayment']);
+                    }
+                    if ($liability['is_to_be_repaid'] == false) {
+                        $liability['repay_details'] = '';
+                    }
+                    return $liability;
+                });
+
+                $validatedData['liabilities'] = $liabilities->toArray();
+            }
+            
+            $this->liabilityRepository->setClient($this->cr->getClient());
+            $this->liabilityRepository->createOrUpdateLiabilityDetails($validatedData);
     }
 
     /**

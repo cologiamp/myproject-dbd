@@ -2,12 +2,13 @@
 
 namespace App\Models\Presenters;
 
-use phpDocumentor\Reflection\Types\Boolean;
-use App\Models\Dependent;
-use PHPUnit\Framework\Attributes\Depends;
+use App\Concerns\FormatsCurrency;
+use App\Models\Asset;
+use App\Models\PensionScheme;
 
 class ClientPresenter extends BasePresenter
 {
+    use FormatsCurrency;
     public function index():array
     {
         return array_merge($this->default(),
@@ -27,6 +28,7 @@ class ClientPresenter extends BasePresenter
     }
 
     //FactFind:// Need to do this for every section/step
+    //Chore: this should probably be refactored to take some of the non-client stuff out of the client model.
     public function formatForStep($step,$section)
     {
         return match ($step . '.' . $section) {
@@ -96,7 +98,7 @@ class ClientPresenter extends BasePresenter
                     ];
                 }))
             ],
-            '2.1' => [
+             '2.1' => [
                 'incomes' => collect($this->model->incomes->map(function ($income){
                     return [
                         'income_id' => $income->id,
@@ -135,6 +137,89 @@ class ClientPresenter extends BasePresenter
                 'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->map(function ($expenditure){
                     return $expenditure->presenter()->form();
                 }))->groupBy('expenditure_type')
+            ],
+            '3.1' => [
+                'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'))->get()->map(function ($asset){
+                    return $asset->presenter()->formatForFactFind('fixed');
+                }))
+            ],
+            '3.2' => [
+                'saving_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id'))->get()->map(function ($asset){
+                    return $asset->presenter()->formatForFactFind('savings');
+                }))
+            ],
+            '3.3' => [
+                'investments' => $this->model->other_investments->map(function ($investment){
+                  return [
+                      'id' => $investment->id,
+                      'owner' => $investment->client->io_id,
+                      'provider' => $investment->provider,
+                      'account_type' => $investment->contract_type,
+                      'product_name' => $investment->product_name,
+                      'is_retained' => $investment->is_retained,
+                      'retained_value' =>  $investment->retained_value != null ? $this->currencyIntToString($investment->retained_value): null,
+                      'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
+                      'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
+                      'frequency' => $investment->frequency,
+                      'start_date' =>  $investment->start_date,
+                      'maturity_date' =>  $investment->maturity_date,
+                      'valuation_at' =>  $investment->valuation_at,
+                  ];
+                })
+            ],
+            '3.4' => [
+                'dc_pensions' => PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'pt' => 'DC',
+                        'owner' => $item->client->io_id,
+                        'type' => $item->defined_contribution_pension->type,
+                        'employer' => $item->employer,
+                        'administrator' => $item->defined_contribution_pension->administrator,
+                        'policy_starts_at' => $item->defined_contribution_pension->policy_start_at,
+                        'policy_number' => $item->defined_contribution_pension->policy_number,
+                        'gross_contribution_percent' => $item->defined_contribution_pension->gross_contribution_percent,
+                        'gross_contribution_absolute' => $item->defined_contribution_pension->gross_contribution_absolute != null ? $this->currencyIntToString($item->defined_contribution_pension->gross_contribution_absolute): null,
+                        'employer_contribution_percent' =>$item->defined_contribution_pension->employer_contribution_percent,
+                        'employer_contribution_absolute' => $item->defined_contribution_pension->employer_contribution_absolute != null ? $this->currencyIntToString($item->defined_contribution_pension->employer_contribution_absolute): null,
+                        'valuation_at' => $item->defined_contribution_pension->valuation_at,
+                        'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
+                        'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
+                        'is_retained'=> $item->defined_contribution_pension->is_retained,
+                    ];
+                }),
+                'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'pt' => 'DB',
+                        'owner' => $item->client->io_id,
+                        'status' => $item->defined_benefit_pension->status,
+                        'employer' => $item->employer,
+                        'retirement_age' => $item->retirement_age,
+                        'prospective_pension_standard' => $item->defined_benefit_pension->prospective_pension_standard != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pension_standard): null,
+                        'prospective_pension_max' => $item->defined_benefit_pension->prospective_pension_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pension_max): null,
+                        'prospective_pcls_standard' => $item->defined_benefit_pension->prospective_pcls_standard  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_standard): null,
+                        'prospective_pcls_max' => $item->defined_benefit_pension->prospective_pcls_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_max): null,
+                        'cetv' => $item->defined_benefit_pension->cetv  != null ? $this->currencyIntToString($item->defined_benefit_pension->cetv): null,
+                        'cetv_ends_at' => $item->defined_benefit_pension->cetv_ends_at
+                    ];
+                })
+            ],
+            '4.1' => [
+                'liabilities' => $this->model->liabilities->map(function ($liability){
+                  return [
+                      'id' => $liability->id,
+                      'owner' => $liability->clients->count() > 1 ? 'Both' : $liability->clients->first()->io_id,
+                      'type' => $liability->type,
+                      'repayment' => $liability->is_repayment,
+                      'amount_outstanding' =>  $liability->amount_outstanding != null ? $this->currencyIntToString($liability->amount_outstanding): null,
+                      'monthly_repayment' => $liability->monthly_repayment != null ? $this->currencyIntToString($liability->monthly_repayment): null,
+                      'lender' => $liability->lender,
+                      'ends_at' =>  $liability->ends_at,
+                      'is_to_be_repaid' => $liability->is_to_be_repaid,
+                      'repay_details' => $liability->repay_details
+                  ];
+                })
             ],
             default => [
 
