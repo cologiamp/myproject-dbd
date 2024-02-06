@@ -42,10 +42,10 @@ class FactFindSectionDataService
         HealthRepository $healthRepository,
         EmploymentDetailRepository $employmentDetailRepository,
         AssetRepository $assetRepository,
-        LiabilityRepository $liabilityRepository
+        LiabilityRepository $liabilityRepository,
         IncomeRepository $incomeRepository,
         ExpenditureRepository $expenditureRepository
-    ) {
+) {
         $this->cr = $clientRepository;
         $this->dependentRepository = $dependentRepository;
         $this->healthRepository = $healthRepository;
@@ -243,7 +243,7 @@ class FactFindSectionDataService
             Log::warning($e);
         }
     }
-  
+
     /**
      * Section: 2
      * Step: 1
@@ -324,7 +324,7 @@ class FactFindSectionDataService
     {
         $this->parseAndUpdateExpenditure($validatedData);
     }
-  
+
      private function _31(array $validatedData): void
     {
         $client= $this->cr->getClient();
@@ -582,10 +582,10 @@ class FactFindSectionDataService
                     if ($liability['ends_at'] && $liability['ends_at'] != null) {
                         $liability['ends_at'] = Carbon::parse($liability['ends_at']);
                     }
-                    if (array_key_exists('amount_outstanding',$liability) && $liability['amount_outstanding'] != null) {
+                    if (array_key_exists('amount_outstanding', $liability) && $liability['amount_outstanding'] != null) {
                         $liability['amount_outstanding'] = $this->currencyStringToInt($liability['amount_outstanding']);
                     }
-                    if (array_key_exists('monthly_repayment',$liability) && $liability['monthly_repayment'] != null) {
+                    if (array_key_exists('monthly_repayment', $liability) && $liability['monthly_repayment'] != null) {
                         $liability['monthly_repayment'] = $this->currencyStringToInt($liability['monthly_repayment']);
                     }
                     if ($liability['is_to_be_repaid'] == false) {
@@ -596,9 +596,12 @@ class FactFindSectionDataService
 
                 $validatedData['liabilities'] = $liabilities->toArray();
             }
-            
+
             $this->liabilityRepository->setClient($this->cr->getClient());
             $this->liabilityRepository->createOrUpdateLiabilityDetails($validatedData);
+        } catch (Throwable $e) {
+            Log::warning($e);
+        }
     }
 
     /**
@@ -626,7 +629,7 @@ class FactFindSectionDataService
 
                 $validatedData['expenditures'] = $expenditures->toArray();
             }
-        
+
             $this->expenditureRepository->setClient($this->cr->getClient());
             $this->expenditureRepository->createOrUpdateExpenditureDetails($validatedData);
         } catch (Throwable $e) {

@@ -770,7 +770,7 @@ return [
             'UZ' => 'Uzbekistan',
             'VU' => 'Vanuatu',
             'VE' => 'Venezuela',
-            'VN' => 'Viet Nam',
+            'VN' => 'Vietnam',
             'VG' => 'Virgin Islands, British',
             'VI' => 'Virgin Islands, U.S.',
             'WF' => 'Wallis And Futuna',
@@ -1295,7 +1295,7 @@ return [
             242  => 'Uzbekistan',
             243  => 'Vanuatu',
             244  => 'Venezuela',
-            245  => 'Viet Nam',
+            245  => 'Vietnam',
             246  => 'Virgin Islands, British',
             247  => 'Virgin Islands, U.s.',
             248  => 'Wallis and Futuna',
@@ -1547,7 +1547,7 @@ return [
             9 => 'Other Mortgages',
             10 => 'Other'
         ],
-        'repayment_or_interest' => [ 
+        'repayment_or_interest' => [
             0 => 'Repayment',
             1 => 'Interest Only'
         ]

@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Health;
 use App\Models\EmploymentDetail;
 use App\Services\FactFindSectionDataService;
+use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -84,7 +85,10 @@ class ClientRepository extends BaseRepository
         {
             $data = $data->safe();
         }
-        //Chore: Refactor this to use IO_ID?
+        if(array_key_exists('date_from',$data) && $data['date_from'] != null)
+        {
+            $data['date_from'] = Carbon::parse($data['date_from']);
+        }
         if(array_key_exists('address_id',$data) && $data['address_id'] != null)
         {
             $addr = $this->client->addresses()->where('address_id',$data['address_id'])->first();
