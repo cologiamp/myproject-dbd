@@ -78,7 +78,7 @@ class HandleInertiaRequests extends Middleware
         }
 //        $client_enabled_nav
         return array_merge(parent::share($request), [
-            'logo' => config('constants.logo'),
+            'logo' => config('constants.new_logo'),
             'navigation' => $nav1
 
 
