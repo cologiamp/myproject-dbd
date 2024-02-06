@@ -10,6 +10,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from "@/Components/Checkbox.vue";
 import HalfPageImage from "@/Components/HalfPageImage.vue";
+import {isMobile} from "@/mobileCheck.js";
 
 const recovery = ref(false);
 
@@ -45,20 +46,25 @@ const submit = () => {
 
 function animateLeftSideElems() {
     document.getElementById('login-form').classList.remove('opacity-0');
-    document.getElementById('login-form').classList.add('animate-fade-from-bottom-50');
+    document.getElementById('login-form').classList.add('animate-fade-from-bottom-30');
 }
 
 onMounted( ()=> {
-    animateLeftSideElems()
+    if (isMobile()) {
+        // no animations on mobile
+        document.getElementById('login-form').classList.remove('opacity-0');
+    } else {
+        animateLeftSideElems()
+    }
 });
 </script>
 
 <template>
     <Head title="Two-factor Confirmation" />
         <Head title="Log in" />
-        <div class="flex min-h-full flex-1 bg-aaron-950">
+        <div class="flex min-h-full flex-1 bg-aaron-900">
             <div class="w-full md:w-1/2">
-                <div class="h-screen flex justify-center">
+                <div class="h-full flex justify-center">
                     <div class="flex flex-col my-auto">
                         <AuthenticationCardLogo id="logo" class="max-w-2xl" />
                         <div id="login-form" class="mt-10 w-fit md:w-96 mx-auto opacity-0">
@@ -74,7 +80,7 @@ onMounted( ()=> {
                                         v-model="form.code"
                                         type="text"
                                         inputmode="numeric"
-                                        class="mt-4 block w-full"
+                                        class="mt-4 block w-full ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
                                         autofocus
                                         autocomplete="one-time-code"
                                     />
@@ -82,13 +88,13 @@ onMounted( ()=> {
                                 </div>
 
                                 <div v-else>
-                                    <InputLabel for="recovery_code" value="Recovery Code" />
+                                    <InputLabel for="recovery_code" value="Recovery Code" class="text-white"/>
                                     <TextInput
                                         id="recovery_code"
                                         ref="recoveryCodeInput"
                                         v-model="form.recovery_code"
                                         type="text"
-                                        class="mt-1 block w-full"
+                                        class="mt-1 block w-full ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
                                         autocomplete="one-time-code"
                                     />
                                     <InputError class="mt-2" :message="form.errors.recovery_code" />

@@ -148,30 +148,43 @@ const regenerateRecoveryCodes = () => {
                         </p>
                     </div>
 
-                    <div class="mt-4 p-2 inline-block bg-white" v-html="qrCode" />
+                    <div class="md:flex md:flex-row">
+                        <div class="mt-4 p-2 inline-block bg-white" v-html="qrCode" />
+                        <div v-if="setupKey" class="mt-4 max-w-xl text-sm text-[#00B49D] md:ml-8">
+                            <p class="font-semibold">
+                                Setup Key: <span v-html="setupKey"></span>
+                            </p>
+                            <div v-if="confirming" class="mt-4 text-white">
+                                <InputLabel for="code" value="Code" />
 
-                    <div v-if="setupKey" class="mt-4 max-w-xl text-sm text-[#00B49D]">
-                        <p class="font-semibold">
-                            Setup Key: <span v-html="setupKey"></span>
-                        </p>
-                    </div>
+                                <TextInput
+                                    id="code"
+                                    v-model="confirmationForm.code"
+                                    type="text"
+                                    name="code"
+                                    class="block mt-1 w-1/2 ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
+                                    inputmode="numeric"
+                                    autofocus
+                                    autocomplete="one-time-code"
+                                    @keyup.enter="confirmTwoFactorAuthentication"
+                                />
 
-                    <div v-if="confirming" class="mt-4 text-white">
-                        <InputLabel for="code" value="Code" />
-
-                        <TextInput
-                            id="code"
-                            v-model="confirmationForm.code"
-                            type="text"
-                            name="code"
-                            class="block mt-1 w-1/2"
-                            inputmode="numeric"
-                            autofocus
-                            autocomplete="one-time-code"
-                            @keyup.enter="confirmTwoFactorAuthentication"
-                        />
-
-                        <InputError :message="confirmationForm.errors.code" class="mt-2" />
+                                <InputError :message="confirmationForm.errors.code" class="mt-2" />
+                                <div v-if="twoFactorEnabled" class="mt-4">
+                                    <ConfirmsPassword @confirmed="confirmTwoFactorAuthentication">
+                                        <PrimaryButton
+                                            v-if="confirming"
+                                            type="button"
+                                            class="me-3 bg-teal-500 hover:bg-teal-700 w-[155px] h-[49px] justify-center"
+                                            :class="{ 'opacity-25': enabling }"
+                                            :disabled="enabling"
+                                        >
+                                            Confirm
+                                        </PrimaryButton>
+                                    </ConfirmsPassword>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -200,7 +213,7 @@ const regenerateRecoveryCodes = () => {
                 </div>
 
                 <div v-else>
-                    <ConfirmsPassword @confirmed="confirmTwoFactorAuthentication">
+                    <!-- <ConfirmsPassword @confirmed="confirmTwoFactorAuthentication">
                         <PrimaryButton
                             v-if="confirming"
                             type="button"
@@ -210,7 +223,7 @@ const regenerateRecoveryCodes = () => {
                         >
                             Confirm
                         </PrimaryButton>
-                    </ConfirmsPassword>
+                    </ConfirmsPassword> -->
 
                     <ConfirmsPassword @confirmed="regenerateRecoveryCodes">
                         <SecondaryButton

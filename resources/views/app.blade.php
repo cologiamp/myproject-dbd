@@ -10,6 +10,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://fonts.cdnfonts.com/css/k2d-2" rel="stylesheet">
+        <link rel="preload" as="image" href="/images/MAN1-550.png" />
 
         <!-- Scripts -->
         @routes
