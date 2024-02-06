@@ -161,7 +161,7 @@ const disableTwoFactorAuthentication = () => {
                             v-model="confirmationForm.code"
                             type="text"
                             name="code"
-                            class="block mt-1 w-1/2"
+                            class="block mt-1 w-1/2 text-black"
                             inputmode="numeric"
                             autofocus
                             autocomplete="one-time-code"

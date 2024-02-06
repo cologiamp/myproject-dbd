@@ -111,7 +111,7 @@ const regenerateRecoveryCodes = () => {
 
         <template #description>
             <span class="text-white font-normal">Add additional security to your account using two factor authentication.</span>
-           
+
         </template>
 
         <template #content>
@@ -160,6 +160,7 @@ const regenerateRecoveryCodes = () => {
                         <InputLabel for="code" value="Code" />
 
                         <TextInput
+                            style="color: #000000"
                             id="code"
                             v-model="confirmationForm.code"
                             type="text"
