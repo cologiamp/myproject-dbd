@@ -1,5 +1,6 @@
 <script setup>
 import { ref, provide, inject, onBeforeMount } from "vue";
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     sidebarItems: {
@@ -12,6 +13,9 @@ const props = defineProps({
     },
     tabName: {
         type: String,
+    },
+    tabIndex: {
+        type: String
     }
 });
 
@@ -26,6 +30,9 @@ function sectionsClick(index, item) {
     });
 
     item.current = true;
+
+    // store step and selectedSection on local session
+    localStorage.setItem('step' + props.tabIndex + 'section', selectedSectionId.value)
 }
 
 provide("selectedSectionId", selectedSectionId);
@@ -61,25 +68,27 @@ const toggleDropdown = (index) => {
 
 <template>
 
-    <aside id="default-sidebar" class="sticky top-48 z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
-        <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
-                <ul class="font-medium">
-                    <li v-for="(item, index) in props.sidebarItems"
-                        v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" ref="btnMenuRef"
-                        :key="item.name"
-                        :id="index"
-                        @click="toggleDropdown(index); sectionsClick(index, item)">
-                        <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                            <div class="rounded-full w-11 h-11 py-2 text-center"
-                                 :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
-                                {{ index }}
-                            </div>
-                            <span class="ms-3 text-base">{{ item.name }}</span>
-                        </div>
-                    </li>
-                </ul>
-        </div>
-    </aside>
+  <aside id="default-sidebar" class="sticky top-48 z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
+      <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
+              <ul class="font-medium">
+                  <li v-for="(item, index) in props.sidebarItems"
+                      v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" ref="btnMenuRef"
+                      :key="item.name"
+                      :id="index"
+                      @click="toggleDropdown(index); sectionsClick(index, item)">
+                       <Link :href="`?step=${ props.tabIndex }&section=${ index }`" >
+                      <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
+                          <div class="rounded-full w-11 h-11 py-2 text-center"
+                               :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
+                              {{ index }}
+                          </div>
+                          <span class="ms-3 text-base">{{ item.name }}</span>
+                      </div>
+                       </Link>
+                  </li>
+              </ul>
+      </div>
+  </aside>
 
     <!-- DISPLAY ON START, HIDE ONSCROLL DOWN AND WHEN MENU IS STICKED -->
     <div class="hidden md:hidden">

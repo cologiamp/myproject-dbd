@@ -12,7 +12,6 @@ import { onMounted, ref, watch } from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
-// const clientId = ;
 
 watch(autoS, (newValue, oldValue) => {
     emit('autosaveStateChange', newValue)

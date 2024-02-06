@@ -68,7 +68,7 @@ class Client extends Model
 
     public function incomes():BelongsToMany
     {
-        return $this->belongsToMany(Income::class);
+        return $this->belongsToMany(Income::class)->withPivot('is_primary');
     }
 
 
@@ -120,7 +120,12 @@ class Client extends Model
         return $this->hasMany(ExistingAccount::class);
     }
 
-    public function pension_scheme():HasMany
+    public function other_investments():HasMany
+    {
+        return $this->hasMany(OtherInvestment::class);
+    }
+
+    public function pension_schemes():HasMany
     {
         return $this->hasMany(PensionScheme::class);
     }
@@ -183,6 +188,53 @@ class Client extends Model
             '1.5' => [
                 'employment_status' => config('enums.employment.employment_status')
             ],
+            '2.1' => [
+                'income_types' => config('enums.incomes.income_type'),
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'belongs_to' => $this->getBelongsToEnums()
+            ],
+            '2.2' => [
+                'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '2.3' => [
+                'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '2.4' => [
+                'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '2.5' => [
+                'expenditure_types' => config('enums.expenditures.liability_expenditure'),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
+            '3.1' => [
+                'owners' => $this->getOwnersForForm(),
+                'asset_types' => config('enums.assets.types_public_no_cash_invest')
+            ],
+            '3.2' => [
+                'owners' => $this->getOwnersForForm(),
+                'providers' => config('enums.assets.providers'),
+                'account_types' => config('enums.assets.account_types'),
+            ],
+            '3.3' => [
+                'owners' => $this->getOwnersForForm(true),
+                'providers' => config('enums.assets.investment_providers'),
+                'account_types' => config('enums.assets.investment_account_types'),
+                'frequencies' => config('enums.assets.frequency_public'),
+            ],
+            '3.4' => [
+                'owners' => $this->getOwnersForForm(true),
+                'pension_statuses' => config('enums.assets.db_pension_statuses'),
+                'pension_types' => config('enums.assets.dc_pension_types'),
+                'administrators' => config('enums.assets.dc_pension_administrators'),
+            ],
+            '4.1' => [
+                'owners' => $this->getOwnersForForm(true),
+                'types' => config('enums.liabilities.types_public'),
+                'repayment_or_interest' => config('enums.liabilities.repayment_or_interest'),
+            ],
             default => [
 
             ]
@@ -214,5 +266,30 @@ class Client extends Model
             return collect(array_keys(array_diff_assoc($parsed_data,$diff_data)));
         }
         else return new Collection();
+    }
+    private function getOwnersForForm($noBoth = false):array
+    {
+        if($this->client_two)
+        {
+            $arr = [
+                $this->io_id => $this->name,
+                $this->client_two->io_id => $this->client_two->name
+            ];
+            if(!$noBoth)
+            {
+                $arr['Both'] = 'Both';
+            }
+            return $arr;
+        }
+        return [
+            $this->io_id => $this->name,
+        ];
+    }
+
+    public function getBelongsToEnums():Collection
+    {
+        return collect([
+            $this->id => $this->first_name
+        ]);
     }
 }

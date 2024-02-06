@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class OtherInvestment extends Model
 {
-    public function clients():BelongsTo
+    protected $guarded = [];
+    public function client():BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
+
 }
