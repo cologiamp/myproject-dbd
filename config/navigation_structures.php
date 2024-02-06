@@ -569,6 +569,30 @@ return [
                             'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean'
                     ]
+                ],
+                5 => [
+                    'name' => 'Share Save Schemes',
+                    'rules' => [
+                        'schemes' => 'sometimes|array',
+                        'schemes.*.owner' => 'sometimes|nullable',
+                        'schemes.*.name' => 'sometimes|nullable|max:255',
+                        'schemes.*.option_price' => 'sometimes|nullable|string',
+                        'schemes.*.monthly_saving' => 'sometimes|nullable|string',
+                        'schemes.*.number_of_shares' => 'sometimes|nullable|integer',
+                        'schemes.*.matures_at' => 'sometimes|nullable|date',
+                    ]
+                ],
+                6 => [
+                    'name' => 'New Lump Sum Capital',
+                    'rules' => [
+                        'capital' => 'sometimes|array',
+                        'capital.*.owner' => 'sometimes|nullable',
+                        'capital.*.description' => 'sometimes|nullable|max:255',
+                        'capital.*.amount' => 'sometimes|nullable|string',
+                        'capital.*.is_retained' =>'sometimes|nullable|boolean',
+                        'capital.*.retained_value' =>'sometimes|nullable|string',
+                        'capital.*.due_at' => 'sometimes|nullable|date',
+                    ]
                 ]
             ],
         ],

@@ -568,9 +568,33 @@ class FactFindSectionDataService
             dd($e);
         }
 }
+
     /**
-     * Section: 4
-     * Step: 1
+     *  Step: 3
+     *  Section: 5
+     * @param array $validatedData
+     * @return void
+     */
+    private function _35(array $validatedData):void
+    {
+        dd($validatedData);
+    }
+    /**
+     *  Step: 3
+     *  Section: 6
+     * @param array $validatedData
+     * @return void
+     */
+    private function _36(array $validatedData):void
+    {
+        dd($validatedData);
+    }
+
+
+
+    /**
+     * Step: 4
+     * Section: 1
      * @param array $validatedData
      * @return void
      */
