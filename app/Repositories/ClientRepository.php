@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Health;
 use App\Models\EmploymentDetail;
 use App\Services\FactFindSectionDataService;
+use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -84,7 +85,10 @@ class ClientRepository extends BaseRepository
         {
             $data = $data->safe();
         }
-        //Chore: Refactor this to use IO_ID?
+        if(array_key_exists('date_from',$data) && $data['date_from'] != null)
+        {
+            $data['date_from'] = Carbon::parse($data['date_from']);
+        }
         if(array_key_exists('address_id',$data) && $data['address_id'] != null)
         {
             $addr = $this->client->addresses()->where('address_id',$data['address_id'])->first();
@@ -137,8 +141,8 @@ class ClientRepository extends BaseRepository
                 }
             })
             ->paginate(
-                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1 ,
-                perPage: $request->filled("perPage") ? $request->input("perPage") : 9
+                perPage: $request->filled("perPage") ? $request->input("perPage") : 9,
+                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1
             );
     }
 
@@ -155,7 +159,7 @@ class ClientRepository extends BaseRepository
         ];
     }
 
-    public function syncIoForAdviser(int $adviser_id,Collection $ioClientCollection)
+    public function syncIoForAdviser(int $adviser_id,Collection $ioClientCollection): void
     {
         //Note: This will make N database queries. Refactor when extra time.
         $ioClientCollection->each(function ($item) use ($adviser_id){
@@ -185,14 +189,14 @@ class ClientRepository extends BaseRepository
      * Load in factfind sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
      */
-    public function loadFactFindSidebarItems($sections, $currentStep, $currentSection)
+    public function loadFactFindSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => FactFindSectionDataService::get($this->client,$currentStep,$key),
+               'dynamicData' => FactFindSectionDataService::get($this->client,$step,$key),
            ];
         });
     }
@@ -210,6 +214,7 @@ class ClientRepository extends BaseRepository
      */
     public function loadFactFindTabs(int $currentStep = 1,int $currentSection = 1):array
     {
+
         return collect(config('navigation_structures.factfind'))->map(function ($value,$key) use ($currentSection,$currentStep){
             return [
                 'name' => $value['name'],
@@ -217,7 +222,7 @@ class ClientRepository extends BaseRepository
                 'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
-                }), $currentStep, $currentSection)->toArray()
+                }), $key, $currentStep, $currentSection)->toArray()
             ];
         })->toArray();
     }

@@ -51,7 +51,10 @@ function handleAutosave(val){
                 </h1>
                 <AutoSaveSpinner :autosave="autosaveState" />
             </div>
-            <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
+            <hr class="-mx-16 h-1 mt-2 mb-6 bg-aaron-950 border-0">
+
+            <span class="-mb-3">{{ tab.name + ' progress: ' + tab.progress + '%' }} </span>
+            <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
                 <div
                     :class="tab.progress === 100 ? `bg-green-400` : `bg-aaron-400`"
                     :style="{ width: `${tab.progress}%`}"
@@ -60,8 +63,8 @@ function handleAutosave(val){
             </div>
         </div>
         <div class="h-fit min-h-[65vh]">
-            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
-                <SectionContent @auto-save-up="handleAutosave"  v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
+            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :tabIndex="tabIndex">
+                <SectionContent @auto-save-up="handleAutosave"  v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index" :tabIndex="tabIndex"></SectionContent>
             </SectionSidebar>
         </div>
     </div>

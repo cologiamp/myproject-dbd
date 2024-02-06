@@ -2,7 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AssetController;
+use App\Http\Controllers\Api\PensionController;
+use App\Http\Controllers\Api\LiabilityController;
 use App\Http\Controllers\Api\SyncClientController;
+use App\Http\Controllers\Api\ExpenditureController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +21,13 @@ use App\Http\Controllers\Api\SyncClientController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:sanctum')->group(function (){
+    Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
+    Route::delete('/assets/{asset}',[AssetController::class,'delete']);
+    Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
+    Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
 });
 
 

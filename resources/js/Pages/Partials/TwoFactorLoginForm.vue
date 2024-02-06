@@ -111,7 +111,7 @@ const regenerateRecoveryCodes = () => {
 
         <template #description>
             <span class="text-white font-normal">Add additional security to your account using two factor authentication.</span>
-           
+
         </template>
 
         <template #content>
@@ -168,7 +168,6 @@ const regenerateRecoveryCodes = () => {
                                     autocomplete="one-time-code"
                                     @keyup.enter="confirmTwoFactorAuthentication"
                                 />
-
                                 <InputError :message="confirmationForm.errors.code" class="mt-2" />
                                 <div v-if="twoFactorEnabled" class="mt-4">
                                     <ConfirmsPassword @confirmed="confirmTwoFactorAuthentication">
