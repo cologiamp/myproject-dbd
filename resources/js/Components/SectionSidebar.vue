@@ -34,30 +34,55 @@ onBeforeMount(() => {
     selectedSectionId.value = initialSectionKey.value
 });
 
+const currentSelectedSection = ref(1);
+const menuShow = ref(true);
+const formShow = ref(true);
+
+const toggleDropdown = (index) => {
+
+    if(window.innerWidth < 768) {
+        if (currentSelectedSection.value !== index) {
+            menuShow.value = false;
+            formShow.value = true;
+        } else {
+            if(formShow.value) {
+                menuShow.value = true;
+                formShow.value = false;
+            } else {
+                menuShow.value = false;
+                formShow.value = true;
+            }
+        }
+    }
+
+    currentSelectedSection.value = index;
+}
 </script>
 
 <template>
 
-    <aside id="default-sidebar" class="h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-full md:absolute md:mb-0" aria-label="Sidebar">
-        <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 text-white">
-            <ul class="font-medium">
-                <li class="cursor-pointer" v-for="(item, index) in props.sidebarItems"
-                    :key="item.name"
-                    :id="index"
-                    @click="sectionsClick(index, item)">
-                    <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                        <div class="rounded-full w-11 h-11 py-2 text-center hover:bg-aaron-400 group-hover:bg-aaron-400"
-                            :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
+    <aside id="default-sidebar" class="sticky top-48 z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
+        <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
+                <ul class="font-medium">
+                    <li v-for="(item, index) in props.sidebarItems"
+                        v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" ref="btnMenuRef"
+                        :key="item.name"
+                        :id="index"
+                        @click="toggleDropdown(index); sectionsClick(index, item)">
+                        <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
+                            <div class="rounded-full w-11 h-11 py-2 text-center"
+                                 :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                                 {{ index }}
+                            </div>
+                            <span class="ms-3 text-base">{{ item.name }}</span>
                         </div>
-                        <span class="ms-3 text-base group-hover:text-aaron-50">{{ item.name }}</span>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
         </div>
     </aside>
 
-    <div class="md:hidden">
+    <!-- DISPLAY ON START, HIDE ONSCROLL DOWN AND WHEN MENU IS STICKED -->
+    <div class="hidden md:hidden">
         <div class="mb-4">
             <span>{{ props.tabName + ' progress: '+ props.progress + '%' }} </span>
         </div>
@@ -66,7 +91,7 @@ onBeforeMount(() => {
         </div>
     </div>
 
-    <div class="md:p-4 sm:ml-80">
+    <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 sm:ml-80">
         <div class="p-4">
             <slot></slot>
         </div>
