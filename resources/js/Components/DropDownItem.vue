@@ -43,20 +43,34 @@ function handleAutosave(val){
 </script>
 
 <template>
-    <div class="bg-aaron-900 sm:rounded-lg p-8 h-full" v-show="tabIndex == selectedMenuId">
-        <div class="w-full flex flex-col gap-6 mb-14">
-            <div class="w-full flex flex-row items-center justify-between">
-                <h1 class="text-2xl font-medium">
-                    {{ tab.name }}
-                </h1>
-                <AutoSaveSpinner :autosave="autosaveState" />
-            </div>
-            <div class="flex w-full h-2.5 bg-gray-200 overflow-hidden dark:bg-gray-700 rounded-md">
-                <div class="bg-aaron-400 w-[50%] rounded-r-md" />
+    <div class="bg-aaron-900 sm:rounded-lg h-full" v-show="tabIndex == selectedMenuId">
+        <div class="sticky top-0 z-[450] w-full flex flex-col gap-6 bg-aaron-900">
+            <div>
+                <div class="w-full flex flex-row items-center justify-between px-8 py-6 mb-8 border-b-2">
+                    <h1 class="text-2xl font-medium">
+                        {{ tab.name }}
+                    </h1>
+                    <AutoSaveSpinner :autosave="autosaveState" />
+                </div>
+                <div class="hidden flex w-full h-2.5 bg-gray-700 rounded-md">
+                    <div class="bg-aaron-400 w-[50%] rounded-r-md" />
+                </div>
+
+                <!-- HIDE ON START, DISPLAY ON SCROLL DOWN AND WHEN MENU IS STICKED -->
+                <div class="px-8 mb-8 w-full">
+                    <div class="mb-4">
+                        <span>{{ tab.name + ' progress: '+ tab.progress + '%' }} </span>
+                    </div>
+                    <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
+                        <div class="bg-aaron-400 w-[50%] rounded-r-md" />
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="block">
-            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems">
+
+
+        <div class="px-8 block">
+            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :progress="tab.progress" :tabName="tab.name" >
                 <SectionContent @auto-save-up="handleAutosave" v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
             </SectionSidebar>
         </div>
