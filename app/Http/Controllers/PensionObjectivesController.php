@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Repositories\ClientRepository;
+//use App\Services\FactFindSectionDataService;
 use App\Services\FactFindSectionDataService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -12,8 +13,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
-class FactFindController extends Controller
+class PensionObjectivesController extends Controller
 {
+
     protected ClientRepository $clientRepository;
     public function __construct(ClientRepository $cr)
     {
@@ -21,12 +23,13 @@ class FactFindController extends Controller
     }
     public function show(Client $client, Request $request) //fact-find?step=1&section=6
     {
+        //dd("Hi");
         //$req->step - which tab to use
         //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
-        $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
+        $tabs = $this->clientRepository->loadPensionObjectivesTabs($step,$section);
 
         return Inertia::render('PensionObjectives', [
             'title' => 'Pension Objectives',

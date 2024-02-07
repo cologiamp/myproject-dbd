@@ -227,6 +227,25 @@ class ClientRepository extends BaseRepository
         })->toArray();
     }
 
+    /**
+     * Load in the correct data structure for the sidebar tabs of the page we're on
+     * @return array
+     */
+    public function loadPensionObjectivesTabs(int $currentStep = 1,int $currentSection = 1):array
+    {
+
+        return collect(config('navigation_structures.pensionobjectives'))->map(function ($value,$key) use ($currentSection,$currentStep){
+            return [
+                'name' => $value['name'],
+                'current' =>  $key === $currentStep,
+                'progress' => $this->calculateFactFindElementProgress($key),
+                'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
+                    return [$key => $value['name']];
+                }), $key, $currentStep, $currentSection)->toArray()
+            ];
+        })->toArray();
+    }
+
     //FactFind://to do - make sure this works for your form
     /**
      * Function to work out the progress % for each step.

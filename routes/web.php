@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\DataIntoIoController;
 use App\Http\Controllers\FactFindController;
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\PensionObjectivesController;
 use App\Http\Controllers\StrategyReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,7 @@ Route::middleware([
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
        Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
+       Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
         Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
 
         Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
