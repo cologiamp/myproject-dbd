@@ -8,7 +8,7 @@ import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 import {changeToCurrency} from "@/currency.js";
 import '@vuepic/vue-datepicker/dist/main.css'
-import {computed, onMounted, ref, watch} from "vue";
+import { watch} from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -65,10 +65,6 @@ function addScheme() {
     });
 }
 
-
-// onMounted(() => {
-//     dateRef.value = props.formData.model.born_at;
-// })
 
 const stepForm = useForm(`EditSchemes${ props.formData.model.client_id }`, {
     schemes: props.formData.model.schemes

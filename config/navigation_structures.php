@@ -575,7 +575,7 @@ return [
                     'rules' => [
                         'schemes' => 'sometimes|array',
                         'schemes.*.id' => 'sometimes|nullable',
-                        'schemes.*.owner' => 'sometimes|nullable',
+                        'schemes.*.owner' => 'sometimes|nullable|string',
                         'schemes.*.name' => 'sometimes|nullable|max:255',
                         'schemes.*.option_price' => 'sometimes|nullable|string',
                         'schemes.*.monthly_saving' => 'sometimes|nullable|string',
@@ -588,7 +588,7 @@ return [
                     'rules' => [
                         'capitals' => 'sometimes|array',
                         'capitals.*.id' => 'sometimes|nullable',
-                        'capitals.*.owner' => 'sometimes|nullable',
+                        'capitals.*.owner' => 'sometimes|nullable|string',
                         'capitals.*.description' => 'sometimes|nullable|max:255',
                         'capitals.*.amount' => 'sometimes|nullable|string',
                         'capitals.*.is_retained' =>'sometimes|nullable|boolean',
