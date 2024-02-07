@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PensionScheme extends Model
 {
+    protected $guarded = [];
     public function client():BelongsTo
     {
         return $this->belongsTo(Client::class);

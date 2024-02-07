@@ -30,7 +30,7 @@ class  InvestmentRepository extends BaseRepository
 
     public function setInvestment(OtherInvestment $oi): void
     {
-        $this->$oi = $oi;
+        $this->oi = $oi;
     }
 
     //Create the model

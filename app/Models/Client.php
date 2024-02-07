@@ -130,6 +130,22 @@ class Client extends Model
         return $this->hasMany(PensionScheme::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function share_save_schemes():HasMany
+    {
+        return $this->hasMany(ShareSaveScheme::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function lump_sum_capitals():BelongsToMany
+    {
+        return $this->belongsToMany(LumpSumCapital::class);
+    }
+
     public function expenditures():BelongsToMany
     {
         return $this->belongsToMany(Expenditure::class);
@@ -229,6 +245,12 @@ class Client extends Model
                 'pension_statuses' => config('enums.assets.db_pension_statuses'),
                 'pension_types' => config('enums.assets.dc_pension_types'),
                 'administrators' => config('enums.assets.dc_pension_administrators'),
+            ],
+            '3.5' => [
+                'owners' => $this->getOwnersForForm(true),
+            ],
+            '3.6' => [
+                'owners' => $this->getOwnersForForm(),
             ],
             '4.1' => [
                 'owners' => $this->getOwnersForForm(true),
