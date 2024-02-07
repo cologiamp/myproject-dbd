@@ -8,6 +8,6 @@ const logo = computed(() => page.props.logo)
 
 <template>
     <Link :href="'/'">
-        <img :src="logo" alt="AdviserHub Logo">
+        <img :src="logo" alt="AdviserHub Logo" class="w-80 md:w-full">
     </Link>
 </template>

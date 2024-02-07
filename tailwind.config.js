@@ -58,7 +58,7 @@ export default {
                 'scale-inwards': 'scale-inwards 1.5s ease-in 0s 1 normal forwards'
             },
             screens: {
-                '3xl': '1980px',
+                '3xl': '1537px',
                 ...defaultTheme.screens
             }
         },
