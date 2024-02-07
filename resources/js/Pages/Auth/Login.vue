@@ -72,12 +72,12 @@ onMounted( ()=> {
         animateLeftSideElems();
     }
 });
-    
+
 </script>
 
 <template>
     <Head title="Log in" />
-    <div class="flex min-h-full flex-1 bg-aaron-900">
+    <div class="flex min-h-full md:overflow-y-hidden flex-1 bg-aaron-900">
         <div class="w-full md:w-1/2">
             <div class="h-full md:flex md:justify-center flex flex-col">
                 <div class="flex flex-col my-auto">
