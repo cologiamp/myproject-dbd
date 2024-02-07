@@ -7,6 +7,8 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
+import {usePage} from "@inertiajs/vue3";
+import FormErrors from "@/Components/FormErrors.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -64,6 +66,8 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 </script>
 
 <template>
+
+    <form-errors :errors="usePage().props.errors"/>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">

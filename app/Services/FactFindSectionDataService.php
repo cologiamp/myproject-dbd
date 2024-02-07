@@ -179,6 +179,7 @@ class FactFindSectionDataService
 
             $this->cr->updateFromValidated($contactDetails);
         } catch (Throwable $e) {
+            dd($e);
             Log::warning($e);
         }
     }
