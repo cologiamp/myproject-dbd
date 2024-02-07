@@ -205,6 +205,32 @@ class ClientPresenter extends BasePresenter
                     ];
                 })
             ],
+            '3.5' => [
+                'schemes' => $this->model->share_save_schemes->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'owner' => $item->client->io_id,
+                        'name' => $item->name,
+                        'option_price' => $item->option_price != null ? $this->currencyIntToString( $item->option_price): null,
+                        'monthly_saving' => $item->monthly_saving != null ? $this->currencyIntToString( $item->monthly_saving): null,
+                        'number_of_shares' => $item->number_of_shares,
+                        'matures_at' => $item->matures_at,
+                    ];
+                })
+            ],
+            '3.6' => [
+                'capitals' => $this->model->lump_sum_capitals->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'owner' => $item->clients->count() > 1 ? 'Both' : $item->clients->first()->io_id,
+                        'description' => $item->description,
+                        'amount' => $item->amount != null ? $this->currencyIntToString( $item->amount): null,
+                        'due_at' => $item->due_at,
+                        'is_retained' => $item->is_retained,
+                        'retained_value' =>  $item->retained_value != null ? $this->currencyIntToString($item->retained_value): null,
+                    ];
+                })
+            ],
             '4.1' => [
                 'liabilities' => $this->model->liabilities->map(function ($liability){
                   return [
