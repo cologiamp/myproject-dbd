@@ -43,18 +43,21 @@ return [
                             'title' => [
                                 'sometimes',
                                 'numeric',
+                                'nullable',
                                 'integer',
                                 Rule::in(array_keys(config('enums.client.title'))),
                             ],
                             'gender' => [
                                 'sometimes',
+                                'nullable',
                                 'numeric',
                                 'integer',
                                 Rule::in(array_keys(config('enums.client.gender'))),
                             ],
-                            'date_of_birth' => 'sometimes|date',
+                            'date_of_birth' => 'sometimes|nullable|date',
                             'marital_status' => [
                                 'sometimes',
+                                'nullable',
                                 'numeric',
                                 'integer',
                                 Rule::in(array_keys(config('enums.client.marital_status')))
@@ -62,19 +65,22 @@ return [
                             'nationality' => [
                                 'sometimes',
                                 'numeric',
+                                'nullable',
                                 'integer',
                                 Rule::in(array_keys((config('enums.client.nationality'))))
                             ],
-                            'ni_number' => 'sometimes|max:9',
+                            'ni_number' => 'sometimes|nullable|max:9',
                             'country_of_domicile' => [
                                 'sometimes',
+                                'nullable',
                             ],
                             'country_of_residence' => [
                                 'sometimes',
+                                'nullable',
                             ],
-                            'valid_will' => 'sometimes|boolean',
-                            'will_up_to_date' => 'sometimes|boolean',
-                            'poa_granted' => 'sometimes|boolean'
+                            'valid_will' => 'sometimes|nullable|boolean',
+                            'will_up_to_date' => 'sometimes|nullable|boolean',
+                            'poa_granted' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     2 => [
@@ -115,9 +121,9 @@ return [
                             "clients.email_address"
                         ],
                         'rules' => [
-                            'addresses' => 'sometimes|array',
-                            'addresses.*.address_line_1' => 'sometimes|max:320',
-                            'addresses.*.address_id' => 'sometimes',
+                            'addresses' => 'sometimes|nullable|array',
+                            'addresses.*.address_line_1' => 'sometimes|nullable|max:320',
+                            'addresses.*.address_id' => 'sometimes|nullable',
                             'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
                             'addresses.*.city' => 'sometimes|nullable|max:320',
                             'addresses.*.county' => 'sometimes|nullable|max:320',
@@ -153,8 +159,8 @@ return [
                             ]
                         ],
                         'rules' => [
-                            'dependents' => 'sometimes|array',
-                            'dependents.*.name' => 'sometimes|string',
+                            'dependents' => 'sometimes|nullable|array',
+                            'dependents.*.name' => 'sometimes|nullable|string',
                             'dependents.*.relationship_type' => [
                                 'required',
                                 'numeric',
@@ -162,8 +168,8 @@ return [
                                 Rule::in(array_keys((config('enums.dependent.relationship_type'))))
                             ],
                             'dependents.*.born_at' => 'sometimes|nullable|date',
-                            'dependents.*.financial_dependent' => 'sometimes|boolean',
-                            'dependents.*.is_living_with_clients' => 'sometimes|boolean'
+                            'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
+                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
                         ]
                     ],
                     5 => [
@@ -178,10 +184,11 @@ return [
                             "employment_details.end_at"
                         ],
                         'rules' => [
-                            'employment_details' => 'sometimes|array',
+                            'employment_details' => 'sometimes|nullable|array',
                             'employment_details.*.id' => 'sometimes|nullable|integer',
                             'employment_details.*.employment_status' => [
                                 'sometimes',
+                                'nullable',
                                 'numeric',
                                 'integer',
                                 Rule::in(array_keys((config('enums.employment.employment_status'))))

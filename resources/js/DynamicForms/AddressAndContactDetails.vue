@@ -8,6 +8,8 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
 import {PlusCircleIcon, XCircleIcon} from "@heroicons/vue/24/solid/index.js";
+import {usePage} from "@inertiajs/vue3";
+import FormErrors from "@/Components/FormErrors.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -60,7 +62,10 @@ function removeAddress(index) {
 }
 
 onMounted(()=>{
-    dateRef.value = props.formData.model.addresses[0].date_from;
+    if(Object.keys(props.formData.model.addresses).length > 0)
+    {
+        dateRef.value = props.formData.model.addresses[0].date_from;
+    }
 })
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
@@ -74,6 +79,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 </script>
 
 <template>
+    <form-errors :errors="usePage().props.errors"/>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div v-for="(address, index) in stepForm.addresses" class="grid pt-4 gap-2 md:grid md:grid-cols-6  md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
@@ -125,7 +131,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                         <option id="country" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(country, id) in formData.enums.countries">{{ country }}</option>
                     </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.country">{{ stepForm.errors.country }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="residency_status" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Ownership</label>
@@ -133,15 +138,13 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                         <option id="residency_status" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(residency_status, id) in formData.enums.residency_status">{{ residency_status }}</option>
                     </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.residency_status">{{ stepForm.errors.residency_status }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="date_from" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date From </label>
                     <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
                         <VueDatePicker text-input @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="date_from" id="date_from"  placeholder="dd/mm/yyyy"/>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_from">{{ stepForm.errors.date_from }}</p>
-                </div>
+                 </div>
             </div>
             <div class="grid gap-2 md:grid-cols-4 md:gap-y-8 md:gap-x-4 pr-2 pt-6">
                 <button type="button" @click="addAddress"
@@ -159,14 +162,12 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.phone_number" type="text" name="phone_number" id="phone_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Phone Number"/>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.phone_number">{{ stepForm.errors.phone_number }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="email_address" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Email Address </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.email_address" type="text" name="email_address" id="email_address"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Email Address"/>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.email_address">{{ stepForm.errors.email_address }}</p>
                 </div>
             </div>
         </div>

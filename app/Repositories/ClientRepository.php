@@ -98,7 +98,7 @@ class ClientRepository extends BaseRepository
             $addr = $this->client->addresses()->where('io_id',$data['io_id'])->first();
         }
         else{
-            $addr = Address::create($data);
+            $addr = Address::create(collect($data)->except(['address_id','io_id'])->toArray());
 
             $this->client->addresses()->attach($addr->fresh());
             return;

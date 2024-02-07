@@ -9,6 +9,7 @@ import { XCircleIcon } from '@heroicons/vue/24/solid';
 import {changeToCurrency} from "@/currency.js";
 import '@vuepic/vue-datepicker/dist/main.css'
 import {computed, onMounted, ref, watch} from "vue";
+import FormErrors from "@/Components/FormErrors.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -132,24 +133,7 @@ function removeAsset(index) {
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
-            <div class="rounded-md bg-red-50 p-4 mb-2" v-if="usePage().props.errors && Object.keys(usePage().props.errors).length > 0">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <XCircleIcon class="h-5 w-5 text-red-400" aria-hidden="true" />
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800" v-if="Object.keys(usePage().props.errors).length === 1">There was an error identified</h3>
-                        <h3 class="text-sm font-medium text-red-800" v-else>There were {{Object.keys(usePage().props.errors).length}} errors identified</h3>
-                        <div class="mt-2 text-sm text-red-700">
-                            <ul role="list" class="list-disc space-y-1 pl-5">
-                                <li v-for="(key, value) in usePage().props.errors">
-                                    {{key}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <form-errors :errors="usePage().props.errors"/>
             <div v-for="(asset, index) in stepForm.fixed_assets"
                  class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
