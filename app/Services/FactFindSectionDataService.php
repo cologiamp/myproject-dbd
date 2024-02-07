@@ -11,10 +11,12 @@ use App\Repositories\DependentRepository;
 use App\Repositories\HealthRepository;
 use App\Repositories\EmploymentDetailRepository;
 use App\Repositories\InvestmentRepository;
+use App\Repositories\LumpSumCapitalRepository;
 use App\Repositories\PensionRepository;
 use App\Repositories\LiabilityRepository;
 use App\Repositories\IncomeRepository;
 use App\Repositories\ExpenditureRepository;
+use App\Repositories\ShareSaveRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -577,7 +579,39 @@ class FactFindSectionDataService
      */
     private function _35(array $validatedData):void
     {
-        dd($validatedData);
+        $schemes = collect($validatedData['schemes'])->map(function ($scheme){
+            if(array_key_exists('owner',$scheme) && $scheme['owner'] != null)
+            {
+                $scheme['client_id'] = Client::where('io_id',$scheme['owner'])->first()->id;
+            }
+            else{
+                $scheme['client_id'] = $this->cr->getClient()->id;
+            }
+            unset($scheme['owner']);
+
+            if (array_key_exists('matures_at',$scheme) && $scheme['matures_at'] != null){
+                $scheme['matures_at'] = Carbon::parse($scheme['matures_at']);
+            }
+            else{
+                unset($scheme['matures_at']);
+            }
+            if (array_key_exists('option_price',$scheme) && $scheme['option_price'] != null){
+                $scheme['option_price'] = $this->currencyStringToInt($scheme['option_price']);
+            }
+            if (array_key_exists('monthly_saving',$scheme) && $scheme['monthly_saving'] != null){
+                $scheme['monthly_saving'] = $this->currencyStringToInt($scheme['monthly_saving']);
+            }
+            return $scheme;
+        });
+
+        $sr = App::make(ShareSaveRepository::class);
+        try{
+            $sr->createOrUpdateSchemes($schemes);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
     }
     /**
      *  Step: 3
@@ -587,7 +621,30 @@ class FactFindSectionDataService
      */
     private function _36(array $validatedData):void
     {
-        dd($validatedData);
+        $capitals = collect($validatedData['capitals'])->map(function ($capital){
+            if (array_key_exists('due_at',$capital) && $capital['due_at'] != null){
+                $capital['due_at'] = Carbon::parse($capital['due_at']);
+            }
+            else{
+                unset($capital['due_at']);
+            }
+            if (array_key_exists('amount',$capital) && $capital['amount'] != null){
+                $capital['amount'] = $this->currencyStringToInt($capital['amount']);
+            }
+            if (array_key_exists('retained_value',$capital) && $capital['retained_value'] != null){
+                $capital['retained_value'] = $this->currencyStringToInt($capital['retained_value']);
+            }
+            return $capital;
+        });
+
+        $lscr = App::make(LumpSumCapitalRepository::class);
+        try{
+            $lscr->createOrUpdateCapitals($capitals);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
     }
 
 

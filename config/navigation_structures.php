@@ -574,6 +574,7 @@ return [
                     'name' => 'Share Save Schemes',
                     'rules' => [
                         'schemes' => 'sometimes|array',
+                        'schemes.*.id' => 'sometimes|nullable',
                         'schemes.*.owner' => 'sometimes|nullable',
                         'schemes.*.name' => 'sometimes|nullable|max:255',
                         'schemes.*.option_price' => 'sometimes|nullable|string',
@@ -585,13 +586,14 @@ return [
                 6 => [
                     'name' => 'New Lump Sum Capital',
                     'rules' => [
-                        'capital' => 'sometimes|array',
-                        'capital.*.owner' => 'sometimes|nullable',
-                        'capital.*.description' => 'sometimes|nullable|max:255',
-                        'capital.*.amount' => 'sometimes|nullable|string',
-                        'capital.*.is_retained' =>'sometimes|nullable|boolean',
-                        'capital.*.retained_value' =>'sometimes|nullable|string',
-                        'capital.*.due_at' => 'sometimes|nullable|date',
+                        'capitals' => 'sometimes|array',
+                        'capitals.*.id' => 'sometimes|nullable',
+                        'capitals.*.owner' => 'sometimes|nullable',
+                        'capitals.*.description' => 'sometimes|nullable|max:255',
+                        'capitals.*.amount' => 'sometimes|nullable|string',
+                        'capitals.*.is_retained' =>'sometimes|nullable|boolean',
+                        'capitals.*.retained_value' =>'sometimes|nullable|string',
+                        'capitals.*.due_at' => 'sometimes|nullable|date',
                     ]
                 ]
             ],

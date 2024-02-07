@@ -75,7 +75,14 @@ const stepForm = useForm(`EditSchemes${ props.formData.model.client_id }`, {
 })
 
 function removeScheme(index) {
-
+    if(stepForm.schemes[index].id != null)
+    {
+        axios.delete('/api/share-save-schemes/'+ stepForm.schemes[index].id).then(function (response){
+            console.log(response.data)
+        }).catch(function (e){
+            console.log(e)
+        });
+    }
     stepForm.schemes.splice(index, 1);
 }
 

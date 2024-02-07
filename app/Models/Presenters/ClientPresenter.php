@@ -219,7 +219,17 @@ class ClientPresenter extends BasePresenter
                 })
             ],
             '3.6' => [
-
+                'capitals' => $this->model->lump_sum_capitals->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'owner' => $item->clients->count() > 1 ? 'Both' : $item->clients->first()->io_id,
+                        'description' => $item->description,
+                        'amount' => $item->amount != null ? $this->currencyIntToString( $item->amount): null,
+                        'due_at' => $item->due_at,
+                        'is_retained' => $item->is_retained,
+                        'retained_value' =>  $item->retained_value != null ? $this->currencyIntToString($item->retained_value): null,
+                    ];
+                })
             ],
             '4.1' => [
                 'liabilities' => $this->model->liabilities->map(function ($liability){

@@ -141,7 +141,7 @@ class Client extends Model
     /**
      * @return BelongsToMany
      */
-    public function lump_sum_captials():BelongsToMany
+    public function lump_sum_capitals():BelongsToMany
     {
         return $this->belongsToMany(LumpSumCapital::class);
     }
