@@ -28,8 +28,8 @@ class FactFindController extends Controller
         $step = $request->step ?? 1;
         $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
 
-        return Inertia::render('PensionObjectives', [
-            'title' => 'Pension Objectives',
+        return Inertia::render('FactFind', [
+            'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,
