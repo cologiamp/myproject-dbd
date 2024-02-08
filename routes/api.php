@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LiabilityController;
 use App\Http\Controllers\Api\SyncClientController;
 use App\Http\Controllers\Api\ExpenditureController;
 use App\Http\Controllers\Api\ShareSaveSchemeController;
+use App\Http\Controllers\Api\FactFindController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,8 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
+
+    Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindController::class,'update']);
 });
 
 
