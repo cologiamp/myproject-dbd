@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Health;
 use App\Models\EmploymentDetail;
 use App\Services\FactFindSectionDataService;
+use App\Services\PensionObjectivesDataService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -201,11 +202,14 @@ class ClientRepository extends BaseRepository
         });
     }
 
-//    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
-//    public function getExampleFormOptions():array
-//    {
-//
-//    }
+    public function loadPensionObjectivesTabContent(array $config, int $currentTab):array
+    {
+        return [
+            'name' => $config['name'],
+            'renderable' => Str::studly($config['name']),
+            'dynamicData' => PensionObjectivesDataService::get($this->client->retirement,$currentTab),
+        ];
+    }
 
 
     /**
@@ -231,17 +235,15 @@ class ClientRepository extends BaseRepository
      * Load in the correct data structure for the sidebar tabs of the page we're on
      * @return array
      */
-    public function loadPensionObjectivesTabs(int $currentStep = 1,int $currentSection = 1):array
+    public function loadPensionObjectivesTabs(int $currentStep = 1):array
     {
 
-        return collect(config('navigation_structures.pensionobjectives'))->map(function ($value,$key) use ($currentSection,$currentStep){
+        return collect(config('navigation_structures.pensionobjectives'))->map(function ($value,$key) use ($currentStep){
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                'progress' => $this->calculateFactFindElementProgress($key),
-                'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
-                    return [$key => $value['name']];
-                }), $key, $currentStep, $currentSection)->toArray()
+                'progress' => 0,
+                'tabcontent' => $this->loadPensionObjectivesTabContent($value,$key)
             ];
         })->toArray();
     }
@@ -295,5 +297,13 @@ class ClientRepository extends BaseRepository
         });
 
         return $nullFields;
+    }
+
+    public function createRetirement():bool
+    {
+        $rr = app()->make(RetirementRepository::class);
+        $rr->create(['client_id' => $this->client->id]);
+        $this->client = $this->client->fresh();
+        return true;
     }
 }

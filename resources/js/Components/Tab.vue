@@ -40,7 +40,7 @@ function handleAutosave(val){
 }
 
 </script>
-
+<!--THIS PAGE IS RENDERED ON DESKTOP ONLY-->
 <template>
 
        <div class="bg-aaron-900 sm:rounded-[20px] p-8" v-show="tabIndex == selectedTabId">
@@ -66,6 +66,7 @@ function handleAutosave(val){
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :tabIndex="tabIndex">
                 <SectionContent @auto-save-up="handleAutosave"  v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index" :tabIndex="tabIndex"></SectionContent>
             </SectionSidebar>
+            <SectionContent v-else-if="tab.tabcontent" @auto-save-up="handleAutosave" :item="tab.tabcontent"  :tabIndex="tabIndex"></SectionContent>
         </div>
     </div>
 </template>

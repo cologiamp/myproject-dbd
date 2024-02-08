@@ -92,10 +92,10 @@ const sidebarOpen = ref(false)
                                             <li>
                                                 <ul role="list" class="-mx-2 space-y-1">
                                                     <li v-for="item in navigation" :key="item.name">
-                                                        <a :href="item.href" :class="[item.current ? 'bg-blue-400 text-white' : 'text-gray-200 hover:text-indigo-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                                                        <Link :href="item.href" :class="[item.current ? 'bg-blue-400 text-white' : 'text-gray-200 hover:text-indigo-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                                                             <component :is="comp(item.icon)" :class="[item.current ? 'text-indigo-600' : 'text-gray-200 group-hover:text-indigo-600', 'h-6 w-6 shrink-0']" aria-hidden="true" />
                                                             {{ item.name }}
-                                                        </a>
+                                                        </Link>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -126,10 +126,10 @@ const sidebarOpen = ref(false)
                             <li>
                                 <ul role="list" class="-mx-2 space-y-1">
                                     <li v-for="item in navigation" :key="item.name">
-                                        <a :href="item.href" :class="[item.current ? 'bg-aaron-400 text-aaron-50' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                                        <Link :href="item.href" :class="[item.current ? 'bg-aaron-400 text-aaron-50' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                                             <component :is="comp(item.icon)"  class='text-aaron-50 h-6 w-6 shrink-0' aria-hidden="true" />
                                             {{ item.name }}
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
                             </li>

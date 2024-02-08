@@ -227,6 +227,7 @@ class ClientPresenter extends BasePresenter
         };
     }
 
+
     public function formatForClientsIndex(): array
     {
         return array_merge($this->default(), [

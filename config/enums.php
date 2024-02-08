@@ -1551,5 +1551,11 @@ return [
             0 => 'Repayment',
             1 => 'Interest Only'
         ]
+    ],
+    'pension_objectives' => [
+        'income_option' => [
+            0 => 'foo',
+            1 => 'bar',
+        ]
     ]
 ];

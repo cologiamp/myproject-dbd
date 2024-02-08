@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Repositories\ClientRepository;
 //use App\Services\FactFindSectionDataService;
 use App\Services\FactFindSectionDataService;
+use App\Services\PensionObjectivesDataService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,23 +22,23 @@ class PensionObjectivesController extends Controller
     {
         $this->clientRepository = $cr;
     }
-    public function show(Client $client, Request $request) //fact-find?step=1&section=6
+    public function show(Client $client, Request $request) //pension-objectives?step=1
     {
-        //dd("Hi");
-        //$req->step - which tab to use
-        //$req->section - which sidebar item to use
         $this->clientRepository->setClient($client);
-        $section = $request->section ?? 1;
+
+        if($client->retirement == null)
+        {
+            $this->clientRepository->createRetirement();
+        }
+
         $step = $request->step ?? 1;
-        $tabs = $this->clientRepository->loadPensionObjectivesTabs($step,$section);
+        $tabs = $this->clientRepository->loadPensionObjectivesTabs($step);
 
         return Inertia::render('PensionObjectives', [
             'title' => 'Pension Objectives',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $step,
-            'section' => $section,
-            'tabs' => $tabs,
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($step)
+            'tabs' => $tabs
         ]);
     }
 
@@ -48,28 +49,23 @@ class PensionObjectivesController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(Client $client, $step, $section, Request $request): \Illuminate\Http\RedirectResponse
+    public function update(Client $client, $step, Request $request): \Illuminate\Http\RedirectResponse
     {
-        $ffsds = App::make(FactFindSectionDataService::class);
-
-        if ($step == 2 && $section >= 2) {
-            $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
-        }
+        $pods = App::make(PensionObjectivesDataService::class);
 
         try{
-            $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
+            $pods->validate($step, $request); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
             Log::warning($e);
         }
-        $ffsds->store(
+        $pods->store(
             $client,
             $step,
-            $section,
-            $ffsds->validated($step, $section, $request)
+            $pods->validated($step, $request)
         );
 
-        return to_route('client.factfind', ['client' => $client, 'step' => $step, 'section' => $section]);
+        return to_route('client.pensionobjectives', ['client' => $client, 'step' => $step]);
     }
 }

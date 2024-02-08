@@ -34,7 +34,7 @@ class FactFindController extends Controller
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($step)
+            'progress' => $this->clientRepository->calculateFactFindElementProgress($step) //Chore: This is not used? Can this be refactored?
         ]);
     }
 

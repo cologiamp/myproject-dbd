@@ -63,12 +63,15 @@ Route::middleware([
     Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
        Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
-       Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
-       Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
-        Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
 
-        Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
-        Route::put('/example',[ExampleController::class,'update'])->name('example.update');
+       Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
+       Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
+
+       Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
+       Route::put('/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
+
+       Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
+       Route::put('/example',[ExampleController::class,'update'])->name('example.update');
 
 
 
