@@ -73,6 +73,9 @@ class PensionObjectivesDataService
     //These methods will PARSE the data before passing it to the REPOSITORY to save in the database
     private function saveTab1(array $validatedData):void
     {
+
+        //dd($validatedData);
+
         if(array_key_exists('intended_retirement',$validatedData))
         {
             if($validatedData['intended_retirement'] != null)
@@ -81,25 +84,43 @@ class PensionObjectivesDataService
             }
             unset($validatedData['intended_retirement']);
 
-
-            try{
-                $this->retirementRepository->update($validatedData);
-            }
-            catch(Throwable $e){
-                Log::warning($e);
-                dd($e);
-            }
-
         }
 
-
-
         //Ignacio: write me
+        if(array_key_exists('intended_benefits_drawn',$validatedData))
+        {
+            if($validatedData['intended_benefits_drawn'] != null)
+            {
+                $validatedData['intended_benefits_drawn_at'] = Carbon::now()->addYears($validatedData['intended_benefits_drawn'] + 1)->subDay(); //Saving +1 because of the rounding down that getDiffInYears does
+            }
+            unset($validatedData['intended_benefits_drawn']);
+        }
+
+        try{
+            $this->retirementRepository->update($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
+
     }
 
     private function saveTab2(array $validatedData):void
     {
         //Ignacio: write me
+        //define any explicit mutators that are not handled
+        if (array_key_exists('date_of_birth', $validatedData)) {
+            $validatedData['date_of_birth'] = Carbon::parse($validatedData['date_of_birth']);
+        }
+        if (array_key_exists('country_of_domicile', $validatedData)  && $validatedData['country_of_domicile'] != null) {
+            $validatedData['country_of_domicile'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_domicile']];
+        }
+        if (array_key_exists('country_of_residence', $validatedData) && $validatedData['country_of_residence'] != null) {
+            $validatedData['country_of_residence'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_residence']];
+        }
+        //This example only has data from one table. This would be different if not the case. May need multiple repositories.
+        $this->cr->updateFromValidated($validatedData);
     }
     private function saveTab3(array $validatedData):void
     {
