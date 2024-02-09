@@ -64,8 +64,7 @@ class FactFindSectionDataService
             'enums' => $client->loadEnumsForStep($step, $section),
             'model' => $client->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-//            'submit_url' => '/client/' . $client->io_id . '/fact-find/' . $step . '/' . $section //here we hydrate the autosave URL
-            'submit_url' => '/api/client/' . $client->io_id . '/fact-find/' . $step . '/' . $section
+            'submit_url' => '/api/client/' . $client->io_id . '/fact-find/' . $step . '/' . $section //here we hydrate the autosave URL
         ];
     }
 

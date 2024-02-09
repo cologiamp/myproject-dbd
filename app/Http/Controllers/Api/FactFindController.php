@@ -22,7 +22,6 @@ class FactFindController extends Controller
      */
     public function update(Client $client, $step, $section, Request $request): string
     {
-        ray($request)->purple();
         $ffsds = App::make(FactFindSectionDataService::class);
 
         if ($step == 2 && $section >= 2) {
@@ -43,7 +42,6 @@ class FactFindController extends Controller
             $ffsds->validated($step, $section, $request)
         );
 
-//        return to_route('client.factfind', ['client' => $client, 'step' => $step, 'section' => $section]);
         return response()->json(['client' => $client, 'step' => $step, 'section' => $section]);
     }
 }

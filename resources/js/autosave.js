@@ -17,32 +17,12 @@ export function autosave(form,submitUrl){
         autosave: true
     })
         .then((response) => {
-            //         preserveScroll: true,
-            //         preserveState: false, //setting this to true breaks components reloading from db on redirect
-
             //Autosave actually takes a fraction of a second, but we delay to 1s to make it clear to user it actually happened
             setTimeout(() => autoS.value = 1,1000);
         })
         .catch((error) => {
             setTimeout(() => autoS.value = 3,1000);
     });
-    // form.transform((data)=>({
-    //     ...data,
-    //     autosave: true
-    // })).put(submitUrl,
-    //     {
-    //         preserveScroll: true,
-    //         preserveState: false, //setting this to true breaks components reloading from db on redirect
-    //         onSuccess: () => {
-    //             //Autosave actually takes a fraction of a second, but we delay to 1s to make it clear to user it actually happened
-    //             setTimeout(() => autoS.value = 1,1000);
-    //         },
-    //         onError:() => {
-    //             //Chore: Make this work
-    //             setTimeout(() => autoS.value = 3,1000);
-    //         }
-    //     }
-    // )
 }
 
 export function __error(field, errorBag = 'default') {
