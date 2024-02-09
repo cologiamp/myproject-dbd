@@ -37,6 +37,7 @@ class PensionObjectivesDataService
     //get the data for a single section of a factfind from a single client
     public static function get($retirement, $step): array
     {
+        //dd($step, $retirement->loadEnumsForPOStep($step));
         return [
             'enums' => $retirement->loadEnumsForPOStep($step),
             'model' => $retirement->presenter()->formatForPOStep($step), //here we load the data for that part of the form

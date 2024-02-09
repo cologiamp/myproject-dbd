@@ -17,10 +17,14 @@ class RetirementPresenter extends BasePresenter
             1 => [
                 'intended_retirement' => Carbon::parse($this->model->intended_retirement_at)->diffInYears(Carbon::now()),
                 'intended_benefits_drawn' => Carbon::parse($this->model->intended_benefits_drawn_at)->diffInYears(Carbon::now()),
-                'income_option' => $this->model->income_option?->income_option,
+                //Question Ignacio: how to make this the "selected" option.
+                'income_option' => $this->model->income_option,
                 'notes' => $this->model->notes,
+                //Question Ignacio: Deal with multi-select (checkbox?) here, how?
+                //As e.g we have: 'is_primary' => (bool) $income->pivot->is_primary
+                //In DB table lifetime_allowance_protection is a json type.
                 'lifetime_allowance_protection' => $this->model->lifetime_allowance_protection,
-                //Ignacio: Define 1, 2, 3 here and load the right data to "rehydrate" the form from the saved model for all the fields :)
+                //****Ignacio: Define 1, 2, 3 here and load the right data to "rehydrate" the form from the saved model for all the fields :)
             ],
             2 => [
                 'additional_contributions' => $this->model->additional_contributions,
@@ -39,7 +43,7 @@ class RetirementPresenter extends BasePresenter
                 'retirement_vs_legacy_specifics' => $this->model->retirement_vs_legacy_specifics,
                 'dependents_suffer' => $this->model->dependents_suffer,
                 'iht_concerns' => $this->model->iht_concerns,
-                //Ignacio: Define 1, 2, 3 here and load the right data to "rehydrate" the form from the saved model for all the fields :)
+                //*****Ignacio: Define 1, 2, 3 here and load the right data to "rehydrate" the form from the saved model for all the fields :)
             ],
             3 => [
                 'known_income_required' => $this->model->known_income_required,

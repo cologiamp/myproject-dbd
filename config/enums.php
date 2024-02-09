@@ -1556,6 +1556,7 @@ return [
         'income_option' => [
             0 => 'foo',
             1 => 'bar',
+            2 => 'yoo',
         ]
     ]
 ];

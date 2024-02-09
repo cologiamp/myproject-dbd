@@ -637,7 +637,20 @@ return [
         ],
         2 =>  [
             'name' => 'Accumulation',
-            //Ignacio: add rules here
+            'rules' => [
+                'intended_retirement' => 'sometimes|nullable|numeric',
+                'intended_benefits_drawn' => 'sometimes|nullable|numeric',
+                'income_option' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.income_option'))),
+                ],
+                'notes' => 'sometimes|nullable|max:1024',
+                'lifetime_allowance_protection' => 'sometimes|nullable|max:1024',
+            ]
+            //*****Ignacio: add rules here
         ],
         3 =>  [
             'name' => 'Decumulation',
