@@ -31,8 +31,12 @@ class PensionObjectivesController extends Controller
             $this->clientRepository->createRetirement();
         }
 
+        //dd($request->step);
+
         $step = $request->step ?? 1;
         $tabs = $this->clientRepository->loadPensionObjectivesTabs($step);
+
+        //dd($tabs);
 
         return Inertia::render('PensionObjectives', [
             'title' => 'Pension Objectives',
@@ -51,6 +55,7 @@ class PensionObjectivesController extends Controller
      */
     public function update(Client $client, $step, Request $request): \Illuminate\Http\RedirectResponse
     {
+        dd($step);
         $pods = App::make(PensionObjectivesDataService::class);
 
         try{

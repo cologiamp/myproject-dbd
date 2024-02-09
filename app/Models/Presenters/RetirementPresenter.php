@@ -27,22 +27,23 @@ class RetirementPresenter extends BasePresenter
                 //****Ignacio: Define 1, 2, 3 here and load the right data to "rehydrate" the form from the saved model for all the fields :)
             ],
             2 => [
-                'additional_contributions' => $this->model->additional_contributions,
-                'in_specie_transfers' => $this->model->in_specie_transfers,
+                'additional_contributions' => (boolean)$this->model->additional_contributions,
+                'in_specie_transfers' => (boolean)$this->model->in_specie_transfers,
+                //Question Ignacio: how to make this option to be the "selected" option.
                 'if_experience_self_select' => $this->model->if_experience_self_select,
                 'if_experience_lifestyle' => $this->model->if_experience_lifestyle,
                 'if_experience_advisory' => $this->model->if_experience_advisory,
                 'if_experience_discretionary' => $this->model->if_experience_discretionary,
-                'is_explained' => $this->model->is_explained,
+                'is_explained' => (boolean)$this->model->is_explained,
                 'preferred_option' => $this->model->preferred_option,
                 'preferred_explanation' => $this->model->preferred_explanation,
-                'wide_range_of_assets' => $this->model->wide_range_of_assets,
+                'wide_range_of_assets' => (boolean)$this->model->wide_range_of_assets,
                 'include_exclude_specifics' => $this->model->include_exclude_specifics,
-                'require_flexibility' => $this->model->require_flexibility,
+                'require_flexibility' => (boolean)$this->model->require_flexibility,
                 'retirement_vs_legacy' => $this->model->retirement_vs_legacy,
                 'retirement_vs_legacy_specifics' => $this->model->retirement_vs_legacy_specifics,
                 'dependents_suffer' => $this->model->dependents_suffer,
-                'iht_concerns' => $this->model->iht_concerns,
+                'iht_concerns' => (boolean)$this->model->iht_concerns,
                 //*****Ignacio: Define 1, 2, 3 here and load the right data to "rehydrate" the form from the saved model for all the fields :)
             ],
             3 => [

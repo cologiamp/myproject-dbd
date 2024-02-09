@@ -1557,6 +1557,36 @@ return [
             0 => 'foo',
             1 => 'bar',
             2 => 'yoo',
-        ]
+        ],
+        'if_experience_self_select' => [
+            0 => 'foo if_experience_self_select',
+            1 => 'bar if_experience_self_select',
+            2 => 'yoo',
+        ],
+        'if_experience_lifestyle' => [
+            0 => 'foo if_experience_lifestyle',
+            1 => 'bar if_experience_lifestyle',
+            2 => 'yoo',
+        ],
+        'if_experience_advisory' => [
+            0 => 'foo if_experience_advisory',
+            1 => 'bar if_experience_advisory',
+            2 => 'yoo',
+        ],
+        'if_experience_discretionary' => [
+            0 => 'foo if_experience_discretionary',
+            1 => 'bar if_experience_discretionary',
+            2 => 'yoo',
+        ],
+        'preferred_option' => [
+            0 => 'foo preferred_option',
+            1 => 'bar preferred_option',
+            2 => 'yoo',
+        ],
+        'retirement_vs_legacy' => [
+            0 => 'foo retirement_vs_legacy',
+            1 => 'bar retirement_vs_legacy',
+            2 => 'yoo',
+        ],
     ]
 ];

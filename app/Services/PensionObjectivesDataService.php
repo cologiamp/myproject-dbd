@@ -66,6 +66,7 @@ class PensionObjectivesDataService
      */
     public function store(Client $client, int $step, array $validatedData): true
     {
+        //dd($step);
         $this->retirementRepository->setRetirement($client->retirement);
         $this->{"saveTab" . $step}($validatedData);
         return true;
@@ -107,21 +108,18 @@ class PensionObjectivesDataService
 
     }
 
-    private function saveTab2(array $validatedData):void
+    private function saveTab2(array $validatedData):array
     {
         //Ignacio: write me
-        //define any explicit mutators that are not handled
-        if (array_key_exists('date_of_birth', $validatedData)) {
-            $validatedData['date_of_birth'] = Carbon::parse($validatedData['date_of_birth']);
+        //return $validatedData;
+
+        try{
+            $this->retirementRepository->update($validatedData);
         }
-        if (array_key_exists('country_of_domicile', $validatedData)  && $validatedData['country_of_domicile'] != null) {
-            $validatedData['country_of_domicile'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_domicile']];
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
         }
-        if (array_key_exists('country_of_residence', $validatedData) && $validatedData['country_of_residence'] != null) {
-            $validatedData['country_of_residence'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_residence']];
-        }
-        //This example only has data from one table. This would be different if not the case. May need multiple repositories.
-        $this->cr->updateFromValidated($validatedData);
     }
     private function saveTab3(array $validatedData):void
     {
