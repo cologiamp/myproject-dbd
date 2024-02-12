@@ -638,6 +638,7 @@ return [
         2 =>  [
             'name' => 'Accumulation',
             'rules' => [
+                //*****Ignacio: add rules here
                 'additional_contributions' => 'sometimes|boolean',
                 'in_specie_transfers' => 'sometimes|boolean',
                 'if_experience_self_select' => [
@@ -678,8 +679,19 @@ return [
                 ],
                 'preferred_explanation' => 'sometimes|nullable|max:1024',
                 'wide_range_of_assets' => 'sometimes|nullable|boolean',
+                'include_exclude_specifics' => 'sometimes|nullable|max:1024',
+                'require_flexibility' => 'sometimes|nullable|boolean',
+                'retirement_vs_legacy' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.retirement_vs_legacy'))),
+                ],
+                'retirement_vs_legacy_specifics' => 'sometimes|nullable|max:1024',
+                'dependents_suffer' => 'sometimes|nullable|max:128',
+                'iht_concerns' => 'sometimes|nullable|boolean',
             ]
-            //*****Ignacio: add rules here
         ],
         3 =>  [
             'name' => 'Decumulation',
