@@ -26,7 +26,7 @@ class SyncClientController extends Controller
      */
     public function __invoke(Client $client, Request $request): true
     {
-                if(!(\Auth::user() && \Auth::user()->can('access IO data'))){
+        if(!(\Auth::user() && \Auth::user()->can('access IO data'))){
             throw new AuthenticationException('No user found or no permission to execute this');
         }
         if($client->io_json != null && $client->getDirtyChanges()->count() > 0 && !$request->force)
@@ -39,6 +39,7 @@ class SyncClientController extends Controller
         $data = $dis->getClient($client->io_id);
         $data['addresses'] = $dis->getAddresses($client->io_id)['items'];
         $data['contactdetails'] = $dis->getContactDetails($client->io_id)['items'];
+        $data['secondary_client'] = $dis->getSecondaryClient($client->io_id);
         $this->clientRepository->setClient($client);
         $this->clientRepository->updateFromValidated(['io_json' => $data]);
         //Then, update the client and connected items that we want to do so from the start.
@@ -48,6 +49,9 @@ class SyncClientController extends Controller
         collect($data['addresses'])->each(function ($item){
             $this->clientRepository->createOrUpdateAddress($item);
         });
+
+
+
         return true;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Concerns;
 
+use App\Models\Client;
 use Illuminate\Support\Collection;
 
 trait ParsesIoClientData{
@@ -92,6 +93,11 @@ trait ParsesIoClientData{
         $addresses = collect($data['addresses'])->map(function ($address){
             return $this->parseAddressFields($address);
         });
+
+        if(array_key_exists('secondary_client',$data) && $data['secondary_client'] != null)
+        {
+            $client['c2_id'] = Client::where('io_id',$data['secondary_client']['io_id'])->first()
+        }
 
         return [
             'client' => $client,

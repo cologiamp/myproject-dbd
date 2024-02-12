@@ -20,6 +20,7 @@ class Client extends Model
     use ParsesIoClientData;
     protected $guarded = [];
 
+
     /**
      * Return the formatted attribute "title" according to the config enum;
      * @return null|string
@@ -27,6 +28,11 @@ class Client extends Model
     public function getFormattedTitleAttribute():null|string
     {
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
+    }
+
+    public function client_two():HasOne
+    {
+        return $this->hasOne(Client::class,'c2_id','id');
     }
 
     public function date_of_birth():Attribute
