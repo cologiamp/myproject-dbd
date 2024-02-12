@@ -66,7 +66,7 @@ class PensionObjectivesDataService
      */
     public function store(Client $client, int $step, array $validatedData): true
     {
-        //dd($step);
+        dd($validatedData);
         $this->retirementRepository->setRetirement($client->retirement);
         $this->{"saveTab" . $step}($validatedData);
         return true;
@@ -88,7 +88,7 @@ class PensionObjectivesDataService
 
         }
 
-        //Ignacio: write me
+        //******Ignacio: write me
         if(array_key_exists('intended_benefits_drawn',$validatedData))
         {
             if($validatedData['intended_benefits_drawn'] != null)
@@ -108,8 +108,9 @@ class PensionObjectivesDataService
 
     }
 
-    private function saveTab2(array $validatedData):array
+    private function saveTab2(array $validatedData):void
     {
+        //dd($validatedData);
         //Ignacio: write me
         //return $validatedData;
 
@@ -121,6 +122,7 @@ class PensionObjectivesDataService
             dd($e);
         }
     }
+
     private function saveTab3(array $validatedData):void
     {
         //Ignacio: write me

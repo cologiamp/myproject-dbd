@@ -204,6 +204,7 @@ class ClientRepository extends BaseRepository
 
     public function loadPensionObjectivesTabContent(array $config, int $currentTab):array
     {
+        //dd($currentTab);
         return [
             'name' => $config['name'],
             'renderable' => Str::studly($config['name']),
@@ -237,6 +238,7 @@ class ClientRepository extends BaseRepository
      */
     public function loadPensionObjectivesTabs(int $currentStep = 1):array
     {
+        //dd($currentStep);
         return collect(config('navigation_structures.pensionobjectives'))->map(function ($value, $key) use ($currentStep){
            //dd($this->loadPensionObjectivesTabContent($value, $key));
             return [

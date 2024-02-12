@@ -70,12 +70,12 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="title" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Which retirement income option do your favour?</label>
+                    <label for="income_option" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Which retirement income option do your favour?</label>
                     <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.income_option" id="unit" name="income_option"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="income_option" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(income_option, id) in formData.enums.income_options">{{ income_option }}</option>
                     </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.title">{{ stepForm.errors.title }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.income_option">{{ stepForm.errors.income_option }}</p>
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">

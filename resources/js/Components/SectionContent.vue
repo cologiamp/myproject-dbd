@@ -44,7 +44,7 @@ onMounted( ()=> {
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <!-- Question Ignacio: hardcoding dynamic componente load, how? Missing section id maybe? -->
         <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)"
-                   :is="dynamicComponent('Accumulation')"
+                   :is="dynamicComponent(item.renderable)"
                    :formData="item.dynamicData"
                    :sectionIndex="sectionIndex"
         />

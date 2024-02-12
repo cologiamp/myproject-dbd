@@ -638,17 +638,46 @@ return [
         2 =>  [
             'name' => 'Accumulation',
             'rules' => [
-                'intended_retirement' => 'sometimes|nullable|numeric',
-                'intended_benefits_drawn' => 'sometimes|nullable|numeric',
-                'income_option' => [
+                'additional_contributions' => 'sometimes|boolean',
+                'in_specie_transfers' => 'sometimes|boolean',
+                'if_experience_self_select' => [
                     'sometimes',
                     'nullable',
                     'numeric',
                     'integer',
-                    Rule::in(array_keys(config('enums.pension_objectives.income_option'))),
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_self_select'))),
                 ],
-                'notes' => 'sometimes|nullable|max:1024',
-                'lifetime_allowance_protection' => 'sometimes|nullable|max:1024',
+                'if_experience_lifestyle' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_lifestyle'))),
+                ],
+                'if_experience_advisory' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_advisory'))),
+                ],
+                'if_experience_discretionary' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_discretionary'))),
+                ],
+                'is_explained' => 'sometimes|nullable|boolean',
+                'preferred_option' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.preferred_option'))),
+                ],
+                'preferred_explanation' => 'sometimes|nullable|max:1024',
+                'wide_range_of_assets' => 'sometimes|nullable|boolean',
             ]
             //*****Ignacio: add rules here
         ],
