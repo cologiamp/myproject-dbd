@@ -632,7 +632,9 @@ return [
                     Rule::in(array_keys(config('enums.pension_objectives.income_option'))),
                 ],
                 'notes' => 'sometimes|nullable|max:1024',
-                'lifetime_allowance_protection' => 'sometimes|nullable|max:1024',
+                'lifetime_allowance_protection' => [
+
+                ],
             ]
         ],
         2 =>  [
