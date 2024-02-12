@@ -66,7 +66,7 @@ class PensionObjectivesDataService
      */
     public function store(Client $client, int $step, array $validatedData): true
     {
-        dd($validatedData);
+        //dd($validatedData);
         $this->retirementRepository->setRetirement($client->retirement);
         $this->{"saveTab" . $step}($validatedData);
         return true;
@@ -110,16 +110,12 @@ class PensionObjectivesDataService
 
     private function saveTab2(array $validatedData):void
     {
-        //dd($validatedData);
-        //Ignacio: write me
-        //return $validatedData;
-
+        //*****Ignacio: write me
         try{
             $this->retirementRepository->update($validatedData);
         }
         catch(Throwable $e){
             Log::warning($e);
-            dd($e);
         }
     }
 

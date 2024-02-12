@@ -223,15 +223,32 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
 
 
-                <div class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                        <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> When do you expect to draw benefits?</label>
-                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.intended_benefits_drawn" type="number" name="intended_benefits_drawn" id="intended_benefits_drawn" min="0" max="100" step="1" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="1" />
-                        </div>
-                    </div>
-                </div>
 
+
+            </div>
+
+            <div class="mb-12">
+                <h1 class="ignacio-write-me">Need for benefits </h1>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
+                        Do you require flexibility as to when and how you may take your retirement benefits from your pension funds including the availability of both annuities and flexi-access drawdown?
+                    </label>
+                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                               v-model="stepForm.require_flexibility" type="radio" id="true" :value="true"
+                               :checked="stepForm.require_flexibility == true"
+                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                               v-model="stepForm.require_flexibility" type="radio" id="false" :value="false"
+                               :checked="stepForm.require_flexibility == false"
+                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.require_flexibility">{{
+                            stepForm.errors.require_flexibility }}</p>
+                </div>
             </div>
 
 
@@ -239,23 +256,14 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <h1 class="ignacio-write-me">Death benefits</h1>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
+                    <label for="retirement_vs_legacy" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         The primary purpose of a pension fund is to provide you with a source of income throughout retirement. However, if other sources of income are available, or the fund is surplus to your needs, it can potentially be passed on to a beneficiary of your choice.
                     </label>
-                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
-                               v-model="stepForm.retirement_vs_legacy" type="radio" id="true" :value="true"
-                               :checked="stepForm.retirement_vs_legacy == true"
-                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
-                               v-model="stepForm.retirement_vs_legacy" type="radio" id="false" :value="false"
-                               :checked="stepForm.retirement_vs_legacy == false"
-                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.retirement_vs_legacy">{{
-                            stepForm.errors.retirement_vs_legacy }}</p>
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.retirement_vs_legacy" id="unit" name="retirement_vs_legacy"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="retirement_vs_legacy" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(retirement_vs_legacy, id) in formData.enums.retirement_vs_legacy">{{ retirement_vs_legacy }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.retirement_vs_legacy">{{ stepForm.errors.retirement_vs_legacy }}</p>
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
