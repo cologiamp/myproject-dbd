@@ -30,9 +30,14 @@ function sectionsClick(index, item) {
     });
 
     item.current = true;
-
     // store step and selectedSection on local session
     localStorage.setItem('step' + props.tabIndex + 'section', selectedSectionId.value)
+
+    const url = new URL(window.location);
+    url.searchParams.set('step', props.tabIndex);
+    url.searchParams.set('section', selectedSectionId.value);
+    window.history.pushState({}, '', url);
+
 }
 
 provide("selectedSectionId", selectedSectionId);
@@ -75,8 +80,7 @@ const toggleDropdown = (index) => {
                       v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" ref="btnMenuRef"
                       :key="item.name"
                       :id="index"
-                      @click="toggleDropdown(index); sectionsClick(index, item)">
-                       <Link :href="`?step=${ props.tabIndex }&section=${ index }`" >
+                      @click="toggleDropdown(index); sectionsClick(index, item)" class="cursor-pointer">
                       <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
                           <div class="rounded-full w-11 h-11 py-2 text-center"
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
@@ -84,7 +88,6 @@ const toggleDropdown = (index) => {
                           </div>
                           <span class="ms-3 text-base">{{ item.name }}</span>
                       </div>
-                       </Link>
                   </li>
               </ul>
       </div>

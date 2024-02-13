@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, inject } from "vue";
+import {defineAsyncComponent, inject, watch} from "vue";
 
 const emit = defineEmits(['autoSaveUp'])
 
@@ -26,13 +26,14 @@ function dynamicComponent(component){
     if ((parseInt(props.tabIndex) == 2 && parseInt(props.sectionIndex) >= 2) || component.includes('Expenditure')) {
        component = 'Expenditure'
     }
-    
+
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
 // need to send the section
 // the input fields
 
 const selectedSectionId = inject("selectedSectionId");
+
 
 </script>
 
