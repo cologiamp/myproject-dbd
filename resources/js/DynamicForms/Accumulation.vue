@@ -21,8 +21,7 @@ const props = defineProps({
                 titles: []
             },
             model: {
-                //*****Ignacio: write me
-                //intended_retirement: null,
+
             },
             submit_method: 'post',
             submit_url: '/',
@@ -35,10 +34,8 @@ const props = defineProps({
 
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
-    //******Ignacio: write me
     additional_contributions: props.formData.model.additional_contributions,
     in_specie_transfers: props.formData.model.in_specie_transfers,
-    //Question Ignacio: how to make this option to be the "selected" option.
     if_experience_self_select: props.formData.model.if_experience_self_select,
     if_experience_lifestyle: props.formData.model.if_experience_lifestyle,
     if_experience_advisory: props.formData.model.if_experience_advisory,
@@ -62,7 +59,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Future Contributions</h1>
+                <h1>Future Contributions</h1>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you wish any future pension arrangements to be capable of receiving additional regular contributions?
@@ -84,7 +81,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                             stepForm.errors.additional_contributions }}</p>
                 </div>
 
-                <!--                IGNACIO********: WRITE ME-->
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you wish any future pension arrangements to be capable of receiving in specie transfers arising from an Approved All Employee Share Scheme?
@@ -107,7 +103,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Investment flexibility</h1>
+                <h1>Investment flexibility</h1>
 
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
@@ -228,7 +224,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Need for benefits </h1>
+                <h1>Need for benefits </h1>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
@@ -253,7 +249,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Death benefits</h1>
+                <h1>Death benefits</h1>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="retirement_vs_legacy" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">

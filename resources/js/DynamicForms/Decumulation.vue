@@ -21,8 +21,7 @@ const props = defineProps({
                 titles: []
             },
             model: {
-                //*****Ignacio: write me
-                //intended_retirement: null,
+
             },
             submit_method: 'post',
             submit_url: '/',
@@ -35,11 +34,9 @@ const props = defineProps({
 
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
-    //******Ignacio: write me
     known_income_required: props.formData.model.known_income_required,
     prefer_flexibility: props.formData.model.prefer_flexibility,
     what_age_annuity: props.formData.model.what_age_annuity,
-    //Question Ignacio: how to make this option to be the "selected" option.
     proportion_of_total_funds: props.formData.model.proportion_of_total_funds,
     spouse_income_proportion: props.formData.model.spouse_income_proportion,
     spouse_lump_sum_death: props.formData.model.spouse_lump_sum_death,
@@ -58,7 +55,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Income options</h1>
+                <h1>Income options</h1>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you require a secure and known income that cannot go down in amount?
@@ -80,7 +77,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                             stepForm.errors.known_income_required }}</p>
                 </div>
 
-                <!--                IGNACIO********: WRITE ME-->
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Would you prefer flexibility in the way your savings are used to provide you with income?
@@ -113,7 +109,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Sources of pension income</h1>
+                <h1>Sources of pension income</h1>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="proportion_of_total_funds" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
@@ -129,7 +125,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Spouse/Partner's Pensions</h1>
+                <h1>Spouse/Partner's Pensions</h1>
 
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
@@ -214,7 +210,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Tax free cash lump sum </h1>
+                <h1>Tax free cash lump sum </h1>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="if_experience_advisory" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Most pension schemes allow the option for you to exchange part of your taxable annual pension for a tax free lump sum and a reduced annual pension. </label>
@@ -238,7 +234,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
             <div class="mb-12">
-                <h1 class="ignacio-write-me">Lump sum death benefits </h1>
+                <h1>Lump sum death benefits </h1>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="if_experience_advisory" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Is providing lump sum death benefits for your spouse, civil partner and / or dependants important to you? </label>

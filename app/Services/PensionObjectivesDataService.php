@@ -105,7 +105,6 @@ class PensionObjectivesDataService
 
     private function saveTab2(array $validatedData):void
     {
-        //*****Ignacio: write me
         try{
             $this->retirementRepository->update($validatedData);
         }
@@ -116,7 +115,6 @@ class PensionObjectivesDataService
 
     private function saveTab3(array $validatedData):void
     {
-        //****Ignacio: write me
         try{
             $this->retirementRepository->update($validatedData);
         }
