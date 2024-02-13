@@ -533,6 +533,7 @@ return [
             197 => 'ZWE', // Zimbabwean
         ],
         'iso_2' => [
+            'GB' => 'United Kingdom',
             'AF' => 'Afghanistan',
             'AX' => 'Aland Islands',
             'AL' => 'Albania',
@@ -763,7 +764,6 @@ return [
             'UG' => 'Uganda',
             'UA' => 'Ukraine',
             'AE' => 'United Arab Emirates',
-            'GB' => 'United Kingdom',
             'US' => 'United States',
             'UM' => 'United States Outlying Islands',
             'UY' => 'Uruguay',
