@@ -22,7 +22,6 @@ const props = defineProps({
                 titles: []
             },
             model: {
-                //Ignacio: write me
                 intended_retirement: null
             },
             submit_method: 'post',
@@ -38,7 +37,6 @@ const props = defineProps({
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     intended_retirement: props.formData.model.intended_retirement,
     intended_benefits_drawn: props.formData.model.intended_benefits_drawn,
-    //Ignacio: write me
     income_option: props.formData.model.income_option,
     notes: props.formData.model.notes,
     lifetime_allowance_protection: props.formData.model.lifetime_allowance_protection,
@@ -73,7 +71,7 @@ function changeCheck(index) {
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div class="mb-12">
-                <h1 class="ignacio-write-me">General</h1>
+                <h1>General</h1>
                 <div class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                         <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> How long until you intend to retire?</label>
@@ -110,9 +108,9 @@ function changeCheck(index) {
                     </div>
                 </div>
             </div>
-            <!--                IGNACIO: WRITE ME-->
+
             <div class="mb-12">
-                <h1 class="ignacio-write-me">HMRC Lifetime Allowance protection</h1>
+                <h1>HMRC Lifetime Allowance protection</h1>
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Which HMRC Lifetime Allowance protection(s) do you hold?</label>

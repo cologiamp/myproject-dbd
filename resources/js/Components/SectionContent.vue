@@ -33,10 +33,6 @@ function dynamicComponent(component){
 // the input fields
 
 const selectedSectionId = inject("selectedSectionId");
-onMounted( ()=> {
-    //alert(props.tabIndex);
-    //alert(JSON.stringify(props));
-});
 
 </script>
 
