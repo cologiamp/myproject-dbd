@@ -37,7 +37,6 @@ class PensionObjectivesDataService
     //get the data for a single section of a factfind from a single client
     public static function get($retirement, $step): array
     {
-        //dd($step, $retirement->loadEnumsForPOStep($step));
         return [
             'enums' => $retirement->loadEnumsForPOStep($step),
             'model' => $retirement->presenter()->formatForPOStep($step), //here we load the data for that part of the form
@@ -66,7 +65,6 @@ class PensionObjectivesDataService
      */
     public function store(Client $client, int $step, array $validatedData): true
     {
-        //dd($validatedData);
         $this->retirementRepository->setRetirement($client->retirement);
         $this->{"saveTab" . $step}($validatedData);
         return true;
@@ -75,8 +73,6 @@ class PensionObjectivesDataService
     //These methods will PARSE the data before passing it to the REPOSITORY to save in the database
     private function saveTab1(array $validatedData):void
     {
-
-        //dd($validatedData);
 
         if(array_key_exists('intended_retirement',$validatedData))
         {
