@@ -24,7 +24,6 @@ class RetirementPresenter extends BasePresenter
             2 => [
                 'additional_contributions' => (boolean)$this->model->additional_contributions,
                 'in_specie_transfers' => (boolean)$this->model->in_specie_transfers,
-                //Question Ignacio: how to make this option to be the "selected" option.
                 'if_experience_self_select' => $this->model->if_experience_self_select,
                 'if_experience_lifestyle' => $this->model->if_experience_lifestyle,
                 'if_experience_advisory' => $this->model->if_experience_advisory,

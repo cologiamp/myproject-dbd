@@ -640,7 +640,6 @@ return [
         2 =>  [
             'name' => 'Accumulation',
             'rules' => [
-                //*****Ignacio: add rules here
                 'additional_contributions' => 'sometimes|boolean',
                 'in_specie_transfers' => 'sometimes|boolean',
                 'if_experience_self_select' => [
@@ -697,7 +696,6 @@ return [
         ],
         3 =>  [
             'name' => 'Decumulation',
-            //****Ignacio: add rules here
             'rules' => [
                 'known_income_required' => 'sometimes|nullable|boolean',
                 'prefer_flexibility' => 'sometimes|nullable|boolean',

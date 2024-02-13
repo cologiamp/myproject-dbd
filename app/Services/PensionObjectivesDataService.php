@@ -84,7 +84,6 @@ class PensionObjectivesDataService
 
         }
 
-        //******Ignacio: write me
         if(array_key_exists('intended_benefits_drawn',$validatedData))
         {
             if($validatedData['intended_benefits_drawn'] != null)
