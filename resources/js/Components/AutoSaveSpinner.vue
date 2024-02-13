@@ -44,7 +44,7 @@ const circumference = 15 * 2 * Math.PI
 <template>
     <div class="flex flex-row items-center gap-4">
         <div v-if="autosave === 2" class="flex flex-row items-center gap-2">
-            <p>Saving</p>
+            <p>Saving&nbsp;</p>
             <svg class="w-10 h-10">
                 <circle
                     class="text-transparent"
@@ -69,17 +69,12 @@ const circumference = 15 * 2 * Math.PI
                 />
             </svg>
         </div>
-        <div
-            v-else-if="autosave === 1"
-            class="flex flex-row items-center gap-2"
-        >
-            <p>Saved</p>
-            <div
-                class="bg-aaron-400 rounded-full p-2"
-            >
-                <CheckIcon class="w-5 h-5 text-aaron-950" />
+        <div v-else-if="autosave === 1" class="flex flex-row items-center gap-2">
+            <p>Saved&nbsp;</p>
+            <div class="bg-aaron-400 rounded-full p-2">
+                <CheckIcon class="w-6 h-6 text-aaron-950" />
             </div>
         </div>
-        <ExclamationTriangleIcon v-else class="text-red-500 w-8 h-8" />
+        <ExclamationTriangleIcon v-else class="text-red-500 w-10 h-10" />
     </div>
 </template>

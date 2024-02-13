@@ -26,12 +26,14 @@ function tabsClick(index, tab) {
     tab.current = true;
 
     // retrieve saved section for equivalent step from localsession
-    if (localStorage.getItem('step' + selectedTabId.value + 'section')) { 
+    if (localStorage.getItem('step' + selectedTabId.value + 'section')) {
         cachedSectionForStep.value = localStorage.getItem('step' + selectedTabId.value + 'section');
     }
-    
-    urlWithFragment = `${location.pathname}?step=${ index }&section=${ cachedSectionForStep.value }`;
-    router.visit(urlWithFragment);
+    const url = new URL(window.location);
+    url.searchParams.set('step', index);
+    url.searchParams.set('section', cachedSectionForStep.value);
+    window.history.pushState({}, '', url);
+
 }
 
 provide("selectedTabId", selectedTabId);
