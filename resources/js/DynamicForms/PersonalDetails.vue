@@ -9,6 +9,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
+import {XCircleIcon} from "@heroicons/vue/24/solid/index.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -180,7 +181,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.country_of_residence">{{ stepForm.errors.country_of_residence }}</p>
                 </div>
                 <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
-                    <h4 class="col-span-6 text-xl font-bold"> Will </h4>
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Will </h4>
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Do you have a valid will?</label>
                         <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
@@ -205,7 +206,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </div>
                 </div>
                 <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
-                    <h4 class="col-span-6 text-xl font-bold"> Power of Attorney </h4>
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Power of Attorney </h4>
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Power of Attorney Granted?</label>
                         <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">

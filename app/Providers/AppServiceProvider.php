@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 }
                 return $bags;
             }
+            ray( (object)[])->purple();
             return (object)[];
         });
     }

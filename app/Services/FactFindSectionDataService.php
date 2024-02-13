@@ -70,12 +70,17 @@ class FactFindSectionDataService
 
     public function validate(int $step, int $section, Request $request)
     {
-        return Validator::make($request->all(), config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules'))->validate();
+        $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
+
+        return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
     public function validated(int $step, int $section, Request $request)
     {
-        return Validator::make($request->all(), config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules'))->validated();
+        $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
+        return Validator::make($request->all(), $rules, $messages)->validated();
     }
 
     /**

@@ -20,7 +20,7 @@ const props = defineProps({
                 <div class="mt-2 text-sm text-red-700">
                     <ul role="list" class="list-disc space-y-1 pl-5">
                         <li v-for="(key, value) in errors">
-                            {{key}}
+                            {{key[0]}}
                         </li>
                     </ul>
                 </div>
