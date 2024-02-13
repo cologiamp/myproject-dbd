@@ -34,6 +34,7 @@ class ClientPresenter extends BasePresenter
         return match ($step . '.' . $section) {
             '1.1' => [
                 'first_name' => $this->model->first_name,
+                'middle_name' => $this->model->middle_name,
                 'last_name' => $this->model->last_name,
                 'salutation' => $this->model->salutation,
                 'title' => $this->model->title,
@@ -46,7 +47,8 @@ class ClientPresenter extends BasePresenter
                 'country_of_residence' => $this->model->country_of_residence != null ? config('enums.client.iso_2_int')[$this->model->country_of_residence] : null,
                 'valid_will' => (boolean)$this->model->valid_will,
                 'will_up_to_date' => (boolean)$this->model->will_up_to_date,
-                'poa_granted' => (boolean)$this->model->poa_granted
+                'poa_granted' => (boolean)$this->model->poa_granted,
+                'poa_name' => $this->model->poa_name
             ],
             '1.2' => [
                 'is_in_good_health' => $this->model->health?->is_in_good_health,

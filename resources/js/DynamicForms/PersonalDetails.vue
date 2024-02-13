@@ -24,7 +24,9 @@ const props = defineProps({
             },
             model: {
                 first_name: null,
+                middle_name: null,
                 last_name: null,
+                poa_name: null,
                 title: null
             },
             submit_method: 'post',
@@ -47,6 +49,7 @@ onMounted(()=>{
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     first_name: props.formData.model.first_name,
+    middle_name: props.formData.model.middle_name,
     last_name: props.formData.model.last_name,
     title: props.formData.model.title,
     salutation: props.formData.model.salutation,
@@ -59,7 +62,8 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     country_of_residence: props.formData.model.country_of_residence,
     valid_will: props.formData.model.valid_will,
     will_up_to_date: props.formData.model.will_up_to_date,
-    poa_granted: props.formData.model.poa_granted
+    poa_granted: props.formData.model.poa_granted,
+    poa_name: props.formData.model.poa_name,
 })
 
 
@@ -87,6 +91,14 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.first_name" type="text" name="first_name" id="first_name"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="First Name" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.first_name">{{ stepForm.errors.first_name }}</p>
+                </div>
+
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="middle_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Middle Name(s) </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.middle_name" type="text" name="middle_name" id="middle_name"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Middle Name" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.middle_name">{{ stepForm.errors.middle_name }}</p>
                 </div>
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
@@ -198,6 +210,16 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.poa_granted">{{ stepForm.errors.poa_granted }}</p>
+                </div>
+
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <div v-if="stepForm.poa_granted == true">
+                        <label for="poa_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Attorney Name </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.poa_name" type="text" name="poa_name" id="poa_name"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Attorney Name" />
+                        </div>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.poa_name">{{ stepForm.errors.poa_name }}</p>
+                    </div>
                 </div>
 
             </div>

@@ -272,6 +272,7 @@ class Client extends Model
                 [
                     'title',
                     'first_name',
+                    'middle_name',
                     'last_name',
                     'date_of_birth',
                     'gender',

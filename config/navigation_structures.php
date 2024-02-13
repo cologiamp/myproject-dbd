@@ -23,6 +23,7 @@ return [
                         'fields' => [
                             "clients.date_of_birth",
                             "clients.first_name",
+                            "clients.middle_name",
                             "clients.last_name",
                             "clients.salutation",
                             'clients.date_of_birth',
@@ -34,10 +35,12 @@ return [
                             'clients.country_of_residence',
                             'clients.valid_will',
                             'clients.will_up_to_date',
-                            'clients.poa_granted'
+                            'clients.poa_granted',
+                            'clients.poa_name'
                         ],
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
+                            'middle_name' => 'sometimes|nullable|max:127',
                             'last_name' => 'sometimes|max:127',
                             'salutation' => 'sometimes|max:127',
                             'title' => [
@@ -80,7 +83,8 @@ return [
                             ],
                             'valid_will' => 'sometimes|nullable|boolean',
                             'will_up_to_date' => 'sometimes|nullable|boolean',
-                            'poa_granted' => 'sometimes|nullable|boolean'
+                            'poa_granted' => 'sometimes|nullable|boolean',
+                            'poa_name' => 'sometimes|nullable|max:127'
                         ]
                     ],
                     2 => [
