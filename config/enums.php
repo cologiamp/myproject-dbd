@@ -1558,6 +1558,11 @@ return [
             1 => 'bar',
             2 => 'yoo',
         ],
+        'lifetime_allowance_protection' => [
+            0 => 'foo lifetime_allowance_protection',
+            1 => 'bar lifetime_allowance_protection',
+            2 => 'yoo lifetime_allowance_protection',
+        ],
         'if_experience_self_select' => [
             0 => 'foo if_experience_self_select',
             1 => 'bar if_experience_self_select',
@@ -1586,6 +1591,26 @@ return [
         'retirement_vs_legacy' => [
             0 => 'foo retirement_vs_legacy',
             1 => 'bar retirement_vs_legacy',
+            2 => 'yoo',
+        ],
+        'proportion_of_total_funds' => [
+            0 => 'foo proportion_of_total_funds',
+            1 => 'bar proportion_of_total_funds',
+            2 => 'yoo',
+        ],
+        'spouse_lump_sum_death' => [
+            0 => 'foo spouse_lump_sum_death',
+            1 => 'bar spouse_lump_sum_death',
+            2 => 'yoo',
+        ],
+        'tax_free_lump_sum_preference' => [
+            0 => 'foo tax_free_lump_sum_preference',
+            1 => 'bar tax_free_lump_sum_preference',
+            2 => 'yoo',
+        ],
+        'lump_sum_death_benefits' => [
+            0 => 'foo lump_sum_death_benefits',
+            1 => 'bar lump_sum_death_benefits',
             2 => 'yoo',
         ],
     ]

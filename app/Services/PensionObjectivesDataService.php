@@ -121,7 +121,13 @@ class PensionObjectivesDataService
 
     private function saveTab3(array $validatedData):void
     {
-        //Ignacio: write me
+        //****Ignacio: write me
+        try{
+            $this->retirementRepository->update($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+        }
     }
 
 

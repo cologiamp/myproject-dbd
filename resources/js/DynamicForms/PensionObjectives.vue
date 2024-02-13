@@ -121,11 +121,11 @@ function changeCheck(index) {
                             @input="changeCheck(index)"
                             class="block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
                             multiple v-model="stepForm.lifetime_allowance_protection"
-                            :options="formData.enums.income_options"
+                            :options="formData.enums.lifetime_allowance_protection"
                             :value=index
                         />
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.first_name">{{ stepForm.errors.first_name }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.lifetime_allowance_protection">{{ stepForm.errors.lifetime_allowance_protection }}</p>
                 </div>
 
 

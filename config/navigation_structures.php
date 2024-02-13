@@ -697,7 +697,45 @@ return [
         ],
         3 =>  [
             'name' => 'Decumulation',
-            //Ignacio: add rules here
+            //****Ignacio: add rules here
+            'rules' => [
+                'known_income_required' => 'sometimes|nullable|boolean',
+                'prefer_flexibility' => 'sometimes|nullable|boolean',
+                'what_age_annuity' => 'sometimes|nullable|numeric',
+                'proportion_of_total_funds' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.proportion_of_total_funds'))),
+                ],
+                'spouse_income_proportion' => 'sometimes|nullable|boolean',
+                'spouse_lump_sum_death' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.spouse_lump_sum_death'))),
+                ],
+                'maximise_lifetime' => 'sometimes|nullable|boolean',
+                'no_spouse' => 'sometimes|nullable|boolean',
+                'spouse_details' => 'sometimes|nullable|max:1024',
+                'tax_free_lump_sum_preference' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.tax_free_lump_sum_preference'))),
+                ],
+                'tax_free_lump_sum_value' => 'sometimes|nullable|numeric',
+                'lump_sum_death_benefits' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.lump_sum_death_benefits'))),
+                ],
+            ]
         ],
 
     ]
