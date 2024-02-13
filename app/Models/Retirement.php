@@ -22,7 +22,6 @@ class Retirement extends Model
             1 => [
                 'income_options' => config('enums.pension_objectives.income_option'),
                 'lifetime_allowance_protection' => config('enums.pension_objectives.lifetime_allowance_protection'),
-                //****Ignacio: Define 1, 2, 3 here and load the right enums for each tab
             ],
             2 => [
                 'income_options' => config('enums.pension_objectives.income_option'),
@@ -39,15 +38,6 @@ class Retirement extends Model
                 'spouse_lump_sum_death' => config('enums.pension_objectives.spouse_lump_sum_death'),
                 'tax_free_lump_sum_preference' => config('enums.pension_objectives.tax_free_lump_sum_preference'),
                 'lump_sum_death_benefits' => config('enums.pension_objectives.lump_sum_death_benefits'),
-                //'retirement_vs_legacy' => config('enums.pension_objectives.retirement_vs_legacy'),
-            ],
-            '1.1' => [
-                'titles' => config('enums.client.title'),
-                'genders' => config('enums.client.gender'),
-                'marital_statuses' => config('enums.client.marital_status'),
-                'nationalities' => config('enums.client.nationality') ,
-                'country_of_domiciles' => config('enums.client.iso_2'),
-                'country_of_residences' => config('enums.client.iso_2')
             ],
             default => [
 
