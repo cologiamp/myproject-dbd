@@ -174,6 +174,11 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
+    public function investment_recommendation():HasMany
+    {
+        return $this->hasMany(InvestmentRecommendation::class);
+    }
+
 
     //Presenter
     public function presenter() : ClientPresenter

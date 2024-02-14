@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\BaseModels\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Presenters\ExpenditurePresenter;
+use App\Models\Presenters\InvestmentRecommendationPresenter;
 
 class Expenditure extends Model
 {
@@ -25,8 +25,8 @@ class Expenditure extends Model
     }
 
     //Presenter
-    public function presenter() : ExpenditurePresenter
+    public function presenter() : InvestmentRecommendationPresenter
     {
-        return new ExpenditurePresenter($this);
+        return new InvestmentRecommendationPresenter($this);
     }
 }

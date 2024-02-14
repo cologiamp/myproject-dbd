@@ -650,5 +650,36 @@ return [
                 ]
             ],
         ]
+    ],
+    'investmentrecommendation' => [
+        //INVESTMENTRECOMMENDATION:// you need to make one of these for every step
+        1 => [
+            'name' => 'Investment Recommendations',
+            'sections' => [
+                1 => [
+                    'name' => 'Basic Details',
+                    'fields' => [
+                        'investment_recommendations.is_ethical_investor',
+                        'investment_recommendations.risk_profile',
+                        'investment_recommendations.previously_invested_amount',
+                        'investment_recommendations.fee_basis',
+                        'investment_recommendations.fee_basis_discount'
+                    ],
+                    'rules' => [
+                        'is_ethical_investor' => 'sometimes|nullable|boolean',
+                        'risk_profile' => 'sometimes|nullable',
+                        'previously_invested_amount' => 'sometimes|nullable|string',
+                        'fee_basis' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.fee_basis'))),
+                        ],
+                        'fee_basis_discount' => 'sometimes|nullable|string'
+                    ]
+                ]
+            ],
+        ]
     ]
 ];

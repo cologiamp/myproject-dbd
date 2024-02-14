@@ -1551,5 +1551,17 @@ return [
             0 => 'Repayment',
             1 => 'Interest Only'
         ]
+    ],
+    'investment_recommendation' => [
+        'fee_basis' => [
+            0 => 'Standard',
+            1 => 'Discounted',
+            2 => 'Friends and Family',
+            3 => 'Staff',
+            4 => 'JP Morgan Staff Terms',
+            5 => 'Standard Chartered Staff Terms',
+            6 => 'Saga Terms',
+            7 => 'Staff'
+        ]
     ]
 ];
