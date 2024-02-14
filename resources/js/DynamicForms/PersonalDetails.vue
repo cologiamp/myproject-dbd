@@ -9,7 +9,6 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import {XCircleIcon} from "@heroicons/vue/24/solid/index.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
