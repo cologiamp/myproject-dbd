@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\InvestmentRecommendation;
 use App\Repositories\InvestmentRecommendationRepository;
 use Illuminate\Http\Request;
@@ -16,20 +17,20 @@ class InvestmentRecommendationController extends Controller
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
     }
 
-    public function show(InvestmentRecommendation $investmentRecommendation, Request $request)
+    public function show(Client $client, Request $request)
     {
-        $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
+        $this->investmentRecommendationRepository->setClient($client);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
         $tabs = $this->investmentRecommendationRepository->loadInvestmentRecommendationTabs($step,$section);
 
         return Inertia::render('FactFind', [
             'title' => 'Fact Find',
-//            'breadcrumbs' => $this->investmentRecommendationRepository->loadBreadcrumbs(),
+            'breadcrumbs' => $this->investmentRecommendationRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-//            'progress' => $this->investmentRecommendationRepository->calculateFactFindElementProgress($step)
+            'progress' => $this->investmentRecommendationRepository->calculateInvestmentRecommendationElementProgress($step)
         ]);
     }
 }

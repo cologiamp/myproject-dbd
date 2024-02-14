@@ -7,6 +7,7 @@ use App\Concerns\ParsesIoClientData;
 use App\Exceptions\ClientNotFoundException;
 use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
+use App\Models\Client;
 use App\Models\InvestmentRecommendation;
 use App\Models\EmploymentDetail;
 use App\Services\InvestmentRecommendationSectionDataService;
@@ -24,10 +25,18 @@ use Symfony\Component\Console\Input\Input;
 class InvestmentRecommendationRepository extends BaseRepository
 {
     use ParsesIoClientData;
+
+    protected Client $client;
     protected InvestmentRecommendation $investmentRecommendation;
-    public function __construct(InvestmentRecommendation $investmentRecommendation)
+    public function __construct(Client $client, InvestmentRecommendation $investmentRecommendation)
     {
+        $this->client = $client;
         $this->investmentRecommendation = $investmentRecommendation;
+    }
+
+    public function setClient(Client $client): void
+    {
+        $this->client = $client;
     }
     public function setInvestmentRecommendation(InvestmentRecommendation $investmentRecommendation): void
     {
@@ -192,39 +201,39 @@ class InvestmentRecommendationRepository extends BaseRepository
      * @param $key
      * @return int
      */
-//    public function calculateInvestmentRecommendationElementProgress(int $step):int
-//    {
-//        $progress = collect(config('navigation_structures.investmentrecommendation.' . $step . '.sections'))->map(function ($section){
-//            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
-//            {
-//                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-//                    $nestedFieldArrays = ['dependents', 'addresses'];
-//
-//                    // process field names for nested field arrays
-//                    if(in_array($key, $nestedFieldArrays)){
-//                        $value = $value->map(function ($val) {
-//                            $keyName = explode('.',$val)[1];
-//                            return $keyName;
-//                        });
-//                    }
-//
-//                    return match ($key) {
-//                        'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
+    public function calculateInvestmentRecommendationElementProgress(int $step):int
+    {
+        $progress = collect(config('navigation_structures.investmentrecommendation.' . $step . '.sections'))->map(function ($section){
+            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
+            {
+                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
+                    $nestedFieldArrays = ['dependents', 'addresses'];
+
+                    // process field names for nested field arrays
+                    if(in_array($key, $nestedFieldArrays)){
+                        $value = $value->map(function ($val) {
+                            $keyName = explode('.',$val)[1];
+                            return $keyName;
+                        });
+                    }
+
+                    return match ($key) {
+                        'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
 //                        'addresses' => $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
 //                        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first() ? Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray() : $this->setEmptyFields($value),
 //                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
 //                        'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get() ? EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get()->toArray() : $this->setEmptyFields($value),
-////                        '//todo write join query here for other places data ends up'.
-//                        default => collect([]),
-//                    };
-//                });
-//            }
-//            else return collect([]);
-//        })->flatten();
-//
-//        if ($progress->count() === 0) return 0;
-//        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
-//    }
+//                        '//todo write join query here for other places data ends up'.
+                        default => collect([]),
+                    };
+                });
+            }
+            else return collect([]);
+        })->flatten();
+
+        if ($progress->count() === 0) return 0;
+        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
+    }
 
 //    public function setEmptyFields(Collection $value)
 //    {
