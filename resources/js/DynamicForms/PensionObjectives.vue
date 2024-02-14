@@ -43,17 +43,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 });
 
 function changeCheck() {
-
-    //alert(stepForm.lifetime_allowance_protection);
-
-    //set all is_primary to false/uncheck
-    /*
-    Object.entries(stepForm.lifetime_allowance_protection).forEach(owner => {
-        const [key, value] = owner;
-        //alert([key, value]);
-        //value['lifetime_allowance_protection'] = false;
-    });
-    */
     autosaveT(stepForm,props.formData.submit_url)
 }
 </script>
