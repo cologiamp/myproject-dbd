@@ -10,6 +10,7 @@ import {onMounted, ref, watch} from "vue";
 import {PlusCircleIcon, XCircleIcon} from "@heroicons/vue/24/solid/index.js";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
+import { DateTime } from "luxon";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -37,10 +38,22 @@ const props = defineProps({
 });
 
 let dateRef = ref();
-function saveDate(value){
+function saveDate(index,value){
+    console.log(index);
+    console.log(value);
     dateRef.value = value;
-    stepForm.addresses[0].date_from = value;
+    stepForm.addresses[index].date_from = value;
     autosaveT(stepForm,props.formData.submit_url)
+
+
+    let now = DateTime.now().minus({years: 1});
+    let then = DateTime.fromISO(value)
+    if(then > now)
+    {
+        //less than one year since date
+        addAddress();
+
+    }
 }
 
 function addAddress() {
@@ -166,7 +179,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="date_from" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date From </label>
                     <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                        <VueDatePicker text-input @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="date_from" id="date_from"  placeholder="dd/mm/yyyy"/>
+                        <VueDatePicker text-input @update:model-value="saveDate(index)" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="date_from" id="date_from"  placeholder="dd/mm/yyyy"/>
                     </div>
                  </div>
             </div>
