@@ -115,6 +115,14 @@ class PensionObjectivesDataService
 
     private function saveTab3(array $validatedData):void
     {
+        if(array_key_exists('tax_free_lump_sum_value', $validatedData))
+        {
+            if($validatedData['tax_free_lump_sum_value'] != null)
+            {
+                $validatedData['tax_free_lump_sum_value'] = $this->currencyStringToInt($validatedData['tax_free_lump_sum_value']);
+            }
+        }
+
         try{
             $this->retirementRepository->update($validatedData);
         }

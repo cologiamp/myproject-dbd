@@ -3,10 +3,10 @@
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
-import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
+import {changeToCurrency} from "@/currency.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -30,9 +30,6 @@ const props = defineProps({
     errors: Object,
 });
 
-
-
-
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     known_income_required: props.formData.model.known_income_required,
     prefer_flexibility: props.formData.model.prefer_flexibility,
@@ -48,7 +45,11 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     lump_sum_death_benefits: props.formData.model.lump_sum_death_benefits,
 })
 
-
+function formatAmount(e) {
+    stepForm.tax_free_lump_sum_value = '';
+    stepForm.tax_free_lump_sum_value = changeToCurrency(e.target.value);
+    autosaveT(stepForm,props.formData.submit_url)
+}
 </script>
 
 <template>
@@ -221,15 +222,14 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.tax_free_lump_sum_preference">{{ stepForm.errors.tax_free_lump_sum_preference }}</p>
                 </div>
 
-                <div class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                        <label for="tax_free_lump_sum_value" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> If so, please state how much (£)</label>
-                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.tax_free_lump_sum_value" type="currency" name="tax_free_lump_sum_value" id="tax_free_lump_sum_value" min="0" max="100" step="1" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="1" />
-                        </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="tax_free_lump_sum_value" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> If so, please state how much </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="formatAmount($event)" type="currency" name="tax_free_lump_sum_value" id="tax_free_lump_sum_value"
+                               :value="stepForm.tax_free_lump_sum_value"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                 </div>
-
 
             </div>
 

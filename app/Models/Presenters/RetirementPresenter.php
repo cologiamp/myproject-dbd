@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\Depends;
 
 class RetirementPresenter extends BasePresenter
 {
-
+    use FormatsCurrency;
     public function formatForPOStep($step):array
     {
         return match ($step) {
@@ -50,7 +50,7 @@ class RetirementPresenter extends BasePresenter
                 'no_spouse' => (boolean)$this->model->no_spouse,
                 'spouse_details' => $this->model->spouse_details,
                 'tax_free_lump_sum_preference' => $this->model->tax_free_lump_sum_preference,
-                'tax_free_lump_sum_value' => $this->model->tax_free_lump_sum_value,
+                'tax_free_lump_sum_value' => $this->model->tax_free_lump_sum_value != null ? $this->currencyIntToString($this->model->tax_free_lump_sum_value): null,
                 'lump_sum_death_benefits' => $this->model->lump_sum_death_benefits ?? null,
             ],
             default => [

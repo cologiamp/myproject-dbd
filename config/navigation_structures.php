@@ -632,9 +632,7 @@ return [
                     Rule::in(array_keys(config('enums.pension_objectives.income_option'))),
                 ],
                 'notes' => 'sometimes|nullable|max:1024',
-                'lifetime_allowance_protection' => [
-
-                ],
+                'lifetime_allowance_protection' => 'sometimes|nullable|array',
             ]
         ],
         2 =>  [
@@ -725,7 +723,7 @@ return [
                     'integer',
                     Rule::in(array_keys(config('enums.pension_objectives.tax_free_lump_sum_preference'))),
                 ],
-                'tax_free_lump_sum_value' => 'sometimes|nullable|numeric',
+                'tax_free_lump_sum_value' => 'sometimes|nullable|string',
                 'lump_sum_death_benefits' => [
                     'sometimes',
                     'nullable',
