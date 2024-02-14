@@ -181,7 +181,8 @@ class FactFindSectionDataService
 
             $contactDetails = array(
                 'phone_number' => $validatedData['phone_number'],
-                'email_address' => $validatedData['email_address']
+                'email_address' => $validatedData['email_address'],
+                'mobile_number' => $validatedData['mobile_number']
             );
 
             $this->cr->updateFromValidated($contactDetails);

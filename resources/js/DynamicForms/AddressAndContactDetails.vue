@@ -26,6 +26,7 @@ const props = defineProps({
             model: {
                 address: null,
                 phone_number: null,
+                mobile_number: null,
                 email_address: null
             },
             submit_method: 'post',
@@ -72,6 +73,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     client_id: props.formData.model.client_id,
     addresses: props.formData.model.addresses,
     phone_number: props.formData.model.phone_number,
+    mobile_number: props.formData.model.mobile_number,
     email_address: props.formData.model.email_address
 })
 
@@ -82,9 +84,31 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     <form-errors :errors="usePage().props.errors"/>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
+            <label class="font-bold mt-3" >Contact Details</label>
+            <div  class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mt-2">
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="phone_number" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Phone Number </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.phone_number" type="text" name="phone_number" id="phone_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Phone Number"/>
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="mobile_number" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Mobile Number </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.mobile_number" type="text" name="mobile_number" id="mobile_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Mobile Number"/>
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="email_address" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Email Address </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.email_address" type="text" name="email_address" id="email_address"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Email Address"/>
+                    </div>
+                </div>
+            </div>
+
             <div v-for="(address, index) in stepForm.addresses" class="grid pt-4 gap-2 md:grid md:grid-cols-6  md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
-                    <label class="font-bold" v-if="index === 0">Primary Address</label>
+                    <label class="font-bold mt-2" v-if="index === 0">Primary Address</label>
                     <label class="font-bold" v-else>Address {{ index + 1 }}</label>
                     <button type="button" v-if="index !== 0" @click="removeAddress(index)"
                             class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -92,7 +116,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </button>
                 </div>
 
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                <div class="md:mt-0 md:pr-2 md:col-span-3" >
                     <label for="line_1" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Address Line 1 </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="address.address_line_1" type="text" name="address_line_1" id="address_line_1"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Address Line 1"/>
@@ -154,21 +178,6 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                          focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     <PlusCircleIcon class="w-6 h-6" />Add Address
                 </button>
-            </div>
-
-            <div  class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mt-5">
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="phone_number" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Phone Number </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.phone_number" type="text" name="phone_number" id="phone_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Phone Number"/>
-                    </div>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="email_address" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Email Address </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.email_address" type="text" name="email_address" id="email_address"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Email Address"/>
-                    </div>
-                </div>
             </div>
         </div>
     </dynamic-form-wrapper>

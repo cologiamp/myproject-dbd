@@ -133,6 +133,7 @@ return [
                                 'addresses.date_from'
                             ],
                             "clients.phone_number",
+                            "clients.mobile_number",
                             "clients.email_address"
                         ],
                         'rules' => [
@@ -159,6 +160,7 @@ return [
                             ],
                             'addresses.*.date_from' => 'sometimes|nullable|date',
                             'phone_number' => 'sometimes|nullable|max:20',
+                            'mobile_number' => 'sometimes|nullable|max:20',
                             'email_address' => 'sometimes|nullable|max:120'
                         ],
                         'messages' => [

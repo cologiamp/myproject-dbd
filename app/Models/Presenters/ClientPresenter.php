@@ -73,6 +73,7 @@ class ClientPresenter extends BasePresenter
                         'date_from' => $address['date_from']
                     ];})),
                     'phone_number' => $this->model->phone_number,
+                    'mobile_number' => $this->model->mobile_number,
                     'email_address' => $this->model->email_address
             ],
             '1.4' => [
