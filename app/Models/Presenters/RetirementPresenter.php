@@ -19,7 +19,7 @@ class RetirementPresenter extends BasePresenter
                 'intended_benefits_drawn' => Carbon::parse($this->model->intended_benefits_drawn_at)->diffInYears(Carbon::now()),
                 'income_option' => $this->model->income_option,
                 'notes' => $this->model->notes,
-                'lifetime_allowance_protection' => $this->model->lifetime_allowance_protection,
+                'lifetime_allowance_protection' => json_decode($this->model->lifetime_allowance_protection),
             ],
             2 => [
                 'additional_contributions' => (boolean)$this->model->additional_contributions,
