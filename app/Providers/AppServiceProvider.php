@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 }
                 return $bags;
             }
+
             return (object)[];
         });
     }

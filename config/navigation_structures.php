@@ -23,6 +23,7 @@ return [
                         'fields' => [
                             "clients.date_of_birth",
                             "clients.first_name",
+                            "clients.middle_name",
                             "clients.last_name",
                             "clients.salutation",
                             'clients.date_of_birth',
@@ -34,10 +35,12 @@ return [
                             'clients.country_of_residence',
                             'clients.valid_will',
                             'clients.will_up_to_date',
-                            'clients.poa_granted'
+                            'clients.poa_granted',
+                            'clients.poa_name'
                         ],
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
+                            'middle_name' => 'sometimes|nullable|max:127',
                             'last_name' => 'sometimes|max:127',
                             'salutation' => 'sometimes|max:127',
                             'title' => [
@@ -69,7 +72,11 @@ return [
                                 'integer',
                                 Rule::in(array_keys((config('enums.client.nationality'))))
                             ],
-                            'ni_number' => 'sometimes|nullable|max:9',
+                            'ni_number' => [
+                                'sometimes',
+                                'nullable',
+                                'regex:/^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}$/i'
+                            ],
                             'country_of_domicile' => [
                                 'sometimes',
                                 'nullable',
@@ -80,7 +87,11 @@ return [
                             ],
                             'valid_will' => 'sometimes|nullable|boolean',
                             'will_up_to_date' => 'sometimes|nullable|boolean',
-                            'poa_granted' => 'sometimes|nullable|boolean'
+                            'poa_granted' => 'sometimes|nullable|boolean',
+                            'poa_name' => 'sometimes|nullable|max:127'
+                        ],
+                        'messages' => [
+                            'ni_number.regex' => 'The entered National Insurance Number has an invalid format',
                         ]
                     ],
                     2 => [
