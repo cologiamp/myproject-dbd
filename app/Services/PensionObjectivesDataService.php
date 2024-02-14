@@ -93,6 +93,18 @@ class PensionObjectivesDataService
             unset($validatedData['intended_benefits_drawn']);
         }
 
+        //dd($validatedData['lifetime_allowance_protection'], json_encode($validatedData['lifetime_allowance_protection']));
+
+        if(array_key_exists('lifetime_allowance_protection',$validatedData))
+        {
+            if($validatedData['lifetime_allowance_protection'] != null)
+            {
+                $validatedData['lifetime_allowance_protection'] = json_encode($validatedData['lifetime_allowance_protection']);
+            }
+        }
+
+        //dd($object);
+
         try{
             $this->retirementRepository->update($validatedData);
         }

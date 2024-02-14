@@ -3,11 +3,11 @@
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
-import vSelect from 'vue-select'
+import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -42,9 +42,18 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     lifetime_allowance_protection: props.formData.model.lifetime_allowance_protection,
 });
 
-function changeCheck(index) {
+function changeCheck() {
 
+    //alert(stepForm.lifetime_allowance_protection);
 
+    //set all is_primary to false/uncheck
+    /*
+    Object.entries(stepForm.lifetime_allowance_protection).forEach(owner => {
+        const [key, value] = owner;
+        //alert([key, value]);
+        //value['lifetime_allowance_protection'] = false;
+    });
+    */
     autosaveT(stepForm,props.formData.submit_url)
 }
 </script>
@@ -97,12 +106,12 @@ function changeCheck(index) {
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Which HMRC Lifetime Allowance protection(s) do you hold?</label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <vSelect
-                            @input="changeCheck(index)"
+                        <v-select
                             class="block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
                             multiple v-model="stepForm.lifetime_allowance_protection"
                             :options="formData.enums.lifetime_allowance_protection"
-                            :value=index
+                            @option:selected="changeCheck()"
+                            @option:deselected="changeCheck()"
                         />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.lifetime_allowance_protection">{{ stepForm.errors.lifetime_allowance_protection }}</p>
