@@ -204,6 +204,9 @@ class FactFindSectionDataService
                     if ($dependent['born_at']) {
                         $dependent['born_at'] = Carbon::parse($dependent['born_at']);
                     }
+                    if ($dependent['financially_dependent_until']) {
+                        $dependent['financially_dependent_until'] = Carbon::parse($dependent['financially_dependent_until']);
+                    }
                     if($dependent['is_living_with_clients'] == null)
                     {
                         $dependent['is_living_with_clients'] = true;

@@ -97,13 +97,14 @@ class DependentRepository extends BaseRepository
                         'name' => $dependent['name'],
                         'born_at' => $dependent['born_at'],
                         'financial_dependent' => $dependent['financial_dependent'],
+                        'financially_dependent_until' => $dependent['financially_dependent_until'],
                         'is_living_with_clients' => $dependent['is_living_with_clients']
                     );
-
+                    ray($formatDependentData)->red();
                     $model->update($formatDependentData);
 
                 } catch (\Exception $e) {
-                    DB::rollback();
+                    dd($e);
                     throw new \Exception($e);
                 }
 
@@ -131,6 +132,7 @@ class DependentRepository extends BaseRepository
             'name' => $dependent['name'],
             'born_at' => $dependent['born_at'],
             'financial_dependent' => $dependent['financial_dependent'],
+            'financially_dependent_until' => $dependent['financially_dependent_until'],
             'is_living_with_clients' => $dependent['is_living_with_clients']
         );
         try{

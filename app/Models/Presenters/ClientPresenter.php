@@ -83,6 +83,7 @@ class ClientPresenter extends BasePresenter
                             'relationship_type' => $dependent->pivot->relationship_type,
                             'born_at' => $dependent->born_at,
                             'financial_dependent' => $dependent->financial_dependent,
+                            'financially_dependent_until' => $dependent->financially_dependent_until,
                             'is_living_with_clients' => $dependent->is_living_with_clients
                     ];
                 }))
