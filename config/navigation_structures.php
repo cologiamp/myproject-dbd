@@ -678,6 +678,33 @@ return [
                         ],
                         'fee_basis_discount' => 'sometimes|nullable|string'
                     ]
+                ],
+                2 => [
+                    'name' => 'Income and Growth Report',
+                    'fields' => [
+
+                    ],
+                    'rules' => [
+
+                    ]
+                ],
+                3 => [
+                    'name' => 'Tax Consequences',
+                    'fields' => [
+
+                    ],
+                    'rules' => [
+
+                    ]
+                ],
+                4 => [
+                    'name' => 'Investment Recommendations',
+                    'fields' => [
+
+                    ],
+                    'rules' => [
+
+                    ]
                 ]
             ],
         ]
