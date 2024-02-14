@@ -28,6 +28,7 @@ const props = defineProps({
                     name: null,
                     relationship_type: null,
                     born_at: null,
+                    financially_dependent_until: null,
                     financial_dependent: null,
                     is_living_with_clients: null
                 }]
@@ -43,8 +44,8 @@ let dateRef = ref();
 
 
 
-function saveDate(index, value) {
-    stepForm.dependents[index].born_at = value;
+function saveDate(index, value, column) {
+    stepForm.dependents[index][column] = value;
     autosaveT(stepForm,props.formData.submit_url);
 }
 
@@ -131,7 +132,7 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                     <div
                         class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
                         <!-- <VueDatePicker text-input @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="born_at" id="born_at"  placeholder="dd/mm/yyyy"/> -->
-                        <VueDatePicker text-input @closed="saveDate(index, dependent.born_at)"
+                        <VueDatePicker text-input @closed="saveDate(index, dependent.born_at,'born_at')"
                             class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="dependent.born_at"
                             name="born_at" id="born_at" placeholder="dd/mm/yyyy" />
                     </div>
@@ -156,6 +157,16 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.financial_dependent">{{
                         stepForm.errors.financial_dependent }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="dependent.financial_dependent">
+                    <label for="financially_dependent_until"
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Financially dependent until? </label>
+                    <div
+                        class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                        <VueDatePicker text-input @closed="saveDate(index, dependent.financially_dependent_until,'financially_dependent_until')"
+                                       class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="dependent.financially_dependent_until"
+                                       name="financially_dependent_until" id="financially_dependent_until" placeholder="dd/mm/yyyy" />
+                    </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Lives with
