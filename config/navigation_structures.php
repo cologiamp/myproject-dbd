@@ -632,16 +632,106 @@ return [
                     Rule::in(array_keys(config('enums.pension_objectives.income_option'))),
                 ],
                 'notes' => 'sometimes|nullable|max:1024',
-                'lifetime_allowance_protection' => 'sometimes|nullable|max:1024',
+                'lifetime_allowance_protection' => 'sometimes|nullable|array',
             ]
         ],
         2 =>  [
             'name' => 'Accumulation',
-            //Ignacio: add rules here
+            'rules' => [
+                'additional_contributions' => 'sometimes|boolean',
+                'in_specie_transfers' => 'sometimes|boolean',
+                'if_experience_self_select' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_self_select'))),
+                ],
+                'if_experience_lifestyle' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_lifestyle'))),
+                ],
+                'if_experience_advisory' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_advisory'))),
+                ],
+                'if_experience_discretionary' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.if_experience_discretionary'))),
+                ],
+                'is_explained' => 'sometimes|nullable|boolean',
+                'preferred_option' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.preferred_option'))),
+                ],
+                'preferred_explanation' => 'sometimes|nullable|max:1024',
+                'wide_range_of_assets' => 'sometimes|nullable|boolean',
+                'include_exclude_specifics' => 'sometimes|nullable|max:1024',
+                'require_flexibility' => 'sometimes|nullable|boolean',
+                'retirement_vs_legacy' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.retirement_vs_legacy'))),
+                ],
+                'retirement_vs_legacy_specifics' => 'sometimes|nullable|max:1024',
+                'dependents_suffer' => 'sometimes|nullable|max:128',
+                'iht_concerns' => 'sometimes|nullable|boolean',
+            ]
         ],
         3 =>  [
             'name' => 'Decumulation',
-            //Ignacio: add rules here
+            'rules' => [
+                'known_income_required' => 'sometimes|nullable|boolean',
+                'prefer_flexibility' => 'sometimes|nullable|boolean',
+                'what_age_annuity' => 'sometimes|nullable|numeric',
+                'proportion_of_total_funds' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.proportion_of_total_funds'))),
+                ],
+                'spouse_income_proportion' => 'sometimes|nullable|boolean',
+                'spouse_lump_sum_death' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.spouse_lump_sum_death'))),
+                ],
+                'maximise_lifetime' => 'sometimes|nullable|boolean',
+                'no_spouse' => 'sometimes|nullable|boolean',
+                'spouse_details' => 'sometimes|nullable|max:1024',
+                'tax_free_lump_sum_preference' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.tax_free_lump_sum_preference'))),
+                ],
+                'tax_free_lump_sum_value' => 'sometimes|nullable|string',
+                'lump_sum_death_benefits' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.pension_objectives.lump_sum_death_benefits'))),
+                ],
+            ]
         ],
 
     ]

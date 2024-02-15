@@ -73,6 +73,7 @@ class PensionObjectivesDataService
     //These methods will PARSE the data before passing it to the REPOSITORY to save in the database
     private function saveTab1(array $validatedData):void
     {
+
         if(array_key_exists('intended_retirement',$validatedData))
         {
             if($validatedData['intended_retirement'] != null)
@@ -81,29 +82,61 @@ class PensionObjectivesDataService
             }
             unset($validatedData['intended_retirement']);
 
-
-            try{
-                $this->retirementRepository->update($validatedData);
-            }
-            catch(Throwable $e){
-                Log::warning($e);
-                dd($e);
-            }
-
         }
 
+        if(array_key_exists('intended_benefits_drawn',$validatedData))
+        {
+            if($validatedData['intended_benefits_drawn'] != null)
+            {
+                $validatedData['intended_benefits_drawn_at'] = Carbon::now()->addYears($validatedData['intended_benefits_drawn'] + 1)->subDay(); //Saving +1 because of the rounding down that getDiffInYears does
+            }
+            unset($validatedData['intended_benefits_drawn']);
+        }
 
+        if(array_key_exists('lifetime_allowance_protection',$validatedData))
+        {
+            if($validatedData['lifetime_allowance_protection'] != null)
+            {
+                $validatedData['lifetime_allowance_protection'] = json_encode($validatedData['lifetime_allowance_protection']);
+            }
+        }
 
-        //Ignacio: write me
+        try{
+            $this->retirementRepository->update($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
+
     }
 
     private function saveTab2(array $validatedData):void
     {
-        //Ignacio: write me
+        try{
+            $this->retirementRepository->update($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+        }
     }
+
     private function saveTab3(array $validatedData):void
     {
-        //Ignacio: write me
+        if(array_key_exists('tax_free_lump_sum_value', $validatedData))
+        {
+            if($validatedData['tax_free_lump_sum_value'] != null)
+            {
+                $validatedData['tax_free_lump_sum_value'] = $this->currencyStringToInt($validatedData['tax_free_lump_sum_value']);
+            }
+        }
+
+        try{
+            $this->retirementRepository->update($validatedData);
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+        }
     }
 
 

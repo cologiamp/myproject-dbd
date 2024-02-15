@@ -207,7 +207,7 @@ class ClientRepository extends BaseRepository
         return [
             'name' => $config['name'],
             'renderable' => Str::studly($config['name']),
-            'dynamicData' => PensionObjectivesDataService::get($this->client->retirement,$currentTab),
+            'dynamicData' => PensionObjectivesDataService::get($this->client->retirement, $currentTab),
         ];
     }
 
@@ -237,13 +237,12 @@ class ClientRepository extends BaseRepository
      */
     public function loadPensionObjectivesTabs(int $currentStep = 1):array
     {
-
-        return collect(config('navigation_structures.pensionobjectives'))->map(function ($value,$key) use ($currentStep){
+        return collect(config('navigation_structures.pensionobjectives'))->map(function ($value, $key) use ($currentStep){
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
                 'progress' => 0,
-                'tabcontent' => $this->loadPensionObjectivesTabContent($value,$key)
+                'tabcontent' => $this->loadPensionObjectivesTabContent($value, $key)
             ];
         })->toArray();
     }

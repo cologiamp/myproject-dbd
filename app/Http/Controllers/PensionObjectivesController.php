@@ -33,7 +33,6 @@ class PensionObjectivesController extends Controller
 
         $step = $request->step ?? 1;
         $tabs = $this->clientRepository->loadPensionObjectivesTabs($step);
-
         return Inertia::render('PensionObjectives', [
             'title' => 'Pension Objectives',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
