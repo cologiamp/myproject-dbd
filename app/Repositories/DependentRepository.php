@@ -100,7 +100,6 @@ class DependentRepository extends BaseRepository
                         'financially_dependent_until' => $dependent['financially_dependent_until'],
                         'is_living_with_clients' => $dependent['is_living_with_clients']
                     );
-                    ray($formatDependentData)->red();
                     $model->update($formatDependentData);
 
                 } catch (\Exception $e) {

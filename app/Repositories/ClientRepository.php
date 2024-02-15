@@ -107,7 +107,6 @@ class ClientRepository extends BaseRepository
             $this->client->addresses()->attach($addr->fresh());
             return;
         }
-        ray($addr)->red();
         $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
     }
 
