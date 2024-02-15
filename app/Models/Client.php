@@ -285,7 +285,8 @@ class Client extends Model
                     'nationality',
                     'salutation',
                     'email_address',
-                    'phone_number'
+                    'phone_number',
+                    'mobile_number',
                 ]
             )->first()->toArray();
 

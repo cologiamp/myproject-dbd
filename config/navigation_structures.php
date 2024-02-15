@@ -113,7 +113,7 @@ return [
                             'medical_conditions' => 'sometimes|nullable|max:1024',
                             'smoker' => 'sometimes|nullable|integer',
                             'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
-                        ],
+                        ]
                         'messages' => []
                     ],
                     3 => [
@@ -130,6 +130,7 @@ return [
                                 'addresses.date_from'
                             ],
                             "clients.phone_number",
+                            "clients.mobile_number",
                             "clients.email_address"
                         ],
                         'rules' => [
@@ -156,6 +157,7 @@ return [
                             ],
                             'addresses.*.date_from' => 'sometimes|nullable|date',
                             'phone_number' => 'sometimes|nullable|max:20',
+                            'mobile_number' => 'sometimes|nullable|max:20',
                             'email_address' => 'sometimes|nullable|max:120'
                         ],
                         'messages' => []
@@ -167,6 +169,7 @@ return [
                                 'dependents.name',
                                 'dependents.relationship_type',
                                 'dependents.born_at',
+                                'dependents.financially_dependent_until',
                                 'dependents.financial_dependent',
                                 'dependents.is_living_with_clients'
                             ]
@@ -181,6 +184,7 @@ return [
                                 Rule::in(array_keys((config('enums.dependent.relationship_type'))))
                             ],
                             'dependents.*.born_at' => 'sometimes|nullable|date',
+                            'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
                             'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
                             'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
                         ],
@@ -260,6 +264,7 @@ return [
                             'incomes.*.starts_at' => 'sometimes|nullable|date',
                             'incomes.*.belongs_to' => 'sometimes|nullable|integer',
                             'incomes.*.record_exists' => 'sometimes|nullable|boolean',
+
                             'incomes.*.is_primary' => 'sometimes|nullable|boolean',
                         ],
                         'messages' => []
@@ -549,7 +554,7 @@ return [
                         'investments.*.valuation_at' => 'sometimes|nullable|date',
                         'investments.*.start_date' => 'sometimes|nullable|date',
                         'investments.*.maturity_date' => 'sometimes|nullable|date',
-                    ],
+                    ]
                     'messages' => []
                 ],
                 4=> [

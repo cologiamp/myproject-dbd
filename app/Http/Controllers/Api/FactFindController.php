@@ -42,6 +42,7 @@ class FactFindController extends Controller
             $ffsds->validated($step, $section, $request)
         );
 
+        ray('test');
         return response()->json(['client' => $client, 'step' => $step, 'section' => $section]);
     }
 }

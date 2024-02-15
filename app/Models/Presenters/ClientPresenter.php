@@ -73,6 +73,7 @@ class ClientPresenter extends BasePresenter
                         'date_from' => $address['date_from']
                     ];})),
                     'phone_number' => $this->model->phone_number,
+                    'mobile_number' => $this->model->mobile_number,
                     'email_address' => $this->model->email_address
             ],
             '1.4' => [
@@ -83,6 +84,7 @@ class ClientPresenter extends BasePresenter
                             'relationship_type' => $dependent->pivot->relationship_type,
                             'born_at' => $dependent->born_at,
                             'financial_dependent' => $dependent->financial_dependent,
+                            'financially_dependent_until' => $dependent->financially_dependent_until,
                             'is_living_with_clients' => $dependent->is_living_with_clients
                     ];
                 }))

@@ -166,9 +166,8 @@ class FactFindSectionDataService
                     collect($validatedData['addresses'])->pluck('address_id')->filter())->pluck('id')
                 );
 
-
                 collect($validatedData['addresses'])->each(function ($item) {
-                    if ($item['date_from'] && $item['date_from'] != null) {
+                    if (array_key_exists('date_from',$item) && $item['date_from'] && $item['date_from'] != null) {
                         $item['date_from'] = Carbon::parse($item['date_from']);
                     }
                     if($item['country'] && $item['country'] != null)
@@ -181,7 +180,8 @@ class FactFindSectionDataService
 
             $contactDetails = array(
                 'phone_number' => $validatedData['phone_number'],
-                'email_address' => $validatedData['email_address']
+                'email_address' => $validatedData['email_address'],
+                'mobile_number' => $validatedData['mobile_number']
             );
 
             $this->cr->updateFromValidated($contactDetails);
@@ -203,6 +203,9 @@ class FactFindSectionDataService
                 $dependents = collect($validatedData['dependents'])->map(function ($dependent) {
                     if ($dependent['born_at']) {
                         $dependent['born_at'] = Carbon::parse($dependent['born_at']);
+                    }
+                    if ($dependent['financially_dependent_until']) {
+                        $dependent['financially_dependent_until'] = Carbon::parse($dependent['financially_dependent_until']);
                     }
                     if($dependent['is_living_with_clients'] == null)
                     {

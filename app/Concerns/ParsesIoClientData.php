@@ -85,6 +85,10 @@ trait ParsesIoClientData{
         {
             $client['phone_number'] = $cd->where('type','Telephone')->first()['value'];
         }
+        if($cd->where('type','Mobile')->first() != null)
+        {
+            $client['mobile_number'] = $cd->where('type','Mobile')->first()['value'];
+        }
         if($cd->where('type','Email')->first() != null)
         {
             $client['email_address'] = $cd->where('type','Email')->first()['value'];
