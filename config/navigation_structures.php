@@ -113,11 +113,8 @@ return [
                             'medical_conditions' => 'sometimes|nullable|max:1024',
                             'smoker' => 'sometimes|nullable|integer',
                             'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
-                        ],
-                        'messages' => [
-
                         ]
-
+                        'messages' => []
                     ],
                     3 => [
                         'name' => 'Address and Contact Details',
@@ -163,9 +160,7 @@ return [
                             'mobile_number' => 'sometimes|nullable|max:20',
                             'email_address' => 'sometimes|nullable|max:120'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ],
                     4 => [
                         'name' => 'Family',
@@ -193,9 +188,7 @@ return [
                             'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
                             'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ],
                     5 => [
                         'name' => 'Employment Details',
@@ -224,9 +217,7 @@ return [
                             'employment_details.*.start_at' => 'sometimes|nullable|date',
                             'employment_details.*.end_at' => 'sometimes|nullable|date'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ],
                 ],
             ],
@@ -243,12 +234,14 @@ return [
                             "incomes.expenses",
                             "incomes.frequency",
                             "incomes.ends_at",
+                            "incomes.starts_at",
                             "incomes.belongs_to",
                             "incomes.record_exists",
                             "incomes.is_primary"
                         ],
                         'rules' => [
                             'incomes' => 'sometimes|nullable|array',
+                            'total' => 'sometimes|nullable',
                             'incomes.*.income_id' => 'sometimes|nullable|integer',
                             'incomes.*.income_type' => [
                                 'sometimes',
@@ -268,13 +261,13 @@ return [
                                 Rule::in(array_keys((config('enums.incomes.frequency'))))
                             ],
                             'incomes.*.ends_at' => 'sometimes|nullable|date',
+                            'incomes.*.starts_at' => 'sometimes|nullable|date',
                             'incomes.*.belongs_to' => 'sometimes|nullable|integer',
                             'incomes.*.record_exists' => 'sometimes|nullable|boolean',
-                            'incomes.*.is_primary' => 'sometimes|nullable|boolean'
-                        ],
-                        'messages' => [
 
-                        ]
+                            'incomes.*.is_primary' => 'sometimes|nullable|boolean',
+                        ],
+                        'messages' => []
                     ],
                     2 => [
                         'name' => 'Basic Essential Expenditure',
@@ -315,9 +308,7 @@ return [
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ],
                     3 => [
                         'name' => 'Basic Quality Of Living Expenditure',
@@ -358,9 +349,7 @@ return [
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ],
                     4 => [
                         'name' => 'Non Essential Outgoings Expenditure',
@@ -401,9 +390,7 @@ return [
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ],
                     5 => [
                         'name' => 'Liability Expenditure',
@@ -444,9 +431,7 @@ return [
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ],
-                        'messages' => [
-
-                        ]
+                        'messages' => []
                     ]
                 ],
             ],
@@ -487,9 +472,7 @@ return [
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
                         'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
                     ],
-                    'messages' => [
-
-                    ]
+                    'messages' => []
                 ],
                 2 => [
                     'name' => 'Savings',
@@ -534,9 +517,7 @@ return [
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
                         'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
                     ],
-                    'messages' => [
-
-                    ]
+                    'messages' => []
                 ],
                 3 => [
                     'name' => 'Investments',
@@ -573,10 +554,8 @@ return [
                         'investments.*.valuation_at' => 'sometimes|nullable|date',
                         'investments.*.start_date' => 'sometimes|nullable|date',
                         'investments.*.maturity_date' => 'sometimes|nullable|date',
-                    ],
-                    'messages' => [
-
                     ]
+                    'messages' => []
                 ],
                 4=> [
                     'name' => 'Pensions',
@@ -628,9 +607,7 @@ return [
                             'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean'
                     ],
-                    'messages' => [
-
-                    ]
+                    'messages' => []
                 ],
                 5 => [
                     'name' => 'Share Save Schemes',
@@ -644,9 +621,7 @@ return [
                         'schemes.*.number_of_shares' => 'sometimes|nullable|integer',
                         'schemes.*.matures_at' => 'sometimes|nullable|date',
                     ],
-                    'messages' => [
-
-                    ]
+                    'messages' => []
                 ],
                 6 => [
                     'name' => 'New Lump Sum Capital',
@@ -660,9 +635,7 @@ return [
                         'capitals.*.retained_value' =>'sometimes|nullable|string',
                         'capitals.*.due_at' => 'sometimes|nullable|date',
                     ],
-                    'messages' => [
-
-                    ]
+                    'messages' => []
                 ]
             ],
         ],
@@ -708,9 +681,7 @@ return [
                         'liabilities.*.is_to_be_repaid' => 'sometimes|nullable|boolean',
                         'liabilities.*.repay_details' => 'sometimes|nullable|max:1024'
                     ],
-                    'messages' => [
-
-                    ]
+                    'messages' => []
                 ]
             ],
         ]

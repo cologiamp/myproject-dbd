@@ -89,7 +89,7 @@ function removeExpenditure(typeIndex, expIndex) {
             })
         });
     }
-    
+
     //remove expenditure from props array
     stepForm.expenditures[typeIndex].splice(expIndex, 1);
 
@@ -97,7 +97,7 @@ function removeExpenditure(typeIndex, expIndex) {
         autosaveT(stepForm,props.formData.submit_url);
       }
     ,500);
-    
+
 }
 
 const stepForm = useForm(`EditExpenditures${ props.sectionIndex }${ props.formData.model.client_id }`, {
@@ -117,7 +117,7 @@ function formatAmountOnload() {
                     if (expenditure['amount'] && expenditure['amount'] != null) {
                         expenditure['amount'] = changeToCurrency(expenditure['amount'].toString());
                     }
-                });   
+                });
             }
         });
     }
@@ -191,7 +191,7 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                 </div>
                 <div v-for="(expenditure, expIndex) in stepForm.expenditures[typeIndex]" class="grid gap-2 border-b-2 border-aaron-500 border-dashed pb-12 last-of-type:border-none last-of-type:border-b-0 last-of-type:pb-0 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
                     <div class="flex flex-row justify-end md:col-span-3 md:pr-2">
-                        
+
                     </div>
                     <div class="md:col-span-6 flex flex-row justify-between">
                         <label class="font-bold">{{ expenditureType }} {{ expIndex + 1 }}</label>
@@ -257,26 +257,22 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.known_end_date">{{ stepForm.errors.known_end_date }}</p>
                     </div>
                     <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
-                        <div v-if="expenditure.currently_active == false">
                             <label for="starts_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Start Date </label>
                             <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                                <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.starts_at, 'starts_at')" 
+                                <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.starts_at, 'starts_at')"
                                     class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.starts_at"
                                     name="starts_at" id="starts_at" placeholder="dd/mm/yyyy" :required="expenditure.currently_active == false"/>
                             </div>
                             <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.starts_at">{{ stepForm.errors.starts_at }}</p>
-                        </div>
                     </div>
                     <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
-                        <div v-if="expenditure.known_end_date == true">
-                            <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
-                            <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                                <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.ends_at, 'ends_at')"
-                                    class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
-                                    name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" :required="expenditure.known_end_date == true"/>
-                            </div>
-                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
+                        <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
+                        <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                            <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.ends_at, 'ends_at')"
+                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
+                                name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" :required="expenditure.known_end_date == true"/>
                         </div>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
                     </div>
                 </div>
                 <button type="button" @click="addExpenditure(typeIndex)" v-if="stepForm.expenditures[typeIndex]"

@@ -1355,16 +1355,28 @@ return [
             3 => 'FourWeekly',
             4 => 'Quarterly',
             5 => 'HalfYearly',
-            6 => 'Annually'
+            6 => 'Annually',
+            7 => 'OneOff'
         ],
         'frequency_public' => [
             0 => 'Monthly',
             1 => 'Weekly',
             2 => 'Once every 2 weeks',
-            3 => 'Every 4 months',
+            3 => 'Every 4 weeks',
             4 => 'Quarterly',
             5 => 'Every 6 months',
-            6 => 'Annually'
+            6 => 'Annual',
+            7 => 'One-off'
+        ],
+        'per_year_frequency' => [
+            0 => 12,
+            1 => 52,
+            2 => 26,
+            3 => 13,
+            4 => 4,
+            5 => 2,
+            6 => 1,
+            7 => 1 //?
         ]
     ],
     'expenditures' => [
@@ -1508,7 +1520,8 @@ return [
             3 => 'FourWeekly',
             4 => 'Quarterly',
             5 => 'HalfYearly',
-            6 => 'Annually'
+            6 => 'Annually',
+            7 => 'OneOff'
         ],
         'frequency_public' => [
             0 => 'Monthly',
@@ -1517,7 +1530,8 @@ return [
             3 => 'Every 4 months',
             4 => 'Quarterly',
             5 => 'Every 6 months',
-            6 => 'Annually'
+            6 => 'Annually',
+            7 => 'One-off'
         ]
     ],
     'liabilities' => [
