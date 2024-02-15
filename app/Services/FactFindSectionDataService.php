@@ -265,6 +265,9 @@ class FactFindSectionDataService
                     if ($income['ends_at'] && $income['ends_at'] != null) {
                         $income['ends_at'] = Carbon::parse($income['ends_at']);
                     }
+                    if ($income['starts_at'] && $income['starts_at'] != null) {
+                        $income['starts_at'] = Carbon::parse($income['starts_at']);
+                    }
                     if ($income['gross_amount'] && $income['gross_amount'] != null) {
                         $income['gross_amount'] = $this->currencyStringToInt($income['gross_amount']);
                     }
@@ -281,8 +284,17 @@ class FactFindSectionDataService
                 $validatedData['incomes'] = $incomes->toArray();
             }
 
+
             $this->incomeRepository->setClient($this->cr->getClient());
             $this->incomeRepository->createOrUpdateIncomeDetails($validatedData);
+
+            if(count($validatedData['incomes']) == 0 && array_key_exists('total',$validatedData))
+            {
+                $this->cr->updateFromValidated(['total_income_basic' => $this->currencyStringToInt($validatedData['total'])]);
+            }
+            else{
+                $this->cr->updateFromValidated(['total_income_basic' => 0]);
+            }
         } catch (Throwable $e) {
             Log::warning($e);
         }

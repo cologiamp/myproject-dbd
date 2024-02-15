@@ -207,22 +207,27 @@ class Client extends Model
             '2.1' => [
                 'income_types' => config('enums.incomes.income_type'),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'belongs_to' => $this->getBelongsToEnums()
             ],
             '2.2' => [
                 'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '2.3' => [
                 'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '2.4' => [
                 'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '2.5' => [
                 'expenditure_types' => config('enums.expenditures.liability_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '3.1' => [
