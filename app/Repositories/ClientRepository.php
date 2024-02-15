@@ -89,9 +89,13 @@ class ClientRepository extends BaseRepository
         {
             $data['date_from'] = Carbon::parse($data['date_from']);
         }
-        if(array_key_exists('address_id',$data) && $data['address_id'] != null)
+        if(array_key_exists('id',$data) && $data['id'] != null)
         {
-            $addr = $this->client->addresses()->where('address_id',$data['address_id'])->first();
+            $addr = Address::find($data['id']);
+        }
+        elseif(array_key_exists('address_id',$data) && $data['address_id'] != null)
+        {
+            $addr = Address::find($data['address_id']);
         }
         elseif(array_key_exists('io_id',$data) && $data['io_id'] != null)
         {
@@ -103,6 +107,7 @@ class ClientRepository extends BaseRepository
             $this->client->addresses()->attach($addr->fresh());
             return;
         }
+        ray($addr)->red();
         $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
     }
 

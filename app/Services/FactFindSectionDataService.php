@@ -166,9 +166,8 @@ class FactFindSectionDataService
                     collect($validatedData['addresses'])->pluck('address_id')->filter())->pluck('id')
                 );
 
-
                 collect($validatedData['addresses'])->each(function ($item) {
-                    if ($item['date_from'] && $item['date_from'] != null) {
+                    if (array_key_exists('date_from',$item) && $item['date_from'] && $item['date_from'] != null) {
                         $item['date_from'] = Carbon::parse($item['date_from']);
                     }
                     if($item['country'] && $item['country'] != null)
