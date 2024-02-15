@@ -427,6 +427,9 @@ class FactFindSectionDataService
                     if (array_key_exists('retained_value',$asset) && $asset['retained_value'] != null){
                         $asset['retained_value'] = $this->currencyStringToInt($asset['retained_value']);
                     }
+                    if (array_key_exists('contribution_amount',$asset) && $asset['contribution_amount'] != null){
+                        $asset['contribution_amount'] = $this->currencyStringToInt($asset['contribution_amount']);
+                    }
 
                     return $asset;
                 });

@@ -489,6 +489,8 @@ return [
                             'assets.interest_rate',
                             'assets.is_retained',
                             'assets.retained_value',
+                            'assets.regular_contributions',
+                            'assets.contribution_amount',
                         ]
                     ],
                     'rules' => [
@@ -512,7 +514,9 @@ return [
                         'saving_assets.*.owner' => 'sometimes|nullable',
                         'saving_assets.*.current_balance' => 'sometimes|nullable|string',
                         'saving_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'saving_assets.*.contribution_amount' => 'sometimes|nullable|string',
                         'saving_assets.*.is_retained' => 'sometimes|nullable|boolean',
+                        'saving_assets.*.regular_contributions' => 'sometimes|nullable|boolean',
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
                         'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
