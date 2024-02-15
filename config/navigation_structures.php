@@ -113,7 +113,7 @@ return [
                             'medical_conditions' => 'sometimes|nullable|max:1024',
                             'smoker' => 'sometimes|nullable|integer',
                             'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
-                        ]
+                        ],
                         'messages' => []
                     ],
                     3 => [
@@ -439,7 +439,7 @@ return [
             'name' => 'Assets',
             'sections' => [
                 1 => [
-                    'name' => 'Fixed Assets',
+                    'name' => 'Property & Possessions',
                     'fields' => [
                         'assets' => [
                             'assets.owner',
@@ -554,7 +554,7 @@ return [
                         'investments.*.valuation_at' => 'sometimes|nullable|date',
                         'investments.*.start_date' => 'sometimes|nullable|date',
                         'investments.*.maturity_date' => 'sometimes|nullable|date',
-                    ]
+                    ],
                     'messages' => []
                 ],
                 4=> [
