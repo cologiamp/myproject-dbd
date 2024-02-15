@@ -174,9 +174,9 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
-    public function investment_recommendation():HasMany
+    public function investment_recommendation():BelongsToMany
     {
-        return $this->hasMany(InvestmentRecommendation::class);
+        return $this->belongsToMany(InvestmentRecommendation::class)->withPivot('isa_allowance_used', 'cgt_allowance_used');
     }
 
 

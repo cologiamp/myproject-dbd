@@ -20,12 +20,14 @@ class InvestmentRecommendationController extends Controller
     public function show(Client $client, Request $request)
     {
         $this->investmentRecommendationRepository->setClient($client);
+        $this->investmentRecommendationRepository->setInvestmentRecommendation($client->investment_recommendation->first());
+
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
         $tabs = $this->investmentRecommendationRepository->loadInvestmentRecommendationTabs($step,$section);
 
-        return Inertia::render('FactFind', [
-            'title' => 'Fact Find',
+        return Inertia::render('InvestmentRecommendation', [
+            'title' => 'Investment Recommendation',
             'breadcrumbs' => $this->investmentRecommendationRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,

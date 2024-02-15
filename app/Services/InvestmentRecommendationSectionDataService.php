@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Concerns\FormatsCurrency;
 use App\Models\Client;
 use App\Models\InvestmentRecommendation;
+use App\Repositories\ClientRepository;
 use App\Repositories\InvestmentRecommendationRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,21 +20,25 @@ use Throwable;
 class InvestmentRecommendationSectionDataService
 {
     use FormatsCurrency;
+    protected ClientRepository $clientRepository;
     protected InvestmentRecommendationRepository $investmentRecommendationRepository;
 
     public function __construct(
+        ClientRepository $clientRepository,
         InvestmentRecommendationRepository $investmentRecommendationRepository
 ) {
+        $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
     }
-    //get the data for a single section of a factfind from a single client
+    //get the data for a single section of a investment recommendation from a single client
     public static function get($investmentRecommendation, $step, $section): array
     {
+        // ToDo: change how client->io_id is fetched once two clients view is in place.
         return [
             'enums' => $investmentRecommendation->loadEnumsForStep($step, $section),
             'model' => $investmentRecommendation->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-            'submit_url' => '/api/client/' . $investmentRecommendation->io_id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
+            'submit_url' => '/api/client/' . $investmentRecommendation->clients()->first()->io_id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
         ];
     }
 
@@ -58,12 +63,15 @@ class InvestmentRecommendationSectionDataService
     {
 
         $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
+        // To Do : Is thi alright?
+        $this->investmentRecommendationRepository->setClient($investmentRecommendation->clients->first());
+
         $this->{"_" . $step . $section}($validatedData);
         return true;
     }
 
 
-    //FactFind:// Need to write a function named _{section}{step} for every form
+    //InvestmentRecommendation:// Need to write a function named _{section}{step} for every form
     /**
      * Section: 1
      * Step: 1
@@ -73,16 +81,43 @@ class InvestmentRecommendationSectionDataService
     private function _11(array $validatedData): void
     {
         //define any explicit mutators that are not handled
-//        if (array_key_exists('date_of_birth', $validatedData)) {
-//            $validatedData['date_of_birth'] = Carbon::parse($validatedData['date_of_birth']);
-//        }
-//        if (array_key_exists('country_of_domicile', $validatedData)  && $validatedData['country_of_domicile'] != null) {
-//            $validatedData['country_of_domicile'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_domicile']];
-//        }
-//        if (array_key_exists('country_of_residence', $validatedData) && $validatedData['country_of_residence'] != null) {
-//            $validatedData['country_of_residence'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_residence']];
-//        }
-//        //This example only has data from one table. This would be different if not the case. May need multiple repositories.
-//        $this->cr->updateFromValidated($validatedData);
+        if ($validatedData['previously_invested_amount'] && $validatedData['previously_invested_amount'] != null) {
+            $validatedData['previously_invested_amount'] = $this->currencyStringToInt($validatedData['previously_invested_amount']);
+        }
+
+        if ($validatedData['fee_basis'] != 1) {
+            $validatedData['fee_basis_discount'] = null;
+        }
+
+        if ($validatedData['fee_basis_discount'] && $validatedData['fee_basis_discount'] != null) {
+            $validatedData['fee_basis_discount'] = $this->currencyStringToInt($validatedData['fee_basis_discount']);
+        }
+
+      $this->investmentRecommendationRepository->updateFromValidated($validatedData);
+    }
+
+    /**
+     * Section: 1
+     * Step: 2
+     * @param array $validatedData
+     * @return void
+     */
+    private function _12(array $validatedData): void
+    {
+        //define any explicit mutators that are not handled
+        if (array_key_exists('isa_allowance_used', $validatedData) && $validatedData['isa_allowance_used'] != null) {
+            $validatedData['isa_allowance_used'] = $this->currencyStringToInt($validatedData['isa_allowance_used']);
+        }
+        if (array_key_exists('cgt_allowance_used', $validatedData) && $validatedData['cgt_allowance_used'] != null) {
+            $validatedData['cgt_allowance_used'] = $this->currencyStringToInt($validatedData['cgt_allowance_used']);
+        }
+        if (array_key_exists('net_income_required', $validatedData) && $validatedData['net_income_required'] != null) {
+            $validatedData['net_income_required'] = $this->currencyStringToInt($validatedData['net_income_required']);
+        }
+        if (array_key_exists('regular_cash_required', $validatedData) && $validatedData['regular_cash_required'] != null) {
+            $validatedData['regular_cash_required'] = $this->currencyStringToInt($validatedData['regular_cash_required']);
+        }
+
+        $this->investmentRecommendationRepository->createOrUpdateInvestmentRecommendation($validatedData);
     }
 }

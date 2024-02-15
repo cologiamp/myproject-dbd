@@ -25,26 +25,28 @@ class InvestmentRecommendationPresenter extends BasePresenter
         ];
     }
 
-    //FactFind:// Need to do this for every section/step
+    //InvestmentRecommendation:// Need to do this for every section/step
     //Chore: this should probably be refactored to take some of the non-client stuff out of the client model.
-    public function formatForStep($step,$section)
+    public function formatForStep($step,$section): array
     {
         return match ($step . '.' . $section) {
             '1.1' => [
-//                'first_name' => $this->model->first_name,
-//                'last_name' => $this->model->last_name,
-//                'salutation' => $this->model->salutation,
-//                'title' => $this->model->title,
-//                'date_of_birth' => $this->model->date_of_birth,
-//                'gender' => $this->model->gender,
-//                'marital_status' => $this->model->marital_status,
-//                'nationality' => $this->model->nationality,
-//                'ni_number' => $this->model->ni_number,
-//                'country_of_domicile' => $this->model->country_of_domicile != null ? config('enums.client.iso_2_int')[$this->model->country_of_domicile] : null,
-//                'country_of_residence' => $this->model->country_of_residence != null ? config('enums.client.iso_2_int')[$this->model->country_of_residence] : null,
-//                'valid_will' => (boolean)$this->model->valid_will,
-//                'will_up_to_date' => (boolean)$this->model->will_up_to_date,
-//                'poa_granted' => (boolean)$this->model->poa_granted
+                'id' => $this->model->id,
+                'is_ethical_investor' => $this->model->is_ethical_investor,
+                'risk_profile' => $this->model->risk_profile,
+                'previously_invested_amount' => $this->model->previously_invested_amount != null ? $this->currencyIntToString($this->model->previously_invested_amount) : null,
+                'fee_basis' => $this->model->fee_basis,
+                'fee_basis_discount' => $this->model->fee_basis_discount != null ? $this->currencyIntToString($this->model->fee_basis_discount) : null
+            ],
+            // To Do : $this->model->clients->first()->pivot ?
+            '1.2' => [
+                'id' => $this->model->id,
+                'report_type' => $this->model->report_type,
+                'isa_allowance_used' => $this->model->clients->first()->pivot->isa_allowance_used != null ? $this->currencyIntToString($this->model->clients->first()->pivot->isa_allowance_used) : null,
+                'cgt_allowance_used' => $this->model->clients->first()->pivot->cgt_allowance_used != null ? $this->currencyIntToString($this->model->clients->first()->pivot->cgt_allowance_used) : null,
+                'net_income_required' => $this->model->net_income_required != null ? $this->currencyIntToString($this->model->net_income_required) : null,
+                'regular_cash_required' => $this->model->regular_cash_required != null ? $this->currencyIntToString($this->model->regular_cash_required) : null,
+                'regular_cash_duration' => $this->model->regular_cash_duration
             ],
             default => [
 

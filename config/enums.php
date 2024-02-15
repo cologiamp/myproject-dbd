@@ -1562,6 +1562,29 @@ return [
             5 => 'Standard Chartered Staff Terms',
             6 => 'Saga Terms',
             7 => 'Staff'
+        ],
+        'report_type' => [
+            0 => 'Growth Only',
+            1 => 'Income & Growth',
+            2 => 'Income Only'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
         ]
     ]
 ];

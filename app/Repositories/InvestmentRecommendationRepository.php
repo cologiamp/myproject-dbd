@@ -102,56 +102,6 @@ class InvestmentRecommendationRepository extends BaseRepository
         select('investment_recommendations.*');//Limit query here
     }
 
-    public function filterIndexQuery(Request $request): LengthAwarePaginator
-    {
-//        return Client::query()
-//            ->where("adviser_id", auth()->user()->id)
-//            ->when($request->input("search"), function($query, $search)  {
-//                $query->where("first_name", "like", "%{$search}%")
-//                    ->orWhere("last_name", "like",  "%{$search}%");
-//            })
-//            ->when($request->input("select"), function($query, $select)  {
-//                switch($select) {
-//                    case 1: // chore: refactor this into an enum
-//                        $query->orderBy("updated_at", "desc");
-//                    case 2:
-//                        $query->orderBy("updated_at", "asc");
-//                    default:
-//                        $query->orderBy("updated_at", "desc");
-//                }
-//            })
-//            ->paginate(
-//                perPage: $request->filled("perPage") ? $request->input("perPage") : 9,
-//                page: $request->boolean("searching") ? 1 : $request->input("page") ?? 1
-//        );
-    }
-
-    public function syncIoForAdviser(int $adviser_id,Collection $ioClientCollection): void
-    {
-        //Note: This will make N database queries. Refactor when extra time.
-//        $ioClientCollection->each(function ($item) use ($adviser_id){
-//            $client = Client::where('io_id',$item['id'])->first();
-//            if($client)
-//            {
-//                if($client->adviser_id != $adviser_id)
-//                {
-//                    $client->update(['adviser_id' => $adviser_id]);
-//                    $client->save();
-//                }
-//            }
-//            else{
-//                ray($item)->orange();
-//                $data = [
-//                    'io_id' => $item['id'],
-//                    'adviser_id' => $adviser_id,
-//                ];
-//                $data = array_merge($data,$this->parseClientFields($item['person']));
-//                ray($data)->purple();
-//                $this->client->create($data);
-//            }
-//        });
-    }
-
     /**
      * Load in investmentrecommendation sidebar items dynamically for the tabs
      * @param int - the step that we want to load the sidebar for
@@ -159,7 +109,7 @@ class InvestmentRecommendationRepository extends BaseRepository
     public function loadInvestmentRecommendationSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
         return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
-           return  [
+            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
@@ -167,12 +117,6 @@ class InvestmentRecommendationRepository extends BaseRepository
            ];
         });
     }
-
-//    //get the options for example form. This is designed as an example of how these requests should be processed. (single client)
-//    public function getExampleFormOptions():array
-//    {
-//
-//    }
 
 
     /**
@@ -219,10 +163,6 @@ class InvestmentRecommendationRepository extends BaseRepository
 
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
-//                        'addresses' => $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
-//                        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first() ? Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray() : $this->setEmptyFields($value),
-//                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
-//                        'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get() ? EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get()->toArray() : $this->setEmptyFields($value),
 //                        '//todo write join query here for other places data ends up'.
                         default => collect([]),
                     };
@@ -235,14 +175,45 @@ class InvestmentRecommendationRepository extends BaseRepository
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
 
-//    public function setEmptyFields(Collection $value)
-//    {
-//        $nullFields = new Collection();
-//        $value->map(function ($val) use ($nullFields) {
-//            $keyName = explode('.',$val)[1];
-//            return $nullFields[$keyName] = null;
-//        });
-//
-//        return $nullFields;
-//    }
+    public function createOrUpdateInvestmentRecommendation(mixed $data):void
+    {
+        if(!is_array($data) && $data::class == Request::class)
+        {
+            $data = $data->safe();
+        }
+
+        $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
+
+        DB::beginTransaction();
+
+        try {
+            if(!$investmentRecommendation){
+                // To Do :
+                // register investment recommendation
+                // update pivot table using attach() ?
+            }
+            else {
+                $formatInvestmentData = array(
+                    'report_type' => $data['report_type'],
+                    'net_income_required' => $data['net_income_required'],
+                    'regular_cash_required' => $data['regular_cash_required'],
+                    'regular_cash_duration' => $data['regular_cash_duration']
+                );
+
+                $investmentRecommendation->update($formatInvestmentData);
+
+                $investmentRecommendation->clients()->updateExistingPivot($investmentRecommendation->id, [
+                    'isa_allowance_used' => $data['isa_allowance_used'],
+                    'cgt_allowance_used' => $data['cgt_allowance_used']
+                ]);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
+
+    }
 }

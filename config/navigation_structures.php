@@ -682,30 +682,56 @@ return [
                 2 => [
                     'name' => 'Income and Growth Report',
                     'fields' => [
-
+                        'investment_recommendations.id',
+                        'investment_recommendations.report_for',
+                        'investment_recommendations.report_type',
+                        'investment_recommendations.isa_allowance_used',
+                        'investment_recommendations.cgt_allowance_used',
+                        'investment_recommendations.net_income_required',
+                        'investment_recommendations.regular_cash_required',
+                        'investment_recommendations.regular_cash_duration'
                     ],
                     'rules' => [
-
+                        'id' => 'sometimes|nullable',
+                        'report_for' => 'sometimes|nullable',
+                        'report_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.report_type'))),
+                        ],
+                        'isa_allowance_used' => 'sometimes|nullable|string',
+                        'cgt_allowance_used' => 'sometimes|nullable|string',
+                        'net_income_required' => 'sometimes|nullable|string',
+                        'regular_cash_required' => 'sometimes|nullable|string',
+                        'regular_cash_duration' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.frequency'))),
+                        ],
                     ]
                 ],
-                3 => [
-                    'name' => 'Tax Consequences',
-                    'fields' => [
-
-                    ],
-                    'rules' => [
-
-                    ]
-                ],
-                4 => [
-                    'name' => 'Investment Recommendations',
-                    'fields' => [
-
-                    ],
-                    'rules' => [
-
-                    ]
-                ]
+//                3 => [
+//                    'name' => 'Tax Consequences',
+//                    'fields' => [
+//
+//                    ],
+//                    'rules' => [
+//
+//                    ]
+//                ],
+//                4 => [
+//                    'name' => 'Investment Recommendations',
+//                    'fields' => [
+//
+//                    ],
+//                    'rules' => [
+//
+//                    ]
+//                ]
             ],
         ]
     ]
