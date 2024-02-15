@@ -219,7 +219,7 @@ function removeAsset(index) {
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="born_at"
-                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2">End date </label>
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2">Maturity Date</label>
                     <div
                         class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
                         <VueDatePicker text-input @closed="saveDate(index, asset.end_date)"
