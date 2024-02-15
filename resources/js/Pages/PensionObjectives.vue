@@ -29,7 +29,6 @@ provide("onloadKey", onloadKey);
         <div class="sections flex flex-col">
             <div class="md:block">
                 <Tabs :tabTitles="tabs"  @setOnloadKey="setOnloadKey">
-
                     <Tab v-for="(tab, index) in tabs"
                          v-bind:key="index"
                          :tab="tab"
@@ -37,16 +36,6 @@ provide("onloadKey", onloadKey);
                        >
                     </Tab>
                 </Tabs>
-            </div>
-            <div class="hidden">
-                <DropDownMenu :titles="tabs" key="tabs.name"    @setOnloadKey="setOnloadKey">
-                    <DropDownItem v-for="(tab, index) in tabs"
-                                  v-bind:key="index"
-                                  :tab="tab"
-                                  :tabIndex="index"
-                                 >
-                    </DropDownItem>
-                </DropDownMenu>
             </div>
         </div>
     </AppLayout>
