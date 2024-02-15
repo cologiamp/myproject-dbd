@@ -27,7 +27,7 @@ provide("onloadKey", onloadKey);
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
         <div class="sections flex flex-col">
-            <div class="hidden md:block">
+            <div class="md:block">
                 <Tabs :tabTitles="tabs"  @setOnloadKey="setOnloadKey">
 
                     <Tab v-for="(tab, index) in tabs"
@@ -38,7 +38,7 @@ provide("onloadKey", onloadKey);
                     </Tab>
                 </Tabs>
             </div>
-            <div class="md:hidden">
+            <div class="hidden">
                 <DropDownMenu :titles="tabs" key="tabs.name"    @setOnloadKey="setOnloadKey">
                     <DropDownItem v-for="(tab, index) in tabs"
                                   v-bind:key="index"

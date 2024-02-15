@@ -57,10 +57,10 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
 <template>
     <dynamic-form-wrapper :saving="autoS">
-        <div class="form-row flex-1">
-            <div class="mb-12">
-                <h1>Future Contributions</h1>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+        <div class="flex flex-col justify-center w-full lg:w-6/12 mx-auto">
+            <div class="mb-4 mt-4 w-full">
+                <h1 class="text-2xl pb-4">Future Contributions</h1>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you wish any future pension arrangements to be capable of receiving additional regular contributions?
                     </label>
@@ -81,7 +81,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                             stepForm.errors.additional_contributions }}</p>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you wish any future pension arrangements to be capable of receiving in specie transfers arising from an Approved All Employee Share Scheme?
                     </label>
@@ -102,40 +102,40 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
             </div>
 
-            <div class="mb-12">
-                <h1>Investment flexibility</h1>
+            <div class="mb-4 mt-4 w-full">
+                <h1 class="text-2xl pb-4">Investment flexibility</h1>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="if_experience_self_select" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Self-selecting investments</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_self_select" id="unit" name="if_experience_self_select"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_self_select" id="unit" name="if_experience_self_select" class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="if_experience_self_select" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(if_experience_self_select, id) in formData.enums.if_experience_self_select">{{ if_experience_self_select }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.if_experience_self_select">{{ stepForm.errors.if_experience_self_select }}</p>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="if_experience_lifestyle" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Lifestyle investment strategies</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_lifestyle" id="unit" name="if_experience_lifestyle"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_lifestyle" id="unit" name="if_experience_lifestyle"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="if_experience_lifestyle" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(if_experience_lifestyle, id) in formData.enums.if_experience_lifestyle">{{ if_experience_lifestyle }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.if_experience_lifestyle">{{ stepForm.errors.if_experience_lifestyle }}</p>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="if_experience_advisory" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Advisory investment services</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_advisory" id="unit" name="if_experience_advisory"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_advisory" id="unit" name="if_experience_advisory"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="if_experience_advisory" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(if_experience_advisory, id) in formData.enums.if_experience_advisory">{{ if_experience_advisory }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.if_experience_advisory">{{ stepForm.errors.if_experience_advisory }}</p>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="if_experience_discretionary" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Discretionary managed investment services</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_discretionary" id="unit" name="if_experience_discretionary"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.if_experience_discretionary" id="unit" name="if_experience_discretionary"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="if_experience_discretionary" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(if_experience_discretionary, id) in formData.enums.if_experience_discretionary">{{ if_experience_discretionary }}</option>
                     </select>
@@ -143,7 +143,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Irrespective of your knowledge and experience in respect of the above approaches to investment, please confirm your Adviser has explained and you now understand the differences
                     </label>
@@ -164,9 +164,9 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="preferred_option" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Having understood the investment options available within various pension arrangements, what is your preference? My preference is...</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.preferred_option" id="unit" name="preferred_option"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.preferred_option" id="unit" name="preferred_option"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="preferred_option" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(preferred_option, id) in formData.enums.preferred_option">{{ preferred_option }}</option>
                     </select>
@@ -174,7 +174,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Please briefly explain why this would be your preferred option </label>
                         <div class="mt-2">
@@ -184,7 +184,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you wish a recommended pension scheme to have a wide range of financial assets available?
                     </label>
@@ -205,7 +205,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                             Do you wish to include or exclude any particular types of investments, individual holdings, sectors or geographical areas?
@@ -223,10 +223,10 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 
             </div>
 
-            <div class="mb-12">
-                <h1>Need for benefits </h1>
+            <div class="mb-4 mt-4 w-full">
+                <h1 class="text-2xl pb-4">Need for benefits </h1>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         Do you require flexibility as to when and how you may take your retirement benefits from your pension funds including the availability of both annuities and flexi-access drawdown?
                     </label>
@@ -248,21 +248,21 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             </div>
 
 
-            <div class="mb-12">
-                <h1>Death benefits</h1>
+            <div class="mb-4 mt-4 w-full">
+                <h1 class="text-2xl pb-4">Death benefits</h1>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="retirement_vs_legacy" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         The primary purpose of a pension fund is to provide you with a source of income throughout retirement. However, if other sources of income are available, or the fund is surplus to your needs, it can potentially be passed on to a beneficiary of your choice.
                     </label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.retirement_vs_legacy" id="unit" name="retirement_vs_legacy"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.retirement_vs_legacy" id="unit" name="retirement_vs_legacy"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="retirement_vs_legacy" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(retirement_vs_legacy, id) in formData.enums.retirement_vs_legacy">{{ retirement_vs_legacy }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.retirement_vs_legacy">{{ stepForm.errors.retirement_vs_legacy }}</p>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Please explain your preference</label>
                         <div class="mt-2">
@@ -271,7 +271,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                     </div>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Who might suffer financially when you die?</label>
                         <div class="mt-2">
@@ -281,7 +281,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         If future inheritance tax is a concern, is it important any recommended pension scheme has the facility for residual funds to potentially be passed down the generations remaining within a pension wrapper?
                     </label>
