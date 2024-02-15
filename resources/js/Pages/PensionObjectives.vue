@@ -27,7 +27,6 @@ provide("onloadKey", onloadKey);
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
         <div class="sections flex flex-col">
-            <div class="md:block">
                 <Tabs :tabTitles="tabs"  @setOnloadKey="setOnloadKey">
                     <Tab v-for="(tab, index) in tabs"
                          v-bind:key="index"
@@ -36,7 +35,6 @@ provide("onloadKey", onloadKey);
                        >
                     </Tab>
                 </Tabs>
-            </div>
         </div>
     </AppLayout>
 </template>

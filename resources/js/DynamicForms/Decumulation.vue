@@ -54,7 +54,7 @@ function formatAmount(e) {
 
 <template>
     <dynamic-form-wrapper :saving="autoS">
-        <div class="flex flex-col justify-center w-full lg:w-6/12 mx-auto">
+        <div class="flex flex-col justify-center w-full md:w-6/12 mx-auto">
             <div class="mb-4 mt-4 w-full">
                 <h1 class="text-2xl pb-4">Income options</h1>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
