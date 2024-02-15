@@ -167,6 +167,7 @@ class ClientPresenter extends BasePresenter
                       'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
                       'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
                       'frequency' => $investment->frequency,
+                      'lump_sum_contribution' =>  $investment->lump_sum_contribution  != null ? $this->currencyIntToString($investment->lump_sum_contribution): null,
                       'start_date' =>  $investment->start_date,
                       'maturity_date' =>  $investment->maturity_date,
                       'valuation_at' =>  $investment->valuation_at,

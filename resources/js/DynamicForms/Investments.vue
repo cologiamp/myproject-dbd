@@ -38,6 +38,7 @@ const props = defineProps({
                     maturity_date: null,
                     regular_contribution: null,
                     frequency: null,
+                    lump_sum_contribution: null,
                     is_retained: null,
                     retained_value: null
                 }]
@@ -74,7 +75,8 @@ function addInvestment() {
         maturity_date: null,
         interest_rate: null,
         is_retained: null,
-        retained_value: null
+        retained_value: null,
+        lump_sum_contribution: null
     });
 }
 
@@ -161,13 +163,6 @@ function removeInvestment(index) {
                         <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="investment.product_name" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
-
-                <!--                current_balance: null,-->
-                <!--                start_date: null,-->
-                <!--                maturity_date: null,-->
-                <!--                interest_rate: null,-->
-                <!--                is_retained: null,-->
-                <!--                retained_value: null-->
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="owner"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
@@ -231,6 +226,7 @@ function removeInvestment(index) {
                     </div>
                 </div>
 
+
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="frequency"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
@@ -241,6 +237,15 @@ function removeInvestment(index) {
                         <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
                                 provider }}</option>
                     </select>
+                </div>
+
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Lump Sum Contribution </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="formatAmount($event, index, 'lump_sum_contribution')" type="currency" name="lump_sum_contribution" id="lump_sum_contribution"
+                               :value="investment.lump_sum_contribution"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">

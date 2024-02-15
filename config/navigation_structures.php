@@ -548,6 +548,7 @@ return [
                         'investments.*.retained_value' => 'sometimes|nullable|string',
                         'investments.*.current_value' => 'sometimes|nullable|string',
                         'investments.*.regular_contribution' => 'sometimes|nullable|string',
+                        'investments.*.lump_sum_contribution' => 'sometimes|nullable|string',
                         'investments.*.frequency' => [
                             'sometimes',
                             'numeric',

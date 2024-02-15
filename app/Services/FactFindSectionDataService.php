@@ -488,6 +488,9 @@ class FactFindSectionDataService
             if (array_key_exists('regular_contribution',$item) && $item['regular_contribution'] != null){
                 $item['regular_contribution'] = $this->currencyStringToInt($item['regular_contribution']);
             }
+            if (array_key_exists('lump_sum_contribution',$item) && $item['lump_sum_contribution'] != null){
+                $item['lump_sum_contribution'] = $this->currencyStringToInt($item['lump_sum_contribution']);
+            }
             if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
                 $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
             }
