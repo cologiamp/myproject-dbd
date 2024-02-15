@@ -251,13 +251,3 @@ function formatAmount(e) {
         </div>
     </dynamic-form-wrapper>
 </template>
-
-<style scoped>
-.aaron-datepicker{
-    --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));
-    --dp-text-color: rgb(236 245 255 / var(--tw-text-opacity));
-    --dp-border-radius: 6px;
-    --dp-border-color: rgb(70 84 190 / var(--tw-ring-opacity));
-}
-
-</style>
