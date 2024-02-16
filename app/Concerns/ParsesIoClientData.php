@@ -96,7 +96,7 @@ trait ParsesIoClientData{
 
         if(array_key_exists('secondary_client',$data) && $data['secondary_client'] != null)
         {
-            $client['c2_id'] = Client::where('io_id',$data['secondary_client']['io_id'])->first()
+            $client['c2_id'] = Client::where('io_id',$data['secondary_client']['io_id'])->first();
         }
 
         return [
