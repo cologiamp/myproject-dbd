@@ -695,7 +695,8 @@ return [
                         'liabilities.*.lender' => 'sometimes|nullable|string',
                         'liabilities.*.ends_at' => 'sometimes|nullable|date',
                         'liabilities.*.is_to_be_repaid' => 'sometimes|nullable|boolean',
-                        'liabilities.*.repay_details' => 'sometimes|nullable|max:1024'
+                        'liabilities.*.repay_details' => 'sometimes|nullable|max:1024',
+                        'liabilities.*.interest_rate' => 'sometimes|nullable|numeric'
                     ],
                     'messages' => []
                 ]

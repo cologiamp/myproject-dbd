@@ -263,6 +263,7 @@ class ClientPresenter extends BasePresenter
                       'monthly_repayment' => $liability->monthly_repayment != null ? $this->currencyIntToString($liability->monthly_repayment): null,
                       'lender' => $liability->lender,
                       'ends_at' =>  $liability->ends_at,
+                      'interest_rate' =>  $liability->interest_rate,
                       'is_to_be_repaid' => (bool) $liability->is_to_be_repaid,
                       'repay_details' => $liability->repay_details
                   ];
