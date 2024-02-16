@@ -554,10 +554,15 @@ class FactFindSectionDataService
             if (array_key_exists('value',$item) && $item['value'] != null){
                 $item['value'] = $this->currencyStringToInt($item['value']);
             }
-            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
+            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null) {
                 $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
             }
-
+            if (array_key_exists('current_fund_value',$item) && $item['current_fund_value'] != null){
+                $item['current_fund_value'] = $this->currencyStringToInt($item['current_fund_value']);
+            }
+            if (array_key_exists('current_transfer_value',$item) && $item['current_transfer_value'] != null){
+                $item['current_transfer_value'] = $this->currencyStringToInt($item['current_transfer_value']);
+            }
             return $item;
         });
 

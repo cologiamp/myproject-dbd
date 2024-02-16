@@ -603,7 +603,25 @@ return [
                             'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
                             'dc_pensions.*.value' => 'sometimes|nullable|string',
                             'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean'
+                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean',
+                            'dc_pensions.*.crystallised_status' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.pension_crystallised_statuses'))))
+                            ],
+                            'dc_pensions.*.fund_type' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.pension_fund_types'))))
+                            ],
+                            'dc_pensions.*.crystallised_percentage' => 'sometimes|nullable',
+                            'dc_pensions.*.current_fund_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.fund_name' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.current_transfer_value' => 'sometimes|nullable|string',
                     ],
                     'messages' => []
                 ],

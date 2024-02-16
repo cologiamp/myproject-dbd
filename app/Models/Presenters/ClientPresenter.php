@@ -200,6 +200,13 @@ class ClientPresenter extends BasePresenter
                         'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                         'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
                         'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
+                        'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
+                        'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
+                        'fund_name'=> $item->defined_contribution_pension->fund_name,
+                        'fund_type'=> $item->defined_contribution_pension->fund_type,
+                        'current_fund_value' => $item->defined_contribution_pension->current_fund_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_fund_value): null,
+                        'current_transfer_value' => $item->defined_contribution_pension->current_transfer_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_transfer_value): null,
+
                     ];
                 }),
                 'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){

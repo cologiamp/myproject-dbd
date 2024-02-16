@@ -1511,6 +1511,24 @@ return [
             2 => 'Retirement Annuity Contract',
             3 => 'Self-Invested Personal Pension'
         ],
+        'pension_crystallised_statuses' => [
+            0 => 'Uncrystallised',
+            1 => 'Fully Crystallised',
+            2 => 'Part Crystallised'
+        ],
+        'pension_fund_types' => [
+          0 => 'Active',
+          1 => 'Passive',
+          2 => 'WP - Fixed',
+          3 => 'WP - Variable',
+          4 => 'WP - Smoothed',
+          5 => 'WP - Conventional',
+          6 => 'Target Dated',
+          7 => 'Investment Trust',
+          8 => 'Shares',
+          9 => 'Cash',
+          10 => 'Discretionary Managed'
+        ],
 
         'frequency' => [
             0 => 'Monthly',

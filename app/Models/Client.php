@@ -251,6 +251,8 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(true),
                 'pension_statuses' => config('enums.assets.db_pension_statuses'),
                 'pension_types' => config('enums.assets.dc_pension_types'),
+                'pension_crystallised_statuses' => config('enums.assets.pension_crystallised_statuses'),
+                'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
             ],
             '3.5' => [
