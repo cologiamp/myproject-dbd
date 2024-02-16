@@ -211,12 +211,13 @@ function removeLiability(index) {
                 <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.is_to_be_repaid">{{ stepForm.errors.is_to_be_repaid }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
-                    <div v-if="liability.is_to_be_repaid == true">
-                        <label for="repay_details" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If yes please provide details</label>
+
+                        <label v-if="liability.is_to_be_repaid == true" for="repay_details" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If yes please provide details</label>
+                        <label v-else for="repay_details" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If no, why not</label>
                         <div class="mt-2">
                             <textarea @change="autosaveLocally()" rows="3" name="repay_details" id="repay_details" v-model="liability.repay_details" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950  shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
-                    </div>
+
                 </div>
             </div>
             <button type="button" @click="addLiability"

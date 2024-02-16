@@ -712,9 +712,7 @@ class FactFindSectionDataService
                     if (array_key_exists('monthly_repayment', $liability) && $liability['monthly_repayment'] != null) {
                         $liability['monthly_repayment'] = $this->currencyStringToInt($liability['monthly_repayment']);
                     }
-                    if ($liability['is_to_be_repaid'] == false) {
-                        $liability['repay_details'] = '';
-                    }
+
                     return $liability;
                 });
 
