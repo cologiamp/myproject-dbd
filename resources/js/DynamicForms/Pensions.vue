@@ -372,7 +372,7 @@ function removePension(index,type) {
 
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Contribution (%) </label>
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Personal Contribution (gross) (%) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveLocally()" v-model="pension.gross_contribution_percent" type="number" name="gross_contribution_percent" id="gross_contribution_percent"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="%" />
@@ -380,7 +380,7 @@ function removePension(index,type) {
                 </div>
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Contribution (£) </label>
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Personal Contribution (gross) (£) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="formatAmount($event, index, 'gross_contribution_absolute','dc_pensions')" type="currency" name="ppm" id="ppm"
                                :value="pension.gross_contribution_absolute"
