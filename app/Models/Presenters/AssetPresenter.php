@@ -37,7 +37,10 @@ class AssetPresenter extends BasePresenter
                 'current_value' =>  $this->model->current_value != null ? $this->currencyIntToString($this->model->current_value): null
             ],
             'savings' => [
-                'provider' => $this->model->provider,
+                'provider' => $this->model->provider != null ? [
+                    'label' => \Cache::get('io_provider_list')[$this->model->provider],
+                    'value' => $this->model->provider
+                ] : null,
                 'account_type' => $this->model->account_type,
                 'name' => $this->model->product_name,
                 'current_balance' => $this->model->current_value != null ? $this->currencyIntToString($this->model->current_value) : null,

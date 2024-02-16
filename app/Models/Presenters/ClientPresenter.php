@@ -83,9 +83,9 @@ class ClientPresenter extends BasePresenter
                             'name' => $dependent->name,
                             'relationship_type' => $dependent->pivot->relationship_type,
                             'born_at' => $dependent->born_at,
-                            'financial_dependent' => $dependent->financial_dependent,
+                            'financial_dependent' => (bool)  $dependent->financial_dependent,
                             'financially_dependent_until' => $dependent->financially_dependent_until,
-                            'is_living_with_clients' => $dependent->is_living_with_clients
+                            'is_living_with_clients' => (bool) $dependent->is_living_with_clients
                     ];
                 }))
             ],
@@ -159,10 +159,13 @@ class ClientPresenter extends BasePresenter
                   return [
                       'id' => $investment->id,
                       'owner' => $investment->client->io_id,
-                      'provider' => $investment->provider,
+                      'provider' => $investment->provider != null ? [
+                          'label' => \Cache::get('io_provider_list')[$investment->provider],
+                          'value' => $investment->provider
+                      ] : null,
                       'account_type' => $investment->contract_type,
                       'product_name' => $investment->product_name,
-                      'is_retained' => $investment->is_retained,
+                      'is_retained' => (bool) $investment->is_retained,
                       'retained_value' =>  $investment->retained_value != null ? $this->currencyIntToString($investment->retained_value): null,
                       'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
                       'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
@@ -182,7 +185,11 @@ class ClientPresenter extends BasePresenter
                         'owner' => $item->client->io_id,
                         'type' => $item->defined_contribution_pension->type,
                         'employer' => $item->employer,
-                        'administrator' => $item->defined_contribution_pension->administrator,
+                        'administrator' =>   $item->defined_contribution_pension->administrator != null ?
+                            [
+                                'label' => \Cache::get('io_provider_list')[$item->defined_contribution_pension->administrator],
+                                'value' => $item->defined_contribution_pension->administrator
+                            ] : null,
                         'policy_starts_at' => $item->defined_contribution_pension->policy_start_at,
                         'policy_number' => $item->defined_contribution_pension->policy_number,
                         'gross_contribution_percent' => $item->defined_contribution_pension->gross_contribution_percent,
@@ -192,7 +199,7 @@ class ClientPresenter extends BasePresenter
                         'valuation_at' => $item->defined_contribution_pension->valuation_at,
                         'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                         'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
-                        'is_retained'=> $item->defined_contribution_pension->is_retained,
+                        'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
                     ];
                 }),
                 'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
@@ -233,7 +240,7 @@ class ClientPresenter extends BasePresenter
                         'description' => $item->description,
                         'amount' => $item->amount != null ? $this->currencyIntToString( $item->amount): null,
                         'due_at' => $item->due_at,
-                        'is_retained' => $item->is_retained,
+                        'is_retained' => (bool) $item->is_retained,
                         'retained_value' =>  $item->retained_value != null ? $this->currencyIntToString($item->retained_value): null,
                     ];
                 })
@@ -249,7 +256,7 @@ class ClientPresenter extends BasePresenter
                       'monthly_repayment' => $liability->monthly_repayment != null ? $this->currencyIntToString($liability->monthly_repayment): null,
                       'lender' => $liability->lender,
                       'ends_at' =>  $liability->ends_at,
-                      'is_to_be_repaid' => $liability->is_to_be_repaid,
+                      'is_to_be_repaid' => (bool) $liability->is_to_be_repaid,
                       'repay_details' => $liability->repay_details
                   ];
                 })

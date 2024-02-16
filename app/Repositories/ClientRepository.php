@@ -91,23 +91,25 @@ class ClientRepository extends BaseRepository
         }
         if(array_key_exists('id',$data) && $data['id'] != null)
         {
-            $addr = Address::find($data['id']);
+            $addr = Address::where('id',$data['id'])->first();
+            $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         elseif(array_key_exists('address_id',$data) && $data['address_id'] != null)
         {
-            $addr = Address::find($data['address_id']);
+            $addr = Address::where('id',$data['address_id'])->first();
+            $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         elseif(array_key_exists('io_id',$data) && $data['io_id'] != null)
         {
-            $addr = $this->client->addresses()->where('io_id',$data['io_id'])->first();
+            $addr = Address::where('io_id',$data['io_id'])->first();
+            $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         else{
             $addr = Address::create(collect($data)->except(['address_id','io_id'])->toArray());
 
             $this->client->addresses()->attach($addr->fresh());
-            return;
         }
-        $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
+
     }
 
     //Delete the resource from the database, doing any cleanup first

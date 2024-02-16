@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Concerns\AccessesIoProviders;
 use App\Concerns\ParsesIoClientData;
+use App\Jobs\CacheProviders;
 use Carbon\Carbon;
 use App\Models\BaseModels\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\Presenters\ClientPresenter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -13,11 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class Client extends Model
 {
-    use ParsesIoClientData;
+    use ParsesIoClientData, AccessesIoProviders;
     protected $guarded = [];
 
     /**
@@ -236,12 +238,12 @@ class Client extends Model
             ],
             '3.2' => [
                 'owners' => $this->getOwnersForForm(),
-                'providers' => config('enums.assets.providers'),
+                'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
-                'providers' => config('enums.assets.investment_providers'),
+                'providers' =>  array_values($this->getProviders()->take(100)->toArray()),
                 'account_types' => config('enums.assets.investment_account_types'),
                 'frequencies' => config('enums.assets.frequency_public'),
             ],
@@ -249,7 +251,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(true),
                 'pension_statuses' => config('enums.assets.db_pension_statuses'),
                 'pension_types' => config('enums.assets.dc_pension_types'),
-                'administrators' => config('enums.assets.dc_pension_administrators'),
+                'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -321,4 +323,5 @@ class Client extends Model
             $this->id => $this->first_name
         ]);
     }
+
 }

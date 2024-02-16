@@ -50,7 +50,7 @@ const props = defineProps({
 
 function saveDate(index, value,type) {
     stepForm.incomes[index][type] = value;
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 function addIncome() {
@@ -92,13 +92,13 @@ function calculateTotals(){
 function updateAndSave()
 {
     calculateTotals()
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveLocally()
 }
 
 function removeIncome(index) {
     stepForm.incomes.splice(index, 1);
     calculateTotals()
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
@@ -106,6 +106,15 @@ const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
     useIncome: props.formData.model.useIncome,
     total: props.formData.model.total,
 })
+
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.incomes = props.formData.model.incomes;
+    stepForm.useIncome = props.formData.model.useIncome;
+    stepForm.total = props.formData.model.total;
+    formatAmountOnload()
+    calculateTotals()
+}
 
 onBeforeMount(() => {
     formatAmountOnload()
@@ -143,7 +152,7 @@ function formatTotal()
 }
 function saveTotal()
 {
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveLocally()
 }
 
 
@@ -238,7 +247,7 @@ function changeToCurrency(amount) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="income_type"
                         class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Income Type</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)"
+                    <select @change="autosaveLocally()"
                         id="income_type" name="income_type" v-model="income.income_type"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="income_type" :value="null">-</option>
@@ -260,7 +269,7 @@ function changeToCurrency(amount) {
                     <label for="net_amount" v-if="income.income_type != 10" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
                     <label for="net_profit" v-else class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="net_amount" id="net_amount"
+                        <input @change="autosaveLocally()" type="text" name="net_amount" id="net_amount"
                             :value="income.net_amount"
                             @input="formatAmount($event, index, 'net_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
@@ -271,7 +280,7 @@ function changeToCurrency(amount) {
                     <div v-if="income.income_type == 10">
                         <label for="expenses" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Valid Expenses </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="expenses" id="expenses"
+                            <input @change="autosaveLocally()" type="currency" name="expenses" id="expenses"
                                 :value="income.expenses"
                                 @input="formatAmount($event, index, 'expenses')"
                                 class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
@@ -321,7 +330,7 @@ function changeToCurrency(amount) {
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="belongs_to" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Belongs To</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
+                    <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="belongs_to" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.belongs_to">{{ belongs_to }}</option>

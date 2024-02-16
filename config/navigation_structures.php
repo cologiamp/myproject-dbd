@@ -166,6 +166,7 @@ return [
                         'name' => 'Family',
                         'fields' => [
                             'dependents' => [
+                                'dependents.dependent_id',
                                 'dependents.name',
                                 'dependents.relationship_type',
                                 'dependents.born_at',
@@ -177,6 +178,7 @@ return [
                         'rules' => [
                             'dependents' => 'sometimes|nullable|array',
                             'dependents.*.name' => 'sometimes|nullable|string',
+                            'dependents.*.dependent_id' => 'sometimes|nullable',
                             'dependents.*.relationship_type' => [
                                 'required',
                                 'numeric',
@@ -499,9 +501,6 @@ return [
                         'saving_assets.*.provider' => [
                             'sometimes',
                             'nullable',
-                            'numeric',
-                            'integer',
-                            Rule::in(array_keys((config('enums.assets.providers'))))
                         ],
                         'saving_assets.*.account_type' => [
                             'sometimes',
@@ -531,10 +530,7 @@ return [
                         'investments.*.owner' => 'sometimes|nullable',
                         'investments.*.provider' => [
                             'sometimes',
-                            'numeric',
                             'nullable',
-                            'integer',
-                            Rule::in(array_keys((config('enums.assets.investment_providers'))))
                         ],
                         'investments.*.account_type' => [
                             'sometimes',
@@ -596,10 +592,7 @@ return [
                             'dc_pensions.*.employer' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.administrator' => [
                                 'sometimes',
-                                'numeric',
                                 'nullable',
-                                'integer',
-                                Rule::in(array_keys((config('enums.assets.dc_pension_administrators'))))
                             ],
                             'dc_pensions.*.policy_starts_at' => 'sometimes|nullable|date',
                             'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',

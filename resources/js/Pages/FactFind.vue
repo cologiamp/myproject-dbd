@@ -20,6 +20,7 @@ function setOnloadKey (obj, fn) {
     onloadKey.value = Object.keys(obj).find(key => fn(obj[key], key, obj));
 }
 
+
 provide("onloadKey", onloadKey);
 
 </script>

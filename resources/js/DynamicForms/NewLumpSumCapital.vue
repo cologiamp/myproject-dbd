@@ -45,7 +45,7 @@ const props = defineProps({
 
 function saveDueAt(index, value) {
     stepForm.capitals[index].due_at = value;
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 function addCapital() {
@@ -65,16 +65,19 @@ function addCapital() {
 function formatAmount(e, index, dataField) {
     stepForm.capitals[index][dataField] = '';
     stepForm.capitals[index][dataField] = changeToCurrency(e.target.value);
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveLocally()
 }
 
 onMounted(() => {
 })
 
-const stepForm = useForm(`EditCapitals${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     capitals: props.formData.model.capitals
 })
-
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.capitals = props.formData.model.capitals;
+}
 function removeCapital(index) {
     if(stepForm.capitals[index].id != null)
     {
@@ -127,7 +130,7 @@ function removeCapital(index) {
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="owner" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owners(s)</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="capital.owner"
+                    <select @change="autosaveLocally()" v-model="capital.owner"
                             id="owner" name="owner"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="owner" :value="null">-</option>
@@ -137,7 +140,7 @@ function removeCapital(index) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Description</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="capital.description" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="capital.description" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
@@ -164,12 +167,12 @@ function removeCapital(index) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is Retained?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="capital.is_retained" type="radio" id="true" :value="true"
                                :checked="capital.is_retained == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="capital.is_retained" type="radio" id="false" :value="false"
                                :checked="capital.is_retained == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />

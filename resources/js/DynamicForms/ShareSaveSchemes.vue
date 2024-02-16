@@ -45,12 +45,12 @@ const props = defineProps({
 function formatAmount(e, index, dataField) {
     stepForm.schemes[index][dataField] = '';
     stepForm.schemes[index][dataField] = changeToCurrency(e.target.value);
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveLocally()
 }
 
 function saveMaturesAt(index, value) {
     stepForm.schemes[index].matures_at = value;
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 function addScheme() {
@@ -66,9 +66,14 @@ function addScheme() {
 }
 
 
-const stepForm = useForm(`EditSchemes${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     schemes: props.formData.model.schemes
 })
+
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.schemes = props.formData.model.schemes;
+}
 
 function removeScheme(index) {
     if(stepForm.schemes[index].id != null)
@@ -117,7 +122,7 @@ function removeScheme(index) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="owner"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="scheme.owner"
+                    <select @change="autosaveLocally()" v-model="scheme.owner"
                             id="owner" name="owner"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="owner" :value="null">-</option>
@@ -130,7 +135,7 @@ function removeScheme(index) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Name</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="scheme.name" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="scheme.name" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
@@ -156,7 +161,7 @@ function removeScheme(index) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Number of Shares</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="scheme.number_of_shares" type="number" step="1" min="0" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="scheme.number_of_shares" type="number" step="1" min="0" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
