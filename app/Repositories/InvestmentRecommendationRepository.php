@@ -1,10 +1,8 @@
 <?php
 namespace App\Repositories;
 
-
-
 use App\Concerns\ParsesIoClientData;
-use App\Exceptions\ClientNotFoundException;
+use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Models\Client;
@@ -48,7 +46,7 @@ class InvestmentRecommendationRepository extends BaseRepository
         if($this->investmentRecommendation){
             return $this->investmentRecommendation;
         }
-        throw new ClientNotFoundException();
+        throw new InvestmentRecommendationNotFoundException();
     }
 
     //Create the model
@@ -108,13 +106,12 @@ class InvestmentRecommendationRepository extends BaseRepository
      */
     public function loadInvestmentRecommendationSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
-        $id = $this->investmentRecommendation->primary_client ? $this->investmentRecommendation->primary_client->io_id : $this->client->io_id;
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step, $id){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
             return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => InvestmentRecommendationSectionDataService::get($this->investmentRecommendation,$step,$key, $id),
+               'dynamicData' => InvestmentRecommendationSectionDataService::get($this->investmentRecommendation,$step,$key,),
            ];
         });
     }
@@ -188,13 +185,14 @@ class InvestmentRecommendationRepository extends BaseRepository
 
         $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
 
+        //add functionality to register investment recommendation to selected [report_for] client_id
+
         try {
             if(!$investmentRecommendation){
                 // To Do :
                 // register investment recommendation
                 // use sync() to attach and detach record in pivot table if the recommendation owner is changed
                 $newRecord = $this->registerInvestmentRecommendation($data);
-                $syncClientRecommendations[$newRecord['id']] = $newRecord['value'];
             }
             else {
                 $formatInvestmentData = array(
@@ -206,10 +204,13 @@ class InvestmentRecommendationRepository extends BaseRepository
 
                 $investmentRecommendation->update($formatInvestmentData);
 
-                $syncClientRecommendations[$investmentRecommendation->id] = [
+                // update clients table
+                $clientInvestmentRecommendation = [
                     'isa_allowance_used' => $data['isa_allowance_used'],
                     'cgt_allowance_used' => $data['cgt_allowance_used']
                 ];
+
+                $investmentRecommendation->primary_client->update($clientInvestmentRecommendation);
             }
 
             DB::commit();
@@ -218,9 +219,6 @@ class InvestmentRecommendationRepository extends BaseRepository
             DB::rollback();
             throw new \Exception($e);
         }
-
-        //do sync on all the dependent records updated/registered
-        $this->investmentRecommendation->clients()->sync($syncClientRecommendations);
 
     }
 
@@ -235,17 +233,35 @@ class InvestmentRecommendationRepository extends BaseRepository
 
         try{
             $investmentRecommendation = InvestmentRecommendation::create($formatInvestmentData);
+            return $investmentRecommendation;
         } catch (\Exception $e) {
-            DB::rollback();
             throw new \Exception($e);
         }
+    }
 
-        return [
-            'id' => $investmentRecommendation['id'],
-            'value' => [
-                'isa_allowance_used' => $data['isa_allowance_used'],
-                'cgt_allowance_used' => $data['cgt_allowance_used']
-            ]
-        ];
+    public function createInitialInvestmentRecommendationForClient()
+    {
+        DB::beginTransaction();
+        $formatInvestmentData = array(
+            'isa_transfer_exit_penalty_ascertained' => '',
+            'isa_transfer_exit_penalty_not_ascertained' => 0,
+            'investment_bonds_chargeable_gain_not_calculated' => 0,
+            'investment_bonds_exit_penalty_not_ascertained' => 0,
+            'investment_bonds_exit_penalty_ascertained' => '',
+            'investment_bonds_managed_funds' => 0,
+            'investment_bonds_with_profits' => 0,
+            'dta_sell_to_cgt_exemption' => 0,
+            'cta_sell_to_cgt_exemption' => 0
+        );
+
+        try {
+            $newInvestmentRecommendation = InvestmentRecommendation::create($formatInvestmentData);
+            DB::commit();
+
+            return $newInvestmentRecommendation;
+        } catch (\Exception $e) {
+            throw new \Exception($e);
+            DB::rollback();
+        }
     }
 }

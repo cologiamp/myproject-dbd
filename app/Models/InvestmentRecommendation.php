@@ -19,9 +19,6 @@ class InvestmentRecommendation extends Model
     public function getPrimaryClientAttribute()
     {
         if ($this->clients->count() > 1) {
-//            return $this->hasOne(Client::class)->ofMany(['id' => 'max'], function(Builder $query) {
-//                $query->where('c2_id', '!=', null);
-//            });
             return $this->clients()->where('c2_id', '!=', null)->first();
         }
 

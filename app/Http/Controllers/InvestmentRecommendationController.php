@@ -7,6 +7,7 @@ use App\Models\InvestmentRecommendation;
 use App\Repositories\InvestmentRecommendationRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class InvestmentRecommendationController extends Controller
 {
@@ -20,10 +21,18 @@ class InvestmentRecommendationController extends Controller
     public function show(Client $client, Request $request)
     {
         $this->investmentRecommendationRepository->setClient($client);
-        $client->investment_recommendation->create();
-//        if($client->investment_recommendation->count() > 0) {
-//            $this->investmentRecommendationRepository->setInvestmentRecommendation($client->investment_recommendation->first());
-//        }
+
+        if(!$client->investment_recommendation_id) {
+            $newRecord = $this->investmentRecommendationRepository->createInitialInvestmentRecommendationForClient();
+
+            $client->update(['investment_recommendation_id' => $newRecord->id]);
+            $client->save();
+
+            $this->investmentRecommendationRepository->setInvestmentRecommendation($newRecord);
+        } else {
+            $investmentRecommendation = InvestmentRecommendation::where('id',$client->investment_recommendation_id)->first();
+            $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
+        }
 
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;

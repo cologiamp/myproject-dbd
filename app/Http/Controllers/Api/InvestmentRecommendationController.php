@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Repositories\InvestmentRecommendationRepository;
 use App\Models\InvestmentRecommendation;
 use App\Services\InvestmentRecommendationSectionDataService;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,12 @@ use Exception;
 
 class InvestmentRecommendationController extends Controller
 {
+    protected InvestmentRecommendationRepository $investmentRecommendationRepository;
+    public function __construct(InvestmentRecommendationRepository $investmentRecommendationRepository)
+    {
+        $this->investmentRecommendationRepository = $investmentRecommendationRepository;
+    }
+
     /**
      * @param InvestmentRecommendation $investmentRecommendation
      * @param $section
@@ -23,7 +30,9 @@ class InvestmentRecommendationController extends Controller
      */
     public function update(Client $client, $step, $section, Request $request): string
     {
-        $investmentRecommendation = $client->investment_recommendation()->first();
+        $investmentRecommendation = $this->investmentRecommendationRepository->getInvestmentRecommendation();
+        $investmentRecommendation = $investmentRecommendation->where('id', $client->investment_recommendation_id)->first();
+
         $irsds = App::make(InvestmentRecommendationSectionDataService::class);
 
         try{

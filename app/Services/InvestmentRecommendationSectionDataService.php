@@ -31,14 +31,13 @@ class InvestmentRecommendationSectionDataService
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
     }
     //get the data for a single section of a investment recommendation from a single client
-    public static function get($investmentRecommendation, $step, $section, $id): array
+    public static function get($investmentRecommendation, $step, $section): array
     {
         return [
             'enums' => $investmentRecommendation->loadEnumsForStep($step, $section),
             'model' => $investmentRecommendation->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-//            'submit_url' => '/api/client/' . $investmentRecommendation->primary_client->io_id . '/investment-recommendation/' . $step . '/' . $section
-            'submit_url' => '/api/client/' . $id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
+            'submit_url' => '/api/client/' . $investmentRecommendation->primary_client->io_id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
         ];
     }
 
