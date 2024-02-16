@@ -20,7 +20,10 @@ class InvestmentRecommendationController extends Controller
     public function show(Client $client, Request $request)
     {
         $this->investmentRecommendationRepository->setClient($client);
-        $this->investmentRecommendationRepository->setInvestmentRecommendation($client->investment_recommendation->first());
+        $client->investment_recommendation->create();
+//        if($client->investment_recommendation->count() > 0) {
+//            $this->investmentRecommendationRepository->setInvestmentRecommendation($client->investment_recommendation->first());
+//        }
 
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;

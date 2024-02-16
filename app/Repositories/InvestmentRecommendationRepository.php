@@ -108,12 +108,13 @@ class InvestmentRecommendationRepository extends BaseRepository
      */
     public function loadInvestmentRecommendationSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
+        $id = $this->investmentRecommendation->primary_client ? $this->investmentRecommendation->primary_client->io_id : $this->client->io_id;
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step, $id){
             return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => InvestmentRecommendationSectionDataService::get($this->investmentRecommendation,$step,$key),
+               'dynamicData' => InvestmentRecommendationSectionDataService::get($this->investmentRecommendation,$step,$key, $id),
            ];
         });
     }
@@ -182,15 +183,18 @@ class InvestmentRecommendationRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
-
+        $syncClientRecommendations = [];
         DB::beginTransaction();
+
+        $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
 
         try {
             if(!$investmentRecommendation){
                 // To Do :
                 // register investment recommendation
-                // update pivot table using attach() ?
+                // use sync() to attach and detach record in pivot table if the recommendation owner is changed
+                $newRecord = $this->registerInvestmentRecommendation($data);
+                $syncClientRecommendations[$newRecord['id']] = $newRecord['value'];
             }
             else {
                 $formatInvestmentData = array(
@@ -202,10 +206,10 @@ class InvestmentRecommendationRepository extends BaseRepository
 
                 $investmentRecommendation->update($formatInvestmentData);
 
-                $investmentRecommendation->clients()->updateExistingPivot($investmentRecommendation->id, [
+                $syncClientRecommendations[$investmentRecommendation->id] = [
                     'isa_allowance_used' => $data['isa_allowance_used'],
                     'cgt_allowance_used' => $data['cgt_allowance_used']
-                ]);
+                ];
             }
 
             DB::commit();
@@ -215,5 +219,33 @@ class InvestmentRecommendationRepository extends BaseRepository
             throw new \Exception($e);
         }
 
+        //do sync on all the dependent records updated/registered
+        $this->investmentRecommendation->clients()->sync($syncClientRecommendations);
+
+    }
+
+    public function registerInvestmentRecommendation(array $data) {
+
+        $formatInvestmentData = array(
+            'report_type' => $data['report_type'],
+            'net_income_required' => $data['net_income_required'],
+            'regular_cash_required' => $data['regular_cash_required'],
+            'regular_cash_duration' => $data['regular_cash_duration']
+        );
+
+        try{
+            $investmentRecommendation = InvestmentRecommendation::create($formatInvestmentData);
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
+
+        return [
+            'id' => $investmentRecommendation['id'],
+            'value' => [
+                'isa_allowance_used' => $data['isa_allowance_used'],
+                'cgt_allowance_used' => $data['cgt_allowance_used']
+            ]
+        ];
     }
 }

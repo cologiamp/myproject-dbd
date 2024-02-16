@@ -31,14 +31,14 @@ class InvestmentRecommendationSectionDataService
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
     }
     //get the data for a single section of a investment recommendation from a single client
-    public static function get($investmentRecommendation, $step, $section): array
+    public static function get($investmentRecommendation, $step, $section, $id): array
     {
-        // ToDo: change how client->io_id is fetched once two clients view is in place.
         return [
             'enums' => $investmentRecommendation->loadEnumsForStep($step, $section),
             'model' => $investmentRecommendation->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-            'submit_url' => '/api/client/' . $investmentRecommendation->clients()->first()->io_id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
+//            'submit_url' => '/api/client/' . $investmentRecommendation->primary_client->io_id . '/investment-recommendation/' . $step . '/' . $section
+            'submit_url' => '/api/client/' . $id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
         ];
     }
 
@@ -63,8 +63,6 @@ class InvestmentRecommendationSectionDataService
     {
 
         $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
-        // To Do : Is thi alright?
-        $this->investmentRecommendationRepository->setClient($investmentRecommendation->clients->first());
 
         $this->{"_" . $step . $section}($validatedData);
         return true;

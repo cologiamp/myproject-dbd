@@ -5,15 +5,27 @@ namespace App\Models;
 use App\Models\BaseModels\Model;
 use App\Models\Presenters\InvestmentRecommendationPresenter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InvestmentRecommendation extends Model
 {
     protected $guarded = [];
 
-    public function clients():BelongsToMany
+    public function clients():HasMany
     {
-        return $this->belongsToMany(Client::class)->withPivot('isa_allowance_used', 'cgt_allowance_used');
+        return $this->hasMany(Client::class);
+    }
+
+    public function getPrimaryClientAttribute()
+    {
+        if ($this->clients->count() > 1) {
+//            return $this->hasOne(Client::class)->ofMany(['id' => 'max'], function(Builder $query) {
+//                $query->where('c2_id', '!=', null);
+//            });
+            return $this->clients()->where('c2_id', '!=', null)->first();
+        }
+
+        return $this->clients()->first();
     }
 
     //Presenter
@@ -29,7 +41,7 @@ class InvestmentRecommendation extends Model
                 'fee_basis' => config('enums.investment_recommendation.fee_basis')
             ],
             '1.2' => [
-                'report_for' => $this->getOwnersForForm(true),
+                'report_for' => $this->getOwnersForForm(),
                 'report_type' => config('enums.investment_recommendation.report_type'),
                 'regular_cash_duration' => config('enums.investment_recommendation.frequency_public')
             ],
@@ -41,11 +53,11 @@ class InvestmentRecommendation extends Model
 
     private function getOwnersForForm($noBoth = false):array
     {
-        if($this->client_two)
+        if($this->primary_client->client_two)
         {
             $arr = [
-                $this->io_id => $this->name,
-                $this->client_two->io_id => $this->client_two->name
+                $this->primary_client->io_id => $this->primary_client->name,
+                $this->primary_client->client_two->io_id => $this->primary_client->client_two->name
             ];
             if(!$noBoth)
             {
@@ -54,7 +66,7 @@ class InvestmentRecommendation extends Model
             return $arr;
         }
         return [
-            $this->io_id => $this->name,
+            $this->primary_client->io_id => $this->primary_client->name,
         ];
     }
 }

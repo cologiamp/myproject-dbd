@@ -38,12 +38,11 @@ class InvestmentRecommendationPresenter extends BasePresenter
                 'fee_basis' => $this->model->fee_basis,
                 'fee_basis_discount' => $this->model->fee_basis_discount != null ? $this->currencyIntToString($this->model->fee_basis_discount) : null
             ],
-            // To Do : $this->model->clients->first()->pivot ?
             '1.2' => [
                 'id' => $this->model->id,
                 'report_type' => $this->model->report_type,
-                'isa_allowance_used' => $this->model->clients->first()->pivot->isa_allowance_used != null ? $this->currencyIntToString($this->model->clients->first()->pivot->isa_allowance_used) : null,
-                'cgt_allowance_used' => $this->model->clients->first()->pivot->cgt_allowance_used != null ? $this->currencyIntToString($this->model->clients->first()->pivot->cgt_allowance_used) : null,
+                'isa_allowance_used' => $this->model->primary_client->isa_allowance_used != null ? $this->currencyIntToString($this->model->primary_client->isa_allowance_used) : null,
+                'cgt_allowance_used' => $this->model->primary_client->cgt_allowance_used != null ? $this->currencyIntToString($this->model->primary_client->cgt_allowance_used) : null,
                 'net_income_required' => $this->model->net_income_required != null ? $this->currencyIntToString($this->model->net_income_required) : null,
                 'regular_cash_required' => $this->model->regular_cash_required != null ? $this->currencyIntToString($this->model->regular_cash_required) : null,
                 'regular_cash_duration' => $this->model->regular_cash_duration
