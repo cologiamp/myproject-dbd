@@ -161,7 +161,7 @@ class InvestmentRecommendationRepository extends BaseRepository
 
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
-//                        '//todo write join query here for other places data ends up'.
+                        // todo write join query here for other places data ends up.
                         default => collect([]),
                     };
                 });
@@ -180,49 +180,9 @@ class InvestmentRecommendationRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $syncClientRecommendations = [];
         DB::beginTransaction();
 
         $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
-
-        //add functionality to register investment recommendation to selected [report_for] client_id
-
-        try {
-            if(!$investmentRecommendation){
-                // To Do :
-                // register investment recommendation
-                // use sync() to attach and detach record in pivot table if the recommendation owner is changed
-                $newRecord = $this->registerInvestmentRecommendation($data);
-            }
-            else {
-                $formatInvestmentData = array(
-                    'report_type' => $data['report_type'],
-                    'net_income_required' => $data['net_income_required'],
-                    'regular_cash_required' => $data['regular_cash_required'],
-                    'regular_cash_duration' => $data['regular_cash_duration']
-                );
-
-                $investmentRecommendation->update($formatInvestmentData);
-
-                // update clients table
-                $clientInvestmentRecommendation = [
-                    'isa_allowance_used' => $data['isa_allowance_used'],
-                    'cgt_allowance_used' => $data['cgt_allowance_used']
-                ];
-
-                $investmentRecommendation->primary_client->update($clientInvestmentRecommendation);
-            }
-
-            DB::commit();
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new \Exception($e);
-        }
-
-    }
-
-    public function registerInvestmentRecommendation(array $data) {
 
         $formatInvestmentData = array(
             'report_type' => $data['report_type'],
@@ -231,15 +191,38 @@ class InvestmentRecommendationRepository extends BaseRepository
             'regular_cash_duration' => $data['regular_cash_duration']
         );
 
-        try{
-            $investmentRecommendation = InvestmentRecommendation::create($formatInvestmentData);
-            return $investmentRecommendation;
+        try {
+            if(!$investmentRecommendation){
+                $newInvestmentRecord = $this->registerInvestmentRecommendation($formatInvestmentData);
+
+                // update client investment info on clients table
+                $this->updateClientsInvestmentId($data, $newInvestmentRecord);
+            }
+            else {
+                $investmentRecommendation->update($formatInvestmentData);
+
+                // update client investment info on clients table
+                $this->updateClientsInvestmentId($data, $investmentRecommendation);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
+    }
+
+    public function registerInvestmentRecommendation(array $data): InvestmentRecommendation
+    {
+        try {
+            return InvestmentRecommendation::create($data);
         } catch (\Exception $e) {
             throw new \Exception($e);
         }
     }
 
-    public function createInitialInvestmentRecommendationForClient()
+    public function createInitialInvestmentRecommendationForClient(): InvestmentRecommendation
     {
         DB::beginTransaction();
         $formatInvestmentData = array(
@@ -260,8 +243,23 @@ class InvestmentRecommendationRepository extends BaseRepository
 
             return $newInvestmentRecommendation;
         } catch (\Exception $e) {
-            throw new \Exception($e);
             DB::rollback();
+            throw new \Exception($e);
+        }
+    }
+
+    private function updateClientsInvestmentId(mixed $data, InvestmentRecommendation $investmentRecommendation): void
+    {
+        $clientInvestmentRecommendation = [
+            'isa_allowance_used' => $data['isa_allowance_used'],
+            'cgt_allowance_used' => $data['cgt_allowance_used']
+        ];
+
+        // To Do: add update condition if [report_for] is set as 'Both'
+        if (array_key_exists('report_for', $data) && $data['report_for'] != null) {
+            $investmentRecommendation->clients()->where('io_id', $data['report_for'])->first()->update($clientInvestmentRecommendation);
+        } else {
+            $investmentRecommendation->primary_client->update($clientInvestmentRecommendation);
         }
     }
 }

@@ -714,15 +714,25 @@ return [
                         ],
                     ]
                 ],
-//                3 => [
-//                    'name' => 'Tax Consequences',
-//                    'fields' => [
-//
-//                    ],
-//                    'rules' => [
-//
-//                    ]
-//                ],
+                3 => [
+                    'name' => 'Tax Consequences',
+                    'fields' => [
+                        'investment_recommendations.cta_base_costs_available',
+                        'investment_recommendations.cta_sell_to_cgt_exemption',
+                        'investment_recommendations.cta_sell_all',
+                        'investment_recommendations.cta_sell_set_amount',
+                        'investment_recommendations.isa_transfer_exit_penalty_not_ascertained',
+                        'investment_recommendations.isa_transfer_exit_penalty_ascertained',
+                        'investment_recommendations.investment_bonds_managed_funds',
+                        'investment_recommendations.investment_bonds_with_profits',
+                        'investment_recommendations.investment_bonds_chargeable_gain_not_calculated',
+                        'investment_recommendations.investment_bonds_exit_penalty_not_ascertained',
+                        'investment_recommendations.investment_bonds_exit_penalty_ascertained'
+                    ],
+                    'rules' => [
+
+                    ]
+                ],
 //                4 => [
 //                    'name' => 'Investment Recommendations',
 //                    'fields' => [

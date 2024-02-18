@@ -1,0 +1,385 @@
+<script setup>
+import {autoS, autosaveT} from "@/autosave.js";
+import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
+import {useForm} from "laravel-precognition-vue-inertia";
+import { PlusCircleIcon } from '@heroicons/vue/24/solid';
+import { XCircleIcon } from '@heroicons/vue/24/solid';
+
+import {onMounted, ref, watch} from "vue";
+import {usePage} from "@inertiajs/vue3";
+import FormErrors from "@/Components/FormErrors.vue";
+import {changeToCurrency} from "@/currency.js";
+
+const emit = defineEmits(['autosaveStateChange'])
+
+watch(autoS,(newValue,oldValue) => {
+    emit('autosaveStateChange',newValue)
+})
+const props = defineProps({
+    formData: {
+        type: Object,
+        default: {
+            enums: {
+                fee_basis: []
+            },
+            model: {
+                cta_base_costs_available: null,
+                cta_sell_to_cgt_exemption: null,
+                cta_sell_all: null,
+                cta_sell_set_amount: null,
+                isa_transfer_exit_penalty_not_ascertained: null,
+                isa_transfer_exit_penalty_ascertained: null,
+                investment_bonds_managed_funds: null,
+                investment_bonds_with_profits: null,
+                investment_bonds_chargeable_gain_not_calculated: null,
+                investment_bonds_exit_penalty_not_ascertained: null,
+                investment_bonds_exit_penalty_ascertained: null
+            },
+            submit_method: 'post',
+            submit_url: '/',
+        },
+    },
+    errors: Object,
+});
+
+function formatAmount(e, dataField) {
+    stepForm[dataField] = '';
+    stepForm[dataField] = changeToCurrency(e.target.value);
+
+    autosaveT(stepForm,props.formData.submit_url);
+}
+
+onMounted(()=>{
+})
+
+const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
+    cta_base_costs_available: null,
+    cta_sell_to_cgt_exemption: null,
+    cta_sell_all: null,
+    cta_sell_set_amount: null,
+    isa_transfer_exit_penalty_not_ascertained: null,
+    isa_transfer_exit_penalty_ascertained: null,
+    investment_bonds_managed_funds: null,
+    investment_bonds_with_profits: null,
+    investment_bonds_chargeable_gain_not_calculated: null,
+    investment_bonds_exit_penalty_not_ascertained: null,
+    investment_bonds_exit_penalty_ascertained: null
+})
+
+
+</script>
+
+<template>
+
+    <form-errors :errors="usePage().props.errors"/>
+    <dynamic-form-wrapper :saving="autoS">
+        <div class="form-row flex-1">
+            <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
+                <label class="font-bold text-white text-lg">Collective Taxable Assets (E.G Unit Trusts)</label>
+            </div>
+            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-8">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
+                    <div>
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Base Costs: Notes</label>
+                        <div class="mt-2">
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Sell Set Amount: Notes </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="cta_sell_set_amount" id="cta_sell_set_amount"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>
+                </div>
+            </div>
+            <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
+                <label class="font-bold text-white text-lg">Direct Taxable Assets (E.g Shares)</label>
+            </div>
+            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4  mb-6">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-8">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
+                    <div>
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Base Costs: Notes</label>
+                        <div class="mt-2">
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Sell Set Amount: Notes </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="cta_sell_set_amount" id="cta_sell_set_amount"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>
+                </div>
+            </div>
+            <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
+                <label class="font-bold text-white text-lg">ISA Transfers</label>
+            </div>
+            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4  mb-6">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-8">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-8">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty -ascertained</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
+                    <div>
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Exit penalty - Notes</label>
+                        <div class="mt-2">
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
+                <label class="font-bold text-white text-lg">Investment Bonds</label>
+            </div>
+            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4  mb-6">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-8">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Managed funds (including unitised WP)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-8">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">With Profits (traditional)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain NOT calculated</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty -ascertained</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
+                    <div>
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Exit penalty - Notes</label>
+                        <div class="mt-2">
+                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
+                <div class="md:col-span-6 flex flex-row justify-between">
+                    <label class="font-bold">Investment Bonds </label>
+                    <button type="button"
+                            class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <XCircleIcon class="w-4 h-4" />Remove Investment Bond
+                    </button>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="provider" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Provider </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="provider" id="provider"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Provider" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.provider">{{ stepForm.errors.provider }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Initial investment </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="initial_investment" id="initial_investment"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.initial_investment">{{ stepForm.errors.initial_investment }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="surrender_value" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Surrender Value </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="surrender_value" id="surrender_value"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.surrender_value">{{ stepForm.errors.surrender_value }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Initial investment </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="initial_investment" id="initial_investment"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.initial_investment">{{ stepForm.errors.initial_investment }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="withdrawals" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Withdrawals </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="withdrawals" id="withdrawals"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.withdrawals">{{ stepForm.errors.withdrawals }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="total_gain" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total Gain </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="total_gain" id="total_gain"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.total_gain">{{ stepForm.errors.total_gain }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="complete_years_held" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> No. of complete years held </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="complete_years_held" id="complete_years_held"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.complete_years_held">{{ stepForm.errors.complete_years_held }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="top_slice" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Top Slice </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="top_slice" id="top_slice"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.top_slice">{{ stepForm.errors.top_slice }}</p>
+                </div>
+            </div>
+            <button type="button"
+                    class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <PlusCircleIcon class="w-6 h-6" />Add Investment Bond
+            </button>
+        </div>
+    </dynamic-form-wrapper>
+</template>
