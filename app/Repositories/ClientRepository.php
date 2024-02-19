@@ -89,21 +89,27 @@ class ClientRepository extends BaseRepository
         {
             $data['date_from'] = Carbon::parse($data['date_from']);
         }
-        if(array_key_exists('address_id',$data) && $data['address_id'] != null)
+        if(array_key_exists('id',$data) && $data['id'] != null)
         {
-            $addr = $this->client->addresses()->where('address_id',$data['address_id'])->first();
+            $addr = Address::where('id',$data['id'])->first();
+            $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
+        }
+        elseif(array_key_exists('address_id',$data) && $data['address_id'] != null)
+        {
+            $addr = Address::where('id',$data['address_id'])->first();
+            $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         elseif(array_key_exists('io_id',$data) && $data['io_id'] != null)
         {
-            $addr = $this->client->addresses()->where('io_id',$data['io_id'])->first();
+            $addr = Address::where('io_id',$data['io_id'])->first();
+            $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         else{
             $addr = Address::create(collect($data)->except(['address_id','io_id'])->toArray());
 
             $this->client->addresses()->attach($addr->fresh());
-            return;
         }
-        $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
+
     }
 
     //Delete the resource from the database, doing any cleanup first

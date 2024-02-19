@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Repositories\ClientRepository;
 use App\Services\FactFindSectionDataService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,7 +42,6 @@ class FactFindController extends Controller
             $section,
             $ffsds->validated($step, $section, $request)
         );
-
-        return response()->json(['client' => $client, 'step' => $step, 'section' => $section]);
+        return json_encode(['model' =>  $ffsds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
     }
 }

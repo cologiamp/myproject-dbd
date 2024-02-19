@@ -70,12 +70,17 @@ class FactFindSectionDataService
 
     public function validate(int $step, int $section, Request $request)
     {
-        return Validator::make($request->all(), config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules'))->validate();
+        $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
+
+        return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
     public function validated(int $step, int $section, Request $request)
     {
-        return Validator::make($request->all(), config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules'))->validated();
+        $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
+        return Validator::make($request->all(), $rules, $messages)->validated();
     }
 
     /**
@@ -156,14 +161,13 @@ class FactFindSectionDataService
         try {
             if (array_key_exists('addresses', $validatedData)) {
 
+                $client = $this->cr->getClient();
+                $passedAddressIds =  collect($validatedData['addresses'])->pluck('address_id')->filter();
                 //addresses can belong to multiple clients, so we don't destroy them, just detach
-                $this->cr->getClient()->addresses()->detach($this->cr->getClient()->addresses->whereNotIn('id',
-                    collect($validatedData['addresses'])->pluck('address_id')->filter())->pluck('id')
-                );
-
+                $client->addresses()->detach($client->addresses->whereNotIn('id', $passedAddressIds)->pluck('id'));
 
                 collect($validatedData['addresses'])->each(function ($item) {
-                    if ($item['date_from'] && $item['date_from'] != null) {
+                    if (array_key_exists('date_from',$item) && $item['date_from'] && $item['date_from'] != null) {
                         $item['date_from'] = Carbon::parse($item['date_from']);
                     }
                     if($item['country'] && $item['country'] != null)
@@ -176,7 +180,8 @@ class FactFindSectionDataService
 
             $contactDetails = array(
                 'phone_number' => $validatedData['phone_number'],
-                'email_address' => $validatedData['email_address']
+                'email_address' => $validatedData['email_address'],
+                'mobile_number' => $validatedData['mobile_number']
             );
 
             $this->cr->updateFromValidated($contactDetails);
@@ -199,7 +204,10 @@ class FactFindSectionDataService
                     if ($dependent['born_at']) {
                         $dependent['born_at'] = Carbon::parse($dependent['born_at']);
                     }
-                    if($dependent['is_living_with_clients'] == null)
+                    if ($dependent['financially_dependent_until']) {
+                        $dependent['financially_dependent_until'] = Carbon::parse($dependent['financially_dependent_until']);
+                    }
+                    if($dependent['is_living_with_clients'] === null)
                     {
                         $dependent['is_living_with_clients'] = true;
                     }
@@ -260,6 +268,9 @@ class FactFindSectionDataService
                     if ($income['ends_at'] && $income['ends_at'] != null) {
                         $income['ends_at'] = Carbon::parse($income['ends_at']);
                     }
+                    if ($income['starts_at'] && $income['starts_at'] != null) {
+                        $income['starts_at'] = Carbon::parse($income['starts_at']);
+                    }
                     if ($income['gross_amount'] && $income['gross_amount'] != null) {
                         $income['gross_amount'] = $this->currencyStringToInt($income['gross_amount']);
                     }
@@ -276,8 +287,17 @@ class FactFindSectionDataService
                 $validatedData['incomes'] = $incomes->toArray();
             }
 
+
             $this->incomeRepository->setClient($this->cr->getClient());
             $this->incomeRepository->createOrUpdateIncomeDetails($validatedData);
+
+            if(count($validatedData['incomes']) == 0 && array_key_exists('total',$validatedData))
+            {
+                $this->cr->updateFromValidated(['total_income_basic' => $this->currencyStringToInt($validatedData['total'])]);
+            }
+            else{
+                $this->cr->updateFromValidated(['total_income_basic' => 0]);
+            }
         } catch (Throwable $e) {
             Log::warning($e);
         }
@@ -394,6 +414,10 @@ class FactFindSectionDataService
                         $asset['product_name'] = $asset['name'];
                         unset($asset['name']);
                     }
+                    if(array_key_exists('provider',$asset) && $asset['provider'] != null && is_array($asset['provider'])){
+                        $asset['provider'] = $asset['provider']['value'];
+                    }
+
                     $asset['category'] = array_flip(config('enums.assets.categories'))['savings'];
                     $asset['type'] = array_flip(config('enums.assets.types'))['Cash'];
                     unset($asset['asset_type']);//remove
@@ -406,6 +430,9 @@ class FactFindSectionDataService
                     }
                     if (array_key_exists('retained_value',$asset) && $asset['retained_value'] != null){
                         $asset['retained_value'] = $this->currencyStringToInt($asset['retained_value']);
+                    }
+                    if (array_key_exists('contribution_amount',$asset) && $asset['contribution_amount'] != null){
+                        $asset['contribution_amount'] = $this->currencyStringToInt($asset['contribution_amount']);
                     }
 
                     return $asset;
@@ -465,9 +492,16 @@ class FactFindSectionDataService
             if (array_key_exists('regular_contribution',$item) && $item['regular_contribution'] != null){
                 $item['regular_contribution'] = $this->currencyStringToInt($item['regular_contribution']);
             }
+            if (array_key_exists('lump_sum_contribution',$item) && $item['lump_sum_contribution'] != null){
+                $item['lump_sum_contribution'] = $this->currencyStringToInt($item['lump_sum_contribution']);
+            }
             if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
                 $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
             }
+            if(array_key_exists('provider',$item) && $item['provider'] != null && is_array($item['provider'])){
+                $item['provider'] = $item['provider']['value'];
+            }
+
 
             return $item;
         });
@@ -507,6 +541,10 @@ class FactFindSectionDataService
                 unset($item['valuation_at']);
             }
 
+            if(array_key_exists('administrator',$item) && $item['administrator'] != null && is_array($item['administrator'])){
+                $item['administrator'] = $item['administrator']['value'];
+            }
+
             if (array_key_exists('gross_contribution_absolute',$item) && $item['gross_contribution_absolute'] != null){
                 $item['gross_contribution_absolute'] = $this->currencyStringToInt($item['gross_contribution_absolute']);
             }
@@ -516,10 +554,15 @@ class FactFindSectionDataService
             if (array_key_exists('value',$item) && $item['value'] != null){
                 $item['value'] = $this->currencyStringToInt($item['value']);
             }
-            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null){
+            if (array_key_exists('retained_value',$item) && $item['retained_value'] != null) {
                 $item['retained_value'] = $this->currencyStringToInt($item['retained_value']);
             }
-
+            if (array_key_exists('current_fund_value',$item) && $item['current_fund_value'] != null){
+                $item['current_fund_value'] = $this->currencyStringToInt($item['current_fund_value']);
+            }
+            if (array_key_exists('current_transfer_value',$item) && $item['current_transfer_value'] != null){
+                $item['current_transfer_value'] = $this->currencyStringToInt($item['current_transfer_value']);
+            }
             return $item;
         });
 
@@ -669,9 +712,7 @@ class FactFindSectionDataService
                     if (array_key_exists('monthly_repayment', $liability) && $liability['monthly_repayment'] != null) {
                         $liability['monthly_repayment'] = $this->currencyStringToInt($liability['monthly_repayment']);
                     }
-                    if ($liability['is_to_be_repaid'] == false) {
-                        $liability['repay_details'] = '';
-                    }
+
                     return $liability;
                 });
 

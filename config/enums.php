@@ -533,6 +533,7 @@ return [
             197 => 'ZWE', // Zimbabwean
         ],
         'iso_2' => [
+            'GB' => 'United Kingdom',
             'AF' => 'Afghanistan',
             'AX' => 'Aland Islands',
             'AL' => 'Albania',
@@ -763,7 +764,6 @@ return [
             'UG' => 'Uganda',
             'UA' => 'Ukraine',
             'AE' => 'United Arab Emirates',
-            'GB' => 'United Kingdom',
             'US' => 'United States',
             'UM' => 'United States Outlying Islands',
             'UY' => 'Uruguay',
@@ -1355,16 +1355,28 @@ return [
             3 => 'FourWeekly',
             4 => 'Quarterly',
             5 => 'HalfYearly',
-            6 => 'Annually'
+            6 => 'Annually',
+            7 => 'OneOff'
         ],
         'frequency_public' => [
             0 => 'Monthly',
             1 => 'Weekly',
             2 => 'Once every 2 weeks',
-            3 => 'Every 4 months',
+            3 => 'Every 4 weeks',
             4 => 'Quarterly',
             5 => 'Every 6 months',
-            6 => 'Annually'
+            6 => 'Annual',
+            7 => 'One-off'
+        ],
+        'per_year_frequency' => [
+            0 => 12,
+            1 => 52,
+            2 => 26,
+            3 => 13,
+            4 => 4,
+            5 => 2,
+            6 => 1,
+            7 => 1 //?
         ]
     ],
     'expenditures' => [
@@ -1466,41 +1478,58 @@ return [
             14 => 'Buy-to-Let Property'
         ],
         'account_types' => [
-            0 => 'Foo',
-            1 => 'Bar',
-            2 => 'Baz'
-        ],
-        'providers' => [
-            0 => 'Foo',
-            1 => 'Bar',
-            2 => 'Baz'
-        ],
-        'investment_providers' => [
-            0 => 'Foo',
-            1 => 'Bar',
-            2 => 'Baz'
+            0 => 'Current Account',
+            1 => 'Savings Accounts',
+            2 => 'Fixed Term Cash Bond',
+            3 => 'NS&I Premium Bonds',
+            4 => 'NS&I Savings Certificates',
+            5 => 'Cash ISA',
+            6 => 'Cash LISA',
+            7 => 'Other cash based account',
         ],
         'investment_account_types' => [
-            0 => 'Foo',
-            1 => 'Bar',
-            2 => 'Baz'
+            0 => 'Direct Equities',
+            1 => 'Discretionary Management Service',
+            2 => 'General Investment Account',
+            3 => 'ISA Stocks & Shares',
+            4 => 'Onshore Bond',
+            5 => 'Offshore Bond',
+            6 => 'Seed Enterprise Investment Scheme',
+            7 => 'Structured Product Income',
+            8 => 'Structure Product Growth',
+            9 => 'Venture Capital Trust',
+            10 => 'Other Investment',
         ],
         'db_pension_statuses' => [
-            0 => 'Status 0',
-            1 => 'Status 1',
-            2 => 'Status 2',
-            3 => 'Status 3',
+            0 => 'Active',
+            1 => 'Deferred',
+            2 => 'In payment',
         ],
         'dc_pension_types' => [
             0 => 'Occupational',
-            1 => 'Personal',
-            2 => 'SIPP'
+            1 => 'Personal Pension',
+            2 => 'Retirement Annuity Contract',
+            3 => 'Self-Invested Personal Pension'
         ],
-        'dc_pension_administrators' => [
-            0 => 'Foo',
-            1 => 'Bar',
-            2 => 'Baz'
+        'pension_crystallised_statuses' => [
+            0 => 'Uncrystallised',
+            1 => 'Fully Crystallised',
+            2 => 'Part Crystallised'
         ],
+        'pension_fund_types' => [
+          0 => 'Active',
+          1 => 'Passive',
+          2 => 'WP - Fixed',
+          3 => 'WP - Variable',
+          4 => 'WP - Smoothed',
+          5 => 'WP - Conventional',
+          6 => 'Target Dated',
+          7 => 'Investment Trust',
+          8 => 'Shares',
+          9 => 'Cash',
+          10 => 'Discretionary Managed'
+        ],
+
         'frequency' => [
             0 => 'Monthly',
             1 => 'Weekly',
@@ -1508,7 +1537,8 @@ return [
             3 => 'FourWeekly',
             4 => 'Quarterly',
             5 => 'HalfYearly',
-            6 => 'Annually'
+            6 => 'Annually',
+            7 => 'OneOff'
         ],
         'frequency_public' => [
             0 => 'Monthly',
@@ -1517,8 +1547,18 @@ return [
             3 => 'Every 4 months',
             4 => 'Quarterly',
             5 => 'Every 6 months',
-            6 => 'Annually'
+            6 => 'Annually',
+            7 => 'One-off'
         ]
+    ],
+    'hmrc_lifetime_allowance_protection_types' => [
+        0 => 'Primary',
+        1 => 'Enhanced',
+        2 => 'Fixed 2012',
+        3 => 'Fixed 2014',
+        4 => 'Fixed 2016',
+        5 => 'Individual 2014',
+        6 => 'Individual 2016'
     ],
     'liabilities' => [
         'types' => [

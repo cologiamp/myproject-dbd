@@ -85,35 +85,31 @@ class DependentRepository extends BaseRepository
 
         $syncDependents = [];
         collect($data['dependents'])->each(function ($dependent) use ($data, &$syncDependents) {
+
             if(array_key_exists('dependent_id', $dependent)) {
 
                 $model = Dependent::where('id', $dependent['dependent_id'])->first();
-
-                DB::beginTransaction();
-
-                try {
-                    //update dependent on [dependents] table
-                    $formatDependentData = array(
-                        'name' => $dependent['name'],
-                        'born_at' => $dependent['born_at'],
-                        'financial_dependent' => $dependent['financial_dependent'],
-                        'is_living_with_clients' => $dependent['is_living_with_clients']
-                    );
-
-                    $model->update($formatDependentData);
-
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    throw new \Exception($e);
-                }
-
-                DB::commit();
+                $model->update([
+                    'name' => $dependent['name'],
+                    'born_at' => $dependent['born_at'],
+                    'financial_dependent' => $dependent['financial_dependent'],
+                    'financially_dependent_until' => $dependent['financially_dependent_until'],
+                    'is_living_with_clients' => $dependent['is_living_with_clients']
+                ]);
 
                 $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
             } else {
-                //register dependent
-                $ret = $this->registerDependent($dependent);
-                $syncDependents[$ret['id']] = $ret['value'];
+
+                $model = Dependent::create([
+                    'name' => $dependent['name'],
+                    'born_at' => $dependent['born_at'],
+                    'financial_dependent' => $dependent['financial_dependent'],
+                    'financially_dependent_until' => $dependent['financially_dependent_until'],
+                    'is_living_with_clients' => $dependent['is_living_with_clients']
+                ]);
+
+
+                $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
             }
 
         });
@@ -124,53 +120,4 @@ class DependentRepository extends BaseRepository
     }
 
 
-
-    public function registerDependent(array $dependent) {
-
-        $dependentData = array(
-            'name' => $dependent['name'],
-            'born_at' => $dependent['born_at'],
-            'financial_dependent' => $dependent['financial_dependent'],
-            'is_living_with_clients' => $dependent['is_living_with_clients']
-        );
-        try{
-            $model = Dependent::create($dependentData);
-        }catch (Exception $e)
-        {
-            dd($e);
-        }
-
-
-
-        return [
-            'id' => $model['id'],
-            'value' => ['relationship_type' => $dependent['relationship_type']]
-        ];
-
-    }
-
-    //FactFind://to do - make sure this works for your form
-    /**
-     * Function to work out the progress % for each section.
-     * @param $key
-     * @return int
-     */
-    // public function calculateFactFindElementProgress(int $section):int
-    // {
-        // $progress = collect(config('navigation_structures.factfind.' . $section . '.sections'))->map(function ($section){
-        // if(array_key_exists('fields',$section) && count($section['fields']) > 0)
-        // {
-        //                 return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-        // return match ($key) {
-        // 'dependents' => Dependent::where("client_id", $this->client->id)->select([...$value])->first()->toArray(),
-        // //                        '//todo write join query here for other places data ends up'.
-        // default => collect([]),
-        // };
-        // });
-        // }
-        //             else return collect([]);
-        // })->flatten();
-        // if ($progress->count() === 0) return 0;
-        // return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
-    // }
 }

@@ -23,6 +23,7 @@ return [
                         'fields' => [
                             "clients.date_of_birth",
                             "clients.first_name",
+                            "clients.middle_name",
                             "clients.last_name",
                             "clients.salutation",
                             'clients.date_of_birth',
@@ -34,10 +35,12 @@ return [
                             'clients.country_of_residence',
                             'clients.valid_will',
                             'clients.will_up_to_date',
-                            'clients.poa_granted'
+                            'clients.poa_granted',
+                            'clients.poa_name'
                         ],
                         'rules' => [
                             'first_name' => 'sometimes|max:127',
+                            'middle_name' => 'sometimes|nullable|max:127',
                             'last_name' => 'sometimes|max:127',
                             'salutation' => 'sometimes|max:127',
                             'title' => [
@@ -69,7 +72,11 @@ return [
                                 'integer',
                                 Rule::in(array_keys((config('enums.client.nationality'))))
                             ],
-                            'ni_number' => 'sometimes|nullable|max:9',
+                            'ni_number' => [
+                                'sometimes',
+                                'nullable',
+                                'regex:/^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}$/i'
+                            ],
                             'country_of_domicile' => [
                                 'sometimes',
                                 'nullable',
@@ -80,7 +87,11 @@ return [
                             ],
                             'valid_will' => 'sometimes|nullable|boolean',
                             'will_up_to_date' => 'sometimes|nullable|boolean',
-                            'poa_granted' => 'sometimes|nullable|boolean'
+                            'poa_granted' => 'sometimes|nullable|boolean',
+                            'poa_name' => 'sometimes|nullable|max:127'
+                        ],
+                        'messages' => [
+                            'ni_number.regex' => 'The entered National Insurance Number has an invalid format',
                         ]
                     ],
                     2 => [
@@ -102,7 +113,8 @@ return [
                             'medical_conditions' => 'sometimes|nullable|max:1024',
                             'smoker' => 'sometimes|nullable|integer',
                             'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                     3 => [
                         'name' => 'Address and Contact Details',
@@ -118,6 +130,7 @@ return [
                                 'addresses.date_from'
                             ],
                             "clients.phone_number",
+                            "clients.mobile_number",
                             "clients.email_address"
                         ],
                         'rules' => [
@@ -144,16 +157,20 @@ return [
                             ],
                             'addresses.*.date_from' => 'sometimes|nullable|date',
                             'phone_number' => 'sometimes|nullable|max:20',
+                            'mobile_number' => 'sometimes|nullable|max:20',
                             'email_address' => 'sometimes|nullable|max:120'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                     4 => [
                         'name' => 'Family',
                         'fields' => [
                             'dependents' => [
+                                'dependents.dependent_id',
                                 'dependents.name',
                                 'dependents.relationship_type',
                                 'dependents.born_at',
+                                'dependents.financially_dependent_until',
                                 'dependents.financial_dependent',
                                 'dependents.is_living_with_clients'
                             ]
@@ -161,6 +178,7 @@ return [
                         'rules' => [
                             'dependents' => 'sometimes|nullable|array',
                             'dependents.*.name' => 'sometimes|nullable|string',
+                            'dependents.*.dependent_id' => 'sometimes|nullable',
                             'dependents.*.relationship_type' => [
                                 'required',
                                 'numeric',
@@ -168,9 +186,11 @@ return [
                                 Rule::in(array_keys((config('enums.dependent.relationship_type'))))
                             ],
                             'dependents.*.born_at' => 'sometimes|nullable|date',
+                            'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
                             'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
                             'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                     5 => [
                         'name' => 'Employment Details',
@@ -198,7 +218,8 @@ return [
                             'employment_details.*.employer' => 'sometimes|nullable|string',
                             'employment_details.*.start_at' => 'sometimes|nullable|date',
                             'employment_details.*.end_at' => 'sometimes|nullable|date'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                 ],
             ],
@@ -215,12 +236,14 @@ return [
                             "incomes.expenses",
                             "incomes.frequency",
                             "incomes.ends_at",
+                            "incomes.starts_at",
                             "incomes.belongs_to",
                             "incomes.record_exists",
                             "incomes.is_primary"
                         ],
                         'rules' => [
                             'incomes' => 'sometimes|nullable|array',
+                            'total' => 'sometimes|nullable',
                             'incomes.*.income_id' => 'sometimes|nullable|integer',
                             'incomes.*.income_type' => [
                                 'sometimes',
@@ -240,10 +263,13 @@ return [
                                 Rule::in(array_keys((config('enums.incomes.frequency'))))
                             ],
                             'incomes.*.ends_at' => 'sometimes|nullable|date',
+                            'incomes.*.starts_at' => 'sometimes|nullable|date',
                             'incomes.*.belongs_to' => 'sometimes|nullable|integer',
                             'incomes.*.record_exists' => 'sometimes|nullable|boolean',
-                            'incomes.*.is_primary' => 'sometimes|nullable|boolean'
-                        ]
+
+                            'incomes.*.is_primary' => 'sometimes|nullable|boolean',
+                        ],
+                        'messages' => []
                     ],
                     2 => [
                         'name' => 'Basic Essential Expenditure',
@@ -283,7 +309,8 @@ return [
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                     3 => [
                         'name' => 'Basic Quality Of Living Expenditure',
@@ -323,7 +350,8 @@ return [
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                     4 => [
                         'name' => 'Non Essential Outgoings Expenditure',
@@ -363,7 +391,8 @@ return [
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
-                        ]
+                        ],
+                        'messages' => []
                     ],
                     5 => [
                         'name' => 'Liability Expenditure',
@@ -403,7 +432,8 @@ return [
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
-                        ]
+                        ],
+                        'messages' => []
                     ]
                 ],
             ],
@@ -411,7 +441,7 @@ return [
             'name' => 'Assets',
             'sections' => [
                 1 => [
-                    'name' => 'Fixed Assets',
+                    'name' => 'Property & Possessions',
                     'fields' => [
                         'assets' => [
                             'assets.owner',
@@ -443,7 +473,8 @@ return [
                         'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
                         'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
-                    ]
+                    ],
+                    'messages' => []
                 ],
                 2 => [
                     'name' => 'Savings',
@@ -460,6 +491,8 @@ return [
                             'assets.interest_rate',
                             'assets.is_retained',
                             'assets.retained_value',
+                            'assets.regular_contributions',
+                            'assets.contribution_amount',
                         ]
                     ],
                     'rules' => [
@@ -468,9 +501,6 @@ return [
                         'saving_assets.*.provider' => [
                             'sometimes',
                             'nullable',
-                            'numeric',
-                            'integer',
-                            Rule::in(array_keys((config('enums.assets.providers'))))
                         ],
                         'saving_assets.*.account_type' => [
                             'sometimes',
@@ -483,11 +513,14 @@ return [
                         'saving_assets.*.owner' => 'sometimes|nullable',
                         'saving_assets.*.current_balance' => 'sometimes|nullable|string',
                         'saving_assets.*.retained_value' => 'sometimes|nullable|string',
+                        'saving_assets.*.contribution_amount' => 'sometimes|nullable|string',
                         'saving_assets.*.is_retained' => 'sometimes|nullable|boolean',
+                        'saving_assets.*.regular_contributions' => 'sometimes|nullable|boolean',
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
                         'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
-                    ]
+                    ],
+                    'messages' => []
                 ],
                 3 => [
                     'name' => 'Investments',
@@ -497,10 +530,7 @@ return [
                         'investments.*.owner' => 'sometimes|nullable',
                         'investments.*.provider' => [
                             'sometimes',
-                            'numeric',
                             'nullable',
-                            'integer',
-                            Rule::in(array_keys((config('enums.assets.investment_providers'))))
                         ],
                         'investments.*.account_type' => [
                             'sometimes',
@@ -514,6 +544,7 @@ return [
                         'investments.*.retained_value' => 'sometimes|nullable|string',
                         'investments.*.current_value' => 'sometimes|nullable|string',
                         'investments.*.regular_contribution' => 'sometimes|nullable|string',
+                        'investments.*.lump_sum_contribution' => 'sometimes|nullable|string',
                         'investments.*.frequency' => [
                             'sometimes',
                             'numeric',
@@ -524,7 +555,8 @@ return [
                         'investments.*.valuation_at' => 'sometimes|nullable|date',
                         'investments.*.start_date' => 'sometimes|nullable|date',
                         'investments.*.maturity_date' => 'sometimes|nullable|date',
-                    ]
+                    ],
+                    'messages' => []
                 ],
                 4=> [
                     'name' => 'Pensions',
@@ -560,10 +592,7 @@ return [
                             'dc_pensions.*.employer' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.administrator' => [
                                 'sometimes',
-                                'numeric',
                                 'nullable',
-                                'integer',
-                                Rule::in(array_keys((config('enums.assets.dc_pension_administrators'))))
                             ],
                             'dc_pensions.*.policy_starts_at' => 'sometimes|nullable|date',
                             'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
@@ -574,8 +603,27 @@ return [
                             'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
                             'dc_pensions.*.value' => 'sometimes|nullable|string',
                             'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean'
-                    ]
+                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean',
+                            'dc_pensions.*.crystallised_status' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.pension_crystallised_statuses'))))
+                            ],
+                            'dc_pensions.*.fund_type' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.pension_fund_types'))))
+                            ],
+                            'dc_pensions.*.crystallised_percentage' => 'sometimes|nullable',
+                            'dc_pensions.*.current_fund_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.fund_name' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.current_transfer_value' => 'sometimes|nullable|string',
+                    ],
+                    'messages' => []
                 ],
                 5 => [
                     'name' => 'Share Save Schemes',
@@ -588,7 +636,8 @@ return [
                         'schemes.*.monthly_saving' => 'sometimes|nullable|string',
                         'schemes.*.number_of_shares' => 'sometimes|nullable|integer',
                         'schemes.*.matures_at' => 'sometimes|nullable|date',
-                    ]
+                    ],
+                    'messages' => []
                 ],
                 6 => [
                     'name' => 'New Lump Sum Capital',
@@ -601,7 +650,8 @@ return [
                         'capitals.*.is_retained' =>'sometimes|nullable|boolean',
                         'capitals.*.retained_value' =>'sometimes|nullable|string',
                         'capitals.*.due_at' => 'sometimes|nullable|date',
-                    ]
+                    ],
+                    'messages' => []
                 ]
             ],
         ],
@@ -645,8 +695,10 @@ return [
                         'liabilities.*.lender' => 'sometimes|nullable|string',
                         'liabilities.*.ends_at' => 'sometimes|nullable|date',
                         'liabilities.*.is_to_be_repaid' => 'sometimes|nullable|boolean',
-                        'liabilities.*.repay_details' => 'sometimes|nullable|max:1024'
-                    ]
+                        'liabilities.*.repay_details' => 'sometimes|nullable|max:1024',
+                        'liabilities.*.interest_rate' => 'sometimes|nullable|numeric'
+                    ],
+                    'messages' => []
                 ]
             ],
         ]

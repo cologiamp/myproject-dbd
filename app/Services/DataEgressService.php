@@ -34,6 +34,7 @@ class DataEgressService
            //we must check if anything actually changed and if we need to update these details.
            $existingContactDetails = collect($i->getContactDetails($client->io_id)['items']);
             $telephone = $existingContactDetails->where('type','Telephone')->first();
+            $mobile = $existingContactDetails->where('type','Mobile')->first();
             $email = $existingContactDetails->where('type','Email')->first();
             if($telephone != null)
             {
@@ -48,6 +49,20 @@ class DataEgressService
                        ]
                    );
                }
+            }
+            if($mobile != null)
+            {
+                if($client->mobile_number != $mobile['value'])
+                {
+                    $i->updateContactDetails(
+                        clientId: $client->io_id,
+                        contactDetailId: $telephone['id'],
+                        payload: [
+                            'type' => 'Mobile',
+                            'value' => $client->mobile_number
+                        ]
+                    );
+                }
             }
             if($email != null)
             {
