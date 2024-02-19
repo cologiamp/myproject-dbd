@@ -180,13 +180,11 @@ class ClientRepository extends BaseRepository
                 }
             }
             else{
-                ray($item)->orange();
                 $data = [
                     'io_id' => $item['id'],
                     'adviser_id' => $adviser_id,
                 ];
                 $data = array_merge($data,$this->parseClientFields($item['person']));
-                ray($data)->purple();
                 $this->client->create($data);
             }
         });

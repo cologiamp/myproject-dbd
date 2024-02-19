@@ -40,7 +40,7 @@ class Retirement extends Model
                 'lump_sum_death_benefits' => config('enums.pension_objectives.lump_sum_death_benefits'),
             ],
             default => [
-
+                
             ]
         };
     }

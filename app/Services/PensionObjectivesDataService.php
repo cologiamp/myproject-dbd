@@ -41,7 +41,7 @@ class PensionObjectivesDataService
             'enums' => $retirement->loadEnumsForPOStep($step),
             'model' => $retirement->presenter()->formatForPOStep($step), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-            'submit_url' => '/client/' . $retirement->client->io_id . '/pension-objectives/' . $step  //here we hydrate the autosave URL
+            'submit_url' => '/api/client/' . $retirement->client->io_id . '/pension-objectives/' . $step  //here we hydrate the autosave URL
         ];
     }
 
