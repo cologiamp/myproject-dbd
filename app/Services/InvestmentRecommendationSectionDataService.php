@@ -126,11 +126,29 @@ class InvestmentRecommendationSectionDataService
      */
     private function _13(array $validatedData): void
     {
-        ray($validatedData)->green();
         //define any explicit mutators that are not handled
-//        if (array_key_exists('isa_allowance_used', $validatedData) && $validatedData['isa_allowance_used'] != null) {
-//            $validatedData['isa_allowance_used'] = $this->currencyStringToInt($validatedData['isa_allowance_used']);
-//        }
+        if (array_key_exists('investment_bonds', $validatedData)) {
+            $investmentBonds = collect($validatedData['investment_bonds'])->map(function ($investmentBond) {
+                if (array_key_exists('initial_investment', $investmentBond) && $investmentBond['initial_investment'] != null) {
+                    $investmentBond['initial_investment'] = $this->currencyStringToInt($investmentBond['initial_investment']);
+                }
+                if (array_key_exists('surrender_value', $investmentBond) && $investmentBond['surrender_value'] != null) {
+                    $investmentBond['surrender_value'] = $this->currencyStringToInt($investmentBond['surrender_value']);
+                }
+                if (array_key_exists('withdrawals', $investmentBond) && $investmentBond['withdrawals'] != null) {
+                    $investmentBond['withdrawals'] = $this->currencyStringToInt($investmentBond['withdrawals']);
+                }
+                if (array_key_exists('total_gain', $investmentBond) && $investmentBond['total_gain'] != null) {
+                    $investmentBond['total_gain'] = $this->currencyStringToInt($investmentBond['total_gain']);
+                }
+                if (array_key_exists('top_slice', $investmentBond) && $investmentBond['top_slice'] != null) {
+                    $investmentBond['top_slice'] = $this->currencyStringToInt($investmentBond['top_slice']);
+                }
+                return $investmentBond;
+            });
+
+            $validatedData['investment_bonds'] = $investmentBonds->toArray();
+        }
 
         $this->investmentRecommendationRepository->createOrUpdateTaxConsequences($validatedData);
     }

@@ -71,6 +71,18 @@ class InvestmentRecommendationPresenter extends BasePresenter
                 'investment_bonds_exit_penalty_not_ascertained' => (bool)$this->model->investment_bonds_exit_penalty_not_ascertained,
                 'investment_bonds_exit_penalty_ascertained_check' => $this->model->investment_bonds_exit_penalty_ascertained == null ? false : true,
                 'investment_bonds_exit_penalty_ascertained' => $this->model->investment_bonds_exit_penalty_ascertained,
+                'investment_bonds' => collect($this->model->investment_bonds->map(function ($investment_bond){
+                    return [
+                        'id' => $investment_bond->id,
+                        'provider' => $investment_bond->provider,
+                        'initial_investment' => $investment_bond->initial_investment != null ? $this->currencyIntToString($investment_bond->initial_investment) : null,
+                        'surrender_value' => $investment_bond->surrender_value != null ? $this->currencyIntToString($investment_bond->surrender_value) : null,
+                        'withdrawals' => $investment_bond->withdrawals != null ? $this->currencyIntToString($investment_bond->withdrawals) : null,
+                        'total_gain' => $investment_bond->total_gain != null ? $this->currencyIntToString($investment_bond->total_gain) : null,
+                        'complete_years_held' => $investment_bond->complete_years_held,
+                        'top_slice' => $investment_bond->top_slice != null ? $this->currencyIntToString($investment_bond->top_slice) : null,
+                    ];
+                }))
             ],
             default => [
 

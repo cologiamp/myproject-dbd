@@ -732,7 +732,14 @@ return [
                         'investment_recommendations.investment_bonds_with_profits',
                         'investment_recommendations.investment_bonds_chargeable_gain_not_calculated',
                         'investment_recommendations.investment_bonds_exit_penalty_not_ascertained',
-                        'investment_recommendations.investment_bonds_exit_penalty_ascertained'
+                        'investment_recommendations.investment_bonds_exit_penalty_ascertained',
+                        'investment_bonds.provider',
+                        'investment_bonds.initial_investment',
+                        'investment_bonds.surrender_value',
+                        'investment_bonds.withdrawals',
+                        'investment_bonds.total_gain',
+                        'investment_bonds.top_slice',
+                        'investment_bonds.complete_years_held'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable',
@@ -751,6 +758,14 @@ return [
                         'investment_bonds_chargeable_gain_not_calculated' => 'sometimes|nullable|boolean',
                         'investment_bonds_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
                         'investment_bonds_exit_penalty_ascertained' => 'sometimes|nullable|string',
+                        'investment_bonds' => 'sometimes|nullable|array',
+                        'investment_bonds.*.provider' => 'sometimes|nullable|string',
+                        'investment_bonds.*.initial_investment' => 'sometimes|nullable|string',
+                        'investment_bonds.*.surrender_value' => 'sometimes|nullable|string',
+                        'investment_bonds.*.withdrawals' => 'sometimes|nullable|string',
+                        'investment_bonds.*.total_gain' => 'sometimes|nullable|string',
+                        'investment_bonds.*.top_slice' => 'sometimes|nullable|string',
+                        'investment_bonds.*.complete_years_held' => 'sometimes|nullable|int'
                     ]
                 ],
 //                4 => [

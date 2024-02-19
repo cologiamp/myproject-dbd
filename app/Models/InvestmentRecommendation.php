@@ -16,6 +16,11 @@ class InvestmentRecommendation extends Model
         return $this->hasMany(Client::class);
     }
 
+    public function investment_bonds():HasMany
+    {
+        return $this->hasMany(InvestmentBond::class);
+    }
+
     public function getPrimaryClientAttribute()
     {
         if ($this->clients->count() > 1) {

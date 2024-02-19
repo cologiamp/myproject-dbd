@@ -7,7 +7,7 @@ use App\Http\Requests\BaseClientRequest;
 use App\Http\Requests\CreateClientRequest;
 use App\Models\Client;
 use App\Models\InvestmentRecommendation;
-use App\Models\EmploymentDetail;
+use App\Models\InvestmentBond;
 use App\Services\InvestmentRecommendationSectionDataService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\Input;
+use Illuminate\Support\Arr;
 
 class InvestmentRecommendationRepository extends BaseRepository
 {
@@ -223,6 +224,7 @@ class InvestmentRecommendationRepository extends BaseRepository
         DB::beginTransaction();
 
         $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
+        $investmentRecommendationId = null;
 
         $formatInvestmentData = array(
             'cta_base_costs_available' => $data['cta_base_costs_available'],
@@ -244,10 +246,15 @@ class InvestmentRecommendationRepository extends BaseRepository
 
         try {
             if(!$investmentRecommendation){
-                $this->registerInvestmentRecommendation($formatInvestmentData);
+                $investmentRecommendation = $this->registerInvestmentRecommendation($formatInvestmentData);
             }
             else {
                 $investmentRecommendation->update($formatInvestmentData);
+            }
+
+            // create or update investment_bonds record
+            if (array_key_exists('investment_bonds', $data)) {
+                $this->createOrUpdateInvestmentBonds($investmentRecommendation, $data['investment_bonds']);
             }
 
             DB::commit();
@@ -306,5 +313,33 @@ class InvestmentRecommendationRepository extends BaseRepository
         } else {
             $investmentRecommendation->primary_client->update($clientInvestmentRecommendation);
         }
+    }
+    private function createOrUpdateInvestmentBonds(InvestmentRecommendation $investmentRecommendation, array $investmentBonds): void
+    {
+//        $investmentRecommendation->investment_bonds()->whereNotIn('id', collect($investmentBonds)->pluck('id')->filter()->toArray())->delete();
+        ray('createOrUpdateInvestmentBonds')->orange();
+        ray($investmentRecommendation->investment_bonds()->whereNotIn('id', collect($investmentBonds)->pluck('id')->filter()->toArray()))->orange();
+
+        collect($investmentBonds)->each(function ($bond) use ($investmentRecommendation) {
+            $formatInvestmentBondData = Arr::except($bond, ['id']);
+            $formatInvestmentBondData['investment_recommendation_id'] = $investmentRecommendation->id;
+
+            if(array_key_exists('id', $bond)) {
+                $model = InvestmentBond::where('id', $bond['id'])->first();
+
+                try {
+                    // update investment bond
+                    ray('update')->orange();
+                    $model->update($formatInvestmentBondData);
+                } catch (\Exception $e) {
+                    throw new \Exception($e);
+                }
+            } else {
+                // register investment bond
+                ray('create new investment bond record')->orange();
+                InvestmentBond::create($formatInvestmentBondData);
+            }
+
+        });
     }
 }

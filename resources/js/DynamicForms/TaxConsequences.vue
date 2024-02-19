@@ -33,7 +33,16 @@ const props = defineProps({
                 investment_bonds_with_profits: null,
                 investment_bonds_chargeable_gain_not_calculated: null,
                 investment_bonds_exit_penalty_not_ascertained: null,
-                investment_bonds_exit_penalty_ascertained: null
+                investment_bonds_exit_penalty_ascertained: null,
+                investment_bonds:[{
+                    provider: null,
+                    initial_investment: null,
+                    surrender_value: null,
+                    withdrawals: null,
+                    total_gain: null,
+                    complete_years_held: null,
+                    top_slice: null
+                }]
             },
             submit_method: 'post',
             submit_url: '/',
@@ -42,9 +51,9 @@ const props = defineProps({
     errors: Object,
 });
 
-function formatAmount(e, dataField) {
-    stepForm[dataField] = '';
-    stepForm[dataField] = changeToCurrency(e.target.value);
+function formatAmount(e, index, dataField) {
+    stepForm.investment_bonds[index][dataField] = '';
+    stepForm.investment_bonds[index][dataField] = changeToCurrency(e.target.value);
 
     autosaveT(stepForm,props.formData.submit_url);
 }
@@ -71,13 +80,13 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     investment_bonds_chargeable_gain_not_calculated: props.formData.model.investment_bonds_chargeable_gain_not_calculated,
     investment_bonds_exit_penalty_not_ascertained: props.formData.model.investment_bonds_exit_penalty_not_ascertained,
     investment_bonds_exit_penalty_ascertained_check: props.formData.model.investment_bonds_exit_penalty_ascertained_check,
-    investment_bonds_exit_penalty_ascertained: props.formData.model.investment_bonds_exit_penalty_ascertained
+    investment_bonds_exit_penalty_ascertained: props.formData.model.investment_bonds_exit_penalty_ascertained,
+    investment_bonds: props.formData.model.investment_bonds
 })
 
 const chargeable_gain = ref(false);
 
 function checkTextInNotes(inputName) {
-    console.log(inputName)
     if (inputName === 'cta_base_costs_available') {
         stepForm.cta_base_costs_availability = stepForm.cta_base_costs_available.length > 0
     } else if (inputName === 'cta_sell_set_amount') {
@@ -97,12 +106,28 @@ function checkTextInNotes(inputName) {
     autosaveT(stepForm,props.formData.submit_url)
 }
 
+function addInvestmentBond() {
+    stepForm.investment_bonds.push({
+        provider: null,
+        initial_investment: null,
+        surrender_value: null,
+        withdrawals: null,
+        total_gain: null,
+        complete_years_held: null,
+        top_slice: null
+    });
+}
+
+function removeInvestmentBond(index) {
+    stepForm.investment_bonds.splice(index, 1);
+    autosaveT(stepForm,props.formData.submit_url);
+}
+
 onMounted(()=>{
 })
 </script>
 
 <template>
-
     <form-errors :errors="usePage().props.errors"/>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
@@ -331,10 +356,10 @@ onMounted(()=>{
                     </div>
                 </div>
             </div>
-            <div class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
+            <div v-for="(investment_bond, index) in stepForm.investment_bonds" class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
-                    <label class="font-bold">Investment Bonds </label>
-                    <button type="button"
+                    <label class="font-bold">Investment Bonds {{ index + 1 }}</label>
+                    <button type="button" @click="removeInvestmentBond"
                             class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <XCircleIcon class="w-4 h-4" />Remove Investment Bond
                     </button>
@@ -342,14 +367,16 @@ onMounted(()=>{
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="provider" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Provider </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="provider" id="provider"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Provider" />
+                        <input v-model="investment_bond.provider" @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="provider" id="provider"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Provider" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.provider">{{ stepForm.errors.provider }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Initial investment </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="initial_investment" id="initial_investment"
+                        <input type="currency" name="initial_investment" id="initial_investment"
+                               :value="investment_bond.initial_investment"
+                               @change="formatAmount($event, index, 'initial_investment')"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.initial_investment">{{ stepForm.errors.initial_investment }}</p>
@@ -357,23 +384,19 @@ onMounted(()=>{
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="surrender_value" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Surrender Value </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="surrender_value" id="surrender_value"
+                        <input type="currency" name="surrender_value" id="surrender_value"
+                               :value="investment_bond.surrender_value"
+                               @change="formatAmount($event, index, 'surrender_value')"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.surrender_value">{{ stepForm.errors.surrender_value }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Initial investment </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="initial_investment" id="initial_investment"
-                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.initial_investment">{{ stepForm.errors.initial_investment }}</p>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="withdrawals" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Withdrawals </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="withdrawals" id="withdrawals"
+                        <input type="currency" name="withdrawals" id="withdrawals"
+                               :value="investment_bond.withdrawals"
+                               @change="formatAmount($event, index, 'withdrawals')"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.withdrawals">{{ stepForm.errors.withdrawals }}</p>
@@ -381,29 +404,35 @@ onMounted(()=>{
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="total_gain" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total Gain </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="total_gain" id="total_gain"
+                        <input type="currency" name="total_gain" id="total_gain"
+                               :value="investment_bond.total_gain"
+                               @change="formatAmount($event, index, 'total_gain')"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.total_gain">{{ stepForm.errors.total_gain }}</p>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="complete_years_held" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> No. of complete years held </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="complete_years_held" id="complete_years_held"
-                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.complete_years_held">{{ stepForm.errors.complete_years_held }}</p>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="top_slice" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Top Slice </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="top_slice" id="top_slice"
+                        <input type="currency" name="top_slice" id="top_slice"
+                               :value="investment_bond.top_slice"
+                               @change="formatAmount($event, index, 'top_slice')"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.top_slice">{{ stepForm.errors.top_slice }}</p>
                 </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="complete_years_held" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> No. of complete years held </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input type="number" name="complete_years_held" id="complete_years_held"
+                               v-model="investment_bond.complete_years_held"
+                               @change="autosaveT(stepForm,props.formData.submit_url)"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.complete_years_held">{{ stepForm.errors.complete_years_held }}</p>
+                </div>
             </div>
-            <button type="button"
+            <button type="button" @click="addInvestmentBond"
                     class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 <PlusCircleIcon class="w-6 h-6" />Add Investment Bond
             </button>
