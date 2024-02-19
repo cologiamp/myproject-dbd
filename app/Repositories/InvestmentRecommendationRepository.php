@@ -173,7 +173,7 @@ class InvestmentRecommendationRepository extends BaseRepository
         return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
     }
 
-    public function createOrUpdateInvestmentRecommendation(mixed $data):void
+    public function createOrUpdateIncomeGrowthReport(mixed $data):void
     {
         if(!is_array($data) && $data::class == Request::class)
         {
@@ -188,7 +188,7 @@ class InvestmentRecommendationRepository extends BaseRepository
             'report_type' => $data['report_type'],
             'net_income_required' => $data['net_income_required'],
             'regular_cash_required' => $data['regular_cash_required'],
-            'regular_cash_duration' => $data['regular_cash_duration']
+            'regular_cash_duration' => $data['regular_cash_duration'],
         );
 
         try {
@@ -203,6 +203,51 @@ class InvestmentRecommendationRepository extends BaseRepository
 
                 // update client investment info on clients table
                 $this->updateClientsInvestmentId($data, $investmentRecommendation);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
+    }
+
+    public function createOrUpdateTaxConsequences(mixed $data):void
+    {
+        if(!is_array($data) && $data::class == Request::class)
+        {
+            $data = $data->safe();
+        }
+
+        DB::beginTransaction();
+
+        $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
+
+        $formatInvestmentData = array(
+            'cta_base_costs_available' => $data['cta_base_costs_available'],
+            'cta_sell_to_cgt_exemption' => $data['cta_sell_to_cgt_exemption'],
+            'cta_sell_all' => $data['cta_sell_all'],
+            'cta_sell_set_amount' => $data['cta_sell_set_amount'],
+            'dta_base_costs_available' => $data['dta_base_costs_available'],
+            'dta_sell_to_cgt_exemption' => $data['dta_sell_to_cgt_exemption'],
+            'dta_sell_all' => $data['dta_sell_all'],
+            'dta_sell_set_amount' => $data['dta_sell_set_amount'],
+            'isa_transfer_exit_penalty_not_ascertained' => $data['isa_transfer_exit_penalty_not_ascertained'],
+            'isa_transfer_exit_penalty_ascertained' => $data['isa_transfer_exit_penalty_ascertained'] == null ? '' : $data['isa_transfer_exit_penalty_ascertained'],
+            'investment_bonds_managed_funds' => $data['investment_bonds_managed_funds'],
+            'investment_bonds_with_profits' => $data['investment_bonds_with_profits'],
+            'investment_bonds_chargeable_gain_not_calculated' => $data['investment_bonds_chargeable_gain_not_calculated'],
+            'investment_bonds_exit_penalty_not_ascertained' => $data['investment_bonds_exit_penalty_not_ascertained'],
+            'investment_bonds_exit_penalty_ascertained' => $data['investment_bonds_exit_penalty_ascertained'] == null ? '' : $data['investment_bonds_exit_penalty_ascertained']
+        );
+
+        try {
+            if(!$investmentRecommendation){
+                $this->registerInvestmentRecommendation($formatInvestmentData);
+            }
+            else {
+                $investmentRecommendation->update($formatInvestmentData);
             }
 
             DB::commit();

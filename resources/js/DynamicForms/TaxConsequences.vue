@@ -5,7 +5,7 @@ import {useForm} from "laravel-precognition-vue-inertia";
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 
-import {onMounted, ref, watch} from "vue";
+import {onMounted, watch, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import {changeToCurrency} from "@/currency.js";
@@ -49,24 +49,56 @@ function formatAmount(e, dataField) {
     autosaveT(stepForm,props.formData.submit_url);
 }
 
+const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
+    id: props.formData.model.id,
+    cta_base_costs_availability: props.formData.model.cta_base_costs_availability,
+    cta_base_costs_available: props.formData.model.cta_base_costs_available,
+    cta_sell_to_cgt_exemption: props.formData.model.cta_sell_to_cgt_exemption,
+    cta_sell_all: props.formData.model.cta_sell_all,
+    cta_sell_set_amount_check: props.formData.model.cta_sell_set_amount_check,
+    cta_sell_set_amount: props.formData.model.cta_sell_set_amount,
+    dta_base_costs_availability: props.formData.model.dta_base_costs_availability,
+    dta_base_costs_available: props.formData.model.dta_base_costs_available,
+    dta_sell_to_cgt_exemption: props.formData.model.dta_sell_to_cgt_exemption,
+    dta_sell_all: props.formData.model.dta_sell_all,
+    dta_sell_set_amount_check: props.formData.model.dta_sell_set_amount_check,
+    dta_sell_set_amount: props.formData.model.dta_sell_set_amount,
+    isa_transfer_exit_penalty_not_ascertained: props.formData.model.isa_transfer_exit_penalty_not_ascertained,
+    isa_transfer_exit_penalty_ascertained_check: props.formData.model.isa_transfer_exit_penalty_ascertained_check,
+    isa_transfer_exit_penalty_ascertained: props.formData.model.isa_transfer_exit_penalty_ascertained,
+    investment_bonds_managed_funds: props.formData.model.investment_bonds_managed_funds,
+    investment_bonds_with_profits: props.formData.model.investment_bonds_with_profits,
+    investment_bonds_chargeable_gain_not_calculated: props.formData.model.investment_bonds_chargeable_gain_not_calculated,
+    investment_bonds_exit_penalty_not_ascertained: props.formData.model.investment_bonds_exit_penalty_not_ascertained,
+    investment_bonds_exit_penalty_ascertained_check: props.formData.model.investment_bonds_exit_penalty_ascertained_check,
+    investment_bonds_exit_penalty_ascertained: props.formData.model.investment_bonds_exit_penalty_ascertained
+})
+
+const chargeable_gain = ref(false);
+
+function checkTextInNotes(inputName) {
+    console.log(inputName)
+    if (inputName === 'cta_base_costs_available') {
+        stepForm.cta_base_costs_availability = stepForm.cta_base_costs_available.length > 0
+    } else if (inputName === 'cta_sell_set_amount') {
+        stepForm.cta_sell_set_amount_check = stepForm.cta_sell_set_amount.length > 0
+    } else if (inputName === 'dta_base_costs_available') {
+        stepForm.dta_base_costs_availability = stepForm.dta_base_costs_available.length > 0
+    } else if (inputName === 'dta_sell_set_amount') {
+        stepForm.dta_sell_set_amount_check = stepForm.dta_sell_set_amount.length > 0
+    } else if (inputName === 'isa_transfer_exit_penalty_ascertained') {
+        stepForm.isa_transfer_exit_penalty_ascertained_check = stepForm.isa_transfer_exit_penalty_ascertained.length > 0
+    } else if (inputName === 'investment_bonds_exit_penalty_not_ascertained') {
+        chargeable_gain.value = stepForm.investment_bonds_exit_penalty_not_ascertained.length > 0
+    } else if (inputName === 'investment_bonds_exit_penalty_ascertained') {
+        stepForm.investment_bonds_exit_penalty_ascertained_check = stepForm.investment_bonds_exit_penalty_ascertained.length > 0
+    }
+
+    autosaveT(stepForm,props.formData.submit_url)
+}
+
 onMounted(()=>{
 })
-
-const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
-    cta_base_costs_available: null,
-    cta_sell_to_cgt_exemption: null,
-    cta_sell_all: null,
-    cta_sell_set_amount: null,
-    isa_transfer_exit_penalty_not_ascertained: null,
-    isa_transfer_exit_penalty_ascertained: null,
-    investment_bonds_managed_funds: null,
-    investment_bonds_with_profits: null,
-    investment_bonds_chargeable_gain_not_calculated: null,
-    investment_bonds_exit_penalty_not_ascertained: null,
-    investment_bonds_exit_penalty_ascertained: null
-})
-
-
 </script>
 
 <template>
@@ -75,125 +107,118 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
-                <label class="font-bold text-white text-lg">Collective Taxable Assets (E.G Unit Trusts)</label>
+                <label class="font-bold text-white text-lg">Collective Taxable Assets (E.g Unit Trusts)</label>
             </div>
             <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="cta_base_costs_availability" name="cta_base_costs_availability" type="checkbox" v-model="stepForm.cta_base_costs_availability" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
+                            <label for="cta_base_costs_availability" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
+                        </div>
+                    </div>
+                    <div v-if="stepForm.cta_base_costs_availability" class="mt-4">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Base Costs: Notes</label>
+                        <div class="mt-2">
+                            <textarea @change="checkTextInNotes('cta_base_costs_available')" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" v-model="stepForm.cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="cta_sell_to_cgt_exemption" name="cta_sell_to_cgt_exemption" type="checkbox" v-model="stepForm.cta_sell_to_cgt_exemption" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="cta_sell_to_cgt_exemption" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
+                        </div>
+                        {{stepForm.cta_sell_to_cgt_exemption}}
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="cta_sell_all" name="cta_sell_all" type="checkbox" v-model="stepForm.cta_sell_all" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="cta_sell_all" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
-                    <div>
-                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Base Costs: Notes</label>
+                    <div class="flex items-center pt-1">
+                        <div class="flex h-6 items-center">
+                            <input id="cta_sell_set_amount_check" name="cta_sell_set_amount_check" type="checkbox" v-model="stepForm.cta_sell_set_amount_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="cta_sell_set_amount_check" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
+                        </div>
+                    </div>
+                    <div v-if="stepForm.cta_sell_set_amount_check" class="mt-4">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Sell Set Amount: Notes</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea @change="checkTextInNotes('cta_sell_set_amount')" rows="3" name="cta_sell_set_amount" id="cta_sell_set_amount" v-model="stepForm.cta_sell_set_amount" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-4">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-4">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-4">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Sell Set Amount: Notes </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="cta_sell_set_amount" id="cta_sell_set_amount"
-                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>
                 </div>
             </div>
             <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
                 <label class="font-bold text-white text-lg">Direct Taxable Assets (E.g Shares)</label>
             </div>
-            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4  mb-6">
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="dta_base_costs_availability" name="dta_base_costs_availability" type="checkbox" v-model="stepForm.dta_base_costs_availability" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
+                            <label for="dta_base_costs_availability" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
+                        </div>
+                    </div>
+                    <div v-if="stepForm.dta_base_costs_availability" class="mt-4">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Base Costs: Notes</label>
+                        <div class="mt-2">
+                            <textarea @change="checkTextInNotes('dta_base_costs_available')" rows="3" name="dta_base_costs_available" id="dta_base_costs_available" v-model="stepForm.dta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="dta_sell_to_cgt_exemption" name="dta_sell_to_cgt_exemption" type="checkbox" v-model="stepForm.dta_sell_to_cgt_exemption" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="dta_sell_to_cgt_exemption" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-4">
+                        <div class="flex h-6 items-center">
+                            <input id="dta_sell_all" name="dta_sell_all" type="checkbox" v-model="stepForm.dta_sell_all" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="dta_sell_all" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
-                    <div>
-                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Base Costs: Notes</label>
+                    <div class="flex items-center pt-1">
+                        <div class="flex h-6 items-center">
+                            <input id="dta_sell_set_amount_check" name="dta_sell_set_amount_check" type="checkbox" v-model="stepForm.dta_sell_set_amount_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="dta_sell_set_amount_check" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
+                        </div>
+                    </div>
+                    <div v-if="stepForm.dta_sell_set_amount_check" class="mt-4">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Sell Set Amount: Notes</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea @change="checkTextInNotes('dta_sell_set_amount')" rows="3" name="dta_sell_set_amount" id="dta_sell_set_amount" v-model="stepForm.dta_sell_set_amount" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-4">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-4">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-4">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Sell Set Amount: Notes </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="cta_sell_set_amount" id="cta_sell_set_amount"
-                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
-                    </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>
                 </div>
             </div>
             <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
@@ -203,10 +228,10 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="isa_transfer_exit_penalty_not_ascertained" name="is_primary" type="checkbox" v-model="stepForm.isa_transfer_exit_penalty_not_ascertained" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
+                            <label for="isa_transfer_exit_penalty_not_ascertained" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
                         </div>
                     </div>
                 </div>
@@ -214,18 +239,19 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="isa_transfer_exit_penalty_ascertained_check" name="isa_transfer_exit_penalty_ascertained_check" type="checkbox" v-model="stepForm.isa_transfer_exit_penalty_ascertained_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty -ascertained</label>
+                            <label for="isa_transfer_exit_penalty_ascertained_check" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - ascertained</label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
-                    <div>
+                    <div v-if="stepForm.isa_transfer_exit_penalty_ascertained_check">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Exit penalty - Notes</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea rows="3" name="cta_base_costs_available" id="cta_base_costs_available" v-model="stepForm.isa_transfer_exit_penalty_ascertained" @change="checkTextInNotes('isa_transfer_exit_penalty_ascertained')"
+                              class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
                 </div>
@@ -237,10 +263,10 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_managed_funds" name="investment_bonds_managed_funds" type="checkbox" v-model="stepForm.investment_bonds_managed_funds" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Managed funds (including unitised WP)</label>
+                            <label for="investment_bonds_managed_funds" class="text-sm font-medium leading-6 text-aaron-50">Managed funds (including unitised WP)</label>
                         </div>
                     </div>
                 </div>
@@ -248,58 +274,59 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_with_profits" name="investment_bonds_with_profits" type="checkbox" v-model="stepForm.investment_bonds_with_profits" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">With Profits (traditional)</label>
+                            <label for="investment_bonds_with_profits" class="text-sm font-medium leading-6 text-aaron-50">With Profits (traditional)</label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_chargeable_gain_not_calculated" name="investment_bonds_chargeable_gain_not_calculated" type="checkbox" v-model="stepForm.investment_bonds_chargeable_gain_not_calculated" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain NOT calculated</label>
+                            <label for="investment_bonds_chargeable_gain_not_calculated" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain NOT calculated</label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="chargeable_gain" name="chargeable_gain" type="checkbox" v-model="chargeable_gain" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain</label>
+                            <label for="chargeable_gain" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain</label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_exit_penalty_not_ascertained" name="investment_bonds_exit_penalty_not_ascertained" type="checkbox" v-model="stepForm.investment_bonds_exit_penalty_not_ascertained" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
+                            <label for="investment_bonds_exit_penalty_not_ascertained" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_exit_penalty_ascertained_check" name="investment_bonds_exit_penalty_ascertained_check" type="checkbox" v-model="stepForm.investment_bonds_exit_penalty_ascertained_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty -ascertained</label>
+                            <label for="investment_bonds_exit_penalty_ascertained_check" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - ascertained</label>
                         </div>
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
-                    <div>
+                    <div v-if="stepForm.investment_bonds_exit_penalty_ascertained_check">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Exit penalty - Notes</label>
                         <div class="mt-2">
-                            <textarea @change="autosaveT(stepForm,props.formData.submit_url)" rows="3" name="cta_base_costs_available" id="cta_base_costs_available" class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                            <textarea rows="3" name="investment_bonds_exit_penalty_ascertained" id="investment_bonds_exit_penalty_ascertained" v-model="stepForm.investment_bonds_exit_penalty_ascertained" @change="checkTextInNotes('investment_bonds_exit_penalty_ascertained')"
+                              class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
                 </div>

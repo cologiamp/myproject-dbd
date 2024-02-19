@@ -115,6 +115,23 @@ class InvestmentRecommendationSectionDataService
             $validatedData['regular_cash_required'] = $this->currencyStringToInt($validatedData['regular_cash_required']);
         }
 
-        $this->investmentRecommendationRepository->createOrUpdateInvestmentRecommendation($validatedData);
+        $this->investmentRecommendationRepository->createOrUpdateIncomeGrowthReport($validatedData);
+    }
+
+    /**
+     * Section: 1
+     * Step: 3
+     * @param array $validatedData
+     * @return void
+     */
+    private function _13(array $validatedData): void
+    {
+        ray($validatedData)->green();
+        //define any explicit mutators that are not handled
+//        if (array_key_exists('isa_allowance_used', $validatedData) && $validatedData['isa_allowance_used'] != null) {
+//            $validatedData['isa_allowance_used'] = $this->currencyStringToInt($validatedData['isa_allowance_used']);
+//        }
+
+        $this->investmentRecommendationRepository->createOrUpdateTaxConsequences($validatedData);
     }
 }

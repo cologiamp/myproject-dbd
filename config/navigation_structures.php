@@ -717,10 +717,15 @@ return [
                 3 => [
                     'name' => 'Tax Consequences',
                     'fields' => [
+                        'investment_recommendations.id',
                         'investment_recommendations.cta_base_costs_available',
                         'investment_recommendations.cta_sell_to_cgt_exemption',
                         'investment_recommendations.cta_sell_all',
                         'investment_recommendations.cta_sell_set_amount',
+                        'investment_recommendations.dta_base_costs_available',
+                        'investment_recommendations.dta_sell_to_cgt_exemption',
+                        'investment_recommendations.dta_sell_all',
+                        'investment_recommendations.dta_sell_set_amount',
                         'investment_recommendations.isa_transfer_exit_penalty_not_ascertained',
                         'investment_recommendations.isa_transfer_exit_penalty_ascertained',
                         'investment_recommendations.investment_bonds_managed_funds',
@@ -730,7 +735,22 @@ return [
                         'investment_recommendations.investment_bonds_exit_penalty_ascertained'
                     ],
                     'rules' => [
-
+                        'id' => 'sometimes|nullable',
+                        'cta_base_costs_available' => 'sometimes|nullable|string',
+                        'cta_sell_to_cgt_exemption' => 'sometimes|nullable|boolean',
+                        'cta_sell_all' => 'sometimes|nullable|boolean',
+                        'cta_sell_set_amount' => 'sometimes|nullable|string',
+                        'dta_base_costs_available' => 'sometimes|nullable|string',
+                        'dta_sell_to_cgt_exemption' => 'sometimes|nullable|boolean',
+                        'dta_sell_all' => 'sometimes|nullable|boolean',
+                        'dta_sell_set_amount' => 'sometimes|nullable|string',
+                        'isa_transfer_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
+                        'isa_transfer_exit_penalty_ascertained' => 'sometimes|nullable|string',
+                        'investment_bonds_managed_funds' => 'sometimes|nullable|boolean',
+                        'investment_bonds_with_profits' => 'sometimes|nullable|boolean',
+                        'investment_bonds_chargeable_gain_not_calculated' => 'sometimes|nullable|boolean',
+                        'investment_bonds_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
+                        'investment_bonds_exit_penalty_ascertained' => 'sometimes|nullable|string',
                     ]
                 ],
 //                4 => [
