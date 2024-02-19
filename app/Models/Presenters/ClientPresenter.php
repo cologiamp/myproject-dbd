@@ -51,13 +51,13 @@ class ClientPresenter extends BasePresenter
                 'poa_name' => $this->model->poa_name
             ],
             '1.2' => [
-                'is_in_good_health' => $this->model->health?->is_in_good_health,
+                'is_in_good_health' => (bool) $this->model->health?->is_in_good_health,
                 'health_details' => $this->model->health?->health_details,
-                'has_life_expectancy_concerns' => $this->model->health?->has_life_expectancy_concerns,
+                'has_life_expectancy_concerns' => (bool) $this->model->health?->has_life_expectancy_concerns,
                 'life_expectancy_details' => $this->model->health?->life_expectancy_details,
                 'medical_conditions' => $this->model->health?->medical_conditions,
                 'smoker' => $this->model->health?->smoker,
-                'smoked_in_last_12_months' => $this->model->health?->smoked_in_last_12_months
+                'smoked_in_last_12_months' => (bool) $this->model->health?->smoked_in_last_12_months
             ],
             '1.3' => [
                 'addresses' => collect($this->model->addresses->map(function ($address){
@@ -68,7 +68,7 @@ class ClientPresenter extends BasePresenter
                         'city' => $address['city'],
                         'county' => $address['county'],
                         'postcode' => $address['postcode'],
-                        'country' => $address['country'],
+                        'country' => '0'.$address['country'], //hack to allow reordering of JS objects with string keys
                         'residency_status' => $address['residency_status'],
                         'date_from' => $address['date_from']
                     ];})),

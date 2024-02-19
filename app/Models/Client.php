@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Client extends Model
 {
@@ -198,7 +199,9 @@ class Client extends Model
             ],
             '1.3' => [
                 'residency_status' => collect(config('enums.address.residency_status_public')),
-                'countries' => config('enums.address.country')
+                'countries' => collect(collect(config('enums.address.country')))->mapWithKeys(function ($item, $key){
+                    return ['0'.$key => $item];//hack to allow reordering of JS objects with string keys
+                })
             ],
             '1.4' => [
                 'relationship_type' => config('enums.dependent.relationship_type')

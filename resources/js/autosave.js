@@ -10,6 +10,7 @@ export async function autosaveT(form,submitUrl){
     return autosave(form, submitUrl)
 }
 
+export const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export async function autosave(form,submitUrl){
     autoS.value = 2;

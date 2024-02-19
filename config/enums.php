@@ -1051,6 +1051,7 @@ return [
             4 => 'Correspondence'
         ],
         'country' => [
+            238  => 'United Kingdom',
             1 => 'Afghanistan',
             2 => 'Aland Islands',
             3 => 'Albania',
@@ -1288,7 +1289,6 @@ return [
             235  => 'Uganda',
             236  => 'Ukraine',
             237  => 'United Arab Emirates',
-            238  => 'United Kingdom',
             239  => 'United States',
             240  => 'United States Minor Outlying Islands',
             241  => 'Uruguay',

@@ -143,10 +143,7 @@ return [
                             'addresses.*.postcode' => 'sometimes|nullable|max:320',
                             'addresses.*.country' => [
                                 'sometimes',
-                                'nullable',
-                                'numeric',
-                                'integer',
-                                Rule::in(array_keys((config('enums.address.country'))))
+                                'nullable'
                             ],
                             'addresses.*.residency_status' => [
                                 'sometimes',
