@@ -9,9 +9,10 @@ import { XCircleIcon } from '@heroicons/vue/24/solid';
 import {changeToCurrency} from "@/currency.js";
 import '@vuepic/vue-datepicker/dist/main.css'
 import {computed, onMounted, ref, watch} from "vue";
-
+import {fetchOptions, filteredProviders} from "@/providers.js";
+import vSelect from 'vue-select';
+import 'vue-select/dist/vue-select.css';
 const emit = defineEmits(['autosaveStateChange'])
-
 watch(autoS, (newValue, oldValue) => {
     emit('autosaveStateChange', newValue)
 })
@@ -23,7 +24,9 @@ const props = defineProps({
                 owners: [],
                 administrators: [],
                 account_types: [],
-                pension_statuses: []
+                pension_statuses: [],
+                pension_crystallised_statuses: [],
+                pension_fund_types: [],
             },
             model: {
                 dc_pensions: [{
@@ -38,10 +41,16 @@ const props = defineProps({
                     gross_contribution_absolute: null,
                     employer_contribution_percent: null,
                     employer_contribution_absolute: null,
+                    crystallised_percentage: null,
+                    crystallised_status: null,
                     valuation_at: null,
                     value: null,
                     retained_value: null,
-                    is_retained: null
+                    is_retained: null,
+                    fund_name: null,
+                    fund_type: null,
+                    current_fund_value: null,
+                    current_transfer_value: null
                 }],
                 db_pensions: [{
                     id: null,
@@ -72,12 +81,12 @@ function formatAmount(e, index, dataField, type) {
     console.log('dataField:' + dataField);
     stepForm[type][index][dataField] = '';
     stepForm[type][index][dataField] = changeToCurrency(e.target.value);
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveLocally()
 }
 
 function saveDate(index, value, type) {
     stepForm[type][index].purchased_at = value;
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 
@@ -86,11 +95,15 @@ function saveDate(index, value, type) {
 //     dateRef.value = props.formData.model.born_at;
 // })
 
-const stepForm = useForm(`EditPensions${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     dc_pensions: props.formData.model.dc_pensions,
     db_pensions: props.formData.model.db_pensions,
 })
-
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.dc_pensions = props.formData.model.dc_pensions;
+    stepForm.db_pensions = props.formData.model.db_pensions;
+}
 function addDc() {
     let owner = Object.keys(props.formData.enums.owners)[0];
     stepForm.dc_pensions.push({
@@ -105,10 +118,16 @@ function addDc() {
         gross_contribution_percent: null,
         gross_contribution_absolute: null,
         employer_contribution_percent: null,
+        crystallised_percentage: null,
+        crystallised_status: null,
         valuation_at: null,
         value: null,
         retained_value: null,
-        is_retained: null
+        is_retained: null,
+        fund_name: null,
+        fund_type: null,
+        current_fund_value: null,
+        current_transfer_value: null
     });
 }
 
@@ -180,9 +199,9 @@ function removePension(index,type) {
                     </button>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Employer</label>
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Scheme Name</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.employer" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="pension.employer" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
@@ -190,7 +209,7 @@ function removePension(index,type) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="relationship_type"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Pension Status</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.status"
+                    <select @change="autosaveLocally()" v-model="pension.status"
                             id="status" name="status"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="status" :value="null">-</option>
@@ -201,7 +220,7 @@ function removePension(index,type) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="owner"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.owner"
+                    <select @change="autosaveLocally()" v-model="pension.owner"
                             id="owner" name="owner"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="owner" :value="null">-</option>
@@ -214,7 +233,7 @@ function removePension(index,type) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Retirement Age</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.retirement_age" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="pension.retirement_age" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
@@ -293,14 +312,14 @@ function removePension(index,type) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Employer</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.employer" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="pension.employer" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="owner"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.owner"
+                    <select @change="autosaveLocally()" v-model="pension.owner"
                             id="owner" name="owner"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="owner" :value="null">-</option>
@@ -313,7 +332,7 @@ function removePension(index,type) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="type"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Pension Type</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.type"
+                    <select @change="autosaveLocally()" v-model="pension.type"
                             id="type" name="type"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="type" :value="null">-</option>
@@ -322,22 +341,35 @@ function removePension(index,type) {
                     </select>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="administrator"
-                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Administrator</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.administrator"
-                            id="administrator" name="administrator"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="administrator" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(type, id) in formData.enums.administrators">{{ type }}
-                        </option>
-                    </select>
+<!--                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">-->
+<!--                    <label for="administrator"-->
+<!--                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Administrator</label>-->
+<!--                    <select @change="autosaveLocally()" v-model="pension.administrator"-->
+<!--                            id="administrator" name="administrator"-->
+<!--                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">-->
+<!--                        <option id="administrator" :value="null">-</option>-->
+<!--                        <option :id="id" :value="id" v-for="(type, id) in formData.enums.administrators">{{ type }}-->
+<!--                        </option>-->
+<!--                    </select>-->
+<!--                </div>-->
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-6">
+                    <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Provider</label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300">
+                        <v-select
+                            class="block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+                            v-model="pension.administrator"
+                            @option:selected="autosaveLocally"
+                            @option:deselected="autosaveLocally"
+                            :options="filteredProviders"
+                            @search="fetchOptions"
+                        />
+                    </div>
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Policy Number</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.policy_number" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        <input @change="autosaveLocally()" v-model="pension.policy_number" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
                     </div>
                 </div>
 
@@ -354,15 +386,15 @@ function removePension(index,type) {
 
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Contribution (%) </label>
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Personal Contribution (gross) (%) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.gross_contribution_percent" type="number" name="gross_contribution_percent" id="gross_contribution_percent"
+                        <input @change="autosaveLocally()" v-model="pension.gross_contribution_percent" type="number" name="gross_contribution_percent" id="gross_contribution_percent"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="%" />
                     </div>
                 </div>
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Contribution (£) </label>
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Personal Contribution (gross) (£) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="formatAmount($event, index, 'gross_contribution_absolute','dc_pensions')" type="currency" name="ppm" id="ppm"
                                :value="pension.gross_contribution_absolute"
@@ -374,7 +406,7 @@ function removePension(index,type) {
                     <label for="employer_contribution_percent" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Employer Contribution (%) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input  type="number" name="employer_contribution_percent" id="employer_contribution_percent"
-                                @change="autosaveT(stepForm,props.formData.submit_url)" v-model="pension.employer_contribution_percent"
+                                @change="autosaveLocally()" v-model="pension.employer_contribution_percent"
                                 class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2
                                 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50
                                  disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="%" />
@@ -411,15 +443,39 @@ function removePension(index,type) {
                     </div>
                 </div>
 
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Crystallisation </h4>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label for="type"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Crystallised Status</label>
+                        <select @change="autosaveLocally()" v-model="pension.crystallised_status"
+                                id="crystallised_status" name="crystallised_status"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="type" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(type, id) in formData.enums.pension_crystallised_statuses">{{ type }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-show="pension.crystallised_status == 2">
+                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Part Crystallised (%) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="autosaveLocally()" type="number" max="100" min="0" step="0.01" name="crystallised_percentage" id="retained_value"
+                                   v-model="pension.crystallised_percentage"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is Retained?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="pension.is_retained" type="radio" id="true" :value="true"
                                :checked="pension.is_retained == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="pension.is_retained" type="radio" id="false" :value="false"
                                :checked="pension.is_retained == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -435,6 +491,44 @@ function removePension(index,type) {
                     </div>
                 </div>
 
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Details </h4>
+
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fund Name</label>
+                        <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="autosaveLocally()" v-model="pension.fund_name" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                        </div>
+                    </div>
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="type"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fund Type</label>
+                        <select @change="autosaveLocally()" v-model="pension.fund_type"
+                                id="fund_type" name="fund_type"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="type" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(type, id) in formData.enums.pension_fund_types">{{ type }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Fund Value (£) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="formatAmount($event, index, 'current_fund_value','dc_pensions')" type="currency" name="current_fund_value" id="current_fund_value"
+                                   :value="pension.current_fund_value"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
+                    </div>
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Transfer Value (£) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="formatAmount($event, index, 'current_transfer_value','dc_pensions')" type="currency" name="current_transfer_value" id="current_transfer_value"
+                                   :value="pension.current_transfer_value"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
+                    </div>
+
+                </div>
 
             </div>
 
@@ -455,4 +549,21 @@ function removePension(index,type) {
     --dp-text-color: rgb(236 245 255 / var(--tw-text-opacity));
     --dp-border-radius: 6px;
     --dp-border-color: rgb(70 84 190 / var(--tw-ring-opacity));
-}</style>
+}
+
+>>> {
+    --vs-controls-color: red;
+
+    --vs-dropdown-bg: #313fa7;
+    --vs-dropdown-color: black;
+    --vs-dropdown-option-color: $bg-aaron-700;
+
+    --vs-selected-bg: #313fa7;
+    --vs-selected-color: #eeeeee;
+
+    --vs-search-input-color: #eeeeee;
+
+    --vs-dropdown-option--active-bg: #0b0f28;
+    --vs-dropdown-option--active-color: #eeeeee;
+}
+</style>

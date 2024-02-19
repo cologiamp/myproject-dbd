@@ -8,7 +8,8 @@ import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import { onBeforeMount, watch } from "vue";
+import {computed, onBeforeMount, ref, watch} from "vue";
+import {formatDate} from "@vueuse/core";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -22,19 +23,22 @@ const props = defineProps({
             enums: {
                 income_types: [],
                 frequencies: [],
+                per_year_frequencies: [],
                 belongs_to: []
             },
             model: {
+                useIncome: true,
+                total: null,
                 incomes: [{
                     income_type: null,
                     gross_amount: null,
                     net_amount: null,
                     expenses: null,
                     frequency: null,
+                    starts_at: null,
                     ends_at: null,
                     belongs_to: null,
                     record_exists: null,
-                    is_primary: true
                 }]
             },
             submit_method: 'post',
@@ -44,9 +48,9 @@ const props = defineProps({
     errors: Object,
 });
 
-function saveDate(index, value) {
-    stepForm.incomes[index].ends_at = value;
-    autosaveT(stepForm,props.formData.submit_url);
+function saveDate(index, value,type) {
+    stepForm.incomes[index][type] = value;
+    autosaveLocally();
 }
 
 function addIncome() {
@@ -56,24 +60,65 @@ function addIncome() {
         net_amount: null,
         expenses: null,
         frequency: null,
+        starts_at: null,
         ends_at: null,
         belongs_to: null,
         record_exists: null,
-        is_primary: false
     });
+    calculatedTotals.value.push([0])
+}
+
+let calculatedTotals = ref([]);
+let calculatedTotal = computed(() => {
+    return calculatedTotals.value.reduce((partialSum, a) => partialSum + a, 0);
+})
+function calculateTotals(){
+    if(stepForm.incomes && stepForm.incomes.length > 0 && props && props.formData)
+    {
+        calculatedTotals.value = stepForm.incomes.map(function (item){
+            if(item.frequency !== null && item.gross_amount !== null)
+            {
+                let tempAmount = item.gross_amount.replace(/[^\d.]/g, '');
+                return tempAmount * props.formData.enums.per_year_frequencies[item.frequency];
+            }
+            return 0;
+        })
+    }
+    else{
+        calculatedTotals.value = [];
+    }
+}
+
+function updateAndSave()
+{
+    calculateTotals()
+    autosaveLocally()
 }
 
 function removeIncome(index) {
     stepForm.incomes.splice(index, 1);
-    autosaveT(stepForm,props.formData.submit_url);
+    calculateTotals()
+    autosaveLocally();
 }
 
 const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
-    incomes: props.formData.model.incomes != null ? props.formData.model.incomes : []
+    incomes: props.formData.model.incomes != null ? props.formData.model.incomes : [],
+    useIncome: props.formData.model.useIncome,
+    total: props.formData.model.total,
 })
+
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.incomes = props.formData.model.incomes;
+    stepForm.useIncome = props.formData.model.useIncome;
+    stepForm.total = props.formData.model.total;
+    formatAmountOnload()
+    calculateTotals()
+}
 
 onBeforeMount(() => {
     formatAmountOnload()
+    calculateTotals()
 })
 
 function formatAmountOnload() {
@@ -91,12 +136,25 @@ function formatAmountOnload() {
         }
 
     });
+    if(stepForm.total && stepForm.total > 0)
+    {
+        stepForm.total = changeToCurrency(stepForm.total.toString())
+    }
 }
 
 function formatAmount(e, index, dataField) {
     stepForm.incomes[index][dataField] = '';
     stepForm.incomes[index][dataField] = changeToCurrency(e.target.value);
 }
+function formatTotal()
+{
+    stepForm.total = changeToCurrency(stepForm.total);
+}
+function saveTotal()
+{
+    autosaveLocally()
+}
+
 
 function changeToCurrency(amount) {
     const formatter = new Intl.NumberFormat('en-US', {
@@ -116,23 +174,8 @@ function changeToCurrency(amount) {
     }
 }
 
-function changeCheck(index) {
-    let incomeOwnerId = stepForm.incomes[index].belongs_to
-    //group incomes by client_id owner
-    const incomesByOwner = Object.groupBy(stepForm.incomes, ({ belongs_to }) => belongs_to);
 
-    //set all is_primary to false/uncheck
-    Object.entries(incomesByOwner[incomeOwnerId]).forEach(owner => {
-        const [key, value] = owner;
-        value['is_primary'] = false;
 
-    });
-
-    //set is_primary to true/checked
-    stepForm.incomes[index].is_primary = true;
-
-    autosaveT(stepForm,props.formData.submit_url)
-}
 
 </script>
 
@@ -157,6 +200,41 @@ function changeCheck(index) {
                     </div>
                 </div>
             </div>
+            <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 mb-4 p-4">
+                <h4 class="col-span-6 text-xl font-bold pt-2"> Overall Income </h4>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="stepForm.useIncome == false">
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total: </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input
+                               v-model="stepForm.total"
+                               @input="formatTotal"
+                               @change="saveTotal"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                    </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.gross_amount">{{ stepForm.errors.gross_amount }}</p>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-else>
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total: </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input
+                            disabled
+                            :value="changeToCurrency(calculatedTotal.toString())"
+                            class="disabled block ring-1 disabled:bg-gray-400 ring-inset flex-1 border-0 rounded-md py-1.5 pl-2
+                                placeholder:text-aaron-950 focus:ring-0 sm:text-sm sm:leading-6 shadow-none" placeholder="£" />
+                            </div>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.gross_amount">{{ stepForm.errors.gross_amount }}</p>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="flex items-center pt-11">
+                        <div class="flex h-6 items-center">
+                            <input :disabled="stepForm.incomes.length > 0" id="is_primary" name="is_primary" type="checkbox" v-model="stepForm.useIncome" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-500" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Collect Income Details</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div v-for="(income, index) in stepForm.incomes"
                 class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
@@ -169,7 +247,7 @@ function changeCheck(index) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="income_type"
                         class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Income Type</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)"
+                    <select @change="autosaveLocally()"
                         id="income_type" name="income_type" v-model="income.income_type"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="income_type" :value="null">-</option>
@@ -180,7 +258,7 @@ function changeCheck(index) {
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Amount </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="gross_amount" id="gross_amount"
+                        <input @change="updateAndSave" type="currency" name="gross_amount" id="gross_amount"
                             :value="income.gross_amount"
                             @input="formatAmount($event, index, 'gross_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
@@ -191,7 +269,7 @@ function changeCheck(index) {
                     <label for="net_amount" v-if="income.income_type != 10" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
                     <label for="net_profit" v-else class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="net_amount" id="net_amount"
+                        <input @change="autosaveLocally()" type="text" name="net_amount" id="net_amount"
                             :value="income.net_amount"
                             @input="formatAmount($event, index, 'net_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
@@ -202,7 +280,7 @@ function changeCheck(index) {
                     <div v-if="income.income_type == 10">
                         <label for="expenses" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Valid Expenses </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" type="currency" name="expenses" id="expenses"
+                            <input @change="autosaveLocally()" type="currency" name="expenses" id="expenses"
                                 :value="income.expenses"
                                 @input="formatAmount($event, index, 'expenses')"
                                 class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
@@ -212,25 +290,47 @@ function changeCheck(index) {
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="frequency" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Frequency</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" id="frequency" name="frequency" v-model="income.frequency"
+                    <select @change="updateAndSave" id="frequency" name="frequency" v-model="income.frequency"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="frequency" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(frequency, id) in formData.enums.frequencies">{{ frequency }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.frequency">{{ stepForm.errors.frequency }}</p>
                 </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
-                    <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                        <VueDatePicker text-input @closed="saveDate(index, income.ends_at)" v-model="income.ends_at"
-                            class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy"
-                            name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" />
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                   <label for="net_profit" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input disabled type="text" name="total" id="total"
+                               :value="changeToCurrency(calculatedTotals[index].toString())"
+                               class="disabled block ring-1 disabled:bg-gray-400 ring-inset ring-aaron-500 flex-1 border-0 rounded-md py-1.5 pl-2
+                                placeholder:text-aaron-950 focus:ring-0 sm:text-sm sm:leading-6 shadow-none" placeholder="£" />
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
                 </div>
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Income Dates </h4>
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="starts_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Start Date </label>
+                        <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                            <VueDatePicker text-input @closed="saveDate(index, income.starts_at,'starts_at')" v-model="income.starts_at"
+                                           class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy"
+                                           name="starts_at" id="starts_at" placeholder="dd/mm/yyyy" />
+                        </div>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.starts_at">{{ stepForm.errors.starts_at }}</p>
+                    </div>
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
+                        <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                            <VueDatePicker text-input @closed="saveDate(index, income.ends_at,'ends_at')" v-model="income.ends_at"
+                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy"
+                                name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" />
+                        </div>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
+                    </div>
+                </div>
+
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="belongs_to" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Belongs To</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
+                    <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="belongs_to" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.belongs_to">{{ belongs_to }}</option>
@@ -238,18 +338,8 @@ function changeCheck(index) {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
                         stepForm.errors.belongs_to }}</p>
                 </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <div class="flex items-center pt-11">
-                        <div class="flex h-6 items-center">
-                            <input id="is_primary" name="is_primary" type="checkbox" v-model="income.is_primary" @change="changeCheck(index)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
-                        </div>
-                        <div class="ml-3">
-                            <label for="is_primary" class="text-sm font-medium leading-6 text-aaron-50">Is Primary</label>
-                        </div>
-                    </div>
-                </div>
         </div>
-        <button type="button" @click="addIncome"
+        <button type="button" @click="addIncome" v-if="stepForm.useIncome == true"
             class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             <PlusCircleIcon class="w-6 h-6" />Add Income
         </button>

@@ -7,6 +7,7 @@ use App\Http\Controllers\DataIntoIoController;
 use App\Http\Controllers\FactFindController;
 use App\Http\Controllers\InvestmentRecommendationController;
 use App\Http\Controllers\ExampleController;
+use App\Http\Controllers\PensionObjectivesController;
 use App\Http\Controllers\StrategyReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -67,8 +68,10 @@ Route::middleware([
         Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
         Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
 
-        Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
-        Route::put('/example',[ExampleController::class,'update'])->name('example.update');
+       Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
+
+       Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
+       Route::put('/example',[ExampleController::class,'update'])->name('example.update');
 
 
 

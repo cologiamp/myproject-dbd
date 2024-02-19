@@ -121,6 +121,26 @@ class PensionRepository extends BaseRepository
         {
             $db->retained_value = $item['retained_value'];
         }
+
+        if(array_key_exists('current_fund_value',$item)) {
+            $db->current_fund_value = $item['current_fund_value'];
+        }
+        if(array_key_exists('current_transfer_value',$item)) {
+            $db->current_transfer_value = $item['current_transfer_value'];
+        }
+        if(array_key_exists('fund_name',$item)) {
+            $db->fund_name = $item['fund_name'];
+        }
+        if(array_key_exists('fund_type',$item)) {
+            $db->fund_type = $item['fund_type'];
+        }
+        if(array_key_exists('crystallised_status',$item)) {
+            $db->crystallised_status = $item['crystallised_status'];
+        }
+        if(array_key_exists('crystallised_percentage',$item)) {
+            $db->crystallised_percentage = $item['crystallised_percentage'];
+        }
+
         else{
             $db->retained_value = null;
         }

@@ -28,6 +28,7 @@ const props = defineProps({
                     name: null,
                     relationship_type: null,
                     born_at: null,
+                    financially_dependent_until: null,
                     financial_dependent: null,
                     is_living_with_clients: null
                 }]
@@ -39,12 +40,11 @@ const props = defineProps({
     errors: Object,
 });
 
-let dateRef = ref();
 
 
 
-function saveDate(index, value) {
-    stepForm.dependents[index].born_at = value;
+function saveDate(index, value, column) {
+    stepForm.dependents[index][column] = value;
     autosaveT(stepForm,props.formData.submit_url);
 }
 
@@ -53,6 +53,7 @@ function addDependent() {
         name: "",
         relationship_type: 5,
         born_at: null,
+        financially_dependent_until: null,
         financial_dependent: false,
         is_living_with_clients: false
     });
@@ -60,16 +61,19 @@ function addDependent() {
 
 function removeDependent(index) {
     stepForm.dependents.splice(index, 1);
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
-onMounted(() => {
-    dateRef.value = props.formData.model.born_at;
-})
+
 
 const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
     dependents: props.formData.model.dependents
 })
+
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.dependents = props.formData.model.dependents;
+}
 
 
 </script>
@@ -107,14 +111,14 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-6">
                     <label for="name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Name </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.name" type="text" name="name" id="name"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Name" />
+                        <input @change="autosaveLocally()" v-model="dependent.name" type="text" name="name" id="name"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Name" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.name">{{ stepForm.errors.name }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="relationship_type"
                         class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Relationship</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="dependent.relationship_type"
+                    <select @change="autosaveLocally()" v-model="dependent.relationship_type"
                         id="relationship_type" name="relationship_type"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="relationship_type" :value="null">-</option>
@@ -130,8 +134,7 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                         Birth </label>
                     <div
                         class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                        <!-- <VueDatePicker text-input @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="born_at" id="born_at"  placeholder="dd/mm/yyyy"/> -->
-                        <VueDatePicker text-input @closed="saveDate(index, dependent.born_at)"
+                        <VueDatePicker text-input @closed="saveDate(index, dependent.born_at,'born_at')"
                             class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="dependent.born_at"
                             name="born_at" id="born_at" placeholder="dd/mm/yyyy" />
                     </div>
@@ -139,34 +142,47 @@ const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_of_birth">{{
                         stepForm.errors.date_of_birth }}</p>
                 </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Financially
-                        Dependent</label>
-                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
-                            v-model="dependent.financial_dependent" type="radio" id="true" :value="true"
-                            :checked="dependent.financial_dependent == true"
-                            class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
-                            v-model="dependent.financial_dependent" type="radio" id="false" :value="false"
-                            :checked="dependent.financial_dependent == false"
-                            class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Financial Status </h4>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Financially
+                            Dependent?</label>
+                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                            <input @change="autosaveLocally()"
+                                v-model="dependent.financial_dependent" type="radio" id="true" :value="true"
+                                :checked="dependent.financial_dependent == true"
+                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                            <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                            <input @change="autosaveLocally()"
+                                v-model="dependent.financial_dependent" type="radio" id="false" :value="false"
+                                :checked="dependent.financial_dependent == false"
+                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                            <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                        </div>
+
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.financial_dependent">{{
-                        stepForm.errors.financial_dependent }}</p>
+
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="dependent.financial_dependent">
+                        <label for="financially_dependent_until"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Financially dependent until? </label>
+                        <div
+                            class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                            <VueDatePicker text-input @closed="saveDate(index, dependent.financially_dependent_until,'financially_dependent_until')"
+                                           class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="dependent.financially_dependent_until"
+                                           name="financially_dependent_until" id="financially_dependent_until" placeholder="dd/mm/yyyy" />
+                        </div>
+                    </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Lives with
                         Client(s)</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                             v-model="dependent.is_living_with_clients" type="radio" id="true" :value="true"
                             :checked="dependent.is_living_with_clients == true"
                             class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                         v-model="dependent.is_living_with_clients" type="radio" id="false" :value="false"
                         :checked="dependent.is_living_with_clients == false"
                         class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />

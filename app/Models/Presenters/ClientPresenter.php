@@ -34,6 +34,7 @@ class ClientPresenter extends BasePresenter
         return match ($step . '.' . $section) {
             '1.1' => [
                 'first_name' => $this->model->first_name,
+                'middle_name' => $this->model->middle_name,
                 'last_name' => $this->model->last_name,
                 'salutation' => $this->model->salutation,
                 'title' => $this->model->title,
@@ -46,16 +47,17 @@ class ClientPresenter extends BasePresenter
                 'country_of_residence' => $this->model->country_of_residence != null ? config('enums.client.iso_2_int')[$this->model->country_of_residence] : null,
                 'valid_will' => (boolean)$this->model->valid_will,
                 'will_up_to_date' => (boolean)$this->model->will_up_to_date,
-                'poa_granted' => (boolean)$this->model->poa_granted
+                'poa_granted' => (boolean)$this->model->poa_granted,
+                'poa_name' => $this->model->poa_name
             ],
             '1.2' => [
-                'is_in_good_health' => $this->model->health?->is_in_good_health,
+                'is_in_good_health' => (bool) $this->model->health?->is_in_good_health,
                 'health_details' => $this->model->health?->health_details,
-                'has_life_expectancy_concerns' => $this->model->health?->has_life_expectancy_concerns,
+                'has_life_expectancy_concerns' => (bool) $this->model->health?->has_life_expectancy_concerns,
                 'life_expectancy_details' => $this->model->health?->life_expectancy_details,
                 'medical_conditions' => $this->model->health?->medical_conditions,
                 'smoker' => $this->model->health?->smoker,
-                'smoked_in_last_12_months' => $this->model->health?->smoked_in_last_12_months
+                'smoked_in_last_12_months' => (bool) $this->model->health?->smoked_in_last_12_months
             ],
             '1.3' => [
                 'addresses' => collect($this->model->addresses->map(function ($address){
@@ -66,11 +68,12 @@ class ClientPresenter extends BasePresenter
                         'city' => $address['city'],
                         'county' => $address['county'],
                         'postcode' => $address['postcode'],
-                        'country' => $address['country'],
+                        'country' => '0'.$address['country'], //hack to allow reordering of JS objects with string keys
                         'residency_status' => $address['residency_status'],
                         'date_from' => $address['date_from']
                     ];})),
                     'phone_number' => $this->model->phone_number,
+                    'mobile_number' => $this->model->mobile_number,
                     'email_address' => $this->model->email_address
             ],
             '1.4' => [
@@ -80,8 +83,9 @@ class ClientPresenter extends BasePresenter
                             'name' => $dependent->name,
                             'relationship_type' => $dependent->pivot->relationship_type,
                             'born_at' => $dependent->born_at,
-                            'financial_dependent' => $dependent->financial_dependent,
-                            'is_living_with_clients' => $dependent->is_living_with_clients
+                            'financial_dependent' => (bool)  $dependent->financial_dependent,
+                            'financially_dependent_until' => $dependent->financially_dependent_until,
+                            'is_living_with_clients' => (bool) $dependent->is_living_with_clients
                     ];
                 }))
             ],
@@ -99,7 +103,7 @@ class ClientPresenter extends BasePresenter
                 }))
             ],
              '2.1' => [
-                'incomes' => collect($this->model->incomes->map(function ($income){
+                'incomes' => collect($this->model->incomes)->map(function ($income){
                     return [
                         'income_id' => $income->id,
                         'income_type' => $income->category,
@@ -107,12 +111,14 @@ class ClientPresenter extends BasePresenter
                         'net_amount' => $income->net_amount,
                         'expenses' => $income->expenses,
                         'frequency' => $income->frequency,
+                        'starts_at' => $income->starts_at,
                         'ends_at' => $income->ends_at,
                         'belongs_to' => $income->pivot->client_id,
                         'record_exists' => $income->pivot->client_id ? true : false,
-                        'is_primary' => (bool) $income->pivot->is_primary
                     ];
-                }))
+                }),
+                 'useIncome' => count($this->model->incomes) > 0 ? true : false,
+                 'total' => count($this->model->incomes) > 0 ? null : $this->model->total_income_basic
             ],
             '2.2' => [
                 'client_id' => $this->model->io_id,
@@ -153,14 +159,18 @@ class ClientPresenter extends BasePresenter
                   return [
                       'id' => $investment->id,
                       'owner' => $investment->client->io_id,
-                      'provider' => $investment->provider,
+                      'provider' => $investment->provider != null ? [
+                          'label' => \Cache::get('io_provider_list')[$investment->provider],
+                          'value' => $investment->provider
+                      ] : null,
                       'account_type' => $investment->contract_type,
                       'product_name' => $investment->product_name,
-                      'is_retained' => $investment->is_retained,
+                      'is_retained' => (bool) $investment->is_retained,
                       'retained_value' =>  $investment->retained_value != null ? $this->currencyIntToString($investment->retained_value): null,
                       'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
                       'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
                       'frequency' => $investment->frequency,
+                      'lump_sum_contribution' =>  $investment->lump_sum_contribution  != null ? $this->currencyIntToString($investment->lump_sum_contribution): null,
                       'start_date' =>  $investment->start_date,
                       'maturity_date' =>  $investment->maturity_date,
                       'valuation_at' =>  $investment->valuation_at,
@@ -175,7 +185,11 @@ class ClientPresenter extends BasePresenter
                         'owner' => $item->client->io_id,
                         'type' => $item->defined_contribution_pension->type,
                         'employer' => $item->employer,
-                        'administrator' => $item->defined_contribution_pension->administrator,
+                        'administrator' =>   $item->defined_contribution_pension->administrator != null ?
+                            [
+                                'label' => \Cache::get('io_provider_list')[$item->defined_contribution_pension->administrator],
+                                'value' => $item->defined_contribution_pension->administrator
+                            ] : null,
                         'policy_starts_at' => $item->defined_contribution_pension->policy_start_at,
                         'policy_number' => $item->defined_contribution_pension->policy_number,
                         'gross_contribution_percent' => $item->defined_contribution_pension->gross_contribution_percent,
@@ -185,7 +199,14 @@ class ClientPresenter extends BasePresenter
                         'valuation_at' => $item->defined_contribution_pension->valuation_at,
                         'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                         'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
-                        'is_retained'=> $item->defined_contribution_pension->is_retained,
+                        'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
+                        'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
+                        'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
+                        'fund_name'=> $item->defined_contribution_pension->fund_name,
+                        'fund_type'=> $item->defined_contribution_pension->fund_type,
+                        'current_fund_value' => $item->defined_contribution_pension->current_fund_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_fund_value): null,
+                        'current_transfer_value' => $item->defined_contribution_pension->current_transfer_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_transfer_value): null,
+
                     ];
                 }),
                 'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
@@ -226,7 +247,7 @@ class ClientPresenter extends BasePresenter
                         'description' => $item->description,
                         'amount' => $item->amount != null ? $this->currencyIntToString( $item->amount): null,
                         'due_at' => $item->due_at,
-                        'is_retained' => $item->is_retained,
+                        'is_retained' => (bool) $item->is_retained,
                         'retained_value' =>  $item->retained_value != null ? $this->currencyIntToString($item->retained_value): null,
                     ];
                 })
@@ -242,7 +263,8 @@ class ClientPresenter extends BasePresenter
                       'monthly_repayment' => $liability->monthly_repayment != null ? $this->currencyIntToString($liability->monthly_repayment): null,
                       'lender' => $liability->lender,
                       'ends_at' =>  $liability->ends_at,
-                      'is_to_be_repaid' => $liability->is_to_be_repaid,
+                      'interest_rate' =>  $liability->interest_rate,
+                      'is_to_be_repaid' => (bool) $liability->is_to_be_repaid,
                       'repay_details' => $liability->repay_details
                   ];
                 })
@@ -252,6 +274,7 @@ class ClientPresenter extends BasePresenter
             ]
         };
     }
+
 
     public function formatForClientsIndex(): array
     {

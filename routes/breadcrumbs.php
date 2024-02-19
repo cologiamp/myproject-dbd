@@ -41,6 +41,10 @@ Breadcrumbs::for('clients', function (BreadcrumbTrail $trail) {
     $trail->push('Clients', route('clients'));
 });
 
+Breadcrumbs::for('/client/{client:io_id}/pension-objectives', function (BreadcrumbTrail $trail) {
+    $trail->push('Pension Objectives', route('pensionobjectives'));
+});
+
 
 //CLIENT MANAGEMENT/SELECTION BREADCRUMBS
 Breadcrumbs::for('client.dashboard', function (BreadcrumbTrail $trail, Client $client): void {
@@ -76,4 +80,9 @@ Breadcrumbs::for('client.example.edit', function (BreadcrumbTrail $trail, Client
     $trail->push('Example');
 });
 
-
+// Dashboard > Clients > "Client Name" > Pension Objectives
+Breadcrumbs::for('client.pensionobjectives', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push('Pension Objectives');
+});

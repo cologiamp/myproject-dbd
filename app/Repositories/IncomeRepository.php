@@ -97,7 +97,8 @@ class IncomeRepository extends BaseRepository
                         'net_amount' => $income['net_amount'],
                         'expenses' => $income['expenses'],
                         'frequency' => $income['frequency'],
-                        'ends_at' => $income['ends_at']
+                        'ends_at' => $income['ends_at'],
+                        'starts_at' => $income['starts_at']
                     );
 
                     $model->update($formatIncomeData);
@@ -108,9 +109,9 @@ class IncomeRepository extends BaseRepository
                 }
 
                 DB::commit();
-                
+
                 $syncIncomes[$model->id] = [
-                    'is_primary' => $income['is_primary']
+                    'is_primary' => true
                 ];
             } else {
                 //register income
@@ -133,7 +134,8 @@ class IncomeRepository extends BaseRepository
             'net_amount' => $income['net_amount'],
             'expenses' => $income['expenses'],
             'frequency' => $income['frequency'],
-            'ends_at' => $income['ends_at']
+            'ends_at' => $income['ends_at'],
+            'starts_at' => $income['starts_at']
         );
         try {
             $model = $this->income->create($incomeData);
@@ -144,7 +146,7 @@ class IncomeRepository extends BaseRepository
         return [
             'id' => $model['id'],
             'value' => [
-                'is_primary' => $income['is_primary']
+                'is_primary' => true
             ]
         ];
 
