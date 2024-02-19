@@ -47,7 +47,7 @@ class AssetPresenter extends BasePresenter
                 'start_date' =>  $this->model->start_at,
                 'end_date' =>  $this->model->end_at,
                 'interest_rate' =>  $this->model->interest_rate,
-                'regular_contributions' =>  $this->model->regular_contributions,
+                'regular_contributions' => (bool)  $this->model->regular_contributions,
                 'contribution_amount' =>  $this->model->contribution_amount != null ? $this->currencyIntToString($this->model->contribution_amount) : null,
 
             ],
