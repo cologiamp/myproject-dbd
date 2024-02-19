@@ -92,7 +92,6 @@ class AssetRepository extends BaseRepository
 
         try {
             collect($assets)->each(function ($asset)  {
-                ray($asset)->red();
                 if(array_key_exists('percent_ownership',$asset))
                 {
                     $percents = $asset['percent_ownership'];

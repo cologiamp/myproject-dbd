@@ -88,13 +88,9 @@ class  InvestmentRepository extends BaseRepository
         try {
             collect($investments)->each(function ($investment)  {
                 if(array_key_exists('id', $investment) && $investment['id'] != null){
-                    ray('ahhhhhh');
-                    ray($investment);
                     $this->oi = OtherInvestment::where('id', $investment['id'])->first();
                     $this->oi->update($investment);
                 } else {
-                    ray('nahhhhhh');
-                    ray($investment);
                     $this->oi->create($investment);
                 }
             });

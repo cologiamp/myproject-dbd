@@ -45,10 +45,27 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     lump_sum_death_benefits: props.formData.model.lump_sum_death_benefits,
 })
 
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.known_income_required = props.formData.model.known_income_required;
+    stepForm.prefer_flexibility = props.formData.model.prefer_flexibility;
+    stepForm.what_age_annuity = props.formData.model.what_age_annuity;
+    stepForm.proportion_of_total_funds = props.formData.model.proportion_of_total_funds;
+    stepForm.spouse_income_proportion = props.formData.model.spouse_income_proportion;
+    stepForm.spouse_lump_sum_death = props.formData.model.spouse_lump_sum_death;
+    stepForm.maximise_lifetime = props.formData.model.maximise_lifetime;
+    stepForm.no_spouse = props.formData.model.no_spouse;
+    stepForm.spouse_details = props.formData.model.spouse_details;
+    stepForm.tax_free_lump_sum_preference = props.formData.model.tax_free_lump_sum_preference;
+    stepForm.tax_free_lump_sum_value = props.formData.model.tax_free_lump_sum_value;
+    stepForm.lump_sum_death_benefits = props.formData.model.lump_sum_death_benefits;
+}
+
+
 function formatAmount(e) {
     stepForm.tax_free_lump_sum_value = '';
     stepForm.tax_free_lump_sum_value = changeToCurrency(e.target.value);
-    autosaveT(stepForm,props.formData.submit_url)
+    autosaveLocally()
 }
 </script>
 
@@ -62,13 +79,13 @@ function formatAmount(e) {
                         Do you require a secure and known income that cannot go down in amount?
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.known_income_required"
                                type="radio" id="true" :value="true"
                                :checked="stepForm.known_income_required == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.known_income_required" type="radio" id="false" :value="false"
                                :checked="stepForm.known_income_required == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -83,12 +100,12 @@ function formatAmount(e) {
                         Would you prefer flexibility in the way your savings are used to provide you with income?
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.prefer_flexibility" type="radio" id="true" :value="true"
                                :checked="stepForm.prefer_flexibility == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.prefer_flexibility" type="radio" id="false" :value="false"
                                :checked="stepForm.prefer_flexibility == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -102,7 +119,7 @@ function formatAmount(e) {
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                         <label for="what_age_annuity" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> If annuity purchase is not your preferred option at this time, at what age might you consider purchasing an annuity?</label>
                         <div class="flex shadow-sm rounded-md focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300">
-                            <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.what_age_annuity" type="number" name="what_age_annuity" id="what_age_annuity" min="0" max="100" step="1" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="1" />
+                            <input @change="autosaveLocally()" v-model="stepForm.what_age_annuity" type="number" name="what_age_annuity" id="what_age_annuity" min="0" max="100" step="1" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="1" />
                         </div>
                     </div>
                 </div>
@@ -116,7 +133,7 @@ function formatAmount(e) {
                     <label for="proportion_of_total_funds" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         What proportion of your overall retirement income do the funds under discussion represent?
                     </label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.proportion_of_total_funds" id="unit" name="proportion_of_total_funds"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.proportion_of_total_funds" id="unit" name="proportion_of_total_funds"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="proportion_of_total_funds" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(proportion_of_total_funds, id) in formData.enums.proportion_of_total_funds">{{ proportion_of_total_funds }}</option>
                     </select>
@@ -134,12 +151,12 @@ function formatAmount(e) {
                         Is it important that on your death your pension funds provide an income for your spouse/civil partner?
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.spouse_income_proportion" type="radio" id="true" :value="true"
                                :checked="stepForm.spouse_income_proportion == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.spouse_income_proportion" type="radio" id="false" :value="false"
                                :checked="stepForm.spouse_income_proportion == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -151,7 +168,7 @@ function formatAmount(e) {
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="spouse_lump_sum_death" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> If so, at what level?</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.spouse_lump_sum_death" id="unit" name="spouse_lump_sum_death"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.spouse_lump_sum_death" id="unit" name="spouse_lump_sum_death"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="spouse_lump_sum_death" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(spouse_lump_sum_death, id) in formData.enums.spouse_lump_sum_death">{{ spouse_lump_sum_death }}</option>
                     </select>
@@ -163,12 +180,12 @@ function formatAmount(e) {
                         Do you wish to maximise the benefits payable to you during your lifetime as your spouse/civil partner have sufficient income from elsewhere?
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.maximise_lifetime" type="radio" id="true" :value="true"
                                :checked="stepForm.maximise_lifetime == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.maximise_lifetime" type="radio" id="false" :value="false"
                                :checked="stepForm.maximise_lifetime == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -184,12 +201,12 @@ function formatAmount(e) {
                         Do you have no spouse/civil partner and expect to remain single?
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.no_spouse" type="radio" id="true" :value="true"
                                :checked="stepForm.no_spouse == true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)"
+                        <input @change="autosaveLocally()"
                                v-model="stepForm.no_spouse" type="radio" id="false" :value="false"
                                :checked="stepForm.no_spouse == false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
@@ -215,7 +232,7 @@ function formatAmount(e) {
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="if_experience_advisory" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Most pension schemes allow the option for you to exchange part of your taxable annual pension for a tax free lump sum and a reduced annual pension. </label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.tax_free_lump_sum_preference" id="unit" name="tax_free_lump_sum_preference"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.tax_free_lump_sum_preference" id="unit" name="tax_free_lump_sum_preference"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="tax_free_lump_sum_preference" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(tax_free_lump_sum_preference, id) in formData.enums.tax_free_lump_sum_preference">{{ tax_free_lump_sum_preference }}</option>
                     </select>
@@ -239,7 +256,7 @@ function formatAmount(e) {
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="if_experience_advisory" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Is providing lump sum death benefits for your spouse, civil partner and / or dependants important to you? </label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.lump_sum_death_benefits" id="unit" name="lump_sum_death_benefits"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.lump_sum_death_benefits" id="unit" name="lump_sum_death_benefits"  class="block rounded-md w-6/12 border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="lump_sum_death_benefits" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(lump_sum_death_benefits, id) in formData.enums.lump_sum_death_benefits">{{ lump_sum_death_benefits }}</option>
                     </select>

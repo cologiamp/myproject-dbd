@@ -120,7 +120,6 @@ class IncomeRepository extends BaseRepository
             }
 
         });
-        ray($syncIncomes);
 
         //do sync on all the income records updated/registered
         $this->client->incomes()->sync($syncIncomes);
