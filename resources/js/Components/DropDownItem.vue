@@ -41,7 +41,7 @@ function handleAutosave(val){
 }
 
 </script>
-
+<!--THIS PAGE IS RENDERED ON MOBILE ONLY-->
 <template>
     <div class="bg-aaron-900 sm:rounded-lg h-full" v-show="tabIndex == selectedMenuId">
         <div class="sticky top-0 z-[450] w-full flex flex-col gap-6 bg-aaron-900">

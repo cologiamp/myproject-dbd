@@ -1591,5 +1591,67 @@ return [
             0 => 'Repayment',
             1 => 'Interest Only'
         ]
+    ],
+    'pension_objectives' => [
+        'income_option' => [
+            0 => 'foo',
+            1 => 'bar',
+            2 => 'yoo',
+        ],
+        'lifetime_allowance_protection' => [
+            0 => 'foo',
+            1 => 'bar',
+            2 => 'yoo',
+        ],
+        'if_experience_self_select' => [
+            0 => 'foo if_experience_self_select',
+            1 => 'bar if_experience_self_select',
+            2 => 'yoo',
+        ],
+        'if_experience_lifestyle' => [
+            0 => 'foo if_experience_lifestyle',
+            1 => 'bar if_experience_lifestyle',
+            2 => 'yoo',
+        ],
+        'if_experience_advisory' => [
+            0 => 'foo if_experience_advisory',
+            1 => 'bar if_experience_advisory',
+            2 => 'yoo',
+        ],
+        'if_experience_discretionary' => [
+            0 => 'foo if_experience_discretionary',
+            1 => 'bar if_experience_discretionary',
+            2 => 'yoo',
+        ],
+        'preferred_option' => [
+            0 => 'foo preferred_option',
+            1 => 'bar preferred_option',
+            2 => 'yoo',
+        ],
+        'retirement_vs_legacy' => [
+            0 => 'foo retirement_vs_legacy',
+            1 => 'bar retirement_vs_legacy',
+            2 => 'yoo',
+        ],
+        'proportion_of_total_funds' => [
+            0 => 'foo proportion_of_total_funds',
+            1 => 'bar proportion_of_total_funds',
+            2 => 'yoo',
+        ],
+        'spouse_lump_sum_death' => [
+            0 => 'foo spouse_lump_sum_death',
+            1 => 'bar spouse_lump_sum_death',
+            2 => 'yoo',
+        ],
+        'tax_free_lump_sum_preference' => [
+            0 => 'foo tax_free_lump_sum_preference',
+            1 => 'bar tax_free_lump_sum_preference',
+            2 => 'yoo',
+        ],
+        'lump_sum_death_benefits' => [
+            0 => 'foo lump_sum_death_benefits',
+            1 => 'bar lump_sum_death_benefits',
+            2 => 'yoo',
+        ],
     ]
 ];
