@@ -1559,9 +1559,9 @@ return [
             2 => 'yoo',
         ],
         'lifetime_allowance_protection' => [
-            0 => 'foo lifetime_allowance_protection',
-            1 => 'bar lifetime_allowance_protection',
-            2 => 'yoo lifetime_allowance_protection',
+            0 => 'foo',
+            1 => 'bar',
+            2 => 'yoo',
         ],
         'if_experience_self_select' => [
             0 => 'foo if_experience_self_select',
