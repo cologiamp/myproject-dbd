@@ -814,7 +814,167 @@ return [
                     Rule::in(array_keys(config('enums.pension_objectives.lump_sum_death_benefits'))),
                 ],
             ]
-        ],
-
+        ]
+    ],
+    'investmentrecommendation' => [
+        1 => [
+            'name' => 'Investment Recommendations',
+            'sections' => [
+                1 => [
+                    'name' => 'Basic Details',
+                    'fields' => [
+                        'investment_recommendations.is_ethical_investor',
+                        'investment_recommendations.risk_profile',
+                        'investment_recommendations.previously_invested_amount',
+                        'investment_recommendations.fee_basis',
+                        'investment_recommendations.fee_basis_discount'
+                    ],
+                    'rules' => [
+                        'is_ethical_investor' => 'sometimes|nullable|boolean',
+                        'risk_profile' => 'sometimes|nullable',
+                        'previously_invested_amount' => 'sometimes|nullable|string',
+                        'fee_basis' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.fee_basis'))),
+                        ],
+                        'fee_basis_discount' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ],
+                2 => [
+                    'name' => 'Income and Growth Report',
+                    'fields' => [
+                        'investment_recommendations.id',
+                        'investment_recommendations.report_for',
+                        'investment_recommendations.report_type',
+                        'investment_recommendations.isa_allowance_used',
+                        'investment_recommendations.cgt_allowance_used',
+                        'investment_recommendations.net_income_required',
+                        'investment_recommendations.regular_cash_required',
+                        'investment_recommendations.regular_cash_duration'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable',
+                        'report_for' => 'sometimes|nullable',
+                        'report_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.report_type'))),
+                        ],
+                        'isa_allowance_used' => 'sometimes|nullable|string',
+                        'cgt_allowance_used' => 'sometimes|nullable|string',
+                        'net_income_required' => 'sometimes|nullable|string',
+                        'regular_cash_required' => 'sometimes|nullable|string',
+                        'regular_cash_duration' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.frequency'))),
+                        ],
+                    ],
+                    'messages' => []
+                ],
+                3 => [
+                    'name' => 'Tax Consequences',
+                    'fields' => [
+                        'investment_recommendations.id',
+                        'investment_recommendations.cta_base_costs_available',
+                        'investment_recommendations.cta_sell_to_cgt_exemption',
+                        'investment_recommendations.cta_sell_all',
+                        'investment_recommendations.cta_sell_set_amount',
+                        'investment_recommendations.dta_base_costs_available',
+                        'investment_recommendations.dta_sell_to_cgt_exemption',
+                        'investment_recommendations.dta_sell_all',
+                        'investment_recommendations.dta_sell_set_amount',
+                        'investment_recommendations.isa_transfer_exit_penalty_not_ascertained',
+                        'investment_recommendations.isa_transfer_exit_penalty_ascertained',
+                        'investment_recommendations.investment_bonds_managed_funds',
+                        'investment_recommendations.investment_bonds_with_profits',
+                        'investment_recommendations.investment_bonds_chargeable_gain_not_calculated',
+                        'investment_recommendations.investment_bonds_exit_penalty_not_ascertained',
+                        'investment_recommendations.investment_bonds_exit_penalty_ascertained',
+                        'investment_bonds.id',
+                        'investment_bonds.provider',
+                        'investment_bonds.initial_investment',
+                        'investment_bonds.surrender_value',
+                        'investment_bonds.withdrawals',
+                        'investment_bonds.total_gain',
+                        'investment_bonds.top_slice',
+                        'investment_bonds.complete_years_held'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable',
+                        'cta_base_costs_available' => 'sometimes|nullable|string',
+                        'cta_sell_to_cgt_exemption' => 'sometimes|nullable|boolean',
+                        'cta_sell_all' => 'sometimes|nullable|boolean',
+                        'cta_sell_set_amount' => 'sometimes|nullable|string',
+                        'dta_base_costs_available' => 'sometimes|nullable|string',
+                        'dta_sell_to_cgt_exemption' => 'sometimes|nullable|boolean',
+                        'dta_sell_all' => 'sometimes|nullable|boolean',
+                        'dta_sell_set_amount' => 'sometimes|nullable|string',
+                        'isa_transfer_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
+                        'isa_transfer_exit_penalty_ascertained' => 'sometimes|nullable|string',
+                        'investment_bonds_managed_funds' => 'sometimes|nullable|boolean',
+                        'investment_bonds_with_profits' => 'sometimes|nullable|boolean',
+                        'investment_bonds_chargeable_gain_not_calculated' => 'sometimes|nullable|boolean',
+                        'investment_bonds_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
+                        'investment_bonds_exit_penalty_ascertained' => 'sometimes|nullable|string',
+                        'investment_bonds' => 'sometimes|nullable|array',
+                        'investment_bonds.*.id' => 'sometimes|nullable|integer',
+                        'investment_bonds.*.provider' => 'sometimes|nullable|string',
+                        'investment_bonds.*.initial_investment' => 'sometimes|nullable|string',
+                        'investment_bonds.*.surrender_value' => 'sometimes|nullable|string',
+                        'investment_bonds.*.withdrawals' => 'sometimes|nullable|string',
+                        'investment_bonds.*.total_gain' => 'sometimes|nullable|string',
+                        'investment_bonds.*.top_slice' => 'sometimes|nullable|string',
+                        'investment_bonds.*.complete_years_held' => 'sometimes|nullable|int'
+                    ],
+                    'messages' => []
+                ],
+                4 => [
+                    'name' => 'Investment Recommendations',
+                    'fields' => [
+                        'investment_recommendation_items' => [
+                            'investment_recommendation_items.id',
+                            'investment_recommendation_items.type',
+                            'investment_recommendation_items.source_plan',
+                            'investment_recommendation_items.description',
+                            'investment_recommendation_items.stock_type',
+                            'investment_recommendation_items.number_of_units',
+                            'investment_recommendation_items.amount'
+                        ]
+                    ],
+                    'rules' => [
+                        'investment_recommendation_items' => 'sometimes|nullable|array',
+                        'investment_recommendation_items.*.id' => 'sometimes|nullable|integer',
+                        'investment_recommendation_items.*.type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.investment_recommendation_items.types'))))
+                        ],
+                        'investment_recommendation_items.*.source_plan' => 'sometimes|nullable|string',
+                        'investment_recommendation_items.*.description' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.investment_recommendation_items.descriptions'))))
+                        ],
+                        'investment_recommendation_items.*.stock_type' => 'sometimes|nullable|string',
+                        'investment_recommendation_items.*.number_of_units' => 'sometimes|nullable|integer',
+                        'investment_recommendation_items.*.amount' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ]
+            ]
+        ]
     ]
 ];
