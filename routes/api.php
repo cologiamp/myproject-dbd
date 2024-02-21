@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\InvestmentRecommendationController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+use App\Http\Controllers\Api\InvestmentRecommendationItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
+    Route::delete('/investment-recommendation-items/{item}', [InvestmentRecommendationItemController::class,'delete']);
 });
 
 

@@ -30,6 +30,10 @@ class InvestmentRecommendationController extends Controller
      */
     public function update(Client $client, $step, $section, Request $request): string
     {
+        if ($request['investment_recommendation_items'] && $request['investment_recommendation_items'] != null) {
+            $request['investment_recommendation_items'] = collect($request['investment_recommendation_items'])->flatten(1)->toArray();
+        }
+
         $investmentRecommendation = $this->investmentRecommendationRepository->getInvestmentRecommendation();
         $investmentRecommendation = $investmentRecommendation->where('id', $client->investment_recommendation_id)->first();
 
@@ -49,6 +53,6 @@ class InvestmentRecommendationController extends Controller
             $irsds->validated($step, $section, $request)
         );
 
-        return response()->json(['investmentRecommendation' => $investmentRecommendation, 'step' => $step, 'section' => $section]);
+        return json_encode(['model' =>  $irsds->get(InvestmentRecommendation::where('id',$client->investment_recommendation_id)->first(),$step,$section)['model']]);
     }
 }

@@ -3,23 +3,17 @@ namespace App\Repositories;
 
 use App\Concerns\ParsesIoClientData;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
-use App\Http\Requests\BaseClientRequest;
-use App\Http\Requests\CreateClientRequest;
 use App\Models\Client;
-use App\Models\InvestmentRecommendation;
 use App\Models\InvestmentBond;
+use App\Models\InvestmentRecommendation;
 use App\Services\InvestmentRecommendationSectionDataService;
-use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\Console\Input\Input;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class InvestmentRecommendationRepository extends BaseRepository
 {
@@ -130,7 +124,7 @@ class InvestmentRecommendationRepository extends BaseRepository
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
 //                'progress' => $this->calculateInvestmentRecommendationElementProgress($key),
-                'progress' => null,
+                'progress' => 0,
                 'sidebaritems' => $this->loadInvestmentRecommendationSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
                 }), $key, $currentStep, $currentSection)->toArray()
@@ -150,16 +144,6 @@ class InvestmentRecommendationRepository extends BaseRepository
             if(array_key_exists('fields',$section) && count($section['fields']) > 0)
             {
                 return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-                    $nestedFieldArrays = ['dependents', 'addresses'];
-
-                    // process field names for nested field arrays
-                    if(in_array($key, $nestedFieldArrays)){
-                        $value = $value->map(function ($val) {
-                            $keyName = explode('.',$val)[1];
-                            return $keyName;
-                        });
-                    }
-
                     return match ($key) {
                         'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
                         // todo write join query here for other places data ends up.
@@ -224,7 +208,6 @@ class InvestmentRecommendationRepository extends BaseRepository
         DB::beginTransaction();
 
         $investmentRecommendation = InvestmentRecommendation::where('id', $data['id'])->first();
-        $investmentRecommendationId = null;
 
         $formatInvestmentData = array(
             'cta_base_costs_available' => $data['cta_base_costs_available'],
@@ -246,9 +229,11 @@ class InvestmentRecommendationRepository extends BaseRepository
 
         try {
             if(!$investmentRecommendation){
+                Log::info('Create new investment recommendation');
                 $investmentRecommendation = $this->registerInvestmentRecommendation($formatInvestmentData);
             }
             else {
+                Log::info('Update investment recommendation');
                 $investmentRecommendation->update($formatInvestmentData);
             }
 
@@ -316,9 +301,7 @@ class InvestmentRecommendationRepository extends BaseRepository
     }
     private function createOrUpdateInvestmentBonds(InvestmentRecommendation $investmentRecommendation, array $investmentBonds): void
     {
-//        $investmentRecommendation->investment_bonds()->whereNotIn('id', collect($investmentBonds)->pluck('id')->filter()->toArray())->delete();
-        ray('createOrUpdateInvestmentBonds')->orange();
-        ray($investmentRecommendation->investment_bonds()->whereNotIn('id', collect($investmentBonds)->pluck('id')->filter()->toArray()))->orange();
+        $investmentRecommendation->investment_bonds()->whereNotIn('id', collect($investmentBonds)->pluck('id')->filter()->toArray())->delete();
 
         collect($investmentBonds)->each(function ($bond) use ($investmentRecommendation) {
             $formatInvestmentBondData = Arr::except($bond, ['id']);
@@ -329,17 +312,16 @@ class InvestmentRecommendationRepository extends BaseRepository
 
                 try {
                     // update investment bond
-                    ray('update')->orange();
+                    Log::info('Update investment bond');
                     $model->update($formatInvestmentBondData);
                 } catch (\Exception $e) {
                     throw new \Exception($e);
                 }
             } else {
                 // register investment bond
-                ray('create new investment bond record')->orange();
+                Log::info('Create new investment bond');
                 InvestmentBond::create($formatInvestmentBondData);
             }
-
         });
     }
 }

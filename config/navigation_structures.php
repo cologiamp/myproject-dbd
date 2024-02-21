@@ -841,7 +841,8 @@ return [
                             Rule::in(array_keys(config('enums.investment_recommendation.fee_basis'))),
                         ],
                         'fee_basis_discount' => 'sometimes|nullable|string'
-                    ]
+                    ],
+                    'messages' => []
                 ],
                 2 => [
                     'name' => 'Income and Growth Report',
@@ -876,7 +877,8 @@ return [
                             'integer',
                             Rule::in(array_keys(config('enums.investment_recommendation.frequency'))),
                         ],
-                    ]
+                    ],
+                    'messages' => []
                 ],
                 3 => [
                     'name' => 'Tax Consequences',
@@ -897,6 +899,7 @@ return [
                         'investment_recommendations.investment_bonds_chargeable_gain_not_calculated',
                         'investment_recommendations.investment_bonds_exit_penalty_not_ascertained',
                         'investment_recommendations.investment_bonds_exit_penalty_ascertained',
+                        'investment_bonds.id',
                         'investment_bonds.provider',
                         'investment_bonds.initial_investment',
                         'investment_bonds.surrender_value',
@@ -923,6 +926,7 @@ return [
                         'investment_bonds_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
                         'investment_bonds_exit_penalty_ascertained' => 'sometimes|nullable|string',
                         'investment_bonds' => 'sometimes|nullable|array',
+                        'investment_bonds.*.id' => 'sometimes|nullable|integer',
                         'investment_bonds.*.provider' => 'sometimes|nullable|string',
                         'investment_bonds.*.initial_investment' => 'sometimes|nullable|string',
                         'investment_bonds.*.surrender_value' => 'sometimes|nullable|string',
@@ -930,8 +934,46 @@ return [
                         'investment_bonds.*.total_gain' => 'sometimes|nullable|string',
                         'investment_bonds.*.top_slice' => 'sometimes|nullable|string',
                         'investment_bonds.*.complete_years_held' => 'sometimes|nullable|int'
-                    ]
+                    ],
+                    'messages' => []
                 ],
+                4 => [
+                    'name' => 'Investment Recommendations',
+                    'fields' => [
+                        'investment_recommendation_items' => [
+                            'investment_recommendation_items.id',
+                            'investment_recommendation_items.type',
+                            'investment_recommendation_items.source_plan',
+                            'investment_recommendation_items.description',
+                            'investment_recommendation_items.stock_type',
+                            'investment_recommendation_items.number_of_units',
+                            'investment_recommendation_items.amount'
+                        ]
+                    ],
+                    'rules' => [
+                        'investment_recommendation_items' => 'sometimes|nullable|array',
+                        'investment_recommendation_items.*.id' => 'sometimes|nullable|integer',
+                        'investment_recommendation_items.*.type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.investment_recommendation_items.types'))))
+                        ],
+                        'investment_recommendation_items.*.source_plan' => 'sometimes|nullable|string',
+                        'investment_recommendation_items.*.description' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.investment_recommendation_items.descriptions'))))
+                        ],
+                        'investment_recommendation_items.*.stock_type' => 'sometimes|nullable|string',
+                        'investment_recommendation_items.*.number_of_units' => 'sometimes|nullable|integer',
+                        'investment_recommendation_items.*.amount' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ]
             ]
         ]
     ]

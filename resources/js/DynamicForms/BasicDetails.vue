@@ -38,7 +38,7 @@ function formatAmount(e, dataField) {
     stepForm[dataField] = '';
     stepForm[dataField] = changeToCurrency(e.target.value);
 
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally()
 }
 
 onMounted(()=>{
@@ -52,11 +52,19 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     fee_basis_discount: props.formData.model.fee_basis_discount
 })
 
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.is_ethical_investor = props.formData.model.is_ethical_investor;
+    stepForm.risk_profile = props.formData.model.risk_profile;
+    stepForm.previously_invested_amount = props.formData.model.previously_invested_amount;
+    stepForm.fee_basis = props.formData.model.fee_basis;
+    stepForm.fee_basis_discount = props.formData.model.fee_basis_discount;
+}
+
 
 </script>
 
 <template>
-
     <form-errors :errors="usePage().props.errors"/>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
@@ -64,16 +72,17 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="is_ethical_investor" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is this an Ethical Investor?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.is_ethical_investor" type="radio" id="true" :value="true" :checked="stepForm.is_ethical_investor == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveLocally()" v-model="stepForm.is_ethical_investor" type="radio" id="true" :value="true" :checked="stepForm.is_ethical_investor == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.is_ethical_investor" type="radio" id="false" :value="false" :checked="stepForm.is_ethical_investor == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <input @change="autosaveLocally()" v-model="stepForm.is_ethical_investor" type="radio" id="false" :value="false" :checked="stepForm.is_ethical_investor == false" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.is_ethical_investor">{{ stepForm.errors.is_ethical_investor }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <!-- To Do: add [Risk Profile] enums when available -->
                     <label for="risk_profile" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Risk Profile</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.risk_profile" id="unit" name="risk_profile"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.risk_profile" id="unit" name="risk_profile"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="title" :value="null">-</option>
                         <!--<option :id="id" :value="id" v-for="(title, id) in formData.enums.titles">{{ risk_profile }}</option>-->
                     </select>
@@ -91,7 +100,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="fee_basis" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fee Basis</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.fee_basis" id="fee_basis" name="fee_basis"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.fee_basis" id="fee_basis" name="fee_basis"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="title" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(fee_basis, id) in formData.enums.fee_basis">{{ fee_basis }}</option>
                     </select>

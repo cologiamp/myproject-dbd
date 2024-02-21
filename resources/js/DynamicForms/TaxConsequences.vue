@@ -55,7 +55,7 @@ function formatAmount(e, index, dataField) {
     stepForm.investment_bonds[index][dataField] = '';
     stepForm.investment_bonds[index][dataField] = changeToCurrency(e.target.value);
 
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
@@ -87,23 +87,81 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
 const chargeable_gain = ref(false);
 
 function checkTextInNotes(inputName) {
-    if (inputName === 'cta_base_costs_available') {
-        stepForm.cta_base_costs_availability = stepForm.cta_base_costs_available.length > 0
-    } else if (inputName === 'cta_sell_set_amount') {
-        stepForm.cta_sell_set_amount_check = stepForm.cta_sell_set_amount.length > 0
-    } else if (inputName === 'dta_base_costs_available') {
-        stepForm.dta_base_costs_availability = stepForm.dta_base_costs_available.length > 0
-    } else if (inputName === 'dta_sell_set_amount') {
-        stepForm.dta_sell_set_amount_check = stepForm.dta_sell_set_amount.length > 0
-    } else if (inputName === 'isa_transfer_exit_penalty_ascertained') {
-        stepForm.isa_transfer_exit_penalty_ascertained_check = stepForm.isa_transfer_exit_penalty_ascertained.length > 0
-    } else if (inputName === 'investment_bonds_exit_penalty_not_ascertained') {
-        chargeable_gain.value = stepForm.investment_bonds_exit_penalty_not_ascertained.length > 0
-    } else if (inputName === 'investment_bonds_exit_penalty_ascertained') {
-        stepForm.investment_bonds_exit_penalty_ascertained_check = stepForm.investment_bonds_exit_penalty_ascertained.length > 0
+    switch(inputName) {
+        case 'cta_base_costs_available':
+            stepForm.cta_base_costs_availability = stepForm.cta_base_costs_available.length > 0
+            autosaveLocally()
+            break;
+        case 'cta_sell_set_amount':
+            stepForm.cta_sell_set_amount_check = stepForm.cta_sell_set_amount.length > 0
+            autosaveLocally()
+            break;
+        case 'dta_base_costs_available':
+            stepForm.dta_base_costs_availability = stepForm.dta_base_costs_available.length > 0
+            autosaveLocally()
+            break;
+        case 'dta_sell_set_amount':
+            stepForm.dta_sell_set_amount_check = stepForm.dta_sell_set_amount.length > 0
+            autosaveLocally()
+            break;
+        case 'isa_transfer_exit_penalty_ascertained':
+            stepForm.isa_transfer_exit_penalty_ascertained_check = stepForm.isa_transfer_exit_penalty_ascertained.length > 0
+            autosaveLocally()
+            break;
+        case 'investment_bonds_exit_penalty_not_ascertained':
+            chargeable_gain.value = stepForm.investment_bonds_exit_penalty_not_ascertained.length > 0
+            autosaveLocally()
+            break;
+        case 'investment_bonds_exit_penalty_ascertained':
+            stepForm.investment_bonds_exit_penalty_ascertained_check = stepForm.investment_bonds_exit_penalty_ascertained.length > 0
+            autosaveLocally()
+            break;
+        default:
+            break;
     }
+}
 
-    autosaveT(stepForm,props.formData.submit_url)
+function setTextInNotes(inputName) {
+    switch(inputName) {
+        case 'cta_base_costs_availability':
+            if (stepForm.cta_base_costs_availability === false) {
+                stepForm.cta_base_costs_available = ''
+                autosaveLocally();
+            }
+            break;
+        case 'cta_sell_set_amount_check':
+            if (stepForm.cta_sell_set_amount_check === false) {
+                stepForm.cta_sell_set_amount = ''
+                autosaveLocally();
+            }
+            break;
+        case 'dta_base_costs_availability':
+            if (stepForm.dta_base_costs_availability === false) {
+                stepForm.dta_base_costs_available = ''
+                autosaveLocally();
+            }
+            break;
+        case 'dta_sell_set_amount_check':
+            if (stepForm.dta_sell_set_amount_check === false) {
+                stepForm.dta_sell_set_amount = ''
+                autosaveLocally();
+            }
+            break;
+        case 'isa_transfer_exit_penalty_ascertained_check':
+            if (stepForm.isa_transfer_exit_penalty_ascertained_check === false) {
+                stepForm.isa_transfer_exit_penalty_ascertained = ''
+                autosaveLocally();
+            }
+            break;
+        case 'investment_bonds_exit_penalty_ascertained_check':
+            if (stepForm.investment_bonds_exit_penalty_ascertained_check === false) {
+                stepForm.investment_bonds_exit_penalty_ascertained = ''
+                autosaveLocally();
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 function addInvestmentBond() {
@@ -120,11 +178,38 @@ function addInvestmentBond() {
 
 function removeInvestmentBond(index) {
     stepForm.investment_bonds.splice(index, 1);
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally();
 }
 
 onMounted(()=>{
 })
+
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.id = props.formData.model.id,
+    stepForm.cta_base_costs_availability = props.formData.model.cta_base_costs_availability,
+    stepForm.cta_base_costs_available = props.formData.model.cta_base_costs_available,
+    stepForm.cta_sell_to_cgt_exemption = props.formData.model.cta_sell_to_cgt_exemption,
+    stepForm.cta_sell_all = props.formData.model.cta_sell_all,
+    stepForm.cta_sell_set_amount_check = props.formData.model.cta_sell_set_amount_check,
+    stepForm.cta_sell_set_amount = props.formData.model.cta_sell_set_amount,
+    stepForm.dta_base_costs_availability = props.formData.model.dta_base_costs_availability,
+    stepForm.dta_base_costs_available = props.formData.model.dta_base_costs_available,
+    stepForm.dta_sell_to_cgt_exemption = props.formData.model.dta_sell_to_cgt_exemption,
+    stepForm.dta_sell_all = props.formData.model.dta_sell_all,
+    stepForm.dta_sell_set_amount_check = props.formData.model.dta_sell_set_amount_check,
+    stepForm.dta_sell_set_amount = props.formData.model.dta_sell_set_amount,
+    stepForm.isa_transfer_exit_penalty_not_ascertained = props.formData.model.isa_transfer_exit_penalty_not_ascertained,
+    stepForm.isa_transfer_exit_penalty_ascertained_check = props.formData.model.isa_transfer_exit_penalty_ascertained_check,
+    stepForm.isa_transfer_exit_penalty_ascertained = props.formData.model.isa_transfer_exit_penalty_ascertained,
+    stepForm.investment_bonds_managed_funds = props.formData.model.investment_bonds_managed_funds,
+    stepForm.investment_bonds_with_profits = props.formData.model.investment_bonds_with_profits,
+    stepForm.investment_bonds_chargeable_gain_not_calculated = props.formData.model.investment_bonds_chargeable_gain_not_calculated,
+    stepForm.investment_bonds_exit_penalty_not_ascertained = props.formData.model.investment_bonds_exit_penalty_not_ascertained,
+    stepForm.investment_bonds_exit_penalty_ascertained_check = props.formData.model.investment_bonds_exit_penalty_ascertained_check,
+    stepForm.investment_bonds_exit_penalty_ascertained = props.formData.model.investment_bonds_exit_penalty_ascertained,
+    stepForm.investment_bonds =  props.formData.model.investment_bonds
+}
 </script>
 
 <template>
@@ -134,11 +219,13 @@ onMounted(()=>{
             <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
                 <label class="font-bold text-white text-lg">Collective Taxable Assets (E.g Unit Trusts)</label>
             </div>
-            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
+            <div class="border-b-2 pb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="cta_base_costs_availability" name="cta_base_costs_availability" type="checkbox" v-model="stepForm.cta_base_costs_availability" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="cta_base_costs_availability" name="cta_base_costs_availability" type="checkbox"
+                                   v-model="stepForm.cta_base_costs_availability" @change="setTextInNotes('cta_base_costs_availability')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="cta_base_costs_availability" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
@@ -154,18 +241,21 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="cta_sell_to_cgt_exemption" name="cta_sell_to_cgt_exemption" type="checkbox" v-model="stepForm.cta_sell_to_cgt_exemption" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="cta_sell_to_cgt_exemption" name="cta_sell_to_cgt_exemption" type="checkbox"
+                                   v-model="stepForm.cta_sell_to_cgt_exemption" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="cta_sell_to_cgt_exemption" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
                         </div>
-                        {{stepForm.cta_sell_to_cgt_exemption}}
                     </div>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="cta_sell_all" name="cta_sell_all" type="checkbox" v-model="stepForm.cta_sell_all" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="cta_sell_all" name="cta_sell_all" type="checkbox"
+                                   v-model="stepForm.cta_sell_all" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="cta_sell_all" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
@@ -175,7 +265,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-1">
                         <div class="flex h-6 items-center">
-                            <input id="cta_sell_set_amount_check" name="cta_sell_set_amount_check" type="checkbox" v-model="stepForm.cta_sell_set_amount_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="cta_sell_set_amount_check" name="cta_sell_set_amount_check" type="checkbox"
+                                   v-model="stepForm.cta_sell_set_amount_check" @change="setTextInNotes('cta_sell_set_amount_check')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="cta_sell_set_amount_check" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
@@ -192,11 +284,13 @@ onMounted(()=>{
             <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
                 <label class="font-bold text-white text-lg">Direct Taxable Assets (E.g Shares)</label>
             </div>
-            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
+            <div class="border-b-2 pb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 mb-6">
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="dta_base_costs_availability" name="dta_base_costs_availability" type="checkbox" v-model="stepForm.dta_base_costs_availability" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="dta_base_costs_availability" name="dta_base_costs_availability" type="checkbox"
+                                   v-model="stepForm.dta_base_costs_availability" @change="setTextInNotes('dta_base_costs_availability')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="dta_base_costs_availability" class="text-sm font-medium leading-6 text-aaron-50">Are the base costs available</label>
@@ -212,7 +306,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="dta_sell_to_cgt_exemption" name="dta_sell_to_cgt_exemption" type="checkbox" v-model="stepForm.dta_sell_to_cgt_exemption" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="dta_sell_to_cgt_exemption" name="dta_sell_to_cgt_exemption" type="checkbox"
+                                   v-model="stepForm.dta_sell_to_cgt_exemption" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="dta_sell_to_cgt_exemption" class="text-sm font-medium leading-6 text-aaron-50">Sell to CGT Excemption? </label>
@@ -222,7 +318,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="dta_sell_all" name="dta_sell_all" type="checkbox" v-model="stepForm.dta_sell_all" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="dta_sell_all" name="dta_sell_all" type="checkbox"
+                                   v-model="stepForm.dta_sell_all" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="dta_sell_all" class="text-sm font-medium leading-6 text-aaron-50">Sell all? </label>
@@ -232,7 +330,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-1">
                         <div class="flex h-6 items-center">
-                            <input id="dta_sell_set_amount_check" name="dta_sell_set_amount_check" type="checkbox" v-model="stepForm.dta_sell_set_amount_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="dta_sell_set_amount_check" name="dta_sell_set_amount_check" type="checkbox"
+                                   v-model="stepForm.dta_sell_set_amount_check" @change="setTextInNotes('dta_sell_set_amount_check')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="dta_sell_set_amount_check" class="text-sm font-medium leading-6 text-aaron-50">Sell set amount? </label>
@@ -249,11 +349,13 @@ onMounted(()=>{
             <div class="flex flex-row justify-between md:col-span-6 md:pr-2 items-center">
                 <label class="font-bold text-white text-lg">ISA Transfers</label>
             </div>
-            <div class="md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4  mb-6">
+            <div class="border-b-2 pb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4  mb-6">
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="isa_transfer_exit_penalty_not_ascertained" name="is_primary" type="checkbox" v-model="stepForm.isa_transfer_exit_penalty_not_ascertained" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="isa_transfer_exit_penalty_not_ascertained" name="is_primary" type="checkbox"
+                                   v-model="stepForm.isa_transfer_exit_penalty_not_ascertained" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="isa_transfer_exit_penalty_not_ascertained" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
@@ -264,18 +366,21 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="isa_transfer_exit_penalty_ascertained_check" name="isa_transfer_exit_penalty_ascertained_check" type="checkbox" v-model="stepForm.isa_transfer_exit_penalty_ascertained_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="isa_transfer_exit_penalty_ascertained_check" name="isa_transfer_exit_penalty_ascertained_check" type="checkbox"
+                                   v-model="stepForm.isa_transfer_exit_penalty_ascertained_check" @change="setTextInNotes('isa_transfer_exit_penalty_ascertained_check')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="isa_transfer_exit_penalty_ascertained_check" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - ascertained</label>
                         </div>
                     </div>
                 </div>
-                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
-                    <div v-if="stepForm.isa_transfer_exit_penalty_ascertained_check">
+                <div v-if="stepForm.isa_transfer_exit_penalty_ascertained_check" class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2">
+                    <div>
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Exit penalty - Notes</label>
                         <div class="mt-2">
-                            <textarea rows="3" name="cta_base_costs_available" id="cta_base_costs_available" v-model="stepForm.isa_transfer_exit_penalty_ascertained" @change="checkTextInNotes('isa_transfer_exit_penalty_ascertained')"
+                            <textarea rows="3" name="cta_base_costs_available" id="cta_base_costs_available"
+                              v-model="stepForm.isa_transfer_exit_penalty_ascertained" @change="checkTextInNotes('isa_transfer_exit_penalty_ascertained')"
                               class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                         </div>
                     </div>
@@ -288,7 +393,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="investment_bonds_managed_funds" name="investment_bonds_managed_funds" type="checkbox" v-model="stepForm.investment_bonds_managed_funds" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_managed_funds" name="investment_bonds_managed_funds" type="checkbox"
+                                   v-model="stepForm.investment_bonds_managed_funds" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="investment_bonds_managed_funds" class="text-sm font-medium leading-6 text-aaron-50">Managed funds (including unitised WP)</label>
@@ -299,7 +406,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-8">
                         <div class="flex h-6 items-center">
-                            <input id="investment_bonds_with_profits" name="investment_bonds_with_profits" type="checkbox" v-model="stepForm.investment_bonds_with_profits" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_with_profits" name="investment_bonds_with_profits" type="checkbox"
+                                   v-model="stepForm.investment_bonds_with_profits" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="investment_bonds_with_profits" class="text-sm font-medium leading-6 text-aaron-50">With Profits (traditional)</label>
@@ -309,7 +418,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="investment_bonds_chargeable_gain_not_calculated" name="investment_bonds_chargeable_gain_not_calculated" type="checkbox" v-model="stepForm.investment_bonds_chargeable_gain_not_calculated" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_chargeable_gain_not_calculated" name="investment_bonds_chargeable_gain_not_calculated" type="checkbox"
+                                   v-model="stepForm.investment_bonds_chargeable_gain_not_calculated" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="investment_bonds_chargeable_gain_not_calculated" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain NOT calculated</label>
@@ -319,7 +430,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="chargeable_gain" name="chargeable_gain" type="checkbox" v-model="chargeable_gain" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="chargeable_gain" name="chargeable_gain" type="checkbox"
+                                   v-model="chargeable_gain" @change="setTextInNotes('chargeable_gain')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="chargeable_gain" class="text-sm font-medium leading-6 text-aaron-50">Chargeable gain</label>
@@ -329,7 +442,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="investment_bonds_exit_penalty_not_ascertained" name="investment_bonds_exit_penalty_not_ascertained" type="checkbox" v-model="stepForm.investment_bonds_exit_penalty_not_ascertained" @change="autosaveT(stepForm,props.formData.submit_url)" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_exit_penalty_not_ascertained" name="investment_bonds_exit_penalty_not_ascertained" type="checkbox"
+                                   v-model="stepForm.investment_bonds_exit_penalty_not_ascertained" @change="autosaveLocally()"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="investment_bonds_exit_penalty_not_ascertained" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - not ascertained</label>
@@ -339,7 +454,9 @@ onMounted(()=>{
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <div class="flex items-center pt-4">
                         <div class="flex h-6 items-center">
-                            <input id="investment_bonds_exit_penalty_ascertained_check" name="investment_bonds_exit_penalty_ascertained_check" type="checkbox" v-model="stepForm.investment_bonds_exit_penalty_ascertained_check" class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                            <input id="investment_bonds_exit_penalty_ascertained_check" name="investment_bonds_exit_penalty_ascertained_check" type="checkbox"
+                                   v-model="stepForm.investment_bonds_exit_penalty_ascertained_check" @change="setTextInNotes('investment_bonds_exit_penalty_ascertained_check')"
+                                   class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
                         </div>
                         <div class="ml-3">
                             <label for="investment_bonds_exit_penalty_ascertained_check" class="text-sm font-medium leading-6 text-aaron-50">Exit penalty - ascertained</label>
@@ -359,7 +476,7 @@ onMounted(()=>{
             <div v-for="(investment_bond, index) in stepForm.investment_bonds" class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
                     <label class="font-bold">Investment Bonds {{ index + 1 }}</label>
-                    <button type="button" @click="removeInvestmentBond"
+                    <button type="button" @click="removeInvestmentBond(index)"
                             class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <XCircleIcon class="w-4 h-4" />Remove Investment Bond
                     </button>
@@ -367,7 +484,9 @@ onMounted(()=>{
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="provider" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Provider </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input v-model="investment_bond.provider" @change="autosaveT(stepForm,props.formData.submit_url)" type="text" name="provider" id="provider"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Provider" />
+                        <input type="text" name="provider" id="provider"
+                               v-model="investment_bond.provider" @change="autosaveLocally()"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Provider" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.provider">{{ stepForm.errors.provider }}</p>
                 </div>
@@ -426,7 +545,7 @@ onMounted(()=>{
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input type="number" name="complete_years_held" id="complete_years_held"
                                v-model="investment_bond.complete_years_held"
-                               @change="autosaveT(stepForm,props.formData.submit_url)"
+                               @change="autosaveLocally()"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.complete_years_held">{{ stepForm.errors.complete_years_held }}</p>

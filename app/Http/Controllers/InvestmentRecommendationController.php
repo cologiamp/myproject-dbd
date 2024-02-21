@@ -7,7 +7,6 @@ use App\Models\InvestmentRecommendation;
 use App\Repositories\InvestmentRecommendationRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class InvestmentRecommendationController extends Controller
 {
@@ -44,7 +43,7 @@ class InvestmentRecommendationController extends Controller
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-            'progress' => $this->investmentRecommendationRepository->calculateInvestmentRecommendationElementProgress($step)
+//            'progress' => $this->investmentRecommendationRepository->calculateInvestmentRecommendationElementProgress($step)
         ]);
     }
 }

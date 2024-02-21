@@ -83,7 +83,7 @@ class HandleInertiaRequests extends Middleware
                 [
                     'name' => 'Investment Recommendation',
                     'href' => '/client/'.$client->io_id.'/investment-recommendation',
-                    'icon' => 'SRIcon',
+                    'icon' => 'IRIcon',
                     'current' => $request->route()->getName() === 'client.investmentrecommendation'
                 ],
             ]);

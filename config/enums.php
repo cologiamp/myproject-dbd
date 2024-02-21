@@ -1690,5 +1690,24 @@ return [
             5 => 'Every 6 months',
             6 => 'Annually'
         ]
+    ],
+    'investment_recommendation_items' => [
+        'types' => [
+            0 => 'bond_element',
+            1 => 'growth_element',
+            2 => 'cash_element',
+            3 => 'treasured_stock_transfers'
+        ],
+        'types_public' => [
+            0 => 'Bond Element',
+            1 => 'Growth Element',
+            2 => 'Cash Element',
+            3 => 'Treasured Stock Transfers'
+        ],
+        'descriptions' => [
+            0 => 'General Investment Account',
+            1 => 'Stocks and Shares ISA (transfer)',
+            2 => 'Stocks and Shares ISA (new subscription)',
+        ]
     ]
 ];

@@ -16,15 +16,6 @@ class InvestmentRecommendationPresenter extends BasePresenter
         );
     }
 
-    public function formatForExampleForm(): array
-    {
-        return [
-//            'first_name'=> $this->model->first_name,
-//            'last_name'=> $this->model->last_name,
-//            'title' => $this->model->title
-        ];
-    }
-
     //InvestmentRecommendation:// Need to do this for every section/step
     //Chore: this should probably be refactored to take some of the non-client stuff out of the client model.
     public function formatForStep($step,$section): array
@@ -84,19 +75,21 @@ class InvestmentRecommendationPresenter extends BasePresenter
                     ];
                 }))
             ],
+            '1.4' => [
+                'investment_recommendation_items' => collect($this->model->primary_client->investment_recommendation_items()->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'type' => $item->type,
+                        'source_plan' => $item->source_plan,
+                        'description' => $item->description,
+                        'stock_type' => $item->stock_type,
+                        'number_of_units' => $item->number_of_units,
+                        'amount' => $item->amount != null ? $this->currencyIntToString($item->amount) : null
+                    ];
+                }))->groupBy('type')
+            ],
             default => [
-
             ]
         };
-    }
-
-    public function formatForRecommendationsIndex(): array
-    {
-//        return array_merge($this->default(), [
-//            'age'=> $this->model->age,
-//            'job_title' => $this->model->job_title,
-//            'last_contact'=> $this->model->last_contact,
-//            'status_text' => $this->model->status_text
-//        ]);
     }
 }

@@ -42,7 +42,7 @@ function formatAmount(e, dataField) {
     stepForm[dataField] = '';
     stepForm[dataField] = changeToCurrency(e.target.value);
 
-    autosaveT(stepForm,props.formData.submit_url);
+    autosaveLocally()
 }
 
 onMounted(()=>{
@@ -59,6 +59,17 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
     regular_cash_duration: props.formData.model.regular_cash_duration
 })
 
+async function autosaveLocally(){
+    props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
+    stepForm.report_for = props.formData.model.report_for;
+    stepForm.report_type = props.formData.model.report_type;
+    stepForm.isa_allowance_used = props.formData.model.isa_allowance_used;
+    stepForm.cgt_allowance_used = props.formData.model.cgt_allowance_used;
+    stepForm.net_income_required = props.formData.model.net_income_required;
+    stepForm.regular_cash_required = props.formData.model.regular_cash_required;
+    stepForm.regular_cash_duration = props.formData.model.regular_cash_duration;
+}
+
 </script>
 
 <template>
@@ -69,8 +80,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
             <div class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4">
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="report_for" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Report For</label>
-                    <!-- To Do: how to set v-model value? -->
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.report_for" id="report_for" name="report_for"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.report_for" id="report_for" name="report_for"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="report_for" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(owner, id) in formData.enums.report_for">{{ owner }}</option>
                     </select>
@@ -78,7 +88,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="risk_profile" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Report Type</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.report_type" id="report_type" name="report_type"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.report_type" id="report_type" name="report_type"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="report_for" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(type, id) in formData.enums.report_type">{{ type }}</option>
                     </select>
@@ -126,7 +136,7 @@ const stepForm = useForm(props.formData.submit_method, props.formData.submit_url
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="regular_cash_duration" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Regular Cash Withdrawal Interval</label>
-                    <select @change="autosaveT(stepForm,props.formData.submit_url)" v-model="stepForm.regular_cash_duration" id="regular_cash_duration" name="regular_cash_duration"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                    <select @change="autosaveLocally()" v-model="stepForm.regular_cash_duration" id="regular_cash_duration" name="regular_cash_duration"  class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="regular_cash_duration" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(duration, id) in formData.enums.regular_cash_duration">{{ duration }}</option>
                     </select>

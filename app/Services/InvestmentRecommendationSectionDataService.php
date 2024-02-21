@@ -2,19 +2,14 @@
 
 namespace App\Services;
 
-
 use App\Concerns\FormatsCurrency;
-use App\Models\Client;
 use App\Models\InvestmentRecommendation;
 use App\Repositories\ClientRepository;
+use App\Repositories\InvestmentRecommendationItemRepository;
 use App\Repositories\InvestmentRecommendationRepository;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-
 use Throwable;
 
 class InvestmentRecommendationSectionDataService
@@ -22,14 +17,18 @@ class InvestmentRecommendationSectionDataService
     use FormatsCurrency;
     protected ClientRepository $clientRepository;
     protected InvestmentRecommendationRepository $investmentRecommendationRepository;
+    protected InvestmentRecommendationItemRepository $investmentRecommendationItemRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
-        InvestmentRecommendationRepository $investmentRecommendationRepository
+        InvestmentRecommendationRepository $investmentRecommendationRepository,
+        InvestmentRecommendationItemRepository $investmentRecommendationItemRepository
 ) {
         $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
+        $this->investmentRecommendationItemRepository = $investmentRecommendationItemRepository;
     }
+
     //get the data for a single section of a investment recommendation from a single client
     public static function get($investmentRecommendation, $step, $section): array
     {
@@ -43,12 +42,18 @@ class InvestmentRecommendationSectionDataService
 
     public function validate(int $step, int $section, Request $request)
     {
-        return Validator::make($request->all(), config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.rules'))->validate();
+        $messages = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.rules');
+
+        return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
     public function validated(int $step, int $section, Request $request)
     {
-        return Validator::make($request->all(), config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.rules'))->validated();
+        $messages = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.rules');
+
+        return Validator::make($request->all(), $rules, $messages)->validated();
     }
 
     /**
@@ -62,6 +67,7 @@ class InvestmentRecommendationSectionDataService
     {
 
         $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
+        $this->clientRepository->setClient($investmentRecommendation->primary_client);
 
         $this->{"_" . $step . $section}($validatedData);
         return true;
@@ -151,5 +157,33 @@ class InvestmentRecommendationSectionDataService
         }
 
         $this->investmentRecommendationRepository->createOrUpdateTaxConsequences($validatedData);
+    }
+
+    /**
+     * Section: 1
+     * Step: 4
+     * @param array $validatedData
+     * @return void
+     */
+    private function _14(array $validatedData): void
+    {
+        try {
+            if (array_key_exists('investment_recommendation_items', $validatedData)) {
+                $items = collect($validatedData['investment_recommendation_items'])->map(function ($item) {
+                    if ($item['amount'] && $item['amount'] != null) {
+                        $item['amount'] = $this->currencyStringToInt($item['amount']);
+                    }
+
+                    return $item;
+                });
+
+                $validatedData['investment_recommendation_items'] = $items->toArray();
+            }
+
+            $this->investmentRecommendationItemRepository->setClient($this->clientRepository->getClient());
+            $this->investmentRecommendationItemRepository->createOrUpdateRecommendationItems($validatedData);
+        } catch (Throwable $e) {
+            Log::warning($e);
+        }
     }
 }

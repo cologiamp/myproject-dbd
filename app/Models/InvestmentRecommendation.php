@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\BaseModels\Model;
 use App\Models\Presenters\InvestmentRecommendationPresenter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class InvestmentRecommendation extends Model
@@ -46,6 +45,11 @@ class InvestmentRecommendation extends Model
                 'report_for' => $this->getOwnersForForm(),
                 'report_type' => config('enums.investment_recommendation.report_type'),
                 'regular_cash_duration' => config('enums.investment_recommendation.frequency_public')
+            ],
+            '1.4' => [
+                'item_types' => config('enums.investment_recommendation_items.types_public'),
+                'owners' => $this->getOwnersForForm(true),
+                'descriptions' => config('enums.investment_recommendation_items.descriptions')
             ],
             default => [
 
