@@ -46,11 +46,9 @@ const props = defineProps({
 });
 
 function formatAmount(e, typeIndex, itemIndex, dataField) {
-    console.log(JSON.stringify(stepForm.investment_recommendation_items[typeIndex][itemIndex]));
     stepForm.investment_recommendation_items[typeIndex][itemIndex][dataField] = '';
     stepForm.investment_recommendation_items[typeIndex][itemIndex][dataField] = changeToCurrency(e.target.value);
 
-    // autosaveT(stepForm,props.formData.submit_url);
     autosaveLocally()
 }
 

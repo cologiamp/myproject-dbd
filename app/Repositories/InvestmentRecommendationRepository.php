@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Concerns\ParsesIoClientData;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
 use App\Models\InvestmentBond;
@@ -17,8 +16,6 @@ use Illuminate\Support\Str;
 
 class InvestmentRecommendationRepository extends BaseRepository
 {
-    use ParsesIoClientData;
-
     protected Client $client;
     protected InvestmentRecommendation $investmentRecommendation;
     public function __construct(Client $client, InvestmentRecommendation $investmentRecommendation)

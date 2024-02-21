@@ -9,7 +9,7 @@ class InvestmentBond extends Model
 {
     protected $guarded = [];
 
-    public function adviser(): BelongsTo
+    public function client(): BelongsTo
     {
         return $this->belongsTo(InvestmentRecommendation::class,'investment_recommendation_id');
     }

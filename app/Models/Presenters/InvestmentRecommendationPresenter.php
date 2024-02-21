@@ -16,8 +16,6 @@ class InvestmentRecommendationPresenter extends BasePresenter
         );
     }
 
-    //InvestmentRecommendation:// Need to do this for every section/step
-    //Chore: this should probably be refactored to take some of the non-client stuff out of the client model.
     public function formatForStep($step,$section): array
     {
         return match ($step . '.' . $section) {

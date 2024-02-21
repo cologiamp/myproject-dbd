@@ -5,7 +5,7 @@ import {useForm} from "laravel-precognition-vue-inertia";
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 
-import {onMounted, watch, ref} from "vue";
+import {onMounted, onUpdated, watch, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import {changeToCurrency} from "@/currency.js";
@@ -159,6 +159,13 @@ function setTextInNotes(inputName) {
                 autosaveLocally();
             }
             break;
+        case 'chargeable_gain':
+            if (stepForm.investment_bonds.length < 1 && chargeable_gain.value === true) {
+                addInvestmentBond();
+            } else if (stepForm.investment_bonds.length === 1 && chargeable_gain.value === false) {
+                removeInvestmentBond(0);
+            }
+            break;
         default:
             break;
     }
@@ -182,6 +189,11 @@ function removeInvestmentBond(index) {
 }
 
 onMounted(()=>{
+    chargeable_gain.value = stepForm.investment_bonds.length > 0;
+})
+
+onUpdated(()=>{
+    chargeable_gain.value = stepForm.investment_bonds.length > 0;
 })
 
 async function autosaveLocally(){
