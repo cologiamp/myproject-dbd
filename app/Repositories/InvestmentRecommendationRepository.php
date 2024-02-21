@@ -261,7 +261,6 @@ class InvestmentRecommendationRepository extends BaseRepository
 
     public function createInitialInvestmentRecommendationForClient(): InvestmentRecommendation
     {
-        DB::beginTransaction();
         $formatInvestmentData = array(
             'isa_transfer_exit_penalty_ascertained' => '',
             'isa_transfer_exit_penalty_not_ascertained' => 0,
@@ -274,6 +273,7 @@ class InvestmentRecommendationRepository extends BaseRepository
             'cta_sell_to_cgt_exemption' => 0
         );
 
+        DB::beginTransaction();
         try {
             $newInvestmentRecommendation = InvestmentRecommendation::create($formatInvestmentData);
             DB::commit();
