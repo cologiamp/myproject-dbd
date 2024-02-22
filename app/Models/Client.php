@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Concerns\AccessesIoProviders;
 use App\Concerns\ParsesIoClientData;
+use App\Jobs\CacheProviders;
 use Carbon\Carbon;
 use App\Models\BaseModels\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\Presenters\ClientPresenter;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,7 +20,7 @@ use Illuminate\Support\Str;
 
 class Client extends Model
 {
-    use ParsesIoClientData;
+    use ParsesIoClientData, AccessesIoProviders;
     protected $guarded = [];
 
 
@@ -202,7 +205,9 @@ class Client extends Model
             ],
             '1.3' => [
                 'residency_status' => collect(config('enums.address.residency_status_public')),
-                'countries' => config('enums.address.country')
+                'countries' => collect(collect(config('enums.address.country')))->mapWithKeys(function ($item, $key){
+                    return ['0'.$key => $item];//hack to allow reordering of JS objects with string keys
+                })
             ],
             '1.4' => [
                 'relationship_type' => config('enums.dependent.relationship_type')
@@ -213,22 +218,27 @@ class Client extends Model
             '2.1' => [
                 'income_types' => config('enums.incomes.income_type'),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'belongs_to' => $this->getBelongsToEnums()
             ],
             '2.2' => [
                 'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '2.3' => [
                 'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '2.4' => [
                 'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '2.5' => [
                 'expenditure_types' => config('enums.expenditures.liability_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
             '3.1' => [
@@ -237,12 +247,12 @@ class Client extends Model
             ],
             '3.2' => [
                 'owners' => $this->getOwnersForForm(),
-                'providers' => config('enums.assets.providers'),
+                'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
-                'providers' => config('enums.assets.investment_providers'),
+                'providers' =>  array_values($this->getProviders()->take(100)->toArray()),
                 'account_types' => config('enums.assets.investment_account_types'),
                 'frequencies' => config('enums.assets.frequency_public'),
             ],
@@ -250,7 +260,9 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(true),
                 'pension_statuses' => config('enums.assets.db_pension_statuses'),
                 'pension_types' => config('enums.assets.dc_pension_types'),
-                'administrators' => config('enums.assets.dc_pension_administrators'),
+                'pension_crystallised_statuses' => config('enums.assets.pension_crystallised_statuses'),
+                'pension_fund_types' => config('enums.assets.pension_fund_types'),
+                'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -268,6 +280,8 @@ class Client extends Model
             ]
         };
     }
+
+
     public function getDirtyChanges():Collection
     {
         if($this->io_json)
@@ -278,6 +292,7 @@ class Client extends Model
                 [
                     'title',
                     'first_name',
+                    'middle_name',
                     'last_name',
                     'date_of_birth',
                     'gender',
@@ -285,7 +300,8 @@ class Client extends Model
                     'nationality',
                     'salutation',
                     'email_address',
-                    'phone_number'
+                    'phone_number',
+                    'mobile_number',
                 ]
             )->first()->toArray();
 
@@ -320,4 +336,5 @@ class Client extends Model
             $this->id => $this->first_name
         ]);
     }
+
 }

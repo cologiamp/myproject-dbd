@@ -20,6 +20,7 @@ trait ParsesIoClientData{
             $data['title'] = config('enums.client.title')[$client->title];
         }
         $data['firstName'] = $client->first_name;
+        $data['middleName'] = $client->middle_name;
         $data['lastName'] = $client->last_name;
         if($client->date_of_birth != null)
         {
@@ -84,6 +85,10 @@ trait ParsesIoClientData{
         if($cd->where('type','Telephone')->first() != null)
         {
             $client['phone_number'] = $cd->where('type','Telephone')->first()['value'];
+        }
+        if($cd->where('type','Mobile')->first() != null)
+        {
+            $client['mobile_number'] = $cd->where('type','Mobile')->first()['value'];
         }
         if($cd->where('type','Email')->first() != null)
         {
@@ -159,6 +164,10 @@ trait ParsesIoClientData{
         if(array_key_exists('firstName',$person) && $person['firstName'] != null)
         {
             $data['first_name'] = $person['firstName'];
+        }
+        if(array_key_exists('middleName',$person) && $person['middleName'] != null)
+        {
+            $data['middle_name'] = $person['middleName'];
         }
         if(array_key_exists('lastName',$person) && $person['lastName'] != null)
         {

@@ -103,7 +103,8 @@ class LiabilityRepository extends BaseRepository
                         'lender' => $liability['lender'],
                         'ends_at' => $liability['ends_at'],
                         'is_to_be_repaid' => $liability['is_to_be_repaid'],
-                        'repay_details' => $liability['repay_details']
+                        'repay_details' => $liability['repay_details'],
+                        'interest_rate' => $liability['interest_rate']
                     );
 
                     $model->update($formatLiabilityData);
@@ -129,7 +130,7 @@ class LiabilityRepository extends BaseRepository
 
     }
 
-    public function registerLiability(array $liability) 
+    public function registerLiability(array $liability)
     {
         $liabilityData = array(
             'type' => $liability['type'],
@@ -139,7 +140,8 @@ class LiabilityRepository extends BaseRepository
             'lender' => $liability['lender'],
             'ends_at' => $liability['ends_at'],
             'is_to_be_repaid' => $liability['is_to_be_repaid'],
-            'repay_details' => $liability['repay_details']
+            'repay_details' => $liability['repay_details'],
+            'interest_rate' => $liability['interest_rate'],
         );
         try {
             $model = $this->liability->create($liabilityData);

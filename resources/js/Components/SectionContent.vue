@@ -39,7 +39,11 @@ const selectedSectionId = inject("selectedSectionId");
 
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
-        <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)" :is="dynamicComponent(item.renderable)" :formData="item.dynamicData" :sectionIndex="sectionIndex"/>
+        <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)"
+                   :is="dynamicComponent(item.renderable)"
+                   :formData="item.dynamicData"
+                   :sectionIndex="sectionIndex"
+        />
     </div>
 </template>
 
