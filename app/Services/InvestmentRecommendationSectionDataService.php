@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\InvestmentRecommendation;
+use App\Models\PensionRecommendation;
 use App\Repositories\ClientRepository;
 use App\Repositories\InvestmentRecommendationItemRepository;
 use App\Repositories\InvestmentRecommendationRepository;
+use App\Repositories\PensionRecommendationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -18,15 +20,18 @@ class InvestmentRecommendationSectionDataService
     protected ClientRepository $clientRepository;
     protected InvestmentRecommendationRepository $investmentRecommendationRepository;
     protected InvestmentRecommendationItemRepository $investmentRecommendationItemRepository;
+    protected PensionRecommendationRepository $pensionRecommendationRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
         InvestmentRecommendationRepository $investmentRecommendationRepository,
-        InvestmentRecommendationItemRepository $investmentRecommendationItemRepository
+        InvestmentRecommendationItemRepository $investmentRecommendationItemRepository,
+        PensionRecommendationRepository $pensionRecommendationRepository,
 ) {
         $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
         $this->investmentRecommendationItemRepository = $investmentRecommendationItemRepository;
+        $this->pensionRecommendationRepository = $pensionRecommendationRepository;
     }
 
     //get the data for a single section of a investment recommendation from a single client
@@ -63,11 +68,17 @@ class InvestmentRecommendationSectionDataService
      * @param array $validatedData
      * @return true
      */
-    public function store(InvestmentRecommendation $investmentRecommendation, int $step, int $section, array $validatedData): true
+    public function store($model, int $step, int $section, array $validatedData): true
     {
+        if ($model instanceof InvestmentRecommendation) {
+            ray('InvestmentRecommendation')->green();
+            $this->investmentRecommendationRepository->setInvestmentRecommendation($model);
+        } else if ($model instanceof PensionRecommendation) {
+            ray('PensionRecommendation')->green();
+            $this->pensionRecommendationRepository->setPensionRecommendation($model);
+        }
 
-        $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
-        $this->clientRepository->setClient($investmentRecommendation->primary_client);
+        $this->clientRepository->setClient($model->primary_client);
 
         $this->{"_" . $step . $section}($validatedData);
         return true;
@@ -184,6 +195,55 @@ class InvestmentRecommendationSectionDataService
             $this->investmentRecommendationItemRepository->createOrUpdateRecommendationItems($validatedData);
         } catch (Throwable $e) {
             Log::warning($e);
+        }
+    }
+
+    /**
+     * Section: 2
+     * Step: 1
+     * @param array $validatedData
+     * @return void
+     */
+    private function _21(array $validatedData): void
+    {
+        //define any explicit mutators that are not handled
+        if (array_key_exists('pension_recommendation', $validatedData)) {
+            $item = $validatedData['pension_recommendation'];
+
+            if ($item['previously_invested_amount'] && $item['previously_invested_amount'] != null) {
+                $item['previously_invested_amount'] = $this->currencyStringToInt($item['previously_invested_amount']);
+            }
+            if ($item['fee_basis'] != 1) {
+                $item['fee_basis_discount'] = null;
+            }
+            if ($item['fee_basis_discount'] && $item['fee_basis_discount'] != null) {
+                $item['fee_basis_discount'] = $this->currencyStringToInt($item['fee_basis_discount']);
+            }
+
+            $this->pensionRecommendationRepository->updateFromValidated($item);
+        }
+    }
+
+    /**
+     * Section: 2
+     * Step: 2
+     * @param array $validatedData
+     * @return void
+     */
+    private function _22(array $validatedData): void
+    {
+        //define any explicit mutators that are not handled
+        if (array_key_exists('pension_recommendation', $validatedData)) {
+            $item = $validatedData['pension_recommendation'];
+
+            if ($item['active_pension_member'] == true) {
+                $item['active_pension_member_reason_not'] = null;
+            }
+            if ($item['active_pension_review_for_transfer'] != 3) {
+                $item['active_pension_review_transfer_reason'] = null;
+            }
+
+            $this->pensionRecommendationRepository->updateFromValidated($item);
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
+use App\Models\PensionRecommendation;
 
 class InvestmentRecommendationPresenter extends BasePresenter
 {
@@ -85,6 +86,32 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'amount' => $item->amount != null ? $this->currencyIntToString($item->amount) : null
                     ];
                 }))->groupBy('type')
+            ],
+            '2.1' => [
+                'pension_recommendation' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->get()->map(function ($item){
+                    return [
+                        'previously_invested_amount' => $item->previously_invested_amount != null ? $this->currencyIntToString($item->previously_invested_amount) : null,
+                        'fee_basis' => $item->fee_basis,
+                        'fee_basis_discount' => $item->fee_basis_discount != null ? $this->currencyIntToString($item->fee_basis_discount) : null,
+                        'report_type' => $item->report_type
+                    ];
+                })
+            ],
+            '2.2' => [
+                'pension_recommendation' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->get()->map(function ($item){
+                    return [
+                        'employment_status' => $item->employment_status != null ? $item->employment_status : $item->clients()->first()->employment_details()->first()->employment_status,
+                        'current_employer_name' => $item->current_employer_name != null ? $item->current_employer_name : $item->clients()->first()->employment_details()->first()->employer,
+                        'workplace_pension_type' => $item->workplace_pension_type,
+                        'employers_pension_name' => $item->employers_pension_name,
+                        'active_pension_member' => (bool)$item->active_pension_member,
+                        'active_pension_member_reason_not' => $item->active_pension_member_reason_not,
+                        'active_pension_review_for_transfer' => $item->active_pension_review_for_transfer,
+                        'active_pension_review_transfer_reason' => $item->active_pension_review_transfer_reason,
+                        'pension_draw_age' => $item->pension_draw_age != null ? $item->pension_draw_age : $item->clients()->first()->employment_details()->first()->intended_retirement_age,
+                        'retirement_option' => $item->retirement_option
+                    ];
+                })
             ],
             default => [
             ]

@@ -1709,5 +1709,53 @@ return [
             1 => 'Stocks and Shares ISA (transfer)',
             2 => 'Stocks and Shares ISA (new subscription)',
         ]
+    ],
+    'pension_recommendation' => [
+        'fee_basis' => [
+            0 => 'standard',
+            1 => 'discounted',
+            2 => 'friends_and_family',
+            3 => 'staff',
+            4 => 'jp_morgan_staff_terms',
+            5 => 'standard_chartered_staff_terms',
+            6 => 'saga_terms',
+            7 => 'staff'
+        ],
+        'fee_basis_public' => [
+            0 => 'Standard',
+            1 => 'Discounted',
+            2 => 'Friends and Family',
+            3 => 'Staff',
+            4 => 'JP Morgan Staff Terms',
+            5 => 'Standard Chartered Staff Terms',
+            6 => 'Saga Terms',
+            7 => 'Staff'
+        ],
+        'report_type' => [
+            0 => 'Growth Only',
+            1 => 'Retirement Income Only'
+        ],
+        'employment_status' => [
+            0 => 'Employed',
+            1 => 'Self-employed',
+            2 => 'Unemployed',
+            3 => 'Retired'
+        ],
+        'workplace_pension_type' => [
+            0 => 'Defined Contribution',
+            1 => 'Defined Benefit',
+            2 => 'Hybrid'
+        ],
+        'pension_review_transfer' => [
+            0 => 'No',
+            1 => 'Yes retiring soon',
+            2 => 'Yes leaving employer',
+            3 => 'Yes other'
+        ],
+        'retirement_option' => [
+            0 => 'Income Drawdown',
+            1 => 'Annuity',
+            2 => 'Cash sum'
+        ]
     ]
 ];

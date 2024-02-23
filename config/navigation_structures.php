@@ -975,6 +975,94 @@ return [
                     'messages' => []
                 ]
             ]
+        ],
+        2 => [
+            'name' => 'Pension Recommendations',
+            'sections' => [
+                1 => [
+                    'name' => 'Basic Details',
+                    'fields' => [
+                        'pension_recommendation.previously_invested_amount',
+                        'pension_recommendation.fee_basis',
+                        'pension_recommendation.fee_basis_discount',
+                        'pension_recommendation.report_type'
+                    ],
+                    'rules' => [
+                        'pension_recommendation' => 'sometimes|nullable',
+                        'pension_recommendation.*.previously_invested_amount' => 'sometimes|nullable|integer',
+                        'pension_recommendation.*.fee_basis' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.fee_basis')))) //change enums to be same with investment recommendation later
+                        ],
+                        'pension_recommendation.*.fee_basis_discount' => 'sometimes|nullable|integer',
+                        'pension_recommendation.*.report_type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.report_type'))))
+                        ]
+                    ],
+                    'messages' => []
+                ],
+                2 => [
+                    'name' => 'Client Details',
+                    'fields' => [
+                        'pension_recommendation.employment_status',
+                        'pension_recommendation.current_employer_name',
+                        'pension_recommendation.workplace_pension_type',
+                        'pension_recommendation.employers_pension_name',
+                        'pension_recommendation.active_pension_member',
+                        'pension_recommendation.active_pension_member_reason_not',
+                        'pension_recommendation.active_pension_review_for_transfer',
+                        'pension_recommendation.active_pension_review_transfer_reason',
+                        'pension_recommendation.pension_draw_age',
+                        'pension_recommendation.retirement_option'
+                    ],
+                    'rules' => [
+                        'pension_recommendation' => 'sometimes|nullable',
+                        'pension_recommendation.*.employment_status' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.employment_status'))))
+                        ],
+                        'pension_recommendation.*.current_employer_name' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.workplace_pension_type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.workplace_pension_type'))))
+                        ],
+                        'pension_recommendation.*.employers_pension_name' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.active_pension_member' => 'sometimes|nullable|boolean',
+                        'pension_recommendation.*.active_pension_member_reason_not' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.active_pension_review_for_transfer' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.pension_review_transfer'))))
+                        ],
+                        'pension_recommendation.*.active_pension_review_transfer_reason' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.pension_draw_age' => 'sometimes|nullable|integer',
+                        'pension_recommendation.*.retirement_option' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.retirement_option'))))
+                        ]
+                    ],
+                    'messages' => []
+                ]
+            ]
         ]
-    ]
+    ],
+
 ];

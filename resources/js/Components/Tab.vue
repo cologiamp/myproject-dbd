@@ -66,7 +66,12 @@ function handleAutosave(val){
         </div>
         <div class="h-fit min-h-[65vh]">
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :tabIndex="tabIndex">
-                <SectionContent @auto-save-up="handleAutosave"  v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index" :tabIndex="tabIndex"></SectionContent>
+                <SectionContent @auto-save-up="handleAutosave" v-for="(item, index) in tab.sidebaritems" v-bind:key="index"
+                    :item="item"
+                    :sectionIndex="index"
+                    :tabIndex="tabIndex"
+                    :tabName="tab.name">
+                </SectionContent>
             </SectionSidebar>
             <SectionContent v-else-if="tab.tabcontent" @auto-save-up="handleAutosave" :item="tab.tabcontent"  :tabIndex="tabIndex"></SectionContent>
         </div>

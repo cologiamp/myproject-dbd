@@ -187,6 +187,11 @@ class Client extends Model
         return $this->belongsToMany(InvestmentRecommendationItem::class);
     }
 
+    public function pension_recommendation():HasOne
+    {
+        return $this->hasOne(PensionRecommendation::class);
+    }
+
 
     //Presenter
     public function presenter() : ClientPresenter
