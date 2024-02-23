@@ -1655,5 +1655,8 @@ return [
             2 => 'Not a primary objective',
             3 => 'Not important',
         ],
+    ],
+    'relation_to_c2' => [
+        0 => 'Partner'
     ]
 ];

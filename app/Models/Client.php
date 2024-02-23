@@ -22,6 +22,7 @@ class Client extends Model
 {
     use ParsesIoClientData, AccessesIoProviders;
     protected $guarded = [];
+    protected $appends = ['name_with_c2'];
 
 
     /**
@@ -33,10 +34,21 @@ class Client extends Model
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
 
-    public function client_two():HasOne
+    public function client_two()
     {
-        return $this->hasOne(Client::class,'c2_id','id');
+        return $this->belongsTo(Client::class,'c2_id','id');
     }
+
+    //Client Two functions
+    public function getDashboardTitleAttribute()
+    {
+        return 'Welcome to ' . $this->getNameWithC2Attribute() . "'s dashboard";
+    }
+    public function getNameWithC2Attribute() //->name_with_c2
+    {
+        return $this->client_two ? $this->name . " & ". $this->client_two->name :  $this->name;
+    }
+
 
     public function date_of_birth():Attribute
     {

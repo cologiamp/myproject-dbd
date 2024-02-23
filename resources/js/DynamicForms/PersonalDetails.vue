@@ -6,7 +6,7 @@ import {useForm} from "laravel-precognition-vue-inertia";
 import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
-import {onMounted, ref, watch} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 
@@ -23,11 +23,7 @@ const props = defineProps({
                 titles: []
             },
             model: {
-                first_name: null,
-                middle_name: null,
-                last_name: null,
-                poa_name: null,
-                title: null
+
             },
             submit_method: 'post',
             submit_url: '/',
@@ -36,6 +32,8 @@ const props = defineProps({
     errors: Object,
 });
 
+let clients = ref([]);
+
 let dateRef = ref();
 function saveDate(value){
     dateRef.value = value;
@@ -43,6 +41,10 @@ function saveDate(value){
     autosaveLocally()
 }
 
+
+onBeforeMount(()=> {
+    clients.value = Object.keys(props.formData.model);
+})
 onMounted(()=>{
     dateRef.value = props.formData.model.date_of_birth;
 })

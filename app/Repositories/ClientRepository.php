@@ -36,6 +36,12 @@ class ClientRepository extends BaseRepository
     {
         $this->client = $client;
     }
+    public function storeRelationships($data): bool
+    {
+        $this->client->relationships = json_encode($data);
+        $this->client->save();
+        return true;
+    }
 
     public function getClient() : Client
     {
@@ -44,6 +50,13 @@ class ClientRepository extends BaseRepository
         }
         throw new ClientNotFoundException();
     }
+
+    public function createClient($data): void
+    {
+        $this->client->create($data);
+        $this->client->fresh();
+    }
+
 
     //Create the model
     public function create(CreateClientRequest $request): Client

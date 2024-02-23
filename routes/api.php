@@ -31,6 +31,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/providers/search',SearchProviderController::class);
 Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindController::class,'update']);
+Route::post('/client/{client:io_id}/fact-find-solo',[FactFindController::class,'solo']);
+Route::post('/client/{client:io_id}/fact-find-together/{c2id}',[FactFindController::class,'selectClientTwo']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
 
 

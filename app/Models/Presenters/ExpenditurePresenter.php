@@ -25,6 +25,7 @@ class ExpenditurePresenter extends BasePresenter
             'ends_at' => $this->model->ends_at,
             'currently_active' => $this->model->starts_at ? false : true,
             'known_end_date' => $this->model->ends_at ? true : false
+            //add belongs to?
         ];
     }
 }

@@ -94,130 +94,130 @@ return [
                             'ni_number.regex' => 'The entered National Insurance Number has an invalid format',
                         ]
                     ],
-                    2 => [
-                        'name' => 'Health Details',
-                        'fields' => [
-                            "health.is_in_good_health",
-                            "health.health_details",
-                            "health.has_life_expectancy_concerns",
-                            "health.life_expectancy_details",
-                            "health.medical_conditions",
-                            "health.smoker",
-                            "health.smoked_in_last_12_months"
-                        ],
-                        'rules' => [
-                            'is_in_good_health' => 'sometimes|nullable|boolean',
-                            'health_details' => 'sometimes|nullable|max:1024',
-                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
-                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
-                            'medical_conditions' => 'sometimes|nullable|max:1024',
-                            'smoker' => 'sometimes|nullable|integer',
-                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
-                        ],
-                        'messages' => []
-                    ],
-                    3 => [
-                        'name' => 'Address and Contact Details',
-                        'fields' => [
-                            'addresses' => [
-                                'addresses.address_line_1',
-                                'addresses.address_line_2',
-                                'addresses.city',
-                                'addresses.county',
-                                'addresses.postcode',
-                                'addresses.country',
-                                'addresses.residency_status',
-                                'addresses.date_from'
-                            ],
-                            "clients.phone_number",
-                            "clients.mobile_number",
-                            "clients.email_address"
-                        ],
-                        'rules' => [
-                            'addresses' => 'sometimes|nullable|array',
-                            'addresses.*.address_line_1' => 'sometimes|nullable|max:320',
-                            'addresses.*.address_id' => 'sometimes|nullable',
-                            'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
-                            'addresses.*.city' => 'sometimes|nullable|max:320',
-                            'addresses.*.county' => 'sometimes|nullable|max:320',
-                            'addresses.*.postcode' => 'sometimes|nullable|max:320',
-                            'addresses.*.country' => [
-                                'sometimes',
-                                'nullable'
-                            ],
-                            'addresses.*.residency_status' => [
-                                'sometimes',
-                                'nullable',
-                                'numeric',
-                                'integer',
-                                Rule::in(array_keys((config('enums.address.residency_status'))))
-                            ],
-                            'addresses.*.date_from' => 'sometimes|nullable|date',
-                            'phone_number' => 'sometimes|nullable|max:20',
-                            'mobile_number' => 'sometimes|nullable|max:20',
-                            'email_address' => 'sometimes|nullable|max:120'
-                        ],
-                        'messages' => []
-                    ],
-                    4 => [
-                        'name' => 'Family',
-                        'fields' => [
-                            'dependents' => [
-                                'dependents.dependent_id',
-                                'dependents.name',
-                                'dependents.relationship_type',
-                                'dependents.born_at',
-                                'dependents.financially_dependent_until',
-                                'dependents.financial_dependent',
-                                'dependents.is_living_with_clients'
-                            ]
-                        ],
-                        'rules' => [
-                            'dependents' => 'sometimes|nullable|array',
-                            'dependents.*.name' => 'sometimes|nullable|string',
-                            'dependents.*.dependent_id' => 'sometimes|nullable',
-                            'dependents.*.relationship_type' => [
-                                'required',
-                                'numeric',
-                                'integer',
-                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
-                            ],
-                            'dependents.*.born_at' => 'sometimes|nullable|date',
-                            'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
-                            'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
-                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
-                        ],
-                        'messages' => []
-                    ],
-                    5 => [
-                        'name' => 'Employment Details',
-                        'fields' => [
-                            "employment_details.id",
-                            "employment_details.employment_status",
-                            "employment_details.intended_retirement_age",
-                            "employment_details.occupation",
-                            "employment_details.employer",
-                            "employment_details.start_at",
-                            "employment_details.end_at"
-                        ],
-                        'rules' => [
-                            'employment_details' => 'sometimes|nullable|array',
-                            'employment_details.*.id' => 'sometimes|nullable|integer',
-                            'employment_details.*.employment_status' => [
-                                'sometimes',
-                                'nullable',
-                                'numeric',
-                                'integer',
-                                Rule::in(array_keys((config('enums.employment.employment_status'))))
-                            ],
-                            'employment_details.*.intended_retirement_age' => 'sometimes|nullable|integer',
-                            'employment_details.*.occupation' => 'sometimes|nullable|string',
-                            'employment_details.*.employer' => 'sometimes|nullable|string',
-                            'employment_details.*.start_at' => 'sometimes|nullable|date',
-                            'employment_details.*.end_at' => 'sometimes|nullable|date'
-                        ],
-                        'messages' => []
-                    ],
+//                    2 => [
+//                        'name' => 'Health Details',
+//                        'fields' => [
+//                            "health.is_in_good_health",
+//                            "health.health_details",
+//                            "health.has_life_expectancy_concerns",
+//                            "health.life_expectancy_details",
+//                            "health.medical_conditions",
+//                            "health.smoker",
+//                            "health.smoked_in_last_12_months"
+//                        ],
+//                        'rules' => [
+//                            'is_in_good_health' => 'sometimes|nullable|boolean',
+//                            'health_details' => 'sometimes|nullable|max:1024',
+//                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
+//                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
+//                            'medical_conditions' => 'sometimes|nullable|max:1024',
+//                            'smoker' => 'sometimes|nullable|integer',
+//                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
+//                        ],
+//                        'messages' => []
+//                    ],
+//                    3 => [
+//                        'name' => 'Address and Contact Details',
+//                        'fields' => [
+//                            'addresses' => [
+//                                'addresses.address_line_1',
+//                                'addresses.address_line_2',
+//                                'addresses.city',
+//                                'addresses.county',
+//                                'addresses.postcode',
+//                                'addresses.country',
+//                                'addresses.residency_status',
+//                                'addresses.date_from'
+//                            ],
+//                            "clients.phone_number",
+//                            "clients.mobile_number",
+//                            "clients.email_address"
+//                        ],
+//                        'rules' => [
+//                            'addresses' => 'sometimes|nullable|array',
+//                            'addresses.*.address_line_1' => 'sometimes|nullable|max:320',
+//                            'addresses.*.address_id' => 'sometimes|nullable',
+//                            'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
+//                            'addresses.*.city' => 'sometimes|nullable|max:320',
+//                            'addresses.*.county' => 'sometimes|nullable|max:320',
+//                            'addresses.*.postcode' => 'sometimes|nullable|max:320',
+//                            'addresses.*.country' => [
+//                                'sometimes',
+//                                'nullable'
+//                            ],
+//                            'addresses.*.residency_status' => [
+//                                'sometimes',
+//                                'nullable',
+//                                'numeric',
+//                                'integer',
+//                                Rule::in(array_keys((config('enums.address.residency_status'))))
+//                            ],
+//                            'addresses.*.date_from' => 'sometimes|nullable|date',
+//                            'phone_number' => 'sometimes|nullable|max:20',
+//                            'mobile_number' => 'sometimes|nullable|max:20',
+//                            'email_address' => 'sometimes|nullable|max:120'
+//                        ],
+//                        'messages' => []
+//                    ],
+//                    4 => [
+//                        'name' => 'Family',
+//                        'fields' => [
+//                            'dependents' => [
+//                                'dependents.dependent_id',
+//                                'dependents.name',
+//                                'dependents.relationship_type',
+//                                'dependents.born_at',
+//                                'dependents.financially_dependent_until',
+//                                'dependents.financial_dependent',
+//                                'dependents.is_living_with_clients'
+//                            ]
+//                        ],
+//                        'rules' => [
+//                            'dependents' => 'sometimes|nullable|array',
+//                            'dependents.*.name' => 'sometimes|nullable|string',
+//                            'dependents.*.dependent_id' => 'sometimes|nullable',
+//                            'dependents.*.relationship_type' => [
+//                                'required',
+//                                'numeric',
+//                                'integer',
+//                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
+//                            ],
+//                            'dependents.*.born_at' => 'sometimes|nullable|date',
+//                            'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
+//                            'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
+//                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
+//                        ],
+//                        'messages' => []
+//                    ],
+//                    5 => [
+//                        'name' => 'Employment Details',
+//                        'fields' => [
+//                            "employment_details.id",
+//                            "employment_details.employment_status",
+//                            "employment_details.intended_retirement_age",
+//                            "employment_details.occupation",
+//                            "employment_details.employer",
+//                            "employment_details.start_at",
+//                            "employment_details.end_at"
+//                        ],
+//                        'rules' => [
+//                            'employment_details' => 'sometimes|nullable|array',
+//                            'employment_details.*.id' => 'sometimes|nullable|integer',
+//                            'employment_details.*.employment_status' => [
+//                                'sometimes',
+//                                'nullable',
+//                                'numeric',
+//                                'integer',
+//                                Rule::in(array_keys((config('enums.employment.employment_status'))))
+//                            ],
+//                            'employment_details.*.intended_retirement_age' => 'sometimes|nullable|integer',
+//                            'employment_details.*.occupation' => 'sometimes|nullable|string',
+//                            'employment_details.*.employer' => 'sometimes|nullable|string',
+//                            'employment_details.*.start_at' => 'sometimes|nullable|date',
+//                            'employment_details.*.end_at' => 'sometimes|nullable|date'
+//                        ],
+//                        'messages' => []
+//                    ],
                 ],
             ],
         2 =>  [

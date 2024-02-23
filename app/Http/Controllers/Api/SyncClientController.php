@@ -34,22 +34,7 @@ class SyncClientController extends Controller
             throw new \Exception('Do you really want to do this? There are changes to the following fields: ' . implode(', ',$client->getDirtyChanges()->toArray()));
         }
                 //They can do this
-         $dis = App::make(\App\Services\DataIngestService::class);
-         //First, store this data, so we can compare against it later
-        $data = $dis->getClient($client->io_id);
-        $data['addresses'] = $dis->getAddresses($client->io_id)['items'];
-        $data['contactdetails'] = $dis->getContactDetails($client->io_id)['items'];
-        $data['secondary_client'] = $dis->getSecondaryClient($client->io_id);
-        $this->clientRepository->setClient($client);
-        $this->clientRepository->updateFromValidated(['io_json' => $data]);
-        //Then, update the client and connected items that we want to do so from the start.
-        $data = $this->parseClientData($data);
-
-        $this->clientRepository->updateFromValidated($data['client']);
-        collect($data['addresses'])->each(function ($item){
-            $this->clientRepository->createOrUpdateAddress($item);
-        });
-
+       $this->fetchAndHandleClient($client);
 
 
         return true;
