@@ -153,6 +153,7 @@ function addDb() {
 
 
 function removePension(index,type) {
+alert(type)
     if(stepForm[type][index].id != null)
     {
         axios.delete('/api/pensions/'+ stepForm[type][index].id).then(function (response){

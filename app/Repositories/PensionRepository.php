@@ -11,13 +11,16 @@ class PensionRepository extends BaseRepository
     public function createOrUpdateDCPensions(mixed $dcPensions):void
     {
         collect($dcPensions)->each(function ($item){
+            ray($item)->red();
             $pension = $this->updateBasePensionSchemeRecord($item);
+            ray($pension)->orange();
             $this->createOrUpdateDC($pension,$item);
         });
     }
 
     public function createOrUpdateDBPensions(mixed $dbPensions):void
     {
+        ray($dbPensions);
         collect($dbPensions)->each(function ($item){
             $pension = $this->updateBasePensionSchemeRecord($item);
             $this->createOrUpdateDB($pension,$item);
@@ -30,6 +33,7 @@ class PensionRepository extends BaseRepository
     {
         if($pension->has('defined_contribution_pension') && $pension->defined_contribution_pension != null)
         {
+            ray('HERE')->green();
             $db = $pension->defined_contribution_pension;
         }
         else{
@@ -226,7 +230,6 @@ class PensionRepository extends BaseRepository
     private function updateBasePensionSchemeRecord(array $item):PensionScheme
     {
         if(array_key_exists('id', $item) && $item['id'] != null){
-
             //Pension first
             $pension = PensionScheme::where('id',$item['id'])->first();
             $pension = $this->updateBP($pension,$item);

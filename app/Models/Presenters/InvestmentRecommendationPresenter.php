@@ -4,6 +4,10 @@ namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\PensionRecommendation;
+use App\Models\PensionScheme;
+use App\Models\DefinedContributionPension;
+use App\Models\DefinedBenefitPension;
+use function Pest\Laravel\instance;
 
 class InvestmentRecommendationPresenter extends BasePresenter
 {
@@ -110,6 +114,21 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'active_pension_review_transfer_reason' => $item->active_pension_review_transfer_reason,
                         'pension_draw_age' => $item->pension_draw_age != null ? $item->pension_draw_age : $item->clients()->first()->employment_details()->first()->intended_retirement_age,
                         'retirement_option' => $item->retirement_option
+                    ];
+                })
+            ],
+            '2.3' => [
+                'existing_pension_plans' => PensionScheme::where('client_id',$this->model->primary_client->id)->get()->map(function ($item){
+                    $pension = $item->defined_benefit_pension()->where('pension_scheme_id', $item->id)->first() ? $item->defined_benefit_pension()->where('pension_scheme_id', $item->id)->first() : $item->defined_contribution_pension()->where('pension_scheme_id', $item->id)->first();
+                    return [
+                        'id' => $item->id,
+                        'client_id' => $this->model->primary_client->id,
+                        'employer' => $item->employer,
+                        'administrator' => $pension->administrator,
+                        'policy_type' => $pension instanceof DefinedBenefitPension ? 0 : 1,
+                        'policy_number' => $pension->policy_number,
+                        'lqa_submitted' => null, // which table ?
+                        'policy_reviewed_transfer' => null //pension_recommendation->active_pension_review_for_transfer ?
                     ];
                 })
             ],

@@ -36,6 +36,12 @@ function dynamicComponent(component){
         if (parseInt(props.sectionIndex) == 2) {
             component = 'PensionClientDetails'
         }
+        if (parseInt(props.sectionIndex) == 3) {
+            component = 'ExistingPensionPlans'
+        }
+        if (parseInt(props.sectionIndex) == 4) {
+            component = 'NewContributions'
+        }
     }
 
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
@@ -49,6 +55,7 @@ const selectedSectionId = inject("selectedSectionId");
 </script>
 
 <template>
+
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component @autosave-state-change="( n ) => $emit('autoSaveUp', n)"
                    :is="dynamicComponent(item.renderable)"

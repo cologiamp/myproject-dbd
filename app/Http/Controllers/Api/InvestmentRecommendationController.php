@@ -49,6 +49,9 @@ class InvestmentRecommendationController extends Controller
             $pensionRecommendation = $this->pensionRecommendationRepository->getPensionRecommendation();
             $model = $pensionRecommendation->where('id', $client->pension_recommendation_id)->first();
         }
+        if ($request['existing_pension_plans'] && $request['existing_pension_plans'] != null) {
+            $model = $client;
+        }
 
         $irsds = App::make(InvestmentRecommendationSectionDataService::class);
 

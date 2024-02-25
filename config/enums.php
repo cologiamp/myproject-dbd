@@ -1756,6 +1756,10 @@ return [
             0 => 'Income Drawdown',
             1 => 'Annuity',
             2 => 'Cash sum'
+        ],
+        'policy_type' => [
+            0 => 'Defined Benefit Pension',
+            1 => 'Defined Contribution Pension'
         ]
     ]
 ];

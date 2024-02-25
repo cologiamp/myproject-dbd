@@ -61,6 +61,9 @@ class InvestmentRecommendation extends Model
                 'pension_review_transfer' => config('enums.pension_recommendation.pension_review_transfer'),
                 'retirement_options' => config('enums.pension_recommendation.retirement_option')
             ],
+            '2.3' => [
+                'policy_types' => config('enums.pension_recommendation.policy_type')
+            ],
             default => [
 
             ]

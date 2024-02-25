@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use Illuminate\Support\Facades\App;
+use App\Repositories\PensionRepository;
 
 class InvestmentRecommendationSectionDataService
 {
@@ -73,12 +75,14 @@ class InvestmentRecommendationSectionDataService
         if ($model instanceof InvestmentRecommendation) {
             ray('InvestmentRecommendation')->green();
             $this->investmentRecommendationRepository->setInvestmentRecommendation($model);
+            $this->clientRepository->setClient($model->primary_client);
         } else if ($model instanceof PensionRecommendation) {
             ray('PensionRecommendation')->green();
             $this->pensionRecommendationRepository->setPensionRecommendation($model);
+            $this->clientRepository->setClient($model->primary_client);
+        } else {
+            $this->clientRepository->setClient($model);
         }
-
-        $this->clientRepository->setClient($model->primary_client);
 
         $this->{"_" . $step . $section}($validatedData);
         return true;
@@ -245,5 +249,32 @@ class InvestmentRecommendationSectionDataService
 
             $this->pensionRecommendationRepository->updateFromValidated($item);
         }
+    }
+
+    /**
+     * Section: 2
+     * Step: 2
+     * @param array $validatedData
+     * @return void
+     */
+    private function _23(array $validatedData): void
+    {
+        //define any explicit mutators that are not handled
+        collect($validatedData['existing_pension_plans'])->each(function ($plan) {
+            $pr = App::make(PensionRepository::class);
+
+            if (array_key_exists('client_id', $plan) && $plan['client_id'] == null) {
+                $client = $this->clientRepository->getClient();
+
+                $plan['client_id'] = $client->id;
+            }
+
+            ray($plan);
+            if ($plan['policy_type'] == 0) {
+                $pr->createOrUpdateDBPensions(collect([$plan]));
+            } else {
+                $pr->createOrUpdateDCPensions(collect([$plan]));
+            }
+        });
     }
 }

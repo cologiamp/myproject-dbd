@@ -1060,6 +1060,75 @@ return [
                         ]
                     ],
                     'messages' => []
+                ],
+                3 => [
+                    'name' => 'Existing Pension Plans',
+                    'fields' => [
+                        'existing_pension_plans.client_id',
+                        'existing_pension_plans.employer',
+                        'existing_pension_plans.administrator',
+                        'existing_pension_plans.policy_type',
+                        'existing_pension_plans.policy_number',
+//                        'existing_pension_plans.lqa_submitted',
+//                        'existing_pension_plans.policy_reviewed_transfer'
+                    ],
+                    'rules' => [
+                        'existing_pension_plans' => 'sometimes|nullable',
+                        'existing_pension_plans.*.client_id' => 'sometimes|nullable|integer',
+                        'existing_pension_plans.*.employer' => 'sometimes|nullable|string',
+                        'existing_pension_plans.*.administrator' => 'sometimes|nullable',
+                        'existing_pension_plans.*.policy_type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.policy_type'))))
+                        ],
+                        'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string'
+                        // add lqa_submitted and policy_reviewed_transfer
+                    ],
+                    'messages' => []
+                ],
+                4 => [
+                    'name' => 'New Contributions',
+//                    'fields' => [
+//                        'prnew_contributions.tax_year',
+//                        'prnew_contributions.estimated_relevant_earnings',
+//                        'prnew_contributions.estimated_adjusted_income',
+//                        'prnew_contributions.type',
+//                        'prnew_contributions.paid_by',
+//                        'prnew_contributions.amount_gross',
+//                        'prnew_contributions.frequency'
+//                    ],
+//                    'rules' => [
+//                        'prnew_contributions' => 'sometimes|nullable',
+//                        'prnew_contributions.*.tax_year' => 'sometimes|nullable|string',
+//                        'prnew_contributions.*.estimated_relevant_earnings' => 'sometimes|nullable|integer',
+//                        'prnew_contributions.*.estimated_adjusted_income' => 'sometimes|nullable|integer',
+//                        'prnew_contributions.*.type' => [
+//                            'sometimes',
+//                            'nullable',
+//                            'numeric',
+//                            'integer',
+//                            Rule::in(array_keys((config('enums.pension_recommendation.new_contribution_type'))))
+//                        ],
+//                        'prnew_contributions.*.paid_by' => [
+//                            'sometimes',
+//                            'nullable',
+//                            'numeric',
+//                            'integer',
+//                            Rule::in(array_keys((config('enums.pension_recommendation.new_contribution_paid_by'))))
+//                        ],
+//                        'prnew_contributions.*.amount_gross' => 'sometimes|nullable|integer',
+//                        'prnew_contributions.*.frequency' => [
+//                            'sometimes',
+//                            'nullable',
+//                            'numeric',
+//                            'integer',
+//                            Rule::in(array_keys((config('enums.pension_recommendation.new_contribution_frequency_public')))) //use existing frequency enum
+//                        ],
+//                    ],
+                    'messages' => []
                 ]
             ]
         ]
