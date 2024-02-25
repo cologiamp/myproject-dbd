@@ -64,6 +64,11 @@ class InvestmentRecommendation extends Model
             '2.3' => [
                 'policy_types' => config('enums.pension_recommendation.policy_type')
             ],
+            '2.4' => [
+                'types' => config('enums.pension_recommendation.new_contribution_type'),
+                'paid_by' => config('enums.pension_recommendation.new_contribution_paid_by'),
+                'frequency' => config('enums.pension_recommendation.frequency_public')
+            ],
             default => [
 
             ]

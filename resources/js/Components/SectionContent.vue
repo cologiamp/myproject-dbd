@@ -33,6 +33,7 @@ function dynamicComponent(component){
         if (parseInt(props.sectionIndex) == 1) {
             component = 'PensionBasicDetails'
         }
+        //improve from here
         if (parseInt(props.sectionIndex) == 2) {
             component = 'PensionClientDetails'
         }
@@ -41,6 +42,9 @@ function dynamicComponent(component){
         }
         if (parseInt(props.sectionIndex) == 4) {
             component = 'NewContributions'
+        }
+        if (parseInt(props.sectionIndex) == 5) {
+            component = 'AnnualAllowance'
         }
     }
 

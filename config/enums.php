@@ -1760,6 +1760,33 @@ return [
         'policy_type' => [
             0 => 'Defined Benefit Pension',
             1 => 'Defined Contribution Pension'
+        ],
+        'new_contribution_type' => [
+            0 => 'Lump Sum',
+            1 => 'Regular'
+        ],
+        'new_contribution_paid_by' => [
+            0 => 'Client',
+            1 => 'Employer',
+            2 => '3rd Party'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
         ]
     ]
 ];
