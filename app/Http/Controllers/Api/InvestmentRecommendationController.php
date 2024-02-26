@@ -40,6 +40,7 @@ class InvestmentRecommendationController extends Controller
      */
     public function update(Client $client, $step, $section, Request $request): string
     {
+        ray($request)->orange();
         $model = null;
         $investmentRecommendation = $this->investmentRecommendationRepository->getInvestmentRecommendation();
         $model = $investmentRecommendation->where('id', $client->investment_recommendation_id)->first();
@@ -47,7 +48,7 @@ class InvestmentRecommendationController extends Controller
         if ($request['investment_recommendation_items'] && $request['investment_recommendation_items'] != null) {
             $request['investment_recommendation_items'] = collect($request['investment_recommendation_items'])->flatten(1)->toArray();
         }
-        if ($request['pension_recommendation'] || $request['prnew_contributions']) {
+        if (array_key_exists('pension_recommendation', $request->all()) || array_key_exists('prnew_contributions', $request->all()) || array_key_exists('pr_annual_allowances', $request->all())) {
             $pensionRecommendation = $this->pensionRecommendationRepository->getPensionRecommendation();
             $model = $pensionRecommendation->where('id', $client->pension_recommendation_id)->first();
         }

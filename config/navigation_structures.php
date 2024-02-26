@@ -1134,29 +1134,33 @@ return [
                     ],
                     'messages' => []
                 ],
-//                5 => [
-//                    'name' => 'Annual Allowance and Draw Down',
-//                    'fields' => [
-//                        'pr_annual_allowances.tax_year',
-//                        'pr_annual_allowances.annual_allowance',
-//                        'pr_annual_allowances.pension_input',
-//                        'pr_annual_allowances.unused_allowance',
-//                        'pr_annual_allowances.dd_pcls_spend',
-//                        'pr_annual_allowances.dd_pcls_income',
-//                        'pr_annual_allowances.dd_income'
-//                    ],
-//                    'rules' => [
-//                        'pr_annual_allowances' => 'sometimes|nullable',
-//                        'pr_annual_allowances.*.tax_year' => 'sometimes|nullable|string',
-//                        'pr_annual_allowances.*.annual_allowance' => 'sometimes|nullable|integer',
-//                        'pr_annual_allowances.*.pension_input' => 'sometimes|nullable|integer',
-//                        'pr_annual_allowances.*.unused_allowance' => 'sometimes|nullable|integer',
-//                        'pr_annual_allowances.*.dd_pcls_spend' => 'sometimes|nullable|integer',
-//                        'pr_annual_allowances.*.dd_pcls_income' => 'sometimes|nullable|integer',
-//                        'pr_annual_allowances.*.dd_income' => 'sometimes|nullable|integer'
-//                    ],
-//                    'messages' => []
-//                ]
+                5 => [
+                    'name' => 'Annual Allowance and Draw Down',
+                    'fields' => [
+                        'pr_annual_allowances' => [
+                            'pr_annual_allowances.tax_year',
+                            'pr_annual_allowances.annual_allowance',
+                            'pr_annual_allowances.pension_input',
+                            'pr_annual_allowances.unused_allowance'
+                        ],
+                        'pension_recommendation.pension_recommendation_id',
+                        'pension_recommendation.dd_pcls_spend',
+                        'pension_recommendation.dd_pcls_income',
+                        'pension_recommendation.dd_income'
+                    ],
+                    'rules' => [
+                        'pr_annual_allowances' => 'sometimes|nullable',
+                        'pr_annual_allowances.*.tax_year' => 'sometimes|nullable|string',
+                        'pr_annual_allowances.*.annual_allowance' => 'sometimes|nullable|string',
+                        'pr_annual_allowances.*.pension_input' => 'sometimes|nullable|string',
+                        'pr_annual_allowances.*.unused_allowance' => 'sometimes|nullable|string',
+                        'pension_recommendation_id' => 'sometimes|nullable|integer',
+                        'dd_pcls_spend' => 'sometimes|nullable|string',
+                        'dd_pcls_income' => 'sometimes|nullable|string',
+                        'dd_income' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ]
             ]
         ]
     ],

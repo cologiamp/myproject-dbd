@@ -147,6 +147,22 @@ class InvestmentRecommendationPresenter extends BasePresenter
                     ];
                 })
             ],
+            '2.5' => [
+                'pr_annual_allowances' => collect(PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->pr_annual_allowances()->get()->map(function ($allowance){
+                    return [
+                        'id' => $allowance->id,
+                        'pension_recommendation_id' => $allowance->pension_recommendation_id,
+                        'tax_year' => $allowance->tax_year,
+                        'annual_allowance' => $allowance->annual_alloowance,
+                        'pension_input' => $allowance->pension_input,
+                        'unused_allowance' => $allowance->unused_allowance
+                    ];
+                })),
+                'pension_recommendation_id' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->id,
+                'dd_pcls_spend' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->dd_pcls_spend,
+                'dd_pcls_income' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->dd_pcls_income,
+                'dd_income' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->dd_income
+            ],
             default => [
             ]
         };

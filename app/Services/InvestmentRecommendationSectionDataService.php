@@ -11,6 +11,7 @@ use App\Repositories\InvestmentRecommendationRepository;
 use App\Repositories\PensionRecommendationRepository;
 use App\Repositories\PensionRepository;
 use App\Repositories\PRNewContributionRepository;
+use App\Repositories\PRAnnualAllowanceRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -25,19 +26,22 @@ class InvestmentRecommendationSectionDataService
     protected InvestmentRecommendationItemRepository $investmentRecommendationItemRepository;
     protected PensionRecommendationRepository $pensionRecommendationRepository;
     protected PRNewContributionRepository $prNewContributionRepository;
+    protected PRAnnualAllowanceRepository $prAnnualAllowanceRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
         InvestmentRecommendationRepository $investmentRecommendationRepository,
         InvestmentRecommendationItemRepository $investmentRecommendationItemRepository,
         PensionRecommendationRepository $pensionRecommendationRepository,
-        PRNewContributionRepository $prNewContributionRepository
+        PRNewContributionRepository $prNewContributionRepository,
+        PRAnnualAllowanceRepository $prAnnualAllowanceRepository
 ) {
         $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
         $this->investmentRecommendationItemRepository = $investmentRecommendationItemRepository;
         $this->pensionRecommendationRepository = $pensionRecommendationRepository;
         $this->prNewContributionRepository = $prNewContributionRepository;
+        $this->prAnnualAllowanceRepository = $prAnnualAllowanceRepository;
     }
 
     //get the data for a single section of a investment recommendation from a single client
@@ -305,5 +309,55 @@ class InvestmentRecommendationSectionDataService
 
         $this->prNewContributionRepository->setClient($this->clientRepository->getClient());
         $this->prNewContributionRepository->createOrUpdateContribution($contributions);
+    }
+
+    /**
+     * Section: 2
+     * Step: 5
+     * @param array $validatedData
+     * @return void
+     */
+    private function _25(array $validatedData): void
+    {
+        $allowances = collect($validatedData['pr_annual_allowances'])->map(function ($allowance) {
+            if ($allowance['annual_allowance'] && $allowance['annual_allowance'] != null) {
+                $allowance['annual_allowance'] = $this->currencyStringToInt($allowance['annual_allowance']);
+            }
+            if ($allowance['pension_input'] && $allowance['pension_input'] != null) {
+                $allowance['pension_input'] = $this->currencyStringToInt($allowance['pension_input']);
+            }
+            if ($allowance['unused_allowance'] && $allowance['unused_allowance'] != null) {
+                $allowance['unused_allowance'] = $this->currencyStringToInt($allowance['unused_allowance']);
+            }
+
+            return $allowance;
+        });
+
+        $this->prAnnualAllowanceRepository->createOrUpdateAllowance($allowances);
+
+        $prData = array();
+
+        if (array_key_exists('dd_pcls_spend', $validatedData) && $validatedData['dd_pcls_spend'] != null) {
+            $validatedData['dd_pcls_spend'] = $this->currencyStringToInt($validatedData['dd_pcls_spend']);
+            $prData['dd_pcls_spend'] = $validatedData['dd_pcls_spend'];
+        }
+        if (array_key_exists('dd_pcls_income', $validatedData) && $validatedData['dd_pcls_income'] != null) {
+            $validatedData['dd_pcls_income'] = $this->currencyStringToInt($validatedData['dd_pcls_income']);
+            $prData['dd_pcls_income'] = $validatedData['dd_pcls_income'];
+        }
+        if (array_key_exists('dd_income', $validatedData) && $validatedData['dd_income'] != null) {
+            $validatedData['dd_income'] = $this->currencyStringToInt($validatedData['dd_income']);
+            $prData['dd_income'] = $validatedData['dd_income'];
+        }
+
+        if (count($prData) > 0) {
+            $prData['pension_recommendation_id'] = $validatedData['pension_recommendation_id'];
+            dd($prData);
+            $this->pensionRecommendationRepository->updateFromValidated($prData);
+        }
+
+
+//        $this->prNewContributionRepository->setClient($this->clientRepository->getClient());
+//        $this->prNewContributionRepository->createOrUpdateAllowance($validatedData);
     }
 }

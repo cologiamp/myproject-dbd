@@ -5,21 +5,21 @@ use App\Exceptions\ClientNotFoundException;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
 use App\Models\PensionRecommendation;
-use App\Models\PRNewContribution;
+use App\Models\PRAnnualAllowance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PRNewContributionRepository extends BaseRepository
+class PRAnnualAllowanceRepository extends BaseRepository
 {
     protected Client $client;
     protected PensionRecommendation $pensionRecommendation;
-    protected PRNewContribution $prNewContribution;
-    public function __construct(Client $client, PensionRecommendation $pensionRecommendation, PRNewContribution $prNewContribution)
+    protected PRAnnualAllowance $prAnnualAllowance;
+    public function __construct(Client $client, PensionRecommendation $pensionRecommendation, PRAnnualAllowance $prAnnualAllowance)
     {
         $this->client = $client;
         $this->pensionRecommendation = $pensionRecommendation;
-        $this->prNewContribution = $prNewContribution;
+        $this->prAnnualAllowance = $prAnnualAllowance;
     }
 
     public function getClient() : Client
@@ -35,23 +35,23 @@ class PRNewContributionRepository extends BaseRepository
         $this->client = $client;
     }
 
-    public function setPRNewContribution(PRNewContribution $prNewContribution): void
+    public function setPRAnnualAllowance(PRAnnualAllowance $prAnnualAllowance): void
     {
-        $this->prNewContribution = $prNewContribution;
+        $this->prAnnualAllowance = $prAnnualAllowance;
     }
 
-    public function getPRNewContribution() : PRNewContribution
+    public function getPRAnnualAllowance() : PRAnnualAllowance
     {
-        if($this->prNewContribution){
-            return $this->prNewContribution;
+        if($this->prAnnualAllowance){
+            return $this->prAnnualAllowance;
         }
-        throw new InvestmentRecommendationNotFoundException();
+        throw new InvestmentRecommendationNotFoundException(); //change this later
     }
 
     //Create the model
-    public function create(Request $request): PRNewContribution
+    public function create(Request $request): PRAnnualAllowance
     {
-        return $this->prNewContribution->create(
+        return $this->prAnnualAllowance->create(
             array_merge($request->safe()->all(),
                 []
             ));
@@ -68,7 +68,7 @@ class PRNewContributionRepository extends BaseRepository
     public function update(Request $request): void
     {
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
-        $this->prNewContribution->update($request->safe());
+        $this->prAnnualAllowance->update($request->safe());
         //relations here - e.g  $this->model->relation()->sync();
     }
 
@@ -80,17 +80,17 @@ class PRNewContributionRepository extends BaseRepository
      */
     public function updateFromValidated(array $array):void
     {
-        $this->prNewContribution->update($array);
+        $this->prAnnualAllowance->update($array);
     }
 
     //Delete the resource from the database, doing any cleanup first
     public function delete(): void
     {
         //handle any cleanup required here
-        $this->prNewContribution->delete();
+        $this->prAnnualAllowance->delete();
     }
 
-    public function createOrUpdateContribution(mixed $data): void
+    public function createOrUpdateAllowance(mixed $data): void
     {
         if(!is_array($data) && $data::class == Request::class)
         {
@@ -100,25 +100,25 @@ class PRNewContributionRepository extends BaseRepository
         DB::beginTransaction();
 
         try {
-            collect($data)->each(function ($contribution) {
-                if(array_key_exists('id', $contribution)) {
-                    $model = PRNewContribution::where('id', $contribution['id'])->first();
+            collect($data)->each(function ($allowance) {
+                if(array_key_exists('id', $allowance)) {
+                    $model = PRAnnualAllowance::where('id', $allowance['id'])->first();
 
                     try {
                         ray('update')->orange();
-                        Log::info('Update PR contribution');
-                        $model->update($contribution);
+                        Log::info('Update PR allowance');
+                        $model->update($allowance);
                     } catch (\Exception $e) {
                         throw new \Exception($e);
                     }
                 } else {
-                    Log::info('Create new contribution');
+                    Log::info('Create new allowance');
 
-                    if (!array_key_exists('pension_recommendation_id', $contribution)) {
-                        $contribution['pension_recommendation_id'] = $this->client->pension_recommendation_id;
+                    if (!array_key_exists('pension_recommendation_id', $allowance)) {
+                        $allowance['pension_recommendation_id'] = $this->client->pension_recommendation_id;
                     }
 
-                    PRNewContribution::create($contribution);
+                    PRAnnualAllowance::create($allowance);
                 }
             });
 

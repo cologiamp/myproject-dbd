@@ -34,4 +34,9 @@ class PensionRecommendation extends Model
     {
         return $this->hasMany(PRNewContribution::class);
     }
+
+    public function pr_annual_allowances():HasMany
+    {
+        return $this->hasMany(PRAnnualAllowance::class);
+    }
 }
