@@ -224,6 +224,10 @@ class FactFindSectionDataService
                     {
                         $dependent['is_living_with_clients'] = true;
                     }
+                    if ($dependent['name']) {
+                        $dependent['name'] = ucfirst($dependent['name']);
+                    }
+
                     return $dependent;
                 });
 
