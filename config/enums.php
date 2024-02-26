@@ -1507,9 +1507,7 @@ return [
         ],
         'dc_pension_types' => [
             0 => 'Occupational',
-            1 => 'Personal Pension',
-            2 => 'Retirement Annuity Contract',
-            3 => 'Self-Invested Personal Pension'
+            1 => 'Personal Pension'
         ],
         'pension_crystallised_statuses' => [
             0 => 'Uncrystallised',
