@@ -241,7 +241,9 @@ class FactFindSectionDataService
                     if ($employment['end_at']) {
                         $employment['end_at'] = Carbon::parse($employment['end_at']);
                     }
-
+                    if ($employment['employer']) {
+                        $employment['employer'] = ucfirst($employment['employer']);
+                    }
                     return $employment;
                 });
 
