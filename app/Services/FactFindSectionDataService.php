@@ -118,6 +118,9 @@ class FactFindSectionDataService
         if (array_key_exists('country_of_residence', $validatedData) && $validatedData['country_of_residence'] != null) {
             $validatedData['country_of_residence'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_residence']];
         }
+        if (array_key_exists('ni_number', $validatedData)) {
+            $validatedData['ni_number'] = strtoupper($validatedData['ni_number']);
+        }
         //This example only has data from one table. This would be different if not the case. May need multiple repositories.
         $this->cr->updateFromValidated($validatedData);
     }
