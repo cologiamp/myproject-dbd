@@ -118,6 +118,18 @@ class FactFindSectionDataService
         if (array_key_exists('country_of_residence', $validatedData) && $validatedData['country_of_residence'] != null) {
             $validatedData['country_of_residence'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_residence']];
         }
+        if (array_key_exists('first_name', $validatedData)) {
+            $validatedData['first_name'] = ucfirst($validatedData['first_name']);
+        }
+        if (array_key_exists('middle_name', $validatedData)) {
+            $validatedData['middle_name'] = ucfirst($validatedData['middle_name']);
+        }
+        if (array_key_exists('last_name', $validatedData)) {
+            $validatedData['last_name'] = ucfirst($validatedData['last_name']);
+        }
+        if (array_key_exists('poa_name', $validatedData)) {
+            $validatedData['poa_name'] = ucfirst($validatedData['poa_name']);
+        }
         //This example only has data from one table. This would be different if not the case. May need multiple repositories.
         $this->cr->updateFromValidated($validatedData);
     }
