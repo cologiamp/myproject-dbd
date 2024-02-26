@@ -4,26 +4,29 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
-use App\Repositories\InvestmentRecommendationRepository;
 use App\Models\InvestmentRecommendation;
-use App\Services\InvestmentRecommendationSectionDataService;
+use App\Repositories\ClientRepository;
+use App\Repositories\InvestmentRecommendationRepository;
 use App\Repositories\PensionRecommendationRepository;
-use App\Models\PensionRecommendation;
+use App\Services\InvestmentRecommendationSectionDataService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class InvestmentRecommendationController extends Controller
 {
+    protected ClientRepository $clientRepository;
     protected InvestmentRecommendationRepository $investmentRecommendationRepository;
     protected PensionRecommendationRepository $pensionRecommendationRepository;
     public function __construct(
+        ClientRepository $clientRepository,
         InvestmentRecommendationRepository $investmentRecommendationRepository,
         PensionRecommendationRepository $pensionRecommendationRepository
     )
     {
+        $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
         $this->pensionRecommendationRepository = $pensionRecommendationRepository;
     }
@@ -44,8 +47,7 @@ class InvestmentRecommendationController extends Controller
         if ($request['investment_recommendation_items'] && $request['investment_recommendation_items'] != null) {
             $request['investment_recommendation_items'] = collect($request['investment_recommendation_items'])->flatten(1)->toArray();
         }
-        if ($request['pension_recommendation'] && $request['pension_recommendation'] != null) {
-            ray('PensionRecommendation')->orange();
+        if ($request['pension_recommendation'] || $request['prnew_contributions']) {
             $pensionRecommendation = $this->pensionRecommendationRepository->getPensionRecommendation();
             $model = $pensionRecommendation->where('id', $client->pension_recommendation_id)->first();
         }

@@ -132,6 +132,21 @@ class InvestmentRecommendationPresenter extends BasePresenter
                     ];
                 })
             ],
+            '2.4' => [
+                'prnew_contributions' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->pr_new_contributions()->get()->map(function ($contribution){
+                    return [
+                        'id' => $contribution->id,
+                        'pension_recommendation_id' => $contribution->pension_recommendation_id,
+                        'tax_year' => $contribution->tax_year,
+                        'estimated_relevant_earnings' => $contribution->estimated_relevant_earnings != null ? $this->currencyIntToString($contribution->estimated_relevant_earnings) : null,
+                        'estimated_adjusted_income' => $contribution->estimated_adjusted_income != null ? $this->currencyIntToString($contribution->estimated_adjusted_income) : null,
+                        'type' => $contribution->type,
+                        'paid_by' => $contribution->paid_by,
+                        'amount_gross' => $contribution->amount_gross != null ? $this->currencyIntToString($contribution->amount_gross) : null,
+                        'frequency' => $contribution->frequency,
+                    ];
+                })
+            ],
             default => [
             ]
         };

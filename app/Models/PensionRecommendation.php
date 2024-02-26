@@ -29,4 +29,9 @@ class PensionRecommendation extends Model
 
         return $this->clients()->first();
     }
+
+    public function pr_new_contributions():HasMany
+    {
+        return $this->hasMany(PRNewContribution::class);
+    }
 }

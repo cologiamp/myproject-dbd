@@ -9,12 +9,13 @@ use App\Repositories\ClientRepository;
 use App\Repositories\InvestmentRecommendationItemRepository;
 use App\Repositories\InvestmentRecommendationRepository;
 use App\Repositories\PensionRecommendationRepository;
+use App\Repositories\PensionRepository;
+use App\Repositories\PRNewContributionRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
-use Illuminate\Support\Facades\App;
-use App\Repositories\PensionRepository;
 
 class InvestmentRecommendationSectionDataService
 {
@@ -23,17 +24,20 @@ class InvestmentRecommendationSectionDataService
     protected InvestmentRecommendationRepository $investmentRecommendationRepository;
     protected InvestmentRecommendationItemRepository $investmentRecommendationItemRepository;
     protected PensionRecommendationRepository $pensionRecommendationRepository;
+    protected PRNewContributionRepository $prNewContributionRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
         InvestmentRecommendationRepository $investmentRecommendationRepository,
         InvestmentRecommendationItemRepository $investmentRecommendationItemRepository,
         PensionRecommendationRepository $pensionRecommendationRepository,
+        PRNewContributionRepository $prNewContributionRepository
 ) {
         $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
         $this->investmentRecommendationItemRepository = $investmentRecommendationItemRepository;
         $this->pensionRecommendationRepository = $pensionRecommendationRepository;
+        $this->prNewContributionRepository = $prNewContributionRepository;
     }
 
     //get the data for a single section of a investment recommendation from a single client
@@ -253,7 +257,7 @@ class InvestmentRecommendationSectionDataService
 
     /**
      * Section: 2
-     * Step: 2
+     * Step: 3
      * @param array $validatedData
      * @return void
      */
@@ -269,12 +273,37 @@ class InvestmentRecommendationSectionDataService
                 $plan['client_id'] = $client->id;
             }
 
-            ray($plan);
             if ($plan['policy_type'] == 0) {
                 $pr->createOrUpdateDBPensions(collect([$plan]));
             } else {
                 $pr->createOrUpdateDCPensions(collect([$plan]));
             }
         });
+    }
+
+    /**
+     * Section: 2
+     * Step: 4
+     * @param array $validatedData
+     * @return void
+     */
+    private function _24(array $validatedData): void
+    {
+        $contributions = collect($validatedData['prnew_contributions'])->map(function ($contribution) {
+            if ($contribution['estimated_relevant_earnings'] && $contribution['estimated_relevant_earnings'] != null) {
+                $contribution['estimated_relevant_earnings'] = $this->currencyStringToInt($contribution['estimated_relevant_earnings']);
+            }
+            if ($contribution['estimated_adjusted_income'] && $contribution['estimated_adjusted_income'] != null) {
+                $contribution['estimated_adjusted_income'] = $this->currencyStringToInt($contribution['estimated_adjusted_income']);
+            }
+            if ($contribution['amount_gross'] && $contribution['amount_gross'] != null) {
+                $contribution['amount_gross'] = $this->currencyStringToInt($contribution['amount_gross']);
+            }
+
+            return $contribution;
+        });
+
+        $this->prNewContributionRepository->setClient($this->clientRepository->getClient());
+        $this->prNewContributionRepository->createOrUpdateContribution($contributions);
     }
 }

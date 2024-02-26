@@ -1092,6 +1092,8 @@ return [
                 4 => [
                     'name' => 'New Contributions',
                     'fields' => [
+                        'prnew_contributions.id',
+                        'prnew_contributions.pension_recommendation_id',
                         'prnew_contributions.tax_year',
                         'prnew_contributions.estimated_relevant_earnings',
                         'prnew_contributions.estimated_adjusted_income',
@@ -1102,9 +1104,11 @@ return [
                     ],
                     'rules' => [
                         'prnew_contributions' => 'sometimes|nullable',
+                        'prnew_contributions.*.id' => 'sometimes|nullable|integer',
+                        'prnew_contributions.*.pension_recommendation_id' => 'sometimes|nullable|integer',
                         'prnew_contributions.*.tax_year' => 'sometimes|nullable|string',
-                        'prnew_contributions.*.estimated_relevant_earnings' => 'sometimes|nullable|integer',
-                        'prnew_contributions.*.estimated_adjusted_income' => 'sometimes|nullable|integer',
+                        'prnew_contributions.*.estimated_relevant_earnings' => 'sometimes|nullable|string',
+                        'prnew_contributions.*.estimated_adjusted_income' => 'sometimes|nullable|string',
                         'prnew_contributions.*.type' => [
                             'sometimes',
                             'nullable',
@@ -1119,7 +1123,7 @@ return [
                             'integer',
                             Rule::in(array_keys((config('enums.pension_recommendation.new_contribution_paid_by'))))
                         ],
-                        'prnew_contributions.*.amount_gross' => 'sometimes|nullable|integer',
+                        'prnew_contributions.*.amount_gross' => 'sometimes|nullable|string',
                         'prnew_contributions.*.frequency' => [
                             'sometimes',
                             'nullable',
@@ -1130,29 +1134,29 @@ return [
                     ],
                     'messages' => []
                 ],
-                5 => [
-                    'name' => 'Annual Allowance and Draw Down',
-                    'fields' => [
-                        'pr_annual_allowances.tax_year',
-                        'pr_annual_allowances.annual_allowance',
-                        'pr_annual_allowances.pension_input',
-                        'pr_annual_allowances.unused_allowance',
-                        'pr_annual_allowances.dd_pcls_spend',
-                        'pr_annual_allowances.dd_pcls_income',
-                        'pr_annual_allowances.dd_income'
-                    ],
-                    'rules' => [
-                        'pr_annual_allowances' => 'sometimes|nullable',
-                        'pr_annual_allowances.*.tax_year' => 'sometimes|nullable|string',
-                        'pr_annual_allowances.*.annual_allowance' => 'sometimes|nullable|integer',
-                        'pr_annual_allowances.*.pension_input' => 'sometimes|nullable|integer',
-                        'pr_annual_allowances.*.unused_allowance' => 'sometimes|nullable|integer',
-                        'pr_annual_allowances.*.dd_pcls_spend' => 'sometimes|nullable|integer',
-                        'pr_annual_allowances.*.dd_pcls_income' => 'sometimes|nullable|integer',
-                        'pr_annual_allowances.*.dd_income' => 'sometimes|nullable|integer'
-                    ],
-                    'messages' => []
-                ]
+//                5 => [
+//                    'name' => 'Annual Allowance and Draw Down',
+//                    'fields' => [
+//                        'pr_annual_allowances.tax_year',
+//                        'pr_annual_allowances.annual_allowance',
+//                        'pr_annual_allowances.pension_input',
+//                        'pr_annual_allowances.unused_allowance',
+//                        'pr_annual_allowances.dd_pcls_spend',
+//                        'pr_annual_allowances.dd_pcls_income',
+//                        'pr_annual_allowances.dd_income'
+//                    ],
+//                    'rules' => [
+//                        'pr_annual_allowances' => 'sometimes|nullable',
+//                        'pr_annual_allowances.*.tax_year' => 'sometimes|nullable|string',
+//                        'pr_annual_allowances.*.annual_allowance' => 'sometimes|nullable|integer',
+//                        'pr_annual_allowances.*.pension_input' => 'sometimes|nullable|integer',
+//                        'pr_annual_allowances.*.unused_allowance' => 'sometimes|nullable|integer',
+//                        'pr_annual_allowances.*.dd_pcls_spend' => 'sometimes|nullable|integer',
+//                        'pr_annual_allowances.*.dd_pcls_income' => 'sometimes|nullable|integer',
+//                        'pr_annual_allowances.*.dd_income' => 'sometimes|nullable|integer'
+//                    ],
+//                    'messages' => []
+//                ]
             ]
         ]
     ],
