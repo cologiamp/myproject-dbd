@@ -133,7 +133,12 @@ async function autosaveLocally(){
 
 
 </script>
-
+<style>
+.ph-style .vs__search::placeholder {
+    color: #6f707d;
+    font-size: 14px;
+}
+</style>
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
@@ -169,7 +174,8 @@ async function autosaveLocally(){
                     <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Provider</label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300">
                         <v-select
-                            class="block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+                            placeholder="Begin typing a provider name"
+                            class="ph-style block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
                              v-model="asset.provider"
                             @option:selected="autosaveLocally()"
                             @option:deselected="autosaveLocally()"
