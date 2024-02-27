@@ -678,6 +678,11 @@ class FactFindSectionDataService
             if (array_key_exists('retained_value',$capital) && $capital['retained_value'] != null){
                 $capital['retained_value'] = $this->currencyStringToInt($capital['retained_value']);
             }
+
+            if (array_key_exists('description', $capital) && $capital['description'] != '') {
+                $capital['description'] = ucfirst($capital['description']);
+            }
+
             return $capital;
         });
 
