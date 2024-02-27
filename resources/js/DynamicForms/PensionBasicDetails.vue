@@ -3,7 +3,7 @@ import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import {changeToCurrency} from "@/currency.js";
@@ -43,9 +43,6 @@ function formatAmount(e, dataField) {
     autosaveLocally()
 }
 
-onMounted(()=>{
-})
-
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     pension_recommendation: props.formData.model.pension_recommendation[0]
 })
@@ -54,8 +51,6 @@ async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
     stepForm.pension_recommendation = props.formData.model.pension_recommendation[0]
 }
-
-
 </script>
 
 <template>
@@ -101,9 +96,6 @@ async function autosaveLocally(){
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.fee_basis_discount">{{ stepForm.errors.fee_basis_discount }}</p>
                     </div>
                 </div>
-                <!--  -->
-
-
             </div>
         </div>
     </dynamic-form-wrapper>

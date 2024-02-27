@@ -87,7 +87,7 @@ const toggleDropdown = (index) => {
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
-                          <span class="col-span-3 text-base">{{ item.name }}</span>
+                          <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>
                       </div>
                   </li>
               </ul>

@@ -3,10 +3,9 @@ import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import {changeToCurrency} from "@/currency.js";
 import { PlusCircleIcon } from '@heroicons/vue/24/solid';
 import { XCircleIcon } from '@heroicons/vue/24/solid';
 
@@ -42,9 +41,6 @@ const props = defineProps({
     errors: Object,
 });
 
-onMounted(()=>{
-})
-
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     existing_pension_plans: props.formData.model.existing_pension_plans
 })
@@ -56,9 +52,7 @@ async function autosaveLocally(index){
         stepForm.existing_pension_plans = props.formData.model.existing_pension_plans
     }
 }
-function removePensionPlan(index,type) {
-    let pension_type = type === 0 ? 'db_pensions' : 'dc_pensions'
-
+function removePensionPlan(index) {
     if(stepForm.existing_pension_plans[index].id != null) {
         axios.delete('/api/pensions/'+ stepForm.existing_pension_plans[index].id).then(function (response){
             console.log(response.data)
@@ -91,7 +85,7 @@ function addPensionPlan() {
                  class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
                     <label class="font-bold">Pension Plan {{ index + 1 }}</label>
-                    <button type="button" @click="removePensionPlan(index, pension.policy_type)"
+                    <button type="button" @click="removePensionPlan(index)"
                             class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <XCircleIcon class="w-4 h-4" />Remove Pension Plan
                     </button>

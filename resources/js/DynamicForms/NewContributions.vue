@@ -116,8 +116,6 @@ function formatAmount(e, index, dataField) {
 
     autosaveLocally()
 }
-
-
 </script>
 
 <template>

@@ -3,10 +3,9 @@ import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import {changeToCurrency} from "@/currency.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -43,16 +42,6 @@ const props = defineProps({
     },
     errors: Object,
 });
-
-function formatAmount(e, dataField) {
-    stepForm.pension_recommendation[dataField] = '';
-    stepForm.pension_recommendation[dataField] = changeToCurrency(e.target.value);
-
-    autosaveLocally()
-}
-
-onMounted(()=>{
-})
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     pension_recommendation: props.formData.model.pension_recommendation[0]

@@ -607,7 +607,6 @@ class FactFindSectionDataService
         $pr = App::make(PensionRepository::class);
         try{
             $pr->createOrUpdateDCPensions($dc);
-            ray($db)->green();
             $pr->createOrUpdateDBPensions($db);
         }
         catch(Throwable $e){

@@ -3,7 +3,7 @@ import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 
-import {onMounted, watch} from "vue";
+import {watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import {changeToCurrency} from "@/currency.js";
@@ -37,9 +37,6 @@ const props = defineProps({
     },
     errors: Object,
 });
-
-onMounted(()=>{
-})
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
     pr_items: props.formData.model.pr_items
@@ -124,8 +121,7 @@ function setPercentage(index) {
                                                 <option id="type" :value="null">-</option>
                                                 <option :id="id" :value="id" v-for="(type, id) in formData.enums.types">{{ type }}</option>
                                             </select>
-                                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
-                                                    stepForm.errors.belongs_to }}</p>
+                                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{ stepForm.errors.belongs_to }}</p>
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm">
                                             <input type="currency" name="value" id="value"

@@ -980,7 +980,7 @@ return [
             'name' => 'Pension Recommendations',
             'sections' => [
                 1 => [
-                    'name' => 'Basic Details',
+                    'name' => 'Pension Basic Details',
                     'fields' => [
                         'pension_recommendation.previously_invested_amount',
                         'pension_recommendation.fee_basis',

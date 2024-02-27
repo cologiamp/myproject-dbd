@@ -4,7 +4,6 @@ namespace App\Repositories;
 use App\Exceptions\ClientNotFoundException;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
-use App\Models\PensionRecommendation;
 use App\Models\PRAnnualAllowance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,12 +12,10 @@ use Illuminate\Support\Facades\Log;
 class PRAnnualAllowanceRepository extends BaseRepository
 {
     protected Client $client;
-    protected PensionRecommendation $pensionRecommendation;
     protected PRAnnualAllowance $prAnnualAllowance;
-    public function __construct(Client $client, PensionRecommendation $pensionRecommendation, PRAnnualAllowance $prAnnualAllowance)
+    public function __construct(Client $client, PRAnnualAllowance $prAnnualAllowance)
     {
         $this->client = $client;
-        $this->pensionRecommendation = $pensionRecommendation;
         $this->prAnnualAllowance = $prAnnualAllowance;
     }
 
@@ -105,7 +102,6 @@ class PRAnnualAllowanceRepository extends BaseRepository
                     $model = PRAnnualAllowance::where('id', $allowance['id'])->first();
 
                     try {
-                        ray('update')->orange();
                         Log::info('Update PR allowance');
                         $model->update($allowance);
                     } catch (\Exception $e) {
@@ -118,8 +114,6 @@ class PRAnnualAllowanceRepository extends BaseRepository
 
                         $allowance['pension_recommendation_id'] = $this->client->pension_recommendation_id;
                     }
-                    ray($this->client);
-                    ray($allowance)->red();
                     PRAnnualAllowance::create($allowance);
                 }
             });

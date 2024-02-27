@@ -40,7 +40,6 @@ class InvestmentRecommendationController extends Controller
      */
     public function update(Client $client, $step, $section, Request $request): string
     {
-        ray($request)->orange();
         $model = null;
         $investmentRecommendation = $this->investmentRecommendationRepository->getInvestmentRecommendation();
         $model = $investmentRecommendation->where('id', $client->investment_recommendation_id)->first();

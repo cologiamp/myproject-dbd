@@ -4,7 +4,6 @@ namespace App\Repositories;
 use App\Exceptions\ClientNotFoundException;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
-use App\Models\PensionRecommendation;
 use App\Models\PRNewContribution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,12 +12,10 @@ use Illuminate\Support\Facades\Log;
 class PRNewContributionRepository extends BaseRepository
 {
     protected Client $client;
-    protected PensionRecommendation $pensionRecommendation;
     protected PRNewContribution $prNewContribution;
-    public function __construct(Client $client, PensionRecommendation $pensionRecommendation, PRNewContribution $prNewContribution)
+    public function __construct(Client $client, PRNewContribution $prNewContribution)
     {
         $this->client = $client;
-        $this->pensionRecommendation = $pensionRecommendation;
         $this->prNewContribution = $prNewContribution;
     }
 
@@ -105,7 +102,6 @@ class PRNewContributionRepository extends BaseRepository
                     $model = PRNewContribution::where('id', $contribution['id'])->first();
 
                     try {
-                        ray('update')->orange();
                         Log::info('Update PR contribution');
                         $model->update($contribution);
                     } catch (\Exception $e) {

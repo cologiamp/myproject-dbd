@@ -4,13 +4,7 @@ namespace App\Repositories;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
 use App\Models\PensionRecommendation;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class PensionRecommendationRepository extends BaseRepository
 {

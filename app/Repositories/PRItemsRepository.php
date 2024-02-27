@@ -4,7 +4,6 @@ namespace App\Repositories;
 use App\Exceptions\ClientNotFoundException;
 use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
-use App\Models\PensionRecommendation;
 use App\Models\PensionRecommendationItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,12 +12,10 @@ use Illuminate\Support\Facades\Log;
 class PRItemsRepository extends BaseRepository
 {
     protected Client $client;
-    protected PensionRecommendation $pensionRecommendation;
     protected PensionRecommendationItem $prItem;
-    public function __construct(Client $client, PensionRecommendation $pensionRecommendation, PensionRecommendationItem $prItem)
+    public function __construct(Client $client, PensionRecommendationItem $prItem)
     {
         $this->client = $client;
-        $this->pensionRecommendation = $pensionRecommendation;
         $this->prItem = $prItem;
     }
 
@@ -103,21 +100,17 @@ class PRItemsRepository extends BaseRepository
                     $model = PensionRecommendationItem::where('id', $item['id'])->first();
 
                     try {
-                        ray('update')->orange();
                         Log::info('Update PR item');
                         $model->update($item);
                     } catch (\Exception $e) {
                         throw new \Exception($e);
                     }
                 } else {
-                    ray('create')->orange();
                     Log::info('Create new item');
 
                     if (!array_key_exists('pension_recommendation_id', $item) || $item['pension_recommendation_id'] == null) {
                         $item['pension_recommendation_id'] = $this->client->pension_recommendation_id;
                     }
-                    ray($this->client);
-                    ray($item)->red();
                     PensionRecommendationItem::create($item);
                 }
             });
