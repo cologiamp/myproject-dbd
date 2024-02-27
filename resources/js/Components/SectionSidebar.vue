@@ -82,12 +82,12 @@ const toggleDropdown = (index) => {
                       :key="item.name"
                       :id="index"
                       @click="toggleDropdown(index); sectionsClick(index, item)" class="cursor-pointer">
-                      <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                          <div class="rounded-full w-11 h-11 py-2 text-center"
+                      <div class="grid grid-cols-4 items-center p-2 text-aaron-50 rounded-md text-base font-semibold group">
+                          <div class="rounded-full w-11 h-11 py-3 text-center text-sm"
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
-                          <span class="mx-2 text-base">{{ item.name }}</span>
+                          <span class="col-span-3 text-base">{{ item.name }}</span>
                       </div>
                   </li>
               </ul>
