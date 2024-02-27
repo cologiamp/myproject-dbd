@@ -115,9 +115,11 @@ class PRAnnualAllowanceRepository extends BaseRepository
                     Log::info('Create new allowance');
 
                     if (!array_key_exists('pension_recommendation_id', $allowance)) {
+
                         $allowance['pension_recommendation_id'] = $this->client->pension_recommendation_id;
                     }
-
+                    ray($this->client);
+                    ray($allowance)->red();
                     PRAnnualAllowance::create($allowance);
                 }
             });

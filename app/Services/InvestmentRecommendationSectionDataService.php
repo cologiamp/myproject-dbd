@@ -333,6 +333,7 @@ class InvestmentRecommendationSectionDataService
             return $allowance;
         });
 
+        $this->prAnnualAllowanceRepository->setClient($this->clientRepository->getClient());
         $this->prAnnualAllowanceRepository->createOrUpdateAllowance($allowances);
 
         $prData = array();
@@ -350,14 +351,7 @@ class InvestmentRecommendationSectionDataService
             $prData['dd_income'] = $validatedData['dd_income'];
         }
 
-        if (count($prData) > 0) {
-            $prData['pension_recommendation_id'] = $validatedData['pension_recommendation_id'];
-            dd($prData);
-            $this->pensionRecommendationRepository->updateFromValidated($prData);
-        }
-
-
-//        $this->prNewContributionRepository->setClient($this->clientRepository->getClient());
-//        $this->prNewContributionRepository->createOrUpdateAllowance($validatedData);
+        $prData['id'] = $validatedData['pension_recommendation_id'];
+        $this->pensionRecommendationRepository->updateFromValidated($prData);
     }
 }

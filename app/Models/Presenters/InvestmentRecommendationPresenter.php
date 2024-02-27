@@ -148,20 +148,24 @@ class InvestmentRecommendationPresenter extends BasePresenter
                 })
             ],
             '2.5' => [
+                'pr_data' => collect(PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->get()->map(function ($pr){
+                    return [
+                        'pension_recommendation_id' => $pr->id,
+                        'dd_pcls_spend' => $pr->dd_pcls_spend != null ? $this->currencyIntToString($pr->dd_pcls_spend) : null,
+                        'dd_pcls_income' => $pr->dd_pcls_income != null ? $this->currencyIntToString($pr->dd_pcls_income) : null,
+                        'dd_income' => $pr->dd_income != null ? $this->currencyIntToString($pr->dd_income) : null
+                    ];
+                }))->collapse(),
                 'pr_annual_allowances' => collect(PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->pr_annual_allowances()->get()->map(function ($allowance){
                     return [
                         'id' => $allowance->id,
                         'pension_recommendation_id' => $allowance->pension_recommendation_id,
                         'tax_year' => $allowance->tax_year,
-                        'annual_allowance' => $allowance->annual_alloowance,
-                        'pension_input' => $allowance->pension_input,
-                        'unused_allowance' => $allowance->unused_allowance
+                        'annual_allowance' => $allowance->annual_allowance != null ? $this->currencyIntToString($allowance->annual_allowance) : null,
+                        'pension_input' => $allowance->pension_input != null ? $this->currencyIntToString($allowance->pension_input) : null,
+                        'unused_allowance' => $allowance->unused_allowance != null ? $this->currencyIntToString($allowance->unused_allowance) : null
                     ];
-                })),
-                'pension_recommendation_id' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->id,
-                'dd_pcls_spend' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->dd_pcls_spend,
-                'dd_pcls_income' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->dd_pcls_income,
-                'dd_income' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->dd_income
+                }))
             ],
             default => [
             ]
