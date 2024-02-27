@@ -1787,6 +1787,20 @@ return [
             4 => 'Quarterly',
             5 => 'Every 6 months',
             6 => 'Annually'
+        ],
+        'item_type' => [
+            0 => 'Cash',
+            1 => 'Income',
+            2 => 'Growth'
+        ],
+        'lqa_submitted' => [
+            0 => 'Yes',
+            1 => 'No',
+            2 => 'Have Authority'
+        ],
+        'policy_reviewed_transfer' => [
+            0 => 'Transfer',
+            1 => 'Information Only'
         ]
     ]
 ];

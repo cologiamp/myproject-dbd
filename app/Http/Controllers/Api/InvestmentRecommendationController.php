@@ -50,7 +50,8 @@ class InvestmentRecommendationController extends Controller
         }
         if (array_key_exists('pension_recommendation', $request->all()) ||
             array_key_exists('prnew_contributions', $request->all()) ||
-            array_key_exists('pr_annual_allowances', $request->all())
+            array_key_exists('pr_annual_allowances', $request->all()) ||
+            array_key_exists('pr_items', $request->all())
         ) {
             $pensionRecommendation = $this->pensionRecommendationRepository->getPensionRecommendation();
             $model = $pensionRecommendation->where('id', $client->pension_recommendation_id)->first();

@@ -21,7 +21,7 @@ const props = defineProps({
 
 const initialSectionKey = inject("onloadKey");
 const selectedSectionId = ref(1);
-const investment_recommendations = 'Investment Recommendations';
+const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
 
 function sectionsClick(index, item) {
     selectedSectionId.value = index
@@ -74,7 +74,7 @@ const toggleDropdown = (index) => {
 
 <template>
 
-  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" :class="props.tabName != investment_recommendations ? 'top-48' : 'top-36'" aria-label="Sidebar">
+  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" :class="!hide_progress.includes(props.tabName) ? 'top-48' : 'top-36'" aria-label="Sidebar">
       <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
               <ul class="font-medium">
                   <li v-for="(item, index) in props.sidebarItems"
@@ -87,7 +87,7 @@ const toggleDropdown = (index) => {
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
-                          <span class="ms-3 text-base">{{ item.name }}</span>
+                          <span class="mx-2 text-base">{{ item.name }}</span>
                       </div>
                   </li>
               </ul>

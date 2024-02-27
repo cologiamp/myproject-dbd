@@ -1069,8 +1069,8 @@ return [
                         'existing_pension_plans.administrator',
                         'existing_pension_plans.policy_type',
                         'existing_pension_plans.policy_number',
-//                        'existing_pension_plans.lqa_submitted',
-//                        'existing_pension_plans.policy_reviewed_transfer'
+                        'existing_pension_plans.lqa_submitted',
+                        'existing_pension_plans.policy_reviewed_transfer'
                     ],
                     'rules' => [
                         'existing_pension_plans' => 'sometimes|nullable',
@@ -1084,8 +1084,21 @@ return [
                             'integer',
                             Rule::in(array_keys((config('enums.pension_recommendation.policy_type'))))
                         ],
-                        'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string'
-                        // add lqa_submitted and policy_reviewed_transfer
+                        'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string',
+                        'existing_pension_plans.*.lqa_submitted' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.lqa_submitted'))))
+                        ],
+                        'existing_pension_plans.*.policy_reviewed_transfer' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.policy_reviewed_transfer'))))
+                        ]
                     ],
                     'messages' => []
                 ],
@@ -1158,6 +1171,30 @@ return [
                         'dd_pcls_spend' => 'sometimes|nullable|string',
                         'dd_pcls_income' => 'sometimes|nullable|string',
                         'dd_income' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ],
+                6 => [
+                    'name' => 'Pension Recommendations',
+                    'fields' => [
+                        'pr_items.type',
+                        'pr_items.value',
+                        'pr_items.percentage',
+                        'pr_items.is_percentage'
+                    ],
+                    'rules' => [
+                        'pr_items' => 'sometimes|nullable|array',
+                        'pr_items.*.id' => 'sometimes|nullable|integer',
+                        'pr_items.*.pension_recommendation_id' => 'sometimes|nullable|integer',
+                        'pr_items.*.type' => [
+                            'sometimes',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.item_type'))))
+                        ],
+                        'pr_items.*.value' => 'sometimes',
+                        'pr_items.*.percentage' => 'sometimes|nullable',
+                        'pr_items.*.is_percentage' => 'sometimes|boolean'
                     ],
                     'messages' => []
                 ]

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\InvestmentController;
 use App\Http\Controllers\Api\InvestmentRecommendationItemController;
 use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
+use App\Http\Controllers\Api\PRItemsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/investment-recommendation-items/{item}', [InvestmentRecommendationItemController::class,'delete']);
     Route::delete('/pr-contributions/{contribution}', [PRContributionController::class,'delete']);
     Route::delete('/pr-allowances/{allowance}', [PRAllowanceController::class,'delete']);
+    Route::delete('/pr-items/{item}', [PRItemsController::class,'delete']);
 });
 
 

@@ -127,8 +127,8 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'administrator' => $pension->administrator,
                         'policy_type' => $pension instanceof DefinedBenefitPension ? 0 : 1,
                         'policy_number' => $pension->policy_number,
-                        'lqa_submitted' => null, // which table ?
-                        'policy_reviewed_transfer' => null //pension_recommendation->active_pension_review_for_transfer ?
+                        'lqa_submitted' => $item->lqa_submitted,
+                        'policy_reviewed_transfer' => $item->policy_reviewed_transfer
                     ];
                 })
             ],
@@ -164,6 +164,18 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'annual_allowance' => $allowance->annual_allowance != null ? $this->currencyIntToString($allowance->annual_allowance) : null,
                         'pension_input' => $allowance->pension_input != null ? $this->currencyIntToString($allowance->pension_input) : null,
                         'unused_allowance' => $allowance->unused_allowance != null ? $this->currencyIntToString($allowance->unused_allowance) : null
+                    ];
+                }))
+            ],
+            '2.6' => [
+                'pr_items' => collect(PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->first()->pr_items()->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'pension_recommendation_id' => $item->pension_recommendation_id,
+                        'type' => $item->type,
+                        'value' => $item->is_percentage == 0 ? $this->currencyIntToString($item->value) : $item->value,
+                        'percentage' => $item->is_percentage == 1 ? $this->percentageIntToString($item->value) : null,
+                        'is_percentage' => (bool) $item->is_percentage
                     ];
                 }))
             ],

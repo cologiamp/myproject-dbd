@@ -12,6 +12,7 @@ use App\Repositories\PensionRecommendationRepository;
 use App\Repositories\PensionRepository;
 use App\Repositories\PRNewContributionRepository;
 use App\Repositories\PRAnnualAllowanceRepository;
+use App\Repositories\PRItemsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +28,7 @@ class InvestmentRecommendationSectionDataService
     protected PensionRecommendationRepository $pensionRecommendationRepository;
     protected PRNewContributionRepository $prNewContributionRepository;
     protected PRAnnualAllowanceRepository $prAnnualAllowanceRepository;
+    protected PRItemsRepository $prItemsRepository;
 
     public function __construct(
         ClientRepository $clientRepository,
@@ -34,7 +36,8 @@ class InvestmentRecommendationSectionDataService
         InvestmentRecommendationItemRepository $investmentRecommendationItemRepository,
         PensionRecommendationRepository $pensionRecommendationRepository,
         PRNewContributionRepository $prNewContributionRepository,
-        PRAnnualAllowanceRepository $prAnnualAllowanceRepository
+        PRAnnualAllowanceRepository $prAnnualAllowanceRepository,
+        PRItemsRepository $prItemsRepository
 ) {
         $this->clientRepository = $clientRepository;
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
@@ -42,6 +45,7 @@ class InvestmentRecommendationSectionDataService
         $this->pensionRecommendationRepository = $pensionRecommendationRepository;
         $this->prNewContributionRepository = $prNewContributionRepository;
         $this->prAnnualAllowanceRepository = $prAnnualAllowanceRepository;
+        $this->prItemsRepository = $prItemsRepository;
     }
 
     //get the data for a single section of a investment recommendation from a single client
@@ -353,5 +357,29 @@ class InvestmentRecommendationSectionDataService
 
         $prData['id'] = $validatedData['pension_recommendation_id'];
         $this->pensionRecommendationRepository->updateFromValidated($prData);
+    }
+
+    /**
+     * Section: 2
+     * Step: 6
+     * @param array $validatedData
+     * @return void
+     */
+    private function _26(array $validatedData): void
+    {
+        $items = collect($validatedData['pr_items'])->map(function ($item) {
+            if (array_key_exists('value', $item) && $item['value'] != null) {
+                $item['value'] = $this->currencyStringToInt($item['value']);
+            }
+            if ($item['is_percentage'] == true) {
+                $item['value'] = $this->currencyStringToInt($item['percentage']);
+            }
+
+            unset($item['percentage']);
+            return $item;
+        });
+
+        $this->prItemsRepository->setClient($this->clientRepository->getClient());
+        $this->prItemsRepository->createOrUpdateItem($items);
     }
 }

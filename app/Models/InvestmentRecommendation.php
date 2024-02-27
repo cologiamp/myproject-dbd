@@ -62,12 +62,17 @@ class InvestmentRecommendation extends Model
                 'retirement_options' => config('enums.pension_recommendation.retirement_option')
             ],
             '2.3' => [
-                'policy_types' => config('enums.pension_recommendation.policy_type')
+                'policy_types' => config('enums.pension_recommendation.policy_type'),
+                'lqa_submitted' => config('enums.pension_recommendation.lqa_submitted'),
+                'policy_reviewed_transfer' => config('enums.pension_recommendation.policy_reviewed_transfer')
             ],
             '2.4' => [
                 'types' => config('enums.pension_recommendation.new_contribution_type'),
                 'paid_by' => config('enums.pension_recommendation.new_contribution_paid_by'),
                 'frequency' => config('enums.pension_recommendation.frequency_public')
+            ],
+            '2.6' => [
+                'types' => config('enums.pension_recommendation.item_type')
             ],
             default => [
 

@@ -244,6 +244,9 @@ class PensionRepository extends BaseRepository
 
     private function updateBP(PensionScheme $pension, array $item):PensionScheme
     {
+        ray('updateBP');
+        ray($pension)->purple();
+        ray($item)->purple();
         if(array_key_exists('client_id',$item))
         {
             $pension->client_id = $item['client_id'];
@@ -264,6 +267,20 @@ class PensionRepository extends BaseRepository
         }
         else{
             $pension->retirement_age = null;
+        }
+        if(array_key_exists('lqa_submitted',$item))
+        {
+            $pension->lqa_submitted = $item['lqa_submitted'];
+        }
+        else{
+            $pension->lqa_submitted = null;
+        }
+        if(array_key_exists('policy_reviewed_transfer',$item))
+        {
+            $pension->policy_reviewed_transfer = $item['policy_reviewed_transfer'];
+        }
+        else{
+            $pension->policy_reviewed_transfer = null;
         }
         return $pension;
     }

@@ -21,8 +21,8 @@ const props = defineProps({
         default: {
             enums: {
                 policy_types: [],
-                // lqa_submitted: [],
-                // policy_reviewed_transfer: []
+                lqa_submitted: [],
+                policy_reviewed_transfer: []
             },
             model: {
                 existing_pension_plans: [{
@@ -135,21 +135,21 @@ function addPensionPlan() {
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="lqa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LQA Submitted</label>
-                    <select @change="autosaveLocally(index)"
+                    <select @change="autosaveLocally(index)" v-model="pension.lqa_submitted"
                             id="lqa_submitted" name="lqa_submitted"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="income_type" :value="null">-</option>
-                        <!--<option :id="id" :value="id" v-for="(lqa_submitted, id) in formData.enums.policy_types">{{ lqa_submitted }}</option>-->
+                        <option id="lqa_submitted" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(lqa_submitted, id) in formData.enums.lqa_submitted">{{ lqa_submitted }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.lqa_submitted">{{ stepForm.errors.lqa_submitted }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="policy_reviewed_transfer" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Policy being reviewed for transfer?</label>
-                    <select @change="autosaveLocally(index)"
+                    <select @change="autosaveLocally(index)" v-model="pension.policy_reviewed_transfer"
                             id="policy_reviewed_transfer" name="policy_reviewed_transfer"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="income_type" :value="null">-</option>
-                        <!--<option :id="id" :value="id" v-for="(lqa_submitted, id) in formData.enums.policy_types">{{ lqa_submitted }}</option>-->
+                        <option id="policy_reviewed_transfer" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(policy_reviewed_transfer, id) in formData.enums.policy_reviewed_transfer">{{ policy_reviewed_transfer }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.policy_reviewed_transfer">{{ stepForm.errors.policy_reviewed_transfer }}</p>
                 </div>

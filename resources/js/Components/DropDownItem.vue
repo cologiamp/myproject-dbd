@@ -23,7 +23,7 @@ const props = defineProps({
     }
 });
 
-const investment_recommendations = 'Investment Recommendations';
+const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
 
 const emit = defineEmits(['setOnloadKey']);
 const selectedMenuId = inject("selectedMenuId");
@@ -59,7 +59,7 @@ function handleAutosave(val){
                 </div>
 
                 <!-- HIDE ON START, DISPLAY ON SCROLL DOWN AND WHEN MENU IS STICKED -->
-                <div v-show="tab.name != investment_recommendations" class="px-8 mb-8 w-full">
+                <div v-show="!hide_progress.includes(tab.name)" class="px-8 mb-8 w-full">
                     <div class="mb-4">
                         <span>{{ tab.name + ' progress: '+ tab.progress + '%' }} </span>
                     </div>
