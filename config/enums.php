@@ -1576,7 +1576,8 @@ return [
             7 => 'Maintenance Alimony',
             8 => 'Other Structured Loans',
             9 => 'Other Mortgages',
-            10 => 'Other'
+            10 => 'Other',
+            11 => 'Mortgage',
         ],
         'repayment_or_interest' => [
             0 => 'Repayment',
