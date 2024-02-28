@@ -27,6 +27,7 @@ const props = defineProps({
                 pension_statuses: [],
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
+                frequency: [],
             },
             model: {
                 dc_pensions: [{
@@ -50,7 +51,8 @@ const props = defineProps({
                     fund_name: null,
                     fund_type: null,
                     current_fund_value: null,
-                    current_transfer_value: null
+                    current_transfer_value: null,
+                    frequency: null,
                 }],
                 db_pensions: [{
                     id: null,
@@ -127,7 +129,8 @@ function addDc() {
         fund_name: null,
         fund_type: null,
         current_fund_value: null,
-        current_transfer_value: null
+        current_transfer_value: null,
+        frequency: null
     });
 }
 
@@ -441,6 +444,18 @@ function removePension(index,type) {
                                :value="pension.value"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
+                </div>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="frequency"
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
+                    <select @change="autosaveLocally" v-model="pension.frequency"
+                            id="frequency" name="frequency"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="frequency" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
+                                provider }}</option>
+                    </select>
                 </div>
 
 
