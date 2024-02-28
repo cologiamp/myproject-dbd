@@ -190,18 +190,6 @@ function removePension(index,type) {
                     </div>
                 </div>
             </div>
-
-            <div class="mb-6">
-                <button type="button" @click="addDc"
-                        class="float-right mr-0 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DC Pension
-                </button>
-                <button type="button" @click="addDb"
-                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DB Pension
-                </button>
-            </div>
-
             <h3 class="text-2xl mt-2 mb-2 text-aaron-400" v-if="stepForm.db_pensions && stepForm.db_pensions.length > 0">DB Pensions</h3>
             <div v-for="(pension, index) in stepForm.db_pensions"
                  class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
@@ -560,17 +548,14 @@ function removePension(index,type) {
             </div>
 
 
-            <div v-if="stepForm.db_pensions && stepForm.db_pensions.length > 0">
-                <button type="button" @click="addDc"
-                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DC Pension
-                </button>
-                <button type="button" @click="addDb"
-                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DB Pension
-                </button>
-            </div>
-
+            <button type="button" @click="addDc"
+                    class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <PlusCircleIcon class="w-6 h-6" />Add DC Pension
+            </button>
+            <button type="button" @click="addDb"
+                    class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <PlusCircleIcon class="w-6 h-6" />Add DB Pension
+            </button>
         </div>
     </dynamic-form-wrapper></template>
 

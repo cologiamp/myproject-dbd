@@ -645,10 +645,6 @@ class FactFindSectionDataService
             if (array_key_exists('monthly_saving',$scheme) && $scheme['monthly_saving'] != null){
                 $scheme['monthly_saving'] = $this->currencyStringToInt($scheme['monthly_saving']);
             }
-            if(array_key_exists('name', $scheme) && $scheme['name'] != '')
-            {
-                $scheme['name'] = ucfirst($scheme['name']);
-            }
             return $scheme;
         });
 
