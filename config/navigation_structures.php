@@ -94,28 +94,28 @@ return [
                             'ni_number.regex' => 'The entered National Insurance Number has an invalid format',
                         ]
                     ],
-//                    2 => [
-//                        'name' => 'Health Details',
-//                        'fields' => [
-//                            "health.is_in_good_health",
-//                            "health.health_details",
-//                            "health.has_life_expectancy_concerns",
-//                            "health.life_expectancy_details",
-//                            "health.medical_conditions",
-//                            "health.smoker",
-//                            "health.smoked_in_last_12_months"
-//                        ],
-//                        'rules' => [
-//                            'is_in_good_health' => 'sometimes|nullable|boolean',
-//                            'health_details' => 'sometimes|nullable|max:1024',
-//                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
-//                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
-//                            'medical_conditions' => 'sometimes|nullable|max:1024',
-//                            'smoker' => 'sometimes|nullable|integer',
-//                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
-//                        ],
-//                        'messages' => []
-//                    ],
+                    2 => [
+                        'name' => 'Health Details',
+                        'fields' => [
+                            "health.is_in_good_health",
+                            "health.health_details",
+                            "health.has_life_expectancy_concerns",
+                            "health.life_expectancy_details",
+                            "health.medical_conditions",
+                            "health.smoker",
+                            "health.smoked_in_last_12_months"
+                        ],
+                        'rules' => [
+                            'is_in_good_health' => 'sometimes|nullable|boolean',
+                            'health_details' => 'sometimes|nullable|max:1024',
+                            'has_life_expectancy_concerns' => 'sometimes|nullable|boolean',
+                            'life_expectancy_details' => 'sometimes|nullable|max:1024',
+                            'medical_conditions' => 'sometimes|nullable|max:1024',
+                            'smoker' => 'sometimes|nullable|integer',
+                            'smoked_in_last_12_months' => 'sometimes|nullable|boolean'
+                        ],
+                        'messages' => []
+                    ],
 //                    3 => [
 //                        'name' => 'Address and Contact Details',
 //                        'fields' => [

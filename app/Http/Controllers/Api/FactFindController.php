@@ -55,8 +55,32 @@ class FactFindController extends Controller
             $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
         }
 
+        //somehow extract and validate the separate steps for the data
+        $daddyRequest = $request->all();
+
+        collect($daddyRequest)->each(function ($item, $key) use (&$daddyRequest, $ffsds,$step,$section) {
+
+            if(is_numeric($key))
+            {
+                try{
+                    $ffsds->validate($step, $section, $item); //throws exception if validation fails - comes back to Inertia as errorbag
+                }
+                catch (Exception $e)
+                {
+                    Log::warning($e);
+                }
+                $ffsds->store(
+                    Client::where('io_id',$key)->first(),
+                    $step,
+                    $section,
+                    $ffsds->validated($step, $section, $item)
+                );
+            }
+            unset($daddyRequest[$key]);
+        });
+        //validate the rest if it has other keys
         try{
-            $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
+            $ffsds->validate($step, $section, $daddyRequest); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
@@ -66,7 +90,7 @@ class FactFindController extends Controller
             $client,
             $step,
             $section,
-            $ffsds->validated($step, $section, $request)
+            $ffsds->validated($step, $section, $daddyRequest)
         );
         return json_encode(['model' =>  $ffsds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
     }

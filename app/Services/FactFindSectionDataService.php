@@ -68,19 +68,26 @@ class FactFindSectionDataService
         ];
     }
 
-    public function validate(int $step, int $section, Request $request)
+    public function validate(int $step, int $section, $request)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
-
-        return Validator::make($request->all(), $rules, $messages)->validate();
+        if(!is_array($request))
+        {
+           $request = $request->all();
+        }
+        return Validator::make($request, $rules, $messages)->validate();
     }
 
-    public function validated(int $step, int $section, Request $request)
+    public function validated(int $step, int $section, $request)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
-        return Validator::make($request->all(), $rules, $messages)->validated();
+        if(!is_array($request))
+        {
+            $request = $request->all();
+        }
+        return Validator::make($request, $rules, $messages)->validated();
     }
 
     /**
