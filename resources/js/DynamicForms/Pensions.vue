@@ -27,7 +27,6 @@ const props = defineProps({
                 pension_statuses: [],
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
-                frequency: [],
             },
             model: {
                 dc_pensions: [{
@@ -51,8 +50,7 @@ const props = defineProps({
                     fund_name: null,
                     fund_type: null,
                     current_fund_value: null,
-                    current_transfer_value: null,
-                    frequency: null,
+                    current_transfer_value: null
                 }],
                 db_pensions: [{
                     id: null,
@@ -129,8 +127,7 @@ function addDc() {
         fund_name: null,
         fund_type: null,
         current_fund_value: null,
-        current_transfer_value: null,
-        frequency: null
+        current_transfer_value: null
     });
 }
 
@@ -189,17 +186,6 @@ function removePension(index,type) {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="mb-6">
-                <button type="button" @click="addDc"
-                        class="float-right mr-0 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DC Pension
-                </button>
-                <button type="button" @click="addDb"
-                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DB Pension
-                </button>
             </div>
 
             <h3 class="text-2xl mt-2 mb-2 text-aaron-400" v-if="stepForm.db_pensions && stepForm.db_pensions.length > 0">DB Pensions</h3>
@@ -446,19 +432,6 @@ function removePension(index,type) {
                     </div>
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="frequency"
-                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
-                    <select @change="autosaveLocally" v-model="pension.frequency"
-                            id="frequency" name="frequency"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="frequency" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
-                                provider }}</option>
-                    </select>
-                </div>
-
-
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="born_at"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2">Valuation Date</label>
@@ -559,18 +532,15 @@ function removePension(index,type) {
 
             </div>
 
-
-            <div v-if="stepForm.db_pensions && stepForm.db_pensions.length > 0">
-                <button type="button" @click="addDc"
-                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DC Pension
-                </button>
-                <button type="button" @click="addDb"
-                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    <PlusCircleIcon class="w-6 h-6" />Add DB Pension
-                </button>
-            </div>
-
+            
+            <button type="button" @click="addDc"
+                    class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <PlusCircleIcon class="w-6 h-6" />Add DC Pension
+            </button>
+            <button type="button" @click="addDb"
+                    class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <PlusCircleIcon class="w-6 h-6" />Add DB Pension
+            </button>
         </div>
     </dynamic-form-wrapper></template>
 
