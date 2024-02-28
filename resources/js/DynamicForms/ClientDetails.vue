@@ -105,7 +105,7 @@ async function autosaveLocally(){
                             <label for="dta_base_costs_availability" class="text-sm font-medium leading-6 text-aaron-50">Is client an active member?</label>
                         </div>
                     </div>
-                    <div class="mt-4">
+                    <div v-if="stepForm.pension_recommendation.active_pension_member == false" class="mt-4">
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If not, why not</label>
                         <div class="mt-2">
                             <textarea rows="3" name="dta_base_costs_available" id="active_pension_member_reason_not"

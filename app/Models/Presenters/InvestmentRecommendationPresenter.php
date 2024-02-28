@@ -3,11 +3,10 @@
 namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
+use App\Models\Client;
+use App\Models\DefinedBenefitPension;
 use App\Models\PensionRecommendation;
 use App\Models\PensionScheme;
-use App\Models\DefinedContributionPension;
-use App\Models\DefinedBenefitPension;
-use function Pest\Laravel\instance;
 
 class InvestmentRecommendationPresenter extends BasePresenter
 {
@@ -26,7 +25,7 @@ class InvestmentRecommendationPresenter extends BasePresenter
         return match ($step . '.' . $section) {
             '1.1' => [
                 'id' => $this->model->id,
-                'is_ethical_investor' => $this->model->is_ethical_investor,
+                'is_ethical_investor' => (bool)$this->model->is_ethical_investor,
                 'risk_profile' => $this->model->risk_profile,
                 'previously_invested_amount' => $this->model->previously_invested_amount != null ? $this->currencyIntToString($this->model->previously_invested_amount) : null,
                 'fee_basis' => $this->model->fee_basis,
@@ -34,6 +33,7 @@ class InvestmentRecommendationPresenter extends BasePresenter
             ],
             '1.2' => [
                 'id' => $this->model->id,
+                'report_for' => Client::where('investment_recommendation_id', $this->model->id)->first()->io_id,
                 'report_type' => $this->model->report_type,
                 'isa_allowance_used' => $this->model->primary_client->isa_allowance_used != null ? $this->currencyIntToString($this->model->primary_client->isa_allowance_used) : null,
                 'cgt_allowance_used' => $this->model->primary_client->cgt_allowance_used != null ? $this->currencyIntToString($this->model->primary_client->cgt_allowance_used) : null,
@@ -87,7 +87,8 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'description' => $item->description,
                         'stock_type' => $item->stock_type,
                         'number_of_units' => $item->number_of_units,
-                        'amount' => $item->amount != null ? $this->currencyIntToString($item->amount) : null
+                        'amount' => $item->amount != null ? $this->currencyIntToString($item->amount) : null,
+                        'owner' => Client::where('id', $item->pivot->client_id)->first()->io_id
                     ];
                 }))->groupBy('type')
             ],
@@ -104,15 +105,15 @@ class InvestmentRecommendationPresenter extends BasePresenter
             '2.2' => [
                 'pension_recommendation' => PensionRecommendation::with('clients')->whereHas('clients')->where('id',$this->model->primary_client->pension_recommendation_id)->get()->map(function ($item){
                     return [
-                        'employment_status' => $item->employment_status != null ? $item->employment_status : $item->clients()->first()->employment_details()->first()->employment_status,
-                        'current_employer_name' => $item->current_employer_name != null ? $item->current_employer_name : $item->clients()->first()->employment_details()->first()->employer,
+                        'employment_status' => $item->employment_status != null ? $item->employment_status : $item->clients()->first()->employment_details()?->first()?->employment_status,
+                        'current_employer_name' => $item->current_employer_name != null ? $item->current_employer_name : $item->clients()->first()->employment_details()->first()?->employer,
                         'workplace_pension_type' => $item->workplace_pension_type,
                         'employers_pension_name' => $item->employers_pension_name,
                         'active_pension_member' => (bool)$item->active_pension_member,
                         'active_pension_member_reason_not' => $item->active_pension_member_reason_not,
                         'active_pension_review_for_transfer' => $item->active_pension_review_for_transfer,
                         'active_pension_review_transfer_reason' => $item->active_pension_review_transfer_reason,
-                        'pension_draw_age' => $item->pension_draw_age != null ? $item->pension_draw_age : $item->clients()->first()->employment_details()->first()->intended_retirement_age,
+                        'pension_draw_age' => $item->pension_draw_age != null ? $item->pension_draw_age : $item->clients()->first()->employment_details()->first()?->intended_retirement_age,
                         'retirement_option' => $item->retirement_option
                     ];
                 })
@@ -124,9 +125,9 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'id' => $item->id,
                         'client_id' => $this->model->primary_client->id,
                         'employer' => $item->employer,
-                        'administrator' => $pension->administrator,
+                        'administrator' => $pension?->administrator,
                         'policy_type' => $pension instanceof DefinedBenefitPension ? 0 : 1,
-                        'policy_number' => $pension->policy_number,
+                        'policy_number' => $pension?->policy_number,
                         'lqa_submitted' => $item->lqa_submitted,
                         'policy_reviewed_transfer' => $item->policy_reviewed_transfer
                     ];
