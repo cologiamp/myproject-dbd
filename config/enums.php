@@ -1655,5 +1655,22 @@ return [
             2 => 'Not a primary objective',
             3 => 'Not important',
         ],
+    ],
+    'strategy_report_recommendations' => [
+        'report_version' => [
+            0 => 'v1',
+            1 => 'v2'
+        ],
+        'retirement_status' => [
+            0 => 'Employed',
+            1 => 'Retired',
+            2 => 'Retiring',
+            3 => 'Flex Retirement'
+        ],
+        'objective_type' => [
+            0 => 'Considering Retirement',
+            1 => 'Retiring',
+            2 => 'Accumilating Wealth'
+        ],
     ]
 ];

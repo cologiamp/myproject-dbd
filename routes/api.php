@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ShareSaveSchemeController;
 use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+use App\Http\Controllers\Api\StrategyReportRecommendationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/providers/search',SearchProviderController::class);
 Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindController::class,'update']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
-
+Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[StrategyReportRecommendationsController::class,'update'])->name('strategyreportrecommendations.update');
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);

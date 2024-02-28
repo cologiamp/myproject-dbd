@@ -816,5 +816,34 @@ return [
             ]
         ],
 
+    ],
+    'strategyreportrecommendations' => [
+        1 => [
+            'name' => 'Strategy Report Recommendations',
+            'rules' => [
+                'report_version' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.report_version'))),
+                ],
+                'retirement_status' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.retirement_status'))),
+                ],
+                'objective_type' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.objective_type'))),
+                ],
+                'next_meeting_date' => 'sometimes|nullable|date',
+            ]
+        ]
     ]
 ];
