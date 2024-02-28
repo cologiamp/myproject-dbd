@@ -348,6 +348,11 @@ class FactFindSectionDataService
         $this->parseAndUpdateExpenditure($validatedData);
     }
 
+    private function _26(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
      private function _31(array $validatedData): void
     {
         $client= $this->cr->getClient();
