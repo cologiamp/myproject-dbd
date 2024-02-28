@@ -47,14 +47,16 @@ class InvestmentRecommendationController extends Controller
         if ($request['investment_recommendation_items'] && $request['investment_recommendation_items'] != null) {
             $request['investment_recommendation_items'] = collect($request['investment_recommendation_items'])->flatten(1)->toArray();
         }
-        if (array_key_exists('pension_recommendation', $request->all()) ||
-            array_key_exists('prnew_contributions', $request->all()) ||
-            array_key_exists('pr_annual_allowances', $request->all()) ||
-            array_key_exists('pr_items', $request->all())
-        ) {
+
+        $isPensionRecommendation = $request->collect()->contains(function ($item, $key) {
+            return in_array($key, ['pension_recommendation','prnew_contributions','pr_annual_allowances','pr_items']);
+        });
+
+        if ($isPensionRecommendation) {
             $pensionRecommendation = $this->pensionRecommendationRepository->getPensionRecommendation();
             $model = $pensionRecommendation->where('id', $client->pension_recommendation_id)->first();
         }
+
         if ($request['existing_pension_plans'] && $request['existing_pension_plans'] != null) {
             $model = $client;
         }

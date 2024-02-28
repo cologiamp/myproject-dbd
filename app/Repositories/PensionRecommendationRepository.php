@@ -5,6 +5,7 @@ use App\Exceptions\InvestmentRecommendationNotFoundException;
 use App\Models\Client;
 use App\Models\PensionRecommendation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PensionRecommendationRepository extends BaseRepository
 {
@@ -73,5 +74,19 @@ class PensionRecommendationRepository extends BaseRepository
     {
         //handle any cleanup required here
         $this->pensionRecommendation->delete();
+    }
+
+    public function createInitialPensionRecommendationForClient(): PensionRecommendation
+    {
+        DB::beginTransaction();
+        try {
+            $newPensionRecommendation = PensionRecommendation::create();
+            DB::commit();
+
+            return $newPensionRecommendation;
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
     }
 }

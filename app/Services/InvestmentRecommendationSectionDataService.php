@@ -85,11 +85,9 @@ class InvestmentRecommendationSectionDataService
     public function store($model, int $step, int $section, array $validatedData): true
     {
         if ($model instanceof InvestmentRecommendation) {
-            ray('InvestmentRecommendation')->green();
             $this->investmentRecommendationRepository->setInvestmentRecommendation($model);
             $this->clientRepository->setClient($model->primary_client);
         } else if ($model instanceof PensionRecommendation) {
-            ray('PensionRecommendation')->green();
             $this->pensionRecommendationRepository->setPensionRecommendation($model);
             $this->clientRepository->setClient($model->primary_client);
         } else {
