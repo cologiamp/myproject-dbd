@@ -44,6 +44,9 @@ onBeforeMount(()=>{
     for (const [item, value] of Object.entries(props.formData.model)) {
 
         stepForm[item] = {};
+        console.log('___________')
+        console.log(item);
+        console.log('___________')
         stepForm[item]['is_in_good_health'] = value.is_in_good_health;
         stepForm[item]['health_details'] = value.health_details;
         stepForm[item]['has_life_expectancy_concerns'] = value.has_life_expectancy_concerns;
@@ -54,12 +57,9 @@ onBeforeMount(()=>{
     }
 
 
-    console.log(props.formData.model);
-
 })
 async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
-    console.log(    props.formData.model );
     for (const [item, value] of Object.entries(props.formData.model)) {
 
         stepForm[item] = {};
@@ -71,7 +71,6 @@ async function autosaveLocally(){
         stepForm[item]['smoker'] = value.smoker;
         stepForm[item]['smoked_in_last_12_months'] = value.smoked_in_last_12_months;
     }
-    console.log(stepForm);
 }
 
 

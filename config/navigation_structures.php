@@ -116,49 +116,49 @@ return [
                         ],
                         'messages' => []
                     ],
-//                    3 => [
-//                        'name' => 'Address and Contact Details',
-//                        'fields' => [
-//                            'addresses' => [
-//                                'addresses.address_line_1',
-//                                'addresses.address_line_2',
-//                                'addresses.city',
-//                                'addresses.county',
-//                                'addresses.postcode',
-//                                'addresses.country',
-//                                'addresses.residency_status',
-//                                'addresses.date_from'
-//                            ],
-//                            "clients.phone_number",
-//                            "clients.mobile_number",
-//                            "clients.email_address"
-//                        ],
-//                        'rules' => [
-//                            'addresses' => 'sometimes|nullable|array',
-//                            'addresses.*.address_line_1' => 'sometimes|nullable|max:320',
-//                            'addresses.*.address_id' => 'sometimes|nullable',
-//                            'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
-//                            'addresses.*.city' => 'sometimes|nullable|max:320',
-//                            'addresses.*.county' => 'sometimes|nullable|max:320',
-//                            'addresses.*.postcode' => 'sometimes|nullable|max:320',
-//                            'addresses.*.country' => [
-//                                'sometimes',
-//                                'nullable'
-//                            ],
-//                            'addresses.*.residency_status' => [
-//                                'sometimes',
-//                                'nullable',
-//                                'numeric',
-//                                'integer',
-//                                Rule::in(array_keys((config('enums.address.residency_status'))))
-//                            ],
-//                            'addresses.*.date_from' => 'sometimes|nullable|date',
-//                            'phone_number' => 'sometimes|nullable|max:20',
-//                            'mobile_number' => 'sometimes|nullable|max:20',
-//                            'email_address' => 'sometimes|nullable|max:120'
-//                        ],
-//                        'messages' => []
-//                    ],
+                    3 => [
+                        'name' => 'Address and Contact Details',
+                        'fields' => [
+                            'addresses' => [
+                                'addresses.address_line_1',
+                                'addresses.address_line_2',
+                                'addresses.city',
+                                'addresses.county',
+                                'addresses.postcode',
+                                'addresses.country',
+                                'addresses.residency_status',
+                                'addresses.date_from'
+                            ],
+                            "clients.phone_number",
+                            "clients.mobile_number",
+                            "clients.email_address"
+                        ],
+                        'rules' => [
+                            'addresses' => 'sometimes|nullable|array',
+                            'addresses.*.address_line_1' => 'sometimes|nullable|max:320',
+                            'addresses.*.address_id' => 'sometimes|nullable',
+                            'addresses.*.address_line_2' => 'sometimes|nullable|max:320',
+                            'addresses.*.city' => 'sometimes|nullable|max:320',
+                            'addresses.*.county' => 'sometimes|nullable|max:320',
+                            'addresses.*.postcode' => 'sometimes|nullable|max:320',
+                            'addresses.*.country' => [
+                                'sometimes',
+                                'nullable'
+                            ],
+                            'addresses.*.residency_status' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.address.residency_status'))))
+                            ],
+                            'addresses.*.date_from' => 'sometimes|nullable|date',
+                            'phone_number' => 'sometimes|nullable|max:20',
+                            'mobile_number' => 'sometimes|nullable|max:20',
+                            'email_address' => 'sometimes|nullable|max:120'
+                        ],
+                        'messages' => []
+                    ],
 //                    4 => [
 //                        'name' => 'Family',
 //                        'fields' => [

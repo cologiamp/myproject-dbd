@@ -39,7 +39,6 @@ const props = defineProps({
 function saveDate(value,key){
 
     stepForm[key].date_of_birth = value;
-    console.log(stepForm[key]);
     autosaveLocally()
 }
 
@@ -64,9 +63,6 @@ onBeforeMount(()=>{
         stepForm[item]['poa_granted'] = value.poa_granted;
         stepForm[item]['poa_name'] = value.poa_name;
     }
-
-
-    console.log(props.formData.model);
 
 })
 
