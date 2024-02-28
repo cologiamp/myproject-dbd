@@ -103,9 +103,6 @@ onBeforeMount(()=>{
     for (const [item, value] of Object.entries(filteredEntries.value)) {
 
         stepForm[item] = {};
-        console.log('___________')
-        console.log(item);
-        console.log('___________')
         stepForm[item]['mobile_number'] = value.mobile_number;
         stepForm[item]['phone_number'] = value.phone_number;
         stepForm[item]['email_address'] = value.email_address;
@@ -135,22 +132,22 @@ async function autosaveLocally(){
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <label class="font-bold mt-3" >Contact Details</label>
-            <div class="grid gap-2 md:grid md:items-start md:gap-y-8 md:gap-x-4" :class="'md:grid-cols-'+ (Object.keys(props.formData.model).length)">
+            <div class="grid gap-2 md:grid md:items-start md:gap-y-8 md:gap-x-4" :class="'md:grid-cols-'+ (Object.keys(filteredEntries).length)">
                 <div v-if="stepForm" :class="Object.keys(filteredEntries).length > 1 ? 'bg-aaron-850' : ''" class="grid gap-2 md:grid md:grid-cols-6 md:items-start md:gap-y-8 md:gap-x-4 rounded-md p-2" v-for="(model,key,index) in filteredEntries" >
-                    <h4 v-if="Object.keys(props.formData.model).length > 1" class="col-span-6 text-xl font-bold pt-2"> Client {{index + 1}} </h4>
-                    <div :class="'col-span-'+ (Object.keys(props.formData.model).length * 3)" class="mt-2  sm:mt-0 md:pr-2">
+                    <h4 v-if="(Object.keys(filteredEntries).length > 1)" class="col-span-6 text-xl font-bold pt-2"> Client {{index + 1}} </h4>
+                    <div :class="'col-span-'+ (Object.keys(filteredEntries).length * 3)" class="mt-2  sm:mt-0 md:pr-2">
                         <label for="phone_number" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Phone Number </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                             <input @change="autosaveLocally()" v-model="stepForm.phone_number" type="text" name="phone_number" id="phone_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Phone Number"/>
                         </div>
                     </div>
-                    <div :class="'col-span-'+ (Object.keys(props.formData.model).length * 3)" class="mt-2  sm:mt-0 md:pr-2">
+                    <div :class="'col-span-'+ (Object.keys(filteredEntries).length * 3)" class="mt-2  sm:mt-0 md:pr-2">
                         <label for="mobile_number" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Mobile Number </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                             <input @change="autosaveLocally()" v-model="stepForm.mobile_number" type="text" name="mobile_number" id="mobile_number"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Mobile Number"/>
                         </div>
                     </div>
-                    <div :class="'col-span-'+ (Object.keys(props.formData.model).length * 3)" class="mt-2  sm:mt-0 md:pr-2">
+                    <div :class="'col-span-'+ (Object.keys(filteredEntries).length * 3)" class="mt-2  sm:mt-0 md:pr-2">
                         <label for="email_address" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Email Address </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                             <input @change="autosaveLocally()" v-model="stepForm.email_address" type="text" name="email_address" id="email_address"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Email Address"/>
