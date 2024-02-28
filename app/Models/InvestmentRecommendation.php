@@ -51,6 +51,29 @@ class InvestmentRecommendation extends Model
                 'owners' => $this->getOwnersForForm(true),
                 'descriptions' => config('enums.investment_recommendation_items.descriptions')
             ],
+            '2.1' => [
+                'fee_basis' => config('enums.pension_recommendation.fee_basis_public'),
+                'report_type' => config('enums.pension_recommendation.report_type'),
+            ],
+            '2.2' => [
+                'employment_status' => config('enums.pension_recommendation.employment_status'),
+                'workplace_pension_types' => config('enums.pension_recommendation.workplace_pension_type'),
+                'pension_review_transfer' => config('enums.pension_recommendation.pension_review_transfer'),
+                'retirement_options' => config('enums.pension_recommendation.retirement_option')
+            ],
+            '2.3' => [
+                'policy_types' => config('enums.pension_recommendation.policy_type'),
+                'lqa_submitted' => config('enums.pension_recommendation.lqa_submitted'),
+                'policy_reviewed_transfer' => config('enums.pension_recommendation.policy_reviewed_transfer')
+            ],
+            '2.4' => [
+                'types' => config('enums.pension_recommendation.new_contribution_type'),
+                'paid_by' => config('enums.pension_recommendation.new_contribution_paid_by'),
+                'frequency' => config('enums.pension_recommendation.frequency_public')
+            ],
+            '2.6' => [
+                'types' => config('enums.pension_recommendation.item_type')
+            ],
             default => [
 
             ]

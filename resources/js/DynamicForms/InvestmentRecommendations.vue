@@ -35,7 +35,8 @@ const props = defineProps({
                     description: null,
                     stock_type: null,
                     number_of_units: null,
-                    amount: null
+                    amount: null,
+                    owner: null
                 }]
             },
             submit_method: 'post',
@@ -72,7 +73,8 @@ function addItem(typeIndex) {
             description: null,
             stock_type: null,
             number_of_units: null,
-            amount: null
+            amount: null,
+            owner: null
         });
     } else {
         stepForm.investment_recommendation_items[typeIndex] = [{
@@ -81,7 +83,8 @@ function addItem(typeIndex) {
             description: null,
             stock_type: null,
             number_of_units: null,
-            amount: null
+            amount: null,
+            owner: null
         }]
     }
 }
@@ -108,9 +111,7 @@ function removeItem(typeIndex, itemIndex) {
             autosaveLocally();
         }
         ,500);
-
 }
-
 
 </script>
 

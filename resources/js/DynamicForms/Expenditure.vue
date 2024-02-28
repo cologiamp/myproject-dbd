@@ -117,7 +117,8 @@ onBeforeMount(() => {
 
 function formatAmountOnload() {
     if (stepForm.expenditures != null) {
-        Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
+        if(props.formData.enums.expenditure_types) {
+            Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
             if(stepForm.expenditures[expType]) {
 
                 stepForm.expenditures[expType].forEach(expenditure => {
@@ -126,7 +127,8 @@ function formatAmountOnload() {
                     }
                 });
             }
-        });
+            });
+        }
     }
 }
 

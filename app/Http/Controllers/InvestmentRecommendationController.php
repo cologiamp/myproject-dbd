@@ -5,16 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\InvestmentRecommendation;
 use App\Repositories\InvestmentRecommendationRepository;
+use App\Repositories\PensionRecommendationRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class InvestmentRecommendationController extends Controller
 {
     protected InvestmentRecommendationRepository $investmentRecommendationRepository;
+    protected PensionRecommendationRepository $pensionRecommendationRepository;
 
-    public function __construct(InvestmentRecommendationRepository $investmentRecommendationRepository)
+    public function __construct(InvestmentRecommendationRepository $investmentRecommendationRepository, PensionRecommendationRepository $pensionRecommendationRepository)
     {
         $this->investmentRecommendationRepository = $investmentRecommendationRepository;
+        $this->pensionRecommendationRepository = $pensionRecommendationRepository;
     }
 
     public function show(Client $client, Request $request)
@@ -31,6 +34,13 @@ class InvestmentRecommendationController extends Controller
         } else {
             $investmentRecommendation = InvestmentRecommendation::where('id',$client->investment_recommendation_id)->first();
             $this->investmentRecommendationRepository->setInvestmentRecommendation($investmentRecommendation);
+        }
+
+        if(!$client->pension_recommendation_id) {
+            $newPension = $this->pensionRecommendationRepository->createInitialPensionRecommendationForClient();
+
+            $client->update(['pension_recommendation_id' => $newPension->id]);
+            $client->save();
         }
 
         $section = $request->section ?? 1;
