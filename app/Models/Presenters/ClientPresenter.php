@@ -212,7 +212,6 @@ class ClientPresenter extends BasePresenter
                         'fund_type'=> $item->defined_contribution_pension->fund_type,
                         'current_fund_value' => $item->defined_contribution_pension->current_fund_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_fund_value): null,
                         'current_transfer_value' => $item->defined_contribution_pension->current_transfer_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_transfer_value): null,
-                        'frequency' => $item->defined_contribution_pension->frequency,
 
                     ];
                 }),
