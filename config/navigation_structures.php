@@ -473,7 +473,6 @@ return [
                         'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
                         'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean',
-                        'expenditures.*.belongs_to' => 'sometimes|nullable',
                     ],
                     'messages' => []
                 ],
@@ -520,7 +519,6 @@ return [
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
                         'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric',
-                        'expenditures.*.belongs_to' => 'sometimes|nullable',
                     ],
                     'messages' => []
                 ],

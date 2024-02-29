@@ -33,6 +33,8 @@ class ClientPresenter extends BasePresenter
     {
         if($this->model->client_two)
         {
+            $fixed_assets_multiple = $this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id')->merge($this->model->client_two->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'));
+            $savings_assets_multiple = $this->model->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id')->merge($this->model->client_two->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id'));
             return match ($step . '.' . $section) {
                 '1.1' => [
                     $this->model->io_id => [
@@ -205,17 +207,17 @@ class ClientPresenter extends BasePresenter
                     }))->groupBy('expenditure_type')
                 ],
                 '3.1' => [
-                    'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'))->get()->map(function ($asset){
+                    'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$fixed_assets_multiple)->get()->map(function ($asset){
                         return $asset->presenter()->formatForFactFind('fixed');
                     }))
                 ],
                 '3.2' => [
-                    'saving_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id'))->get()->map(function ($asset){
+                    'saving_assets' => collect(Asset::with('clients')->whereIn('id',$savings_assets_multiple)->get()->map(function ($asset){
                         return $asset->presenter()->formatForFactFind('savings');
                     }))
                 ],
                 '3.3' => [
-                    'investments' => $this->model->other_investments->map(function ($investment){
+                    'investments' => $this->model->other_investments->merge($this->model->client_two->other_investments)->map(function ($investment){
                         return [
                             'id' => $investment->id,
                             'owner' => $investment->client->io_id,
@@ -238,7 +240,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '3.4' => [
-                    'dc_pensions' => PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
+                    'dc_pensions' => PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->whereIn('client_id',[$this->model->id,$this->model->client_two->id])->get()->map(function ($item){
                         return [
                             'id' => $item->id,
                             'pt' => 'DC',
@@ -269,7 +271,7 @@ class ClientPresenter extends BasePresenter
 
                         ];
                     }),
-                    'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
+                    'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$this->model->id,$this->model->client_two->id])->get()->map(function ($item){
                         return [
                             'id' => $item->id,
                             'pt' => 'DB',
@@ -287,7 +289,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '3.5' => [
-                    'schemes' => $this->model->share_save_schemes->map(function ($item){
+                    'schemes' => $this->model->share_save_schemes->merge($this->model->client_two->share_save_schemes)->map(function ($item){
                         return [
                             'id' => $item->id,
                             'owner' => $item->client->io_id,
@@ -300,7 +302,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '3.6' => [
-                    'capitals' => $this->model->lump_sum_capitals->map(function ($item){
+                    'capitals' => $this->model->lump_sum_capitals->merge($this->model->client_two->share_save_schemes)->map(function ($item){
                         return [
                             'id' => $item->id,
                             'owner' => $item->clients->count() > 1 ? 'Both' : $item->clients->first()->io_id,
@@ -313,7 +315,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '4.1' => [
-                    'liabilities' => $this->model->liabilities->map(function ($liability){
+                    'liabilities' => $this->model->liabilities->merge($this->model->client_two->liabilities)->map(function ($liability){
                         return [
                             'id' => $liability->id,
                             'owner' => $liability->clients->count() > 1 ? 'Both' : $liability->clients->first()->io_id,
