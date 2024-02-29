@@ -171,6 +171,7 @@ class ClientRepository extends BaseRepository
 
            if($percents != null)
            {
+               $addr->clients()->detach();
                collect($percents)->each(function ($item,$key) use ($addr){
                    $client = Client::with('addresses')->where('io_id',$key)->first();
                    if(collect($client->addresses->pluck('id'))->doesntContain($addr->id))

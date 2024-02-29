@@ -223,10 +223,13 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
             ],
             '1.4' => [
-                'relationship_type' => config('enums.dependent.relationship_type')
+                'relationship_type' => config('enums.dependent.relationship_type'),
+                'owners' => $this->getOwnersForForm(true),
             ],
             '1.5' => [
-                'employment_status' => config('enums.employment.employment_status')
+                'employment_status' => config('enums.employment.employment_status'),
+                'owners' => $this->getOwnersForForm(true),
+
             ],
             '2.1' => [
                 'income_types' => config('enums.incomes.income_type'),

@@ -21,7 +21,8 @@ const props = defineProps({
         type: Object,
         default: {
             enums: {
-                employment_status: []
+                employment_status: [],
+                owners: [],
             },
             model: {
                 employment_details: [{
@@ -30,6 +31,7 @@ const props = defineProps({
                     occupation: null,
                     employer: null,
                     start_at: null,
+                    employee: null,
                     end_at: null
                 }]
             },
@@ -46,10 +48,17 @@ function saveDate(index, value, dateId) {
 }
 
 function addEmployment() {
+
+    let employee = null;
+    if(Object.keys(props.formData.enums.owners).length == 1){
+        employee = Object.keys(props.formData.enums.owners)[0]
+    }
+
     stepForm.employment_details.push({
         employment_status: '-',
         intended_retirement_age: null,
         occupation: null,
+        employee: employee,
         employer: null,
         start_at: null,
         end_at: null
@@ -120,9 +129,20 @@ onMounted(() => {
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.employment_status">{{ stepForm.errors.employment_status }}</p>
                 </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="employment_status" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Employee</label>
+                    <select @change="autosaveLocally()" v-model="employment_detail.employee"
+                            id="employment_status" name="employment_status"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="employment_status" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(name, id) in formData.enums.owners">{{
+                                name }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.employment_status">{{ stepForm.errors.employment_status }}</p>
+                </div>
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="intended_retirement_age" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Intended Retirement Age </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md w-20">
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 ">
                         <input @change="autosaveLocally()" v-model="employment_detail.intended_retirement_age" type="text" name="intended_retirement_age" id="intended_retirement_age"  class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="Age"/>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.intended_retirement_age">{{ stepForm.errors.intended_retirement_age }}</p>

@@ -121,11 +121,26 @@ class ClientPresenter extends BasePresenter
                     ],
                 ],
                 '1.4' => [
-                    'dependents' => collect($this->model->dependents->map(function ($dependent){
+                    'dependents' => collect($this->model->dependents->merge($this->model->client_two->dependents)->map(function ($dependent){
                         return [
                             'dependent_id' => $dependent->id,
                             'name' => $dependent->name,
-                            'relationship_type' => $dependent->pivot->relationship_type,
+                            'relationships' => [
+                                $this->model->io_id => [
+                                    'is_related' => $this->model->dependents->contains($dependent->id),
+                                    'relationship_type' =>
+                                        $this->model->dependents->contains($dependent->id) ?
+                                            $dependent->clients()->where('clients.id',$this->model->id)->first()->pivot->relationship_type
+                                            : null
+                                ],
+                                $this->model->client_two->io_id => [
+                                    'is_related' => $this->model->client_two->dependents->contains($dependent->id),
+                                    'relationship_type' =>
+                                        $this->model->client_two->dependents->contains($dependent->id) ?
+                                            $dependent->clients()->where('clients.id',$this->model->client_two->id)->first()->pivot->relationship_type
+                                            : null
+                                ]
+                            ],
                             'born_at' => $dependent->born_at,
                             'financial_dependent' => (bool)  $dependent->financial_dependent,
                             'financially_dependent_until' => $dependent->financially_dependent_until,
@@ -134,32 +149,18 @@ class ClientPresenter extends BasePresenter
                     }))
                 ],
                 '1.5' => [
-                    $this->model->io_id => [
-                        'employment_details' => collect($this->model->employment_details->map(function ($employment){
-                            return [
-                                'id' => $employment->id,
-                                'employment_status' => $employment->employment_status,
-                                'intended_retirement_age' => $employment->intended_retirement_age,
-                                'occupation' => $employment->occupation,
-                                'employer' => $employment->employer,
-                                'start_at' => $employment->start_at,
-                                'end_at' => $employment->end_at
-                            ];
-                        }))
-                    ],
-                    $this->model->client_two->io_id => [
-                        'employment_details' => collect($this->model->client_two->employment_details->map(function ($employment){
-                            return [
-                                'id' => $employment->id,
-                                'employment_status' => $employment->employment_status,
-                                'intended_retirement_age' => $employment->intended_retirement_age,
-                                'occupation' => $employment->occupation,
-                                'employer' => $employment->employer,
-                                'start_at' => $employment->start_at,
-                                'end_at' => $employment->end_at
-                            ];
-                        }))
-                    ]
+                    'employment_details' => collect($this->model->employment_details->merge($this->model->client_two->employment_details)->map(function ($employment){
+                        return [
+                            'id' => $employment->id,
+                            'employee' => $employment->client->io_id,
+                            'employment_status' => $employment->employment_status,
+                            'intended_retirement_age' => $employment->intended_retirement_age,
+                            'occupation' => $employment->occupation,
+                            'employer' => $employment->employer,
+                            'start_at' => $employment->start_at,
+                            'end_at' => $employment->end_at
+                        ];
+                    }))
                 ],
                 '2.1' => [
                     'incomes' => collect($this->model->incomes)->map(function ($income){
@@ -378,7 +379,8 @@ class ClientPresenter extends BasePresenter
                             'country' => '0'.$address['country'], //hack to allow reordering of JS objects with string keys
                             'residency_status' => $address['residency_status'],
                             'date_from' => $address['date_from'],
-                            //add owner?
+                            'owner' =>  $address->clients->first()->io_id ?? $this->model->io_id,
+                            'percent_ownership' => $address->clients->first()->pivot->percent_ownership ?? 100
                         ];})),
                     $this->model->io_id => [
                         'phone_number' => $this->model->phone_number,
@@ -391,7 +393,15 @@ class ClientPresenter extends BasePresenter
                         return [
                             'dependent_id' => $dependent->id,
                             'name' => $dependent->name,
-                            'relationship_type' => $dependent->pivot->relationship_type,
+                            'relationships' => [
+                                $this->model->io_id => [
+                                    'is_related' => $this->model->dependents->contains($dependent->id),
+                                    'relationship_type' =>
+                                        $this->model->dependents->contains($dependent->id) ?
+                                            $dependent->clients()->where('clients.id',$this->model->id)->first()->pivot->relationship_type
+                                            : null
+                                ],
+                            ],
                             'born_at' => $dependent->born_at,
                             'financial_dependent' => (bool)  $dependent->financial_dependent,
                             'financially_dependent_until' => $dependent->financially_dependent_until,
@@ -400,19 +410,18 @@ class ClientPresenter extends BasePresenter
                     }))
                 ],
                 '1.5' => [
-                    $this->model->io_id => [
-                        'employment_details' => collect($this->model->employment_details->map(function ($employment){
-                            return [
-                                'id' => $employment->id,
-                                'employment_status' => $employment->employment_status,
-                                'intended_retirement_age' => $employment->intended_retirement_age,
-                                'occupation' => $employment->occupation,
-                                'employer' => $employment->employer,
-                                'start_at' => $employment->start_at,
-                                'end_at' => $employment->end_at
-                            ];
-                        }))
-                    ]
+                    'employment_details' => collect($this->model->employment_details->map(function ($employment){
+                        return [
+                            'id' => $employment->id,
+                            'employee' => $employment->client->io_id,
+                            'employment_status' => $employment->employment_status,
+                            'intended_retirement_age' => $employment->intended_retirement_age,
+                            'occupation' => $employment->occupation,
+                            'employer' => $employment->employer,
+                            'start_at' => $employment->start_at,
+                            'end_at' => $employment->end_at
+                        ];
+                    }))
                 ],
                 '2.1' => [
                     'incomes' => collect($this->model->incomes)->map(function ($income){

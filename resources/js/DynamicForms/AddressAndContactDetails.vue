@@ -125,6 +125,20 @@ onBeforeMount(()=>{
     }
 })
 
+function resetOwnerPercentages(index)
+{
+    if(Object.keys(filteredEntries.value).length > 1)
+    {
+        if( stepForm.addresses[index].owner != 'Both')
+        {
+            let enteredPercent = stepForm.addresses[index].percent_ownership[stepForm.addresses[index].owner];
+            stepForm.addresses[index].percent_ownership = {};
+            stepForm.addresses[index].percent_ownership[stepForm.addresses[index].owner] = enteredPercent;
+            autosaveLocally();
+        }
+    }
+}
+
 function autosavePercentOwnership()
 {
     if(Object.keys(filteredEntries.value).length > 1)
@@ -266,19 +280,20 @@ async function autosaveLocally(){
                         <option :id="id" :value="id" v-for="(country, id) in  props.formData.enums.countries">{{ country }}</option>
                     </select>
                 </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="residency_status" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Ownership</label>
-                    <select @change="autosaveLocally()" v-model="address.residency_status" id="residency_status" name="residency_status" class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="residency_status" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(residency_status, id) in formData.enums.residency_status">{{ residency_status }}</option>
-                    </select>
-                </div>
+
                 <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4 ">
-                    <h4 class="col-span-6 text-xl font-bold pt-2"> Ownership (%) </h4>
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Ownership </h4>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label for="residency_status" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Ownership Status</label>
+                        <select @change="autosaveLocally()" v-model="address.residency_status" id="residency_status" name="residency_status" class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="residency_status" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(residency_status, id) in formData.enums.residency_status">{{ residency_status }}</option>
+                        </select>
+                    </div>
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                         <label for="owner"
                                class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
-                        <select  v-model="address.owner"
+                        <select @change="resetOwnerPercentages(index)" v-model="address.owner"
                                 id="owner" name="owner"
                                 class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="owner" :value="null">-</option>
@@ -300,7 +315,7 @@ async function autosaveLocally(){
                         <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">{{formData.enums.owners[address.owner]}} (%)</label>
                         <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
 
-                            <input disabled v-model="address.percent_ownership[address.owner]" value="100" type="number" min="0" max="100" class="cursor-not-allowed block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                            <input @change="autosaveLocally"  v-model="address.percent_ownership[address.owner]" value="100" type="number" min="0" max="100" class="cursor-not-allowed block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
 
 
                         </div>

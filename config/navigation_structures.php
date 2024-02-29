@@ -161,65 +161,62 @@ return [
                         ],
                         'messages' => []
                     ],
-//                    4 => [
-//                        'name' => 'Family',
-//                        'fields' => [
-//                            'dependents' => [
-//                                'dependents.dependent_id',
-//                                'dependents.name',
-//                                'dependents.relationship_type',
-//                                'dependents.born_at',
-//                                'dependents.financially_dependent_until',
-//                                'dependents.financial_dependent',
-//                                'dependents.is_living_with_clients'
-//                            ]
-//                        ],
-//                        'rules' => [
-//                            'dependents' => 'sometimes|nullable|array',
-//                            'dependents.*.name' => 'sometimes|nullable|string',
-//                            'dependents.*.dependent_id' => 'sometimes|nullable',
-//                            'dependents.*.relationship_type' => [
-//                                'required',
-//                                'numeric',
-//                                'integer',
-//                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
-//                            ],
-//                            'dependents.*.born_at' => 'sometimes|nullable|date',
-//                            'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
-//                            'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
-//                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
-//                        ],
-//                        'messages' => []
-//                    ],
-//                    5 => [
-//                        'name' => 'Employment Details',
-//                        'fields' => [
-//                            "employment_details.id",
-//                            "employment_details.employment_status",
-//                            "employment_details.intended_retirement_age",
-//                            "employment_details.occupation",
-//                            "employment_details.employer",
-//                            "employment_details.start_at",
-//                            "employment_details.end_at"
-//                        ],
-//                        'rules' => [
-//                            'employment_details' => 'sometimes|nullable|array',
-//                            'employment_details.*.id' => 'sometimes|nullable|integer',
-//                            'employment_details.*.employment_status' => [
-//                                'sometimes',
-//                                'nullable',
-//                                'numeric',
-//                                'integer',
-//                                Rule::in(array_keys((config('enums.employment.employment_status'))))
-//                            ],
-//                            'employment_details.*.intended_retirement_age' => 'sometimes|nullable|integer',
-//                            'employment_details.*.occupation' => 'sometimes|nullable|string',
-//                            'employment_details.*.employer' => 'sometimes|nullable|string',
-//                            'employment_details.*.start_at' => 'sometimes|nullable|date',
-//                            'employment_details.*.end_at' => 'sometimes|nullable|date'
-//                        ],
-//                        'messages' => []
-//                    ],
+                    4 => [
+                        'name' => 'Family',
+                        'fields' => [
+                            'dependents' => [
+                                'dependents.dependent_id',
+                                'dependents.name',
+                                'dependents.relationship_type',
+                                'dependents.born_at',
+                                'dependents.financially_dependent_until',
+                                'dependents.financial_dependent',
+                                'dependents.is_living_with_clients'
+                            ]
+                        ],
+                        'rules' => [
+                            'dependents' => 'sometimes|nullable|array',
+                            'dependents.*.name' => 'sometimes|nullable|string',
+                            'dependents.*.dependent_id' => 'sometimes|nullable',
+                            'dependents.*.relationships' => 'sometimes|nullable|array',
+                            'dependents.*.born_at' => 'sometimes|nullable|date',
+                            'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
+                            'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
+                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean',
+                            'dependents.*.related_to' => 'sometimes|nullable',
+                        ],
+                        'messages' => []
+                    ],
+                    5 => [
+                        'name' => 'Employment Details',
+                        'fields' => [
+                            "employment_details.id",
+                            "employment_details.employment_status",
+                            "employment_details.intended_retirement_age",
+                            "employment_details.occupation",
+                            "employment_details.employer",
+                            "employment_details.start_at",
+                            "employment_details.end_at"
+                        ],
+                        'rules' => [
+                            'employment_details' => 'sometimes|nullable|array',
+                            'employment_details.*.id' => 'sometimes|nullable|integer',
+                            'employment_details.*.employment_status' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.employment.employment_status'))))
+                            ],
+                            'employment_details.*.intended_retirement_age' => 'sometimes|nullable|integer',
+                            'employment_details.*.occupation' => 'sometimes|nullable|string',
+                            'employment_details.*.employer' => 'sometimes|nullable|string',
+                            'employment_details.*.start_at' => 'sometimes|nullable|date',
+                            'employment_details.*.end_at' => 'sometimes|nullable|date',
+                            'employment_details.*.employee' => 'sometimes|nullable',
+                        ],
+                        'messages' => []
+                    ],
                 ],
             ],
         2 =>  [
