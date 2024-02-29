@@ -33,6 +33,7 @@ const props = defineProps({
                     currently_active: true,
                     known_end_date: false,
                     starts_at: null,
+                    belongs_to: null,
                     ends_at: null
                 }]
             },
@@ -59,6 +60,7 @@ function addExpenditure(typeIndex) {
             currently_active: true,
             known_end_date: false,
             starts_at: null,
+            belongs_to: null,
             ends_at: null
         });
     } else {
@@ -70,6 +72,7 @@ function addExpenditure(typeIndex) {
             currently_active: true,
             known_end_date: false,
             starts_at: null,
+            belongs_to: null,
             ends_at: null
         }]
     }

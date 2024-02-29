@@ -163,7 +163,7 @@ class ClientPresenter extends BasePresenter
                     }))
                 ],
                 '2.1' => [
-                    'incomes' => collect($this->model->incomes)->map(function ($income){
+                    'incomes' => collect($this->model->incomes->merge($this->model->client_two->incomes))->map(function ($income){
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
@@ -173,11 +173,11 @@ class ClientPresenter extends BasePresenter
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,
-                            'belongs_to' => $income->pivot->client_id,
+                            'belongs_to' => $income->clients->count() > 1 ? 'Both' : $income->clients->first()->io_id,
                             'record_exists' => $income->pivot->client_id ? true : false,
                         ];
                     }),
-                    'useIncome' => count($this->model->incomes) > 0 ? true : false,
+                    'useIncome' => count(collect($this->model->incomes->merge($this->model->client_two->incomes))) > 0 ? true : false,
                     'total' => count($this->model->incomes) > 0 ? null : $this->model->total_income_basic
                 ],
                 '2.2' => [

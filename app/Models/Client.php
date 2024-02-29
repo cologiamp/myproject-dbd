@@ -235,7 +235,7 @@ class Client extends Model
                 'income_types' => config('enums.incomes.income_type'),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'belongs_to' => $this->getBelongsToEnums()
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.2' => [
                 'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),

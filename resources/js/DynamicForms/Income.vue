@@ -24,7 +24,7 @@ const props = defineProps({
                 income_types: [],
                 frequencies: [],
                 per_year_frequencies: [],
-                belongs_to: []
+                owners: []
             },
             model: {
                 useIncome: true,
@@ -333,7 +333,7 @@ function changeToCurrency(amount) {
                     <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="belongs_to" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.belongs_to">{{ belongs_to }}</option>
+                        <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.owners">{{ belongs_to }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
                         stepForm.errors.belongs_to }}</p>

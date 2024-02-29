@@ -260,7 +260,7 @@ return [
                             ],
                             'incomes.*.ends_at' => 'sometimes|nullable|date',
                             'incomes.*.starts_at' => 'sometimes|nullable|date',
-                            'incomes.*.belongs_to' => 'sometimes|nullable|integer',
+                            'incomes.*.belongs_to' => 'sometimes|nullable',
                             'incomes.*.record_exists' => 'sometimes|nullable|boolean',
 
                             'incomes.*.is_primary' => 'sometimes|nullable|boolean',
