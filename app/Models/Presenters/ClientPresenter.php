@@ -182,25 +182,25 @@ class ClientPresenter extends BasePresenter
                 ],
                 '2.2' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_essential_expenditure')->get())->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.3' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get())->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.4' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get())->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.5' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('liability_expenditure')->get())->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],

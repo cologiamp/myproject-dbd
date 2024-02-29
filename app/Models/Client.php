@@ -240,22 +240,26 @@ class Client extends Model
             '2.2' => [
                 'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.3' => [
                 'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.4' => [
                 'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.5' => [
                 'expenditure_types' => config('enums.expenditures.liability_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '3.1' => [
                 'owners' => $this->getOwnersForForm(),

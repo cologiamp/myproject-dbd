@@ -26,7 +26,6 @@ class ExpenditurePresenter extends BasePresenter
             'currently_active' => $this->model->starts_at ? false : true,
             'known_end_date' => $this->model->ends_at ? true : false,
             'belongs_to' => $this->model->clients->count() > 1 ? 'Both' : $this->model->clients->first()->io_id,
-            //add belongs to?
         ];
     }
 }

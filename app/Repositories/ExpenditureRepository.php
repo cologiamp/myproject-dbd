@@ -79,7 +79,7 @@ class ExpenditureRepository extends BaseRepository
 
         $this->expenditure->delete();
 
-        
+
     }
 
     public function createOrUpdateExpenditureDetails(mixed $data):void
@@ -107,6 +107,7 @@ class ExpenditureRepository extends BaseRepository
                     );
 
                     $model->update($formatExpenditureData);
+                    $model->clients()->detach();
 
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -119,16 +120,24 @@ class ExpenditureRepository extends BaseRepository
                 $model = $this->registerExpenditure($expenditure);
             }
 
-            $client = Client::with('expenditures')->where('id', $this->client->id)->first();
-
-            if(collect($client->expenditures->pluck('id'))->doesntContain($model->id)){
-                $this->client->expenditures()->attach($model->id);
+            if($expenditure['belongs_to'] == null)
+            {
+                $expenditure['belongs_to'] = $this->client->io_id;
+            }
+            if($expenditure['belongs_to'] == 'Both'){
+                $client = $this->client->id;
+                $client2 = $this->client->client_two->id;
+                $model->clients()->attach([$client,$client2]);
+            }
+            else{
+                $client = Client::where('io_id',$expenditure['belongs_to'])->first();
+                $model->clients()->attach($client->id);
             }
 
         });
     }
 
-    public function registerExpenditure(array $expenditure) 
+    public function registerExpenditure(array $expenditure)
     {
         $expenditureData = array(
             'type' => $expenditure['expenditure_type'],
