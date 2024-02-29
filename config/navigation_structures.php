@@ -844,6 +844,23 @@ return [
                 ],
                 'next_meeting_date' => 'sometimes|nullable|date',
             ]
+        ],
+        2 => [
+            'name' => 'Objectives',
+            'rules' => [
+                'id' => 'sometimes|nullable|numeric',
+                'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'is_primary' => 'sometimes|nullable|boolean',
+                'type' => 'sometimes|nullable|numeric',
+                'objective' => 'sometimes|nullable|numeric',
+                'objective_custom' => 'sometimes|nullable|string',
+                'what_for' => 'sometimes|nullable|numeric',
+                'what_for_custom' => 'sometimes|nullable|string'
+            ]
+        ],
+        3 => [
+            'name' => 'Call to Action',
+            'rules' => []
         ]
     ]
 ];

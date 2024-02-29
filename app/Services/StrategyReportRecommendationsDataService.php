@@ -5,8 +5,10 @@ namespace App\Services;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\Client;
+use App\Repositories\ClientRepository;
 use App\Models\StrategyReportRecommendation;
 use App\Repositories\StrategyReportRecomRepository;
+use App\Repositories\StrategyRecomObjectivesRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,10 +18,17 @@ use Throwable;
 class StrategyReportRecommendationsDataService
 {
     use FormatsCurrency;
+    protected ClientRepository $clientRepository;
     protected StrategyReportRecomRepository $strategyReportRecomRepository;
-    public function __construct(StrategyReportRecomRepository $strategyReportRecomRepository)
+    protected StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository;
+    public function __construct(
+        ClientRepository $clientRepository,
+        StrategyReportRecomRepository $strategyReportRecomRepository,
+        StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository)
     {
+        $this->clientRepository = $clientRepository;
         $this->strategyReportRecomRepository = $strategyReportRecomRepository;
+        $this->strategyRecomObjectivesRepository = $strategyRecomObjectivesRepository;
     }
 
     //get the data for a single section of a factfind from a single client
@@ -53,6 +62,7 @@ class StrategyReportRecommendationsDataService
      */
     public function store(Client $client, int $step, array $validatedData): true
     {
+        $this->clientRepository->setClient($client);
         $this->strategyReportRecomRepository->setStrategyReportRecom(StrategyReportRecommendation::where('id', $client->strategy_report_recommendation_id)->first());
         $this->{"saveTab" . $step}($validatedData);
         return true;
@@ -78,5 +88,24 @@ class StrategyReportRecommendationsDataService
             dd($e);
         }
 
+    }
+
+    private function saveTab2(array $validatedData):void
+    {
+        try {
+            $this->strategyRecomObjectivesRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
+            $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
+
+            if (array_key_exists('id',$validatedData)) {
+                $this->strategyRecomObjectivesRepository->update($validatedData);
+            } else {
+                $validatedData['strategy_report_recommendation_id'] = $recommendation->id;
+                $this->strategyRecomObjectivesRepository->create($validatedData);
+            }
+        }
+        catch(Throwable $e){
+            Log::warning($e);
+            dd($e);
+        }
     }
 }

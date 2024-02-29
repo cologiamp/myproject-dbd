@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\StrategyReportRecommendation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\ClientNotFoundException;
 
 class StrategyReportRecomRepository extends BaseRepository
 {
@@ -19,7 +20,13 @@ class StrategyReportRecomRepository extends BaseRepository
         $this->strategyReportRecommendation = $strategyReportRecommendation;
     }
 
-
+    public function getStrategyReportRecom() : StrategyReportRecommendation
+    {
+        if($this->strategyReportRecommendation){
+            return $this->strategyReportRecommendation;
+        }
+        throw new ClientNotFoundException();
+    }
 
     //Create the model from either a HTPT Request or from an array
     public function create(mixed $input): StrategyReportRecommendation

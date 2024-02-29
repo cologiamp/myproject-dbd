@@ -9,6 +9,7 @@ use App\Models\Presenters\StrategyReportRecommendationsPresenter;
 class StrategyRecomObjectives extends Model
 {
     protected $guarded = [];
+    protected $table = 'strategy_recommendation_objectives';
 
     public function strategy_report_recommendation():BelongsTo
     {

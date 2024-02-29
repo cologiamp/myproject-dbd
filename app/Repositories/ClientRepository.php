@@ -1,8 +1,6 @@
 <?php
 namespace App\Repositories;
 
-
-
 use App\Concerns\ParsesIoClientData;
 use App\Exceptions\ClientNotFoundException;
 use App\Http\Requests\BaseClientRequest;
