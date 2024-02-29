@@ -118,7 +118,7 @@ class Client extends Model
 
     public function addresses():BelongsToMany
     {
-        return $this->belongsToMany(Address::class);
+        return $this->belongsToMany(Address::class)->withPivot('percent_ownership');
     }
 
     public function health():HasOne
@@ -219,7 +219,8 @@ class Client extends Model
                 'residency_status' => collect(config('enums.address.residency_status_public')),
                 'countries' => collect(collect(config('enums.address.country')))->mapWithKeys(function ($item, $key){
                     return ['0'.$key => $item];//hack to allow reordering of JS objects with string keys
-                })
+                }),
+                'owners' => $this->getOwnersForForm(),
             ],
             '1.4' => [
                 'relationship_type' => config('enums.dependent.relationship_type')

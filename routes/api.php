@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ShareSaveSchemeController;
 use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+use App\Http\Controllers\Api\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectives
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
+    Route::delete('/addresses/{address}',[ClientController::class,'deleteAddress']);
     Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
     Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);

@@ -153,6 +153,8 @@ return [
                                 Rule::in(array_keys((config('enums.address.residency_status'))))
                             ],
                             'addresses.*.date_from' => 'sometimes|nullable|date',
+                            'addresses.*.percent_ownership' => 'sometimes|nullable',
+                            'addresses.*.owner' => 'sometimes|nullable',
                             'phone_number' => 'sometimes|nullable|max:20',
                             'mobile_number' => 'sometimes|nullable|max:20',
                             'email_address' => 'sometimes|nullable|max:120'

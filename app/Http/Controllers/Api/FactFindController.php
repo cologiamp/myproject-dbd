@@ -57,7 +57,6 @@ class FactFindController extends Controller
 
         //somehow extract and validate the separate steps for the data
         $daddyRequest = $request->all();
-
         collect($daddyRequest)->each(function ($item, $key) use (&$daddyRequest, $ffsds,$step,$section) {
 
             if(is_numeric($key))
@@ -75,8 +74,8 @@ class FactFindController extends Controller
                     $section,
                     $ffsds->validated($step, $section, $item)
                 );
+                unset($daddyRequest[$key]);
             }
-            unset($daddyRequest[$key]);
         });
         //validate the rest if it has other keys
         try{

@@ -105,8 +105,10 @@ class ClientPresenter extends BasePresenter
                             'country' => '0'.$address['country'], //hack to allow reordering of JS objects with string keys
                             'residency_status' => $address['residency_status'],
                             'date_from' => $address['date_from'],
-                            //add owner?
-                        ];})),
+                            'owner' => $address->clients->count() > 1 ? 'Both' : $address->clients->first()->io_id,
+                            'percent_ownership' => $address->clients->mapWithKeys(fn($i) => [$i->io_id => $i->pivot->percent_ownership]),
+                        ];
+                    })),
                     $this->model->io_id => [
                         'phone_number' => $this->model->phone_number,
                         'mobile_number' => $this->model->mobile_number,
