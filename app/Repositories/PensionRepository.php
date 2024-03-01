@@ -140,6 +140,9 @@ class PensionRepository extends BaseRepository
         if(array_key_exists('crystallised_percentage',$item)) {
             $db->crystallised_percentage = $item['crystallised_percentage'];
         }
+        if(array_key_exists('frequency',$item)) {
+            $db->frequency = $item['frequency'];
+        }
 
         else{
             $db->retained_value = null;

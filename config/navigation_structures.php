@@ -619,6 +619,13 @@ return [
                             'dc_pensions.*.current_fund_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.fund_name' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.current_transfer_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.frequency'))))
+                            ],
                     ],
                     'messages' => []
                 ],
