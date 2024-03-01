@@ -563,7 +563,6 @@ class FactFindSectionDataService
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
-
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -678,6 +677,7 @@ class FactFindSectionDataService
 
         $lscr = App::make(LumpSumCapitalRepository::class);
         try{
+            $lscr->setClient($this->cr->getClient());
             $lscr->createOrUpdateCapitals($capitals);
         }
         catch(Throwable $e){

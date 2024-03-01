@@ -302,7 +302,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '3.6' => [
-                    'capitals' => $this->model->lump_sum_capitals->merge($this->model->client_two->share_save_schemes)->map(function ($item){
+                    'capitals' => $this->model->lump_sum_capitals->merge($this->model->client_two->lump_sum_capitals)->map(function ($item){
                         return [
                             'id' => $item->id,
                             'owner' => $item->clients->count() > 1 ? 'Both' : $item->clients->first()->io_id,
