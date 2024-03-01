@@ -27,7 +27,7 @@ const props = defineProps({
                 pension_statuses: [],
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
-                frequency: [],
+                frequencies: []
             },
             model: {
                 dc_pensions: [{
