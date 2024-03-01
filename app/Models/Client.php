@@ -291,7 +291,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
             ],
             '4.1' => [
-                'owners' => $this->getOwnersForForm(true),
+                'owners' => $this->getOwnersForForm(),
                 'types' => config('enums.liabilities.types_public'),
                 'repayment_or_interest' => config('enums.liabilities.repayment_or_interest'),
             ],
