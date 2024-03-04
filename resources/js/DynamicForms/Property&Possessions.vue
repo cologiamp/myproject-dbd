@@ -29,8 +29,8 @@ const props = defineProps({
                 fixed_assets: [{
                     id: null,
                     owner: null,
-                    asset_type: null,
                     percent_ownership: [],
+                    asset_type: null,
                     description: null,
                     purchased_at: null,
                     original_value: null,
@@ -133,6 +133,24 @@ function removeAsset(index) {
     stepForm.fixed_assets.splice(index, 1);
 }
 
+
+function resetOwnerPercentages(index)
+{
+    if( stepForm.fixed_assets[index].owner != 'Both')
+    {
+        let enteredPercent = stepForm.fixed_assets[index].percent_ownership[stepForm.fixed_assets[index].owner];
+        if(!enteredPercent)
+        {
+            enteredPercent = 100;
+        }
+        stepForm.fixed_assets[index].percent_ownership = {};
+        stepForm.fixed_assets[index].percent_ownership[stepForm.fixed_assets[index].owner] = enteredPercent;
+        autosaveLocally();
+    }
+}
+
+
+
 </script>
 
 <template>
@@ -160,36 +178,44 @@ function removeAsset(index) {
                                 assetType }}</option>
                     </select>
                 </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="owner"
-                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
-                    <select @change="autosaveLocally()" v-model="asset.owner"
-                            id="asset_type" name="asset_type"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="asset_type" :value="null">-</option>
-                        <option :id="id" :value="id"  v-for="(owner, id) in formData.enums.owners">
-                            {{owner}}
-                        </option>
-                    </select>
-                </div>
-                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2" v-if="asset.owner === 'Both'">
-                    <div v-for="(owner,io) in ownersNotBoth">
-                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">{{owner}}}</label>
-                        <div class="mt-2">
-                            <input @change="autosaveLocally()" v-model="asset.percent_ownership[io]" type="number" min="0" max="100" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4 ">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Ownership </h4>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label for="owner"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Owner</label>
+                        <select @change="resetOwnerPercentages(index)" v-model="asset.owner"
+                                id="owner" name="owner"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="owner" :value="null">-</option>
+                            <option :id="id" :value="id"  v-for="(owner, id) in formData.enums.owners">
+                                {{owner}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4" >
+
+                    </div>
+                    <div v-if="asset.owner === 'Both'" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-for="(owner,io) in ownersNotBoth">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">{{owner[1]}} (%)</label>
+                        <div class="mt-2 w-full">
+                            <input @change="autosaveLocally" placeholder="%" v-model="asset.percent_ownership[owner[0]]" type="number" min="0" max="100" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none  w-full">
                         </div>
                     </div>
-                </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-else-if="asset.owner">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Percentage Ownership: {{formData.enums.owners[asset.owner]}}</label>
-                    <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-else-if="asset.owner">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">{{formData.enums.owners[asset.owner]}} (%)</label>
+                        <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
 
-                         <input disabled v-model="asset.percent_ownership[asset.owner]" value="100" type="number" min="0" max="100" class="cursor-not-allowed block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                            <input @change="autosaveLocally"  v-model="asset.percent_ownership[asset.owner]" value="100" type="number" min="0" max="100" class="cursor-not-allowed block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
 
+
+                        </div>
 
                     </div>
-
                 </div>
+
+
+
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Description</label>
                     <div class="mt-2">

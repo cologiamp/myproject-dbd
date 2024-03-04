@@ -2,9 +2,52 @@
 
 namespace App\Concerns;
 
+use App\Models\Client;
+use App\Repositories\ClientRepository;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 trait ParsesIoClientData{
+
+    public function fetchAndHandleClient($client, string $io_id = null):void
+    {
+        $cr = App::make(ClientRepository::class);
+
+        if($client != null)
+        {
+            $io_id = $client->io_id;
+        }
+
+        $dis = App::make(\App\Services\DataIngestService::class);
+        $data = $dis->getClient($io_id);
+        $data['addresses'] = $dis->getAddresses($io_id)['items'];
+        $data['contactdetails'] = $dis->getContactDetails($io_id)['items'];
+        $data['relationships'] = $dis->getSecondaryClient($io_id, $data);
+
+        if($client == null)
+        {
+            $d2 = [
+                'io_id' => $io_id,
+                'adviser_id' => Auth::user()->id,
+            ];
+            $cr->createClient(array_merge($d2,$this->parseClientFields($data['person'])));
+            $client = Client::where('io_id',$io_id)->first();
+        }
+        $cr->setClient($client);
+
+        $cr->updateFromValidated(['io_json' => $data]);
+        //Then, update the client and connected items that we want to do so from the start.
+        $data = $this->parseClientData($data);
+
+        $cr->updateFromValidated($data['client']);
+        $cr->storeRelationships($data['relationships']);
+
+        collect($data['addresses'])->each(function ($item) use ($cr){
+            $cr->createOrUpdateAddress($item);
+        });
+    }
+
 
     /**
      * The reverse of ParseClientData. Take in a Client, return it formatted for use in IO
@@ -97,10 +140,14 @@ trait ParsesIoClientData{
         $addresses = collect($data['addresses'])->map(function ($address){
             return $this->parseAddressFields($address);
         });
-
+        if(!is_array($data))
+        {
+            $data = $data->toArray();
+        }
         return [
             'client' => $client,
-            'addresses' => $addresses
+            'addresses' => $addresses,
+            'relationships' => array_key_exists('relationships',$data) ?  $data['relationships'] : null
         ];
     }
 

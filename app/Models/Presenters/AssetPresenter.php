@@ -21,7 +21,7 @@ class AssetPresenter extends BasePresenter
             'id' => $this->model->id,
             'owner' => $this->model->clients->count() > 1 ? 'Both' : $this->model->clients->first()->io_id,
             'asset_type' => $this->model->type,
-            'is_retained' => $this->model->is_retained,
+            'is_retained' => (bool) $this->model->is_retained,
             'retained_value' =>  $this->model->retained_value != null ? $this->currencyIntToString($this->model->retained_value): null,
         ];
     }

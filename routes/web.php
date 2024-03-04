@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\SyncClientController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientDashboardController;
+use App\Http\Controllers\ClientRelationshipController;
 use App\Http\Controllers\DataIntoIoController;
 use App\Http\Controllers\FactFindController;
 use App\Http\Controllers\InvestmentRecommendationController;
@@ -47,7 +48,8 @@ Route::middleware([
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    // '2fa'
+     '2fa',
+    'is_not_c2'
 ])->group(function () {
 
 
@@ -63,6 +65,7 @@ Route::middleware([
 
     Route::name('client.')->prefix('/client/{client:io_id}/')->group(function (){
        Route::get('/dashboard',ClientDashboardController::class)->name('dashboard');
+       Route::get('/relationships/select',ClientRelationshipController::class)->name('relationships');
        Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
         Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');

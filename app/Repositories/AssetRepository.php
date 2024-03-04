@@ -92,17 +92,24 @@ class AssetRepository extends BaseRepository
 
         try {
             collect($assets)->each(function ($asset)  {
+
                 if(array_key_exists('percent_ownership',$asset))
                 {
                     $percents = $asset['percent_ownership'];
                     unset($asset['percent_ownership']);
+                    unset($asset['owner']);
                     $owner = null;
                 }
-                else{
+                elseif(array_key_exists('owner',$asset)){
                     $owner = $asset['owner'];
+                    unset($asset['percent_ownership']);
+                    unset($asset['owner']);
                     $percents = null;
                 }
-                unset($asset['owner']);
+                else{
+                    $percents = null;
+                    $owner = null;
+                }
 
                 if(array_key_exists('id', $asset) && $asset['id'] != null){
                     $model = Asset::where('id', $asset['id'])->first();
@@ -112,27 +119,43 @@ class AssetRepository extends BaseRepository
                 }
                 if($percents != null)
                 {
+                    $model->clients()->detach();
                     collect($percents)->each(function ($item,$key) use ($model){
                         $client = Client::with('assets')->where('io_id',$key)->first();
                         if(collect($client->assets->pluck('id'))->doesntContain($model->id))
                         {
                             $client->assets()->attach($model->id,['percent_ownership' => $item]);
                         }
+                        else{
+                            DB::table('asset_client')->where('asset_id',$model->id)->where('client_id',$client->id)->update(['percent_ownership'=> $item]);
+                        }
                     });
                 }
                 elseif($owner != null)
                 {
+                    $model->clients()->detach();
                     if($owner == 'Both')
                     {
-                        dd('need to handle the case where both clients own an asset');
-                    }
-                    else{
-                        $client = Client::with('assets')->where('io_id',$owner)->first();
-                        if(collect($client->assets->pluck('id'))->doesntContain($model->id))
+                        $client = $this->client;
+                        $client2 = $this->client->client_two;
+                        if($client && $client2)
                         {
-                            $client->assets()->attach($model->id);
+                            $model->clients()->attach( $client->id,['percent_ownership' => 50]);
+                            $model->clients()->attach( $client2->id,['percent_ownership' => 50]);
+                        }
+                        else{
+                            dd('both but not client two');
                         }
                     }
+                    else{
+                        //case where 100% owned by one client, no percentages
+                        $client = Client::with('assets')->where('io_id',$owner)->first();
+                        $client->assets()->attach($model->id,['percent_ownership' => 100]);
+                    }
+                }
+                else{
+                    $client = $this->client;
+                    $client->assets()->attach($model->id,['percent_ownership' => 100]);
                 }
             });
 
