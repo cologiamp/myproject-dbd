@@ -155,7 +155,7 @@ return [
                             'addresses.*.date_from' => 'sometimes|nullable|date',
                             'phone_number' => 'sometimes|nullable|max:20',
                             'mobile_number' => 'sometimes|nullable|max:20',
-                            'email_address' => 'sometimes|nullable|max:120'
+                            'email_address' => 'sometimes|nullable|max:120|unique:clients'
                         ],
                         'messages' => []
                     ],
