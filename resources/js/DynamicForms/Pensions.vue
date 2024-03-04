@@ -425,8 +425,19 @@ function removePension(index,type) {
                     </div>
                 </div>
 
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="frequency"
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
+                    <select @change="autosaveLocally" v-model="pension.frequency"
+                            id="frequency" name="frequency"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="frequency" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
+                                provider }}</option>
+                    </select>
+                </div><br>
 
-                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+
                     <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                         <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Value (£) </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
@@ -436,19 +447,7 @@ function removePension(index,type) {
                         </div>
                     </div>
 
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                        <label for="frequency"
-                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Frequency</label>
-                        <select @change="autosaveLocally" v-model="pension.frequency"
-                                id="frequency" name="frequency"
-                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                            <option id="frequency" :value="null">-</option>
-                            <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
-                                    provider }}</option>
-                        </select>
-                    </div>
 
-                </div>
 
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
@@ -459,6 +458,31 @@ function removePension(index,type) {
                         <VueDatePicker text-input @closed="saveDate(index, pension.valuation_at, 'dc_pensions')"
                                        class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="pension.valuation_at"
                                        name="valuation_at" id="valuation_at" placeholder="dd/mm/yyyy" />
+                    </div>
+                </div>
+
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is Retained?</label>
+                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                        <input @change="autosaveLocally()"
+                               v-model="pension.is_retained" type="radio" id="true" :value="true"
+                               :checked="pension.is_retained == true"
+                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                        <input @change="autosaveLocally()"
+                               v-model="pension.is_retained" type="radio" id="false" :value="false"
+                               :checked="pension.is_retained == false"
+                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-show="pension.is_retained">
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Retained Value (£) </label>
+                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                        <input @change="formatAmount($event, index, 'retained_value','dc_pensions')" type="currency" name="retained_value" id="retained_value"
+                               :value="pension.retained_value"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                 </div>
 
@@ -486,29 +510,6 @@ function removePension(index,type) {
 
                 </div>
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is Retained?</label>
-                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <input @change="autosaveLocally()"
-                               v-model="pension.is_retained" type="radio" id="true" :value="true"
-                               :checked="pension.is_retained == true"
-                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                        <input @change="autosaveLocally()"
-                               v-model="pension.is_retained" type="radio" id="false" :value="false"
-                               :checked="pension.is_retained == false"
-                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                    </div>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-show="pension.is_retained">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Retained Value (£) </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="formatAmount($event, index, 'retained_value','dc_pensions')" type="currency" name="retained_value" id="retained_value"
-                               :value="pension.retained_value"
-                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
-                    </div>
-                </div>
 
                 <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
                     <h4 class="col-span-6 text-xl font-bold pt-2"> Details </h4>
