@@ -49,20 +49,28 @@ Breadcrumbs::for('/client/{client:io_id}/pension-objectives', function (Breadcru
 //CLIENT MANAGEMENT/SELECTION BREADCRUMBS
 Breadcrumbs::for('client.dashboard', function (BreadcrumbTrail $trail, Client $client): void {
     $trail->parent('clients');
-    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
 });
+
+//CLIENT MANAGEMENT/SELECTION BREADCRUMBS
+Breadcrumbs::for('client.relationships', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
+    $trail->push("Relationships", route('client.relationships', $client));
+});
+
 
 // Dashboard > Clients > "Client Name" > Fact Find
 Breadcrumbs::for('client.factfind', function (BreadcrumbTrail $trail, Client $client): void {
     $trail->parent('clients');
-    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
     $trail->push('Fact Find');
 });
 
 // Dashboard > Clients > "Client Name" > Strategy
 Breadcrumbs::for('client.strategy', function (BreadcrumbTrail $trail, Client $client): void {
     $trail->parent('clients');
-    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
     $trail->push('Strategy Report');
 });
 
@@ -76,13 +84,13 @@ Breadcrumbs::for('client.investmentrecommendation', function (BreadcrumbTrail $t
 // Dashboard > Clients > "Client Name" > Example
 Breadcrumbs::for('client.example.edit', function (BreadcrumbTrail $trail, Client $client): void {
     $trail->parent('clients');
-    $trail->push("{$client['name']}", route('client.example.edit', $client));
+    $trail->push("{$client['name_with_c2']}", route('client.example.edit', $client));
     $trail->push('Example');
 });
 
 // Dashboard > Clients > "Client Name" > Pension Objectives
 Breadcrumbs::for('client.pensionobjectives', function (BreadcrumbTrail $trail, Client $client): void {
     $trail->parent('clients');
-    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
     $trail->push('Pension Objectives');
 });

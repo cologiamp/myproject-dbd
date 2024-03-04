@@ -68,19 +68,26 @@ class FactFindSectionDataService
         ];
     }
 
-    public function validate(int $step, int $section, Request $request)
+    public function validate(int $step, int $section, $request)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
-
-        return Validator::make($request->all(), $rules, $messages)->validate();
+        if(!is_array($request))
+        {
+           $request = $request->all();
+        }
+        return Validator::make($request, $rules, $messages)->validate();
     }
 
-    public function validated(int $step, int $section, Request $request)
+    public function validated(int $step, int $section, $request)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
-        return Validator::make($request->all(), $rules, $messages)->validated();
+        if(!is_array($request))
+        {
+            $request = $request->all();
+        }
+        return Validator::make($request, $rules, $messages)->validated();
     }
 
     /**
@@ -160,13 +167,7 @@ class FactFindSectionDataService
     {
         try {
             if (array_key_exists('addresses', $validatedData)) {
-
-                $client = $this->cr->getClient();
-                $passedAddressIds =  collect($validatedData['addresses'])->pluck('address_id')->filter();
-                //addresses can belong to multiple clients, so we don't destroy them, just detach
-                $client->addresses()->detach($client->addresses->whereNotIn('id', $passedAddressIds)->pluck('id'));
-
-                collect($validatedData['addresses'])->each(function ($item) {
+                $addresses = collect($validatedData['addresses'])->map(function ($item) {
                     if (array_key_exists('date_from',$item) && $item['date_from'] && $item['date_from'] != null) {
                         $item['date_from'] = Carbon::parse($item['date_from']);
                     }
@@ -174,18 +175,12 @@ class FactFindSectionDataService
                     {
                         $item['country'] = (int)$item['country'];
                     }
-
-                    $this->cr->createOrUpdateAddress($item);
+                    return $item;
                 });
+                $this->cr->createOrUpdateAddresses($addresses);
             }
 
-            $contactDetails = array(
-                'phone_number' => $validatedData['phone_number'],
-                'email_address' => $validatedData['email_address'],
-                'mobile_number' => $validatedData['mobile_number']
-            );
-
-            $this->cr->updateFromValidated($contactDetails);
+            $this->cr->updateFromValidated(collect($validatedData)->only(['mobile_number','email_address','phone_number'])->toArray());
         } catch (Throwable $e) {
             Log::warning($e);
         }
@@ -568,7 +563,6 @@ class FactFindSectionDataService
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
-
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -683,6 +677,7 @@ class FactFindSectionDataService
 
         $lscr = App::make(LumpSumCapitalRepository::class);
         try{
+            $lscr->setClient($this->cr->getClient());
             $lscr->createOrUpdateCapitals($capitals);
         }
         catch(Throwable $e){

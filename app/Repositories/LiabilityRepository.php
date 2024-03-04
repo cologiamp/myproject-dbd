@@ -91,6 +91,17 @@ class LiabilityRepository extends BaseRepository
             if(array_key_exists('id', $liability)) {
                 $model = Liability::where('id', $liability['id'])->first();
 
+                if(array_key_exists('owner',$liability) && $liability['owner'] != null)
+                {
+                    $owner = $liability['owner'];
+                    unset($liability['owner']);
+                }
+                else{
+                    $owner = null;
+                }
+
+
+
                 DB::beginTransaction();
 
                 try {
@@ -120,12 +131,32 @@ class LiabilityRepository extends BaseRepository
                 $model = $this->registerLiability($liability);
             }
 
-            $client = Client::with('liabilities')->where('id', $this->client->id)->first();
-
-            if(collect($client->liabilities->pluck('id'))->doesntContain($model->id)){
-                $this->client->liabilities()->attach($model->id);
+            if($owner != null)
+            {
+                $model->clients()->detach();
+                if($owner == 'Both')
+                {
+                    $client = $this->client;
+                    $client2 = $this->client->client_two;
+                    if($client && $client2)
+                    {
+                        $model->clients()->attach( $client->id);
+                        $model->clients()->attach( $client2->id);
+                    }
+                    else{
+                        dd('both but not client two');
+                    }
+                }
+                else{
+                    //case where 100% owned by one client, no percentages
+                    $client = Client::where('io_id',$owner)->first();
+                    $client->liabilities()->attach($model->id);
+                }
             }
-
+            else{
+                $client = $this->client;
+                $client->liabilities()->attach($model->id);
+            }
         });
 
     }

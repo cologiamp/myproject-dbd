@@ -1656,6 +1656,9 @@ return [
             3 => 'Not important',
         ],
     ],
+    'relation_to_c2' => [
+        0 => 'Partner'
+    ],
     'investment_recommendation' => [
         'fee_basis' => [
             0 => 'Standard',
