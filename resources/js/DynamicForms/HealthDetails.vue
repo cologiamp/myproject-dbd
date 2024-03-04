@@ -116,7 +116,7 @@ async function autosaveLocally(){
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.smoker">{{ stepForm.errors.smoker }}</p>
                 </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-show="stepForm.smoker">
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-show="!stepForm.smoker">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Have you smoked in the last 12 months?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input @change="autosaveLocally()" v-model="stepForm.smoked_in_last_12_months" type="radio" id="true" :value="true" :checked="stepForm.smoked_in_last_12_months == true" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
