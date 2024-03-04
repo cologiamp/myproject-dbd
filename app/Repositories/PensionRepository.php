@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\DefinedBenefitPension;
 use App\Models\DefinedContributionPension;
+use App\Models\PensionFund;
 use App\Models\PensionScheme;
 
 class PensionRepository extends BaseRepository
@@ -12,7 +13,25 @@ class PensionRepository extends BaseRepository
     {
         collect($dcPensions)->each(function ($item){
             $pension = $this->updateBasePensionSchemeRecord($item);
-            $this->createOrUpdateDC($pension,$item);
+            $dc_pension = $this->createOrUpdateDC($pension,$item);
+
+            collect($item['funds'])->each(function ($fund) use ($dc_pension){
+
+                if(array_key_exists('id',$fund) && $fund['id'] != null)
+                {
+                    $fundRecord = PensionFund::find($fund['id']);
+                }
+                else{
+                    $fundRecord = new PensionFund();
+                    $fundRecord->defined_contribution_pension_id = $dc_pension['id'];
+
+                }
+                $fundRecord->fund_name = $fund['fund_name'];
+                $fundRecord->fund_type = $fund['fund_type'];
+                $fundRecord->current_fund_value = $fund['current_fund_value'];
+                $fundRecord->current_transfer_value = $fund['current_transfer_value'];
+                $fundRecord->save();
+            });
         });
     }
 
@@ -26,7 +45,7 @@ class PensionRepository extends BaseRepository
 
 
     //Private
-    private function createOrUpdateDC(PensionScheme $pension,array $item): void
+    private function createOrUpdateDC(PensionScheme $pension,array $item): DefinedContributionPension
     {
         if($pension->has('defined_contribution_pension') && $pension->defined_contribution_pension != null)
         {
@@ -152,7 +171,7 @@ class PensionRepository extends BaseRepository
 
         $dc->save();
 
-
+        return $dc;
 
     }
 
@@ -276,9 +295,15 @@ class PensionRepository extends BaseRepository
         }
         if($pension->defined_contribution_pension)
         {
+            $pension->defined_contribution_pension->pension_funds()->delete();
             $pension->defined_contribution_pension->delete();
         }
         $pension->delete();
+        return true;
+    }
+    public function deletePensionFund(PensionFund $pensionFund):bool
+    {
+        $pensionFund->delete();
         return true;
     }
 }

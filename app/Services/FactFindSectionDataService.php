@@ -613,6 +613,22 @@ class FactFindSectionDataService
             if (array_key_exists('current_transfer_value',$item) && $item['current_transfer_value'] != null){
                 $item['current_transfer_value'] = $this->currencyStringToInt($item['current_transfer_value']);
             }
+
+            if(array_key_exists('funds',$item) && is_array($item['funds']))
+            {
+                $item['funds'] = collect($item['funds'])->map(function ($fund){
+                    if(array_key_exists('current_fund_value',$fund) && $fund['current_fund_value'] != null)
+                    {
+                        $fund['current_fund_value'] = $this->currencyStringToInt($fund['current_fund_value']);
+                    }
+                    if(array_key_exists('current_transfer_value',$fund) && $fund['current_transfer_value'] != null)
+                    {
+                        $fund['current_transfer_value'] = $this->currencyStringToInt($fund['current_transfer_value']);
+                    }
+                    return $fund;
+                })->toArray();
+            }
+
             return $item;
         });
 

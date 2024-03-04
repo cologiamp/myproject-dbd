@@ -615,17 +615,18 @@ return [
                                 'integer',
                                 Rule::in(array_keys((config('enums.assets.pension_crystallised_statuses'))))
                             ],
-                            'dc_pensions.*.fund_type' => [
+                            'dc_pensions.*.crystallised_percentage' => 'sometimes|nullable',
+                            'dc_pensions.*.funds.*.fund_type' => [
                                 'sometimes',
                                 'numeric',
                                 'nullable',
                                 'integer',
                                 Rule::in(array_keys((config('enums.assets.pension_fund_types'))))
                             ],
-                            'dc_pensions.*.crystallised_percentage' => 'sometimes|nullable',
-                            'dc_pensions.*.current_fund_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.fund_name' => 'sometimes|nullable|max:255',
-                            'dc_pensions.*.current_transfer_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.funds.*.id' => 'sometimes|nullable',
+                            'dc_pensions.*.funds.*.current_fund_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.funds.*.fund_name' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.funds.*.current_transfer_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.frequency' => [
                                 'sometimes',
                                 'nullable',

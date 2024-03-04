@@ -48,10 +48,7 @@ const props = defineProps({
                     value: null,
                     retained_value: null,
                     is_retained: null,
-                    fund_name: null,
-                    fund_type: null,
-                    current_fund_value: null,
-                    current_transfer_value: null,
+                    funds: [],
                     frequency: null,
                 }],
                 db_pensions: [{
@@ -78,11 +75,14 @@ const props = defineProps({
 
 
 function formatAmount(e, index, dataField, type) {
-    console.log('type:' + type);
-    console.log('index:' + index);
-    console.log('dataField:' + dataField);
     stepForm[type][index][dataField] = '';
     stepForm[type][index][dataField] = changeToCurrency(e.target.value);
+    autosaveLocally()
+}
+
+function formatFundAmount(e, index, dataField, fundId, type) {
+    stepForm[type][index]['funds'][fundId][dataField] = '';
+    stepForm[type][index]['funds'][fundId][dataField] = changeToCurrency(e.target.value);
     autosaveLocally()
 }
 
@@ -110,7 +110,7 @@ function addDc() {
     let owner = Object.keys(props.formData.enums.owners)[0];
     stepForm.dc_pensions.push({
         id: null,
-        pt: 'db',
+        pt: 'dc',
         owner: owner,
         type: null,
         employer: null,
@@ -126,10 +126,7 @@ function addDc() {
         value: null,
         retained_value: null,
         is_retained: null,
-        fund_name: null,
-        fund_type: null,
-        current_fund_value: null,
-        current_transfer_value: null,
+        funds: [],
         frequency: null
     });
 }
@@ -139,7 +136,7 @@ function addDb() {
     let owner = Object.keys(props.formData.enums.owners)[0];
     stepForm.db_pensions.push({
         id: null,
-        pt: 'dc',
+        pt: 'db',
         owner: owner,
         status: null,
         employer: null,
@@ -153,6 +150,30 @@ function addDb() {
     });
 }
 
+function addFund(index){
+    console.log((stepForm.dc_pensions[index]));
+    stepForm.dc_pensions[index].funds.push({
+        fund_name: null,
+        fund_type: null,
+        current_fund_value: null,
+        current_transfer_value: null
+    })
+}
+
+
+
+function removePensionFund(index,pensionIndex) {
+    let model = stepForm['dc_pensions'][index]['funds'][pensionIndex];
+    if(model.id != null)
+    {
+        axios.delete('/api/pension-funds/' + model.id).then(function (response){
+            console.log(response.data)
+        }).catch(function (e){
+            console.log(e)
+        });
+    }
+    stepForm['dc_pensions'][index]['funds'].splice(pensionIndex, 1);
+}
 
 
 function removePension(index,type) {
@@ -527,43 +548,58 @@ function removePension(index,type) {
                 </div>
 
 
-                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                <div class="col-span-6 rounded-md bg-aaron-950 pt-2 p-4">
                     <h4 class="col-span-6 text-xl font-bold pt-2"> Details </h4>
 
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fund Name</label>
-                        <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveLocally()" v-model="pension.fund_name" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                    <div class="col-span-6 m-2 grid grid-cols-6 rounded-md bg-aaron-900 pt-2 p-4" v-for="(value, key) in pension.funds">
+                        <h4 class="col-span-6 text-xl font-bold pt-2"> Fund {{ key + 1 }} </h4>
+                        <div class="md:col-span-6 flex flex-row justify-between">
+                            <label class="font-bold">DC Pension {{ index + 1 }}</label>
+                            <button type="button" @click="removePensionFund(index,key)"
+                                    class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                <XCircleIcon class="w-4 h-4" />Delete Fund
+                            </button>
                         </div>
-                    </div>
-                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                        <label for="type"
-                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fund Type</label>
-                        <select @change="autosaveLocally()" v-model="pension.fund_type"
-                                id="fund_type" name="fund_type"
-                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                            <option id="type" :value="null">-</option>
-                            <option :id="id" :value="id" v-for="(type, id) in formData.enums.pension_fund_types">{{ type }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Fund Value (£) </label>
-                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="formatAmount($event, index, 'current_fund_value','dc_pensions')" type="currency" name="current_fund_value" id="current_fund_value"
-                                   :value="pension.current_fund_value"
-                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                            <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fund Name</label>
+                            <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                                <input @change="autosaveLocally()" v-model="value.fund_name" type="text" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                            </div>
                         </div>
-                    </div>
-                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Transfer Value (£) </label>
-                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="formatAmount($event, index, 'current_transfer_value','dc_pensions')" type="currency" name="current_transfer_value" id="current_transfer_value"
-                                   :value="pension.current_transfer_value"
-                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                            <label for="type"
+                                   class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Fund Type</label>
+                            <select @change="autosaveLocally()" v-model="value.fund_type"
+                                    id="fund_type" name="fund_type"
+                                    class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                                <option id="type" :value="null">-</option>
+                                <option :id="id" :value="id" v-for="(type, id) in formData.enums.pension_fund_types">{{ type }}
+                                </option>
+                            </select>
                         </div>
+                        <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                            <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Fund Value (£) </label>
+                            <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                                <input @change="formatFundAmount($event, index, 'current_fund_value', key,'dc_pensions')" type="currency" name="current_fund_value" id="current_fund_value"
+                                       :value="value.current_fund_value"
+                                       class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                            </div>
+                        </div>
+                        <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                            <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Transfer Value (£) </label>
+                            <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                                <input @change="formatFundAmount($event, index, 'current_transfer_value', key,'dc_pensions')" type="currency" name="current_transfer_value" id="current_transfer_value"
+                                       :value="value.current_transfer_value"
+                                       class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                            </div>
+                        </div>
+
                     </div>
 
+                    <button type="button" @click="addFund(index)"
+                            class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <PlusCircleIcon class="w-6 h-6" />Add Fund
+                    </button>
                 </div>
 
             </div>
