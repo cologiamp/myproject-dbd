@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
 use App\Http\Controllers\Api\StrategyReportRecommendationsController;
+use App\Http\Controllers\APi\StrategyObjectivesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::get('/providers/search',SearchProviderController::class);
 Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindController::class,'update']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
 Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[StrategyReportRecommendationsController::class,'update'])->name('strategyreportrecommendations.update');
+Route::get('/strategy-report-recommendation/get/{id}',[StrategyReportRecommendationsController::class,'get'])->name('strategyreportrecommendations.get');
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
@@ -43,7 +45,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
-
+    Route::delete('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'delete']);
 
 });
 

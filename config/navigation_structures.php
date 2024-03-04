@@ -850,12 +850,21 @@ return [
             'rules' => [
                 'id' => 'sometimes|nullable|numeric',
                 'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
-                'is_primary' => 'sometimes|nullable|boolean',
+                'is_primary' => 'sometimes|nullable|numeric',
                 'type' => 'sometimes|nullable|numeric',
                 'objective' => 'sometimes|nullable|numeric',
                 'objective_custom' => 'sometimes|nullable|string',
                 'what_for' => 'sometimes|nullable|numeric',
-                'what_for_custom' => 'sometimes|nullable|string'
+                'what_for_custom' => 'sometimes|nullable|string',
+                'objectives' => 'sometimes|nullable',
+                'objectives.*.id' => 'sometimes|nullable|numeric',
+                'objectives.*.strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'objectives.*.is_primary' => 'sometimes|nullable|numeric',
+                'objectives.*.type' => 'sometimes|nullable|numeric',
+                'objectives.*.objective' => 'sometimes|nullable|numeric',
+                'objectives.*.objective_custom' => 'sometimes|nullable|string',
+                'objectives.*.what_for' => 'sometimes|nullable|numeric',
+                'objectives.*.what_for_custom' => 'sometimes|nullable|string',
             ]
         ],
         3 => [

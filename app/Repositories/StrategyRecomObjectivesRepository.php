@@ -29,6 +29,11 @@ class StrategyRecomObjectivesRepository extends BaseRepository
         throw new ClientNotFoundException();
     }
 
+    public function setStrategyReportRecomObjective(StrategyRecomObjectives $objective):void
+    {
+        $this->strategyRecomObjectives = $objective;
+    }
+
     //Create the model from either a HTPT Request or from an array
     public function create(mixed $input): StrategyRecomObjectives
     {
@@ -36,6 +41,7 @@ class StrategyRecomObjectivesRepository extends BaseRepository
         {
             $input = $input->safe()->all();
         }
+
         return $this->strategyRecomObjectives->create($input);
     }
 
@@ -51,6 +57,22 @@ class StrategyRecomObjectivesRepository extends BaseRepository
         {
             $input = $input->safe();
         }
+
         $this->strategyRecomObjectives->update($input);
     }
+
+    //Delete the resource from the database, doing any cleanup first
+    public function delete(): void
+    {
+        //handle any cleanup required here
+        $this->strategyRecomObjectives->delete();
+    }
+
+    public function getMaxOrderId(int $id): int
+    {
+        $currentMax = $this->strategyRecomObjectives->where('strategy_report_recommendation_id', $id)->max('order');
+//        dd($currentMax + 1);
+        return $currentMax + 1;
+    }
+
 }
