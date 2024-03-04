@@ -372,8 +372,4 @@ class Client extends Model
         ]);
     }
 
-    public function client_two():HasOne
-    {
-        return $this->hasOne(Client::class,'c2_id','id');
-    }
 }
