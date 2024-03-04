@@ -554,6 +554,14 @@ class FactFindSectionDataService
     {
         $dc = collect($validatedData['dc_pensions'])->map(function ($item){
 
+            if (array_key_exists('employer', $item) && $item['employer'] != '') {
+                $item['employer'] = ucfirst($item['employer']);
+            }
+
+            if (array_key_exists('fund_name', $item) && $item['fund_name'] != '') {
+                $item['fund_name'] = ucfirst($item['fund_name']);
+            }
+
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -601,6 +609,10 @@ class FactFindSectionDataService
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
+
+            if (array_key_exists('employer', $item) && $item['employer'] != '') {
+                $item['employer'] = ucfirst($item['employer']);
+            }
 
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
