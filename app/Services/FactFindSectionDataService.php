@@ -68,18 +68,26 @@ class FactFindSectionDataService
         ];
     }
 
-    public function validate(int $step, int $section, Request $request)
+    public function validate(int $step, int $section, Request $request, Client $client)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
 
+        if($step == 1 && $section == 3)
+        {
+            $rules['email_address'] = $rules['email_address'] . ',email_address,'.$client->id;
+        }
         return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
-    public function validated(int $step, int $section, Request $request)
+    public function validated(int $step, int $section, Request $request,  Client $client)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
+        if($step == 1 && $section == 3)
+        {
+            $rules['email_address'] = $rules['email_address'] . ',email_address,'.$client->id;
+        }
         return Validator::make($request->all(), $rules, $messages)->validated();
     }
 

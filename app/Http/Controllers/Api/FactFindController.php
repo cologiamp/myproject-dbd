@@ -28,9 +28,9 @@ class FactFindController extends Controller
         if ($step == 2 && $section >= 2) {
             $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
         }
-
+        $thisClient = $client; //Will be replaced when merged with multiple client
         try{
-            $ffsds->validate($step, $section, $request); //throws exception if validation fails - comes back to Inertia as errorbag
+            $ffsds->validate($step, $section, $request,$thisClient); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
@@ -40,7 +40,7 @@ class FactFindController extends Controller
             $client,
             $step,
             $section,
-            $ffsds->validated($step, $section, $request)
+            $ffsds->validated($step, $section, $request,$thisClient)
         );
         return json_encode(['model' =>  $ffsds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
     }
