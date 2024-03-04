@@ -439,7 +439,8 @@ return [
                                 'expenditures.type',
                                 'expenditures.amount',
                                 'expenditures.frequency',
-                                'expenditures.description'
+                                'expenditures.description',
+                                'expenditures.starts_at'
                             ]
                         ],
                         'rules' => [
@@ -461,6 +462,7 @@ return [
                                 'integer',
                                 Rule::in(array_keys((config('enums.incomes.frequency'))))
                             ],
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
                         ],
                         'messages' => []
                     ]

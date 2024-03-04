@@ -745,13 +745,12 @@ class FactFindSectionDataService
                     if ($expenditure['amount'] && $expenditure['amount'] != null) {
                         $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
                     }
-                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
+                    if (array_key_exists('starts_at',$expenditure) && $expenditure['starts_at'] && $expenditure['starts_at'] != null) {
                         $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
                     }
-                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
+                    if (array_key_exists('ends_at',$expenditure) && $expenditure['ends_at'] && $expenditure['ends_at'] != null) {
                         $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
                     }
-
                     return $expenditure;
                 });
 
