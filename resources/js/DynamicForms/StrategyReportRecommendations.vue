@@ -1,9 +1,7 @@
 <script setup>
-//FACTFIND:// you need to make one of these for every step
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
-import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import VueDatePicker from "@vuepic/vue-datepicker";
 

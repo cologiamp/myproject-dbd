@@ -96,23 +96,17 @@ class StrategyReportRecommendationsDataService
 
     private function saveTab2(array $validatedData):void
     {
-        ray($validatedData)->purple();
         try {
             $this->strategyRecomObjectivesRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
             $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
 
             $singleObjectiveData = Arr::except($validatedData, ['objectives']);
-            ray(count($singleObjectiveData) > 0)->purple();
-            ray($singleObjectiveData)->purple();
 
             if (count($singleObjectiveData) > 0) {
                 $singleObjectiveData['is_primary'] = $singleObjectiveData['objective_type'];
                 unset($singleObjectiveData['objective_type']);
 
-                ray($singleObjectiveData)->red();
-
                 if (array_key_exists('id',$singleObjectiveData) && $singleObjectiveData['id'] != null) {
-                    ray('update objective')->orange();
                     $this->strategyRecomObjectivesRepository->setStrategyReportRecomObjective(
                         $this->strategyRecomObjectivesRepository->getObjectiveById($singleObjectiveData['id'])
                     );
@@ -125,7 +119,6 @@ class StrategyReportRecommendationsDataService
                     $orderId = $this->strategyRecomObjectivesRepository->getMaxOrderId($recommendation->id);
                     $singleObjectiveData['order'] = $orderId;
 
-                    ray('create new objective')->green();
                     $this->strategyRecomObjectivesRepository->create($singleObjectiveData);
                 }
                 unset($validatedData['objectives']);
@@ -143,18 +136,14 @@ class StrategyReportRecommendationsDataService
 
     private function saveTab3(array $validatedData):void
     {
-//        dd($validatedData);
         try {
             $this->strategyRecomActionsRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
             $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
 
             $singleActionData = Arr::except($validatedData, ['actions']);
-            ray(count($singleActionData) > 0)->purple();
-            ray($singleActionData)->purple();
 
             if (count($singleActionData) > 0) {
                 if (array_key_exists('id',$singleActionData) && $singleActionData['id'] != null) {
-                    ray('update action')->orange();
                     $this->strategyRecomActionsRepository->setStrategyReportRecomAction(
                         $this->strategyRecomActionsRepository->getActionById($singleActionData['id'])
                     );
@@ -167,7 +156,6 @@ class StrategyReportRecommendationsDataService
                     $orderId = $this->strategyRecomActionsRepository->getMaxOrderId($recommendation->id);
                     $singleActionData['order'] = $orderId;
 
-                    ray('create new action')->green();
                     $this->strategyRecomActionsRepository->create($singleActionData);
                 }
                 unset($validatedData['actions']);

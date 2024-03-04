@@ -6,7 +6,6 @@ import 'vue-select/dist/vue-select.css';
 import DraggableTable from "@/Components/CallToActionTable.vue";
 import {PlusCircleIcon} from '@heroicons/vue/24/solid';
 
-import '@vuepic/vue-datepicker/dist/main.css'
 import {onBeforeMount, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
