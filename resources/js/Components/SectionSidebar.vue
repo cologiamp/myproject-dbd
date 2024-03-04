@@ -1,6 +1,7 @@
 <script setup>
 import { ref, provide, inject, onBeforeMount } from "vue";
-import { Link } from '@inertiajs/vue3';
+import {Link, router} from '@inertiajs/vue3';
+import {ArrowRightIcon} from "@heroicons/vue/24/solid/index.js";
 
 const props = defineProps({
     sidebarItems: {
@@ -23,6 +24,7 @@ const initialSectionKey = inject("onloadKey");
 const selectedSectionId = ref(1);
 
 function sectionsClick(index, item) {
+    console.log('CALLED')
     selectedSectionId.value = index
 
     Object.keys(props.sidebarItems).forEach(key => {
@@ -31,11 +33,11 @@ function sectionsClick(index, item) {
 
     item.current = true;
     // store step and selectedSection on local session
-    localStorage.setItem('step' + props.tabIndex + 'section', selectedSectionId.value)
+    // localStorage.setItem('step' + props.tabIndex + 'section', selectedSectionId.value)
 
     const url = new URL(window.location);
     url.searchParams.set('step', props.tabIndex);
-    url.searchParams.set('section', selectedSectionId.value);
+    url.searchParams.set('section', selectedSectionId.value.toString());
     window.history.pushState({}, '', url);
 
 }
@@ -69,7 +71,27 @@ const toggleDropdown = (index) => {
 
     currentSelectedSection.value = index;
 }
+
+function nextTab(){
+    const pathname = window.location.pathname;
+    const search = window.location.search;
+
+    let arr = search.split('&');
+    let section = arr[1].slice(-1);
+    let step = arr[0].slice(-1);
+
+    if(section == Object.keys(props.sidebarItems).length)
+    {
+        router.visit(pathname + '?step=' + (parseInt(step) +1) + '&section=1' )
+    }
+    else{
+        router.visit(pathname + '?step=' + step + '&section=' + (parseInt(section) + 1) )
+    }
+}
+
 </script>
+
+
 
 <template>
 
@@ -103,10 +125,14 @@ const toggleDropdown = (index) => {
         </div>
     </div>
 
-    <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 sm:ml-80">
+    <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 mb-4 sm:ml-80">
         <div class="p-4">
             <slot></slot>
         </div>
+        <button type="button" @click="nextTab"
+                class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            Next <ArrowRightIcon class="w-6 h-6" />
+        </button>
     </div>
 
 </template>
