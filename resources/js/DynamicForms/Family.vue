@@ -70,14 +70,6 @@ function addDependent() {
 }
 
 function removeDependent(index) {
-    // if(stepForm.addresses[index].address_id != null)
-    // {
-    //     axios.delete('/api/addresses/'+ stepForm.addresses[index].address_id).then(function (response){
-    //         console.log(response.data)
-    //     }).catch(function (e){
-    //         console.log(e)
-    //     });
-    // }
     stepForm.dependents[index].relationships = [];
     autosaveLocally();
 }

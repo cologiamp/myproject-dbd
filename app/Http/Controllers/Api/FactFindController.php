@@ -16,7 +16,7 @@ use Exception;
 class FactFindController extends Controller
 {
     use ParsesIoClientData;
-    public function solo(Client $client)
+    public function solo(Client $client): true
     {
         $cr = App::make(ClientRepository::class);
         $cr->setClient($client);
@@ -24,7 +24,7 @@ class FactFindController extends Controller
         return true;
     }
 
-    public function selectClientTwo(Client $client, $c2id, Request $request)
+    public function selectClientTwo(Client $client, $c2id, Request $request): void
     {
         $client2 = Client::where('io_id',$c2id)->first();
         if($client2 == null)

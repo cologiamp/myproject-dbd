@@ -44,9 +44,6 @@ onBeforeMount(()=>{
     for (const [item, value] of Object.entries(props.formData.model)) {
 
         stepForm[item] = {};
-        console.log('___________')
-        console.log(item);
-        console.log('___________')
         stepForm[item]['is_in_good_health'] = value.is_in_good_health;
         stepForm[item]['health_details'] = value.health_details;
         stepForm[item]['has_life_expectancy_concerns'] = value.has_life_expectancy_concerns;

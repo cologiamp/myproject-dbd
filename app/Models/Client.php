@@ -34,17 +34,17 @@ class Client extends Model
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
 
-    public function client_two()
+    public function client_two(): BelongsTo
     {
         return $this->belongsTo(Client::class,'c2_id','id');
     }
 
     //Client Two functions
-    public function getDashboardTitleAttribute()
+    public function getDashboardTitleAttribute(): string
     {
         return 'Welcome to ' . $this->getNameWithC2Attribute() . "'s dashboard";
     }
-    public function getNameWithC2Attribute() //->name_with_c2
+    public function getNameWithC2Attribute():string //->name_with_c2
     {
         return $this->client_two ? $this->name . " & ". $this->client_two->name :  $this->name;
     }

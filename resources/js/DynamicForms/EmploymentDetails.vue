@@ -130,11 +130,11 @@ onMounted(() => {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.employment_status">{{ stepForm.errors.employment_status }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="employment_status" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Employee</label>
+                    <label for="employee" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Employee</label>
                     <select @change="autosaveLocally()" v-model="employment_detail.employee"
-                            id="employment_status" name="employment_status"
+                            id="employee" name="employee"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="employment_status" :value="null">-</option>
+                        <option id="employee" :value="null">-</option>
                         <option :id="id" :value="id" v-for="(name, id) in formData.enums.owners">{{
                                 name }}</option>
                     </select>
