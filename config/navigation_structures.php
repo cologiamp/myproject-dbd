@@ -850,7 +850,7 @@ return [
             'rules' => [
                 'id' => 'sometimes|nullable|numeric',
                 'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
-                'is_primary' => 'sometimes|nullable|numeric',
+                'objective_type' => 'sometimes|nullable|numeric',
                 'type' => 'sometimes|nullable|numeric',
                 'objective' => 'sometimes|nullable|numeric',
                 'objective_custom' => 'sometimes|nullable|string',
@@ -865,7 +865,8 @@ return [
                 'objectives.*.objective_custom' => 'sometimes|nullable|string',
                 'objectives.*.what_for' => 'sometimes|nullable|numeric',
                 'objectives.*.what_for_custom' => 'sometimes|nullable|string',
-            ]
+            ],
+            'messages' => []
         ],
         3 => [
             'name' => 'Call to Action',

@@ -1,8 +1,8 @@
 <script setup>
 
-import {onMounted, onUpdated, ref} from "vue";
+import {onMounted, ref} from "vue";
 import draggable from "vuedraggable";
-import {PencilSquareIcon, TrashIcon} from '@heroicons/vue/24/outline';
+import {PencilSquareIcon, TrashIcon, ArrowsUpDownIcon} from '@heroicons/vue/24/outline';
 
 const props = defineProps({
     topics: [],
@@ -10,16 +10,8 @@ const props = defineProps({
     objectives:[]
 });
 
-const emit = defineEmits(['getObjectiveToEdit', 'removeObjective', 'rearrangeTable'])
+const emit = defineEmits(['getObjectiveToEdit', 'removeObjective', 'reOrderObjectives'])
 const data = ref(props.objectives);
-
-onUpdated(()=>{
-    console.log('onUpdated')
-    // data.value = props.objectives; //necessary after saving edit/add button
-
-
-    // console.log(JSON.stringify(data))
-})
 
 onMounted(() => {
     data.value = props.objectives;
@@ -33,18 +25,14 @@ function removeObjective(id) {
     emit('removeObjective', id)
 }
 
-function log() {
-    console.log('log')
-    // console.log(JSON.stringify(data.value));
-
+function updateOrder() {
     Object.entries(data.value).forEach(data => {
         const [key, value] = data;
 
         value.order = parseInt(key) + 1
     });
-    console.log(JSON.stringify(data.value));
 
-    emit('rearrangeTable', data.value)
+    emit('reOrderObjectives', data.value)
 }
 
 function getIsPrimaryText(index) {
@@ -52,18 +40,15 @@ function getIsPrimaryText(index) {
 }
 
 function getType(index) {
-    return props.topics[parseInt(index)].name
+    return props.topics[parseInt(index)] ? props.topics[parseInt(index)].name : ''
 }
 
 function getObjective(topicIndex, objIndex) {
-    return props.topics[parseInt(topicIndex)]['objectives'][parseInt(objIndex)]
+    return props.topics[parseInt(topicIndex)] ? props.topics[parseInt(topicIndex)]['objectives'][parseInt(objIndex)] : ''
 }
 
 function getWhatFor(topicIndex, whatForIndex) {
-    // if(parseInt(whatForIndex) === 99) {
-    //     return element.objective_custom
-    // }
-    return props.topics[parseInt(topicIndex)]['what_for'][parseInt(whatForIndex)]
+    return props.topics[parseInt(topicIndex)] ? props.topics[parseInt(topicIndex)]['what_for'][parseInt(whatForIndex)] : ''
 }
 
 </script>
@@ -71,44 +56,57 @@ function getWhatFor(topicIndex, whatForIndex) {
 <template>
     <div class="mt-8 flow-root">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <table class="min-w-full divide-y divide-gray-300">
-                <thead class="thead-dark bg-aaron-700">
+            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-500">
+                <thead class="bg-aaron-700">
                 <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left font-semibold sm:pl-0">Type</th>
+                    <th scope="col" class="p-3"></th>
+                    <th scope="col" class="px-3 py-3.5 text-left font-semibold">Type</th>
                     <th scope="col" class="px-3 py-3.5 text-left font-semibold">Topic</th>
                     <th scope="col" class="px-3 py-3.5 text-left font-semibold">Objective</th>
                     <th scope="col" class="px-3 py-3.5 text-left font-semibold">What for?</th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Edit</span>
-                    </th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Edit</span>
-                    </th>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0"></th>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0"></th>
                 </tr>
                 </thead>
-                <draggable v-model="data" tag="tbody" item-key="name" @change="log">
+                <draggable v-if="data.length > 0" v-model="data" tag="tbody" item-key="name" @change="updateOrder" class="divide-y divide-gray-500">
                     <template #item="{ element }">
                         <tr>
-                            <td scope="row" class="text-sm py-4 pl-4 pr-3 sm:pl-0">{{getIsPrimaryText(element.is_primary)}}</td>
+                            <td class="px-3 py-4">
+                                <a href="#" class="hover:text-indigo-900">
+                                    <ArrowsUpDownIcon class="w-5 h-5"></ArrowsUpDownIcon>
+                                </a>
+                            </td>
+                            <td scope="row" class="text-sm px-3 py-4">{{getIsPrimaryText(element.is_primary)}}</td>
                             <td class="text-sm px-3 py-4">{{ getType(element.type) }}</td>
-                            <!-- element.objective === 'Other' ? element.objective_custom : element.objective -->
-                            <td class="text-sm px-3 py-4">{{ getObjective(element.type, element.objective) }}</td>
-                            <!-- element.what_for === 'Other' ? element.what_for_custom : element.what_for-->
-                            <td class="text-sm px-3 py-4">{{ getWhatFor(element.type, element.what_for) }}</td>
+                            <td class="text-sm px-3 py-4">{{ element.objective === 99 ? element.objective_custom : getObjective(element.type, element.objective) }}</td>
+                            <td class="text-sm px-3 py-4">{{ element.what_for === 99 ? element.what_for_custom : getWhatFor(element.type, element.what_for) }}</td>
                             <td class="relative text-sm py-4 pl-3 pr-4 text-right sm:pr-0">
-                                <a href="#" @click="edit(element.id)" class="hover:text-indigo-900">
+                                <a href="#" @click="edit(element.id)">
                                     <PencilSquareIcon class="w-5 h-5"></PencilSquareIcon>
                                 </a>
                             </td>
                             <td class="relative text-sm py-4 pl-3 pr-4 text-right sm:pr-0">
-                                <a href="#" @click="removeObjective(element.id)" class="hover:text-indigo-900">
+                                <a href="#" @click="removeObjective(element.id)">
                                     <TrashIcon class="w-5 h-5"></TrashIcon>
                                 </a>
                             </td>
                         </tr>
                     </template>
                 </draggable>
+                <tbody v-else>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-sm col-span-7 px-3 py-4">
+                            No objectives data.
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
             </table>
             </div>
         </div>
@@ -117,7 +115,7 @@ function getWhatFor(topicIndex, whatForIndex) {
 </template>
 
 <style scoped>
-.buttons {
-    margin-top: 35px;
+.grabbing * {
+    cursor: grabbing;
 }
 </style>

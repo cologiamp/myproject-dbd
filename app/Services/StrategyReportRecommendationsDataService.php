@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use Illuminate\Support\Arr;
 
 class StrategyReportRecommendationsDataService
 {
@@ -92,38 +93,46 @@ class StrategyReportRecommendationsDataService
 
     private function saveTab2(array $validatedData):void
     {
-        ray('validate Data=')->green();
-        ray($validatedData)->green();
+        ray($validatedData)->purple();
         try {
             $this->strategyRecomObjectivesRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
             $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
 
-            ray('$recommendation=')->green();
-            ray($recommendation)->green();
+            $singleObjectiveData = Arr::except($validatedData, ['objectives']);
+            ray(count($singleObjectiveData) > 0)->purple();
+            ray($singleObjectiveData)->purple();
 
-//            if (array_key_exists('id',$validatedData) && $validatedData['id'] != null) {
-//                $this->strategyRecomObjectivesRepository->setStrategyReportRecomObjective(StrategyRecomObjectives::where('id', $validatedData['id'])->first()); // put it repository file later?
-//                $this->strategyRecomObjectivesRepository->update($validatedData);
-//            } else if (count($validatedData) > 0) {
-//                $validatedData['strategy_report_recommendation_id'] = $recommendation->id;
-//
-//                $orderId = $this->strategyRecomObjectivesRepository->getMaxOrderId($recommendation->id);
-//                $validatedData['order'] =$orderId;
-//
-//                $this->strategyRecomObjectivesRepository->create($validatedData);
-//            }
+            if (count($singleObjectiveData) > 0) {
+                $singleObjectiveData['is_primary'] = $singleObjectiveData['objective_type'];
+                unset($singleObjectiveData['objective_type']);
 
-            if (array_key_exists('objectives',$validatedData) && $validatedData['objectives'] != null) {
-                collect($validatedData['objectives'])->each(function ($obj){
-                    unset($obj['client_id']);
-                    ray($obj)->orange();
-                    $this->strategyRecomObjectivesRepository->setStrategyReportRecomObjective(StrategyRecomObjectives::where('id', $obj['id'])->first()); // put it repository file later?
-                    $this->strategyRecomObjectivesRepository->update($obj);
-                });
+                ray($singleObjectiveData)->red();
+
+                if (array_key_exists('id',$singleObjectiveData) && $singleObjectiveData['id'] != null) {
+                    ray('update objective')->orange();
+                    $this->strategyRecomObjectivesRepository->setStrategyReportRecomObjective(
+                        $this->strategyRecomObjectivesRepository->getObjectiveById($singleObjectiveData['id'])
+                    );
+
+                    $this->strategyRecomObjectivesRepository->update($singleObjectiveData);
+
+                } else {
+                    $singleObjectiveData['strategy_report_recommendation_id'] = $recommendation->id;
+
+                    $orderId = $this->strategyRecomObjectivesRepository->getMaxOrderId($recommendation->id);
+                    $singleObjectiveData['order'] = $orderId;
+
+                    ray('create new objective')->green();
+                    $this->strategyRecomObjectivesRepository->create($singleObjectiveData);
+                }
+                unset($validatedData['objectives']);
+            } else {
+                if (array_key_exists('objectives',$validatedData) && count($validatedData['objectives']) > 0) {
+                    $this->strategyRecomObjectivesRepository->updateObjectivesOrder($validatedData['objectives']);
+                }
 
             }
-        }
-        catch(Throwable $e){
+        } catch (Throwable $e) {
             Log::warning($e);
             dd($e);
         }

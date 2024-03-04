@@ -8,6 +8,8 @@ import {PlusCircleIcon} from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import {onBeforeMount, ref, watch} from "vue";
+import {usePage} from "@inertiajs/vue3";
+import FormErrors from "@/Components/FormErrors.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -40,12 +42,13 @@ async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
     stepForm.objectives = props.formData.model.objectives;
 
-    console.log(JSON.stringify(stepForm.objectives))
-
-    is_edit.value = false;
-    addObjective.value = false;
-    resetData();
+    forceRerender();
 }
+
+const draggableKey = ref(0);
+const forceRerender = () => {
+    draggableKey.value += 1;
+};
 
 const topics_enum = ref([]);
 const objectives_enum = ref([]);
@@ -66,7 +69,7 @@ async function getObjectiveToEdit(objectiveId) {
         stepForm.id = response.data.id
         stepForm.client_id = response.data.client_id
         stepForm.strategy_report_recommendation_id = response.data.strategy_report_recommendation_id
-        stepForm.is_primary = response.data.is_primary
+        stepForm.objective_type = response.data.is_primary
         stepForm.type = response.data.type
         setTopicEnums(stepForm.type)
         stepForm.objective = response.data.objective
@@ -94,18 +97,19 @@ onBeforeMount(() => {
 
 function addObj() {
     addObjective.value = true
+    resetData();
 }
 
 function resetData() {
-    stepForm.id = null
-    stepForm.client_id = null
-    stepForm.strategy_report_recommendation_id = null
-    stepForm.is_primary = null
-    stepForm.type = null
-    stepForm.objective = null
-    stepForm.objective_custom = null
-    stepForm.what_for = null
-    stepForm.what_for_custom = null
+    delete stepForm.id
+    delete stepForm.client_id
+    delete stepForm.strategy_report_recommendation_id
+    delete stepForm.objective_type
+    delete stepForm.type
+    delete stepForm.objective
+    delete stepForm.objective_custom
+    delete stepForm.what_for
+    delete stepForm.what_for_custom
 }
 
 function removeObjective(id) {
@@ -130,18 +134,36 @@ function removeObjective(id) {
     }
 }
 
-function rearrangeTable(objectives) {
+function reOrderObjectives(objectives) {
+    resetData();
     stepForm.objectives = objectives
     autosaveLocally()
+}
+
+function cancel() {
+    is_edit.value = false;
+    addObjective.value = false;
+    resetData();
+}
+
+function save() {
+    autosaveLocally();
+
+    is_edit.value = false;
+    addObjective.value = false;
+
+    // forceRerender();
+    resetData();
 }
 
 </script>
 
 <template>
+    <form-errors :errors="usePage().props.errors"/>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
             <div v-if="addObjective === false && is_edit === false" class="grid grid-cols-3 gap-2">
-                <div class="mt-4 pt-8 w-full flex items-center justify-center col-start-3">
+                <div class="mt-4 pt-8 w-full flex items-center justify-end col-start-3">
                     <button type="button" @click="addObj"
                             class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <PlusCircleIcon class="w-6 h-6" />Add Objective
@@ -151,20 +173,24 @@ function rearrangeTable(objectives) {
             <div v-if="addObjective === true || is_edit === true" class="grid grid-cols-3 gap-2">
                 <div class="mt-4 w-full">
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
-                        <label for="is_primary" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Objective Type </label>
-                        <select id="is_primary" name="is_primary" v-model="stepForm.is_primary"
+                        <label for="objective_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Objective Type </label>
+                        <select id="objective_type" name="objective_type" v-model="stepForm.objective_type" required
                             class="block rounded-md w-full border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="type" :value="null">-</option>
                             <option :id="1" :value="1">Primary Objective</option>
                             <option :id="0" :value="0">Secondary Objective</option>
                         </select>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.is_primary">{{ stepForm.errors.is_primary }}</p>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective_type">{{ stepForm.errors.objective_type }}</p>
                     </div>
                 </div>
-                <div class="mt-4 pt-8 w-full flex items-center justify-center col-start-3">
-                    <button type="button" @click="autosaveLocally()"
+                <div class="mt-4 pt-8 w-full flex items-center justify-end col-start-3 gap-x-4 md:pr-2">
+                    <button type="button" @click="save()"
                         class="inline-flex items-center gap-x-1.5 rounded-md bg-green-600 px-8 py-2 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         Save
+                    </button>
+                    <button type="button" @click="cancel()"
+                            class="inline-flex items-center gap-x-1.5 rounded-md bg-red-700 px-8 py-2 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Cancel
                     </button>
                 </div>
             </div>
@@ -200,7 +226,7 @@ function rearrangeTable(objectives) {
                     </div>
                 </div>
                 <div class="mb-4 w-full col-start-2">
-                    <div v-if="stepForm.objective == 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                    <div v-if="stepForm.objective === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="objective_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom Topic </label>
                         <textarea rows="3" name="objective_custom" id="objective_custom"
                             v-model="stepForm.objective_custom"
@@ -209,7 +235,7 @@ function rearrangeTable(objectives) {
                     </div>
                 </div>
                 <div class="mb-4 w-full">
-                    <div v-if="stepForm.what_for == 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                    <div v-if="stepForm.what_for === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="what_for_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom Topic </label>
                         <textarea rows="3" name="what_for_custom" id="what_for_custom"
                           v-model="stepForm.what_for_custom"
@@ -219,12 +245,13 @@ function rearrangeTable(objectives) {
                 </div>
             </div>
             <DraggableTable
+                :key="draggableKey"
                 :topics="props.formData.enums.topics"
                 :primaryTypes="props.formData.enums.recom_objective_types"
                 :objectives="stepForm.objectives"
                 @get-objective-to-edit="getObjectiveToEdit"
                 @remove-objective="removeObjective"
-                @rearrangeTable="rearrangeTable"
+                @re-order-objectives="reOrderObjectives"
             ></DraggableTable>
         </div>
     </dynamic-form-wrapper>

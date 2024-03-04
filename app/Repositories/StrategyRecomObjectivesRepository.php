@@ -71,8 +71,38 @@ class StrategyRecomObjectivesRepository extends BaseRepository
     public function getMaxOrderId(int $id): int
     {
         $currentMax = $this->strategyRecomObjectives->where('strategy_report_recommendation_id', $id)->max('order');
-//        dd($currentMax + 1);
         return $currentMax + 1;
     }
+
+    public function getObjectiveById($id): StrategyRecomObjectives
+    {
+        return StrategyRecomObjectives::where('id', $id)->first();
+    }
+
+    public function updateObjectivesOrder(array $objectives):void
+    {
+        collect($objectives)->each(function ($obj){
+            unset($obj['client_id']);
+
+            $this->setStrategyReportRecomObjective(
+                $this->getObjectiveById($obj['id'])
+            );
+
+            $this->update($obj);
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
