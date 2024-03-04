@@ -35,7 +35,6 @@ class AssetPresenter extends BasePresenter
                 'purchased_at' => $this->model->start_at,
                 'original_value' => $this->model->original_value != null ? $this->currencyIntToString($this->model->original_value) : null,
                 'current_value' =>  $this->model->current_value != null ? $this->currencyIntToString($this->model->current_value): null,
-                'frequency' => $this->model->frequency,
             ],
             'savings' => [
                 'provider' => $this->model->provider != null ? [
