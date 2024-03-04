@@ -141,6 +141,14 @@ class FactFindSectionDataService
         if (array_key_exists('poa_name', $validatedData)) {
             $validatedData['poa_name'] = ucfirst($validatedData['poa_name']);
         }
+
+        if (array_key_exists('title', $validatedData)) {
+            if(config('enums.client.gendered_titles')[$validatedData['title']] != 0)
+            {
+                $validatedData['gender'] = config('enums.client.gendered_titles')[$validatedData['title']];
+            }
+        }
+
         //This example only has data from one table. This would be different if not the case. May need multiple repositories.
         $this->cr->updateFromValidated($validatedData);
     }
