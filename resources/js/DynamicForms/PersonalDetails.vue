@@ -140,7 +140,7 @@ async function autosaveLocally(){
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="last_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date of Birth </label>
                     <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                        <VueDatePicker text-input  @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="date_of_birth" id="date_of_birth"  placeholder="dd/mm/yyyy"/>
+                        <VueDatePicker text-input :enable-time-picker="false" @update:model-value="saveDate" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="dateRef" name="date_of_birth" id="date_of_birth"  placeholder="dd/mm/yyyy"/>
                     </div>
 
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.date_of_birth">{{ stepForm.errors.date_of_birth }}</p>
