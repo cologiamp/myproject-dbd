@@ -195,6 +195,21 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
+    public function investment_recommendation():HasOne
+    {
+        return $this->hasOne(InvestmentRecommendation::class);
+    }
+
+    public function investment_recommendation_items():BelongsToMany
+    {
+        return $this->belongsToMany(InvestmentRecommendationItem::class);
+    }
+
+    public function pension_recommendation():HasOne
+    {
+        return $this->hasOne(PensionRecommendation::class);
+    }
+
 
     //Presenter
     public function presenter() : ClientPresenter
@@ -357,4 +372,8 @@ class Client extends Model
         ]);
     }
 
+    public function client_two():HasOne
+    {
+        return $this->hasOne(Client::class,'c2_id','id');
+    }
 }

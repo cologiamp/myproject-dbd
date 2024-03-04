@@ -1658,5 +1658,152 @@ return [
     ],
     'relation_to_c2' => [
         0 => 'Partner'
+    ],
+    'investment_recommendation' => [
+        'fee_basis' => [
+            0 => 'Standard',
+            1 => 'Discounted',
+            2 => 'Friends and Family',
+            3 => 'Staff',
+            4 => 'JP Morgan Staff Terms',
+            5 => 'Standard Chartered Staff Terms',
+            6 => 'Saga Terms',
+            7 => 'Staff'
+        ],
+        'report_type' => [
+            0 => 'Growth Only',
+            1 => 'Income & Growth',
+            2 => 'Income Only'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
+        ]
+    ],
+    'investment_recommendation_items' => [
+        'types' => [
+            0 => 'bond_element',
+            1 => 'growth_element',
+            2 => 'cash_element',
+            3 => 'treasured_stock_transfers'
+        ],
+        'types_public' => [
+            0 => 'Bond Element',
+            1 => 'Growth Element',
+            2 => 'Cash Element',
+            3 => 'Treasured Stock Transfers'
+        ],
+        'descriptions' => [
+            0 => 'General Investment Account',
+            1 => 'Stocks and Shares ISA (transfer)',
+            2 => 'Stocks and Shares ISA (new subscription)',
+        ]
+    ],
+    'pension_recommendation' => [
+        'fee_basis' => [
+            0 => 'standard',
+            1 => 'discounted',
+            2 => 'friends_and_family',
+            3 => 'staff',
+            4 => 'jp_morgan_staff_terms',
+            5 => 'standard_chartered_staff_terms',
+            6 => 'saga_terms',
+            7 => 'staff'
+        ],
+        'fee_basis_public' => [
+            0 => 'Standard',
+            1 => 'Discounted',
+            2 => 'Friends and Family',
+            3 => 'Staff',
+            4 => 'JP Morgan Staff Terms',
+            5 => 'Standard Chartered Staff Terms',
+            6 => 'Saga Terms',
+            7 => 'Staff'
+        ],
+        'report_type' => [
+            0 => 'Growth Only',
+            1 => 'Retirement Income Only'
+        ],
+        'employment_status' => [
+            0 => 'Employed',
+            1 => 'Self-employed',
+            2 => 'Unemployed',
+            3 => 'Retired'
+        ],
+        'workplace_pension_type' => [
+            0 => 'Defined Contribution',
+            1 => 'Defined Benefit',
+            2 => 'Hybrid'
+        ],
+        'pension_review_transfer' => [
+            0 => 'No',
+            1 => 'Yes retiring soon',
+            2 => 'Yes leaving employer',
+            3 => 'Yes other'
+        ],
+        'retirement_option' => [
+            0 => 'Income Drawdown',
+            1 => 'Annuity',
+            2 => 'Cash sum'
+        ],
+        'policy_type' => [
+            0 => 'Defined Benefit Pension',
+            1 => 'Defined Contribution Pension'
+        ],
+        'new_contribution_type' => [
+            0 => 'Lump Sum',
+            1 => 'Regular'
+        ],
+        'new_contribution_paid_by' => [
+            0 => 'Client',
+            1 => 'Employer',
+            2 => '3rd Party'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
+        ],
+        'item_type' => [
+            0 => 'Cash',
+            1 => 'Income',
+            2 => 'Growth'
+        ],
+        'lqa_submitted' => [
+            0 => 'Yes',
+            1 => 'No',
+            2 => 'Have Authority'
+        ],
+        'policy_reviewed_transfer' => [
+            0 => 'Transfer',
+            1 => 'Information Only'
+        ]
     ]
 ];

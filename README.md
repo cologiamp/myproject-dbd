@@ -30,3 +30,14 @@ You can do this by setting the Repository in the composer.json file.
             }
         }
     ],
+
+
+To undo
+    
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/wealth-at-work/Intelliflo",
+            "no-api": true
+        }
+    ],

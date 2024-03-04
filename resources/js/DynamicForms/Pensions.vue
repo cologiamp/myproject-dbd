@@ -76,9 +76,6 @@ const props = defineProps({
 
 
 function formatAmount(e, index, dataField, type) {
-    console.log('type:' + type);
-    console.log('index:' + index);
-    console.log('dataField:' + dataField);
     stepForm[type][index][dataField] = '';
     stepForm[type][index][dataField] = changeToCurrency(e.target.value);
     autosaveLocally()
@@ -88,12 +85,6 @@ function saveDate(index, value, type) {
     stepForm[type][index].purchased_at = value;
     autosaveLocally();
 }
-
-
-
-// onMounted(() => {
-//     dateRef.value = props.formData.model.born_at;
-// })
 
 const stepForm = useForm({
     dc_pensions: props.formData.model.dc_pensions,
