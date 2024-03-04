@@ -515,7 +515,14 @@ return [
                         'saving_assets.*.regular_contributions' => 'sometimes|nullable|boolean',
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
-                        'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric'
+                        'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric',
+                        'saving_assets.*.frequency' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.frequency'))))
+                        ],
                     ],
                     'messages' => []
                 ],

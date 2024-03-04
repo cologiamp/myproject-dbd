@@ -34,7 +34,7 @@ class AssetPresenter extends BasePresenter
                 'description' => $this->model->description,
                 'purchased_at' => $this->model->start_at,
                 'original_value' => $this->model->original_value != null ? $this->currencyIntToString($this->model->original_value) : null,
-                'current_value' =>  $this->model->current_value != null ? $this->currencyIntToString($this->model->current_value): null
+                'current_value' =>  $this->model->current_value != null ? $this->currencyIntToString($this->model->current_value): null,
             ],
             'savings' => [
                 'provider' => $this->model->provider != null ? [
@@ -49,6 +49,7 @@ class AssetPresenter extends BasePresenter
                 'interest_rate' =>  $this->model->interest_rate,
                 'regular_contributions' => (bool)  $this->model->regular_contributions,
                 'contribution_amount' =>  $this->model->contribution_amount != null ? $this->currencyIntToString($this->model->contribution_amount) : null,
+                'frequency' => $this->model->frequency,
 
             ],
             default => []

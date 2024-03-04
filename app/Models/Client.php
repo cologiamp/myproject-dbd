@@ -243,6 +243,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
                 'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
+                'frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
