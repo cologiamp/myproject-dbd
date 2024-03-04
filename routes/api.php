@@ -10,8 +10,13 @@ use App\Http\Controllers\Api\LiabilityController;
 use App\Http\Controllers\Api\ExpenditureController;
 use App\Http\Controllers\Api\ShareSaveSchemeController;
 use App\Http\Controllers\Api\FactFindController;
+use App\Http\Controllers\Api\InvestmentRecommendationController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+use App\Http\Controllers\Api\InvestmentRecommendationItemController;
+use App\Http\Controllers\Api\PRContributionController;
+use App\Http\Controllers\Api\PRAllowanceController;
+use App\Http\Controllers\Api\PRItemsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +37,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/providers/search',SearchProviderController::class);
 Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindController::class,'update']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
+Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 
 
 Route::middleware('auth:sanctum')->group(function (){
@@ -42,8 +48,10 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
-
-
+    Route::delete('/investment-recommendation-items/{item}', [InvestmentRecommendationItemController::class,'delete']);
+    Route::delete('/pr-contributions/{contribution}', [PRContributionController::class,'delete']);
+    Route::delete('/pr-allowances/{allowance}', [PRAllowanceController::class,'delete']);
+    Route::delete('/pr-items/{item}', [PRItemsController::class,'delete']);
 });
 
 

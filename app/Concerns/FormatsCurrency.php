@@ -25,5 +25,14 @@ trait FormatsCurrency{
     {
         return '£' . number_format($amount/100,2);
     }
+    /**
+     * Formats percentage as required
+     * @param int $amount
+     * @return string
+     */
+    private function percentageIntToString(int $amount): string
+    {
+        return number_format($amount) . '%';
+    }
 
 }
