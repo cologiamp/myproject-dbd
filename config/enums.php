@@ -1499,6 +1499,7 @@ return [
             8 => 'Structure Product Growth',
             9 => 'Venture Capital Trust',
             10 => 'Other Investment',
+            11 => 'Collectives',
         ],
         'db_pension_statuses' => [
             0 => 'Active',
