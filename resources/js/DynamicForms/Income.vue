@@ -201,7 +201,7 @@ function changeToCurrency(amount) {
                 </div>
             </div>
             <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 mb-4 p-4">
-                <h4 class="col-span-6 text-xl font-bold pt-2"> Overall Income </h4>
+                <h4 class="col-span-6 text-xl font-bold pt-2"> Gross Income </h4>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="stepForm.useIncome == false">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total: </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
