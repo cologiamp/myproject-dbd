@@ -30,124 +30,127 @@ class PensionRepository extends BaseRepository
     {
         if($pension->has('defined_contribution_pension') && $pension->defined_contribution_pension != null)
         {
-            $db = $pension->defined_contribution_pension;
+            $dc = $pension->defined_contribution_pension;
         }
         else{
-            $db = new DefinedContributionPension();
-            $db->pension_scheme_id = $pension->id;
+            $dc = new DefinedContributionPension();
+            $dc->pension_scheme_id = $pension->id;
         }
         if(array_key_exists('type',$item))
         {
-            $db->type = $item['type'];
+            $dc->type = $item['type'];
         }
         else{
-            $db->type = null;
+            $dc->type = null;
         }
         if(array_key_exists('administrator',$item))
         {
-            $db->administrator = $item['administrator'];
+            $dc->administrator = $item['administrator'];
         }
         else{
-            $db->administrator = null;
+            $dc->administrator = null;
         }
 
         if(array_key_exists('policy_start_at',$item))
         {
-            $db->policy_start_at = $item['policy_start_at'];
+            $dc->policy_start_at = $item['policy_start_at'];
         }
         else{
-            $db->policy_start_at = null;
+            $dc->policy_start_at = null;
         }
 
         if(array_key_exists('policy_number',$item))
         {
-            $db->policy_number = $item['policy_number'];
+            $dc->policy_number = $item['policy_number'];
         }
         else{
-            $db->policy_number = null;
+            $dc->policy_number = null;
         }
 
         if(array_key_exists('gross_contribution_percent',$item))
         {
-            $db->gross_contribution_percent = $item['gross_contribution_percent'];
+            $dc->gross_contribution_percent = $item['gross_contribution_percent'];
         }
         else{
-            $db->gross_contribution_percent = null;
+            $dc->gross_contribution_percent = null;
         }
 
         if(array_key_exists('gross_contribution_absolute',$item))
         {
-            $db->gross_contribution_absolute = $item['gross_contribution_absolute'];
+            $dc->gross_contribution_absolute = $item['gross_contribution_absolute'];
         }
         else{
-            $db->gross_contribution_absolute = null;
+            $dc->gross_contribution_absolute = null;
         }
         if(array_key_exists('employer_contribution_percent',$item))
         {
-            $db->employer_contribution_percent = $item['employer_contribution_percent'];
+            $dc->employer_contribution_percent = $item['employer_contribution_percent'];
         }
         else{
-            $db->employer_contribution_percent = null;
+            $dc->employer_contribution_percent = null;
         }
         if(array_key_exists('employer_contribution_absolute',$item))
         {
-            $db->employer_contribution_absolute = $item['employer_contribution_absolute'];
+            $dc->employer_contribution_absolute = $item['employer_contribution_absolute'];
         }
         else{
-            $db->employer_contribution_absolute = null;
+            $dc->employer_contribution_absolute = null;
         }
         if(array_key_exists('value',$item))
         {
-            $db->value = $item['value'];
+            $dc->value = $item['value'];
         }
         else{
-            $db->value = null;
+            $dc->value = null;
         }
         if(array_key_exists('valuation_at',$item))
         {
-            $db->valuation_at = $item['valuation_at'];
+            $dc->valuation_at = $item['valuation_at'];
         }
         else{
-            $db->valuation_at = null;
+            $dc->valuation_at = null;
         }
         if(array_key_exists('is_retained',$item))
         {
-            $db->is_retained = $item['is_retained'];
+            $dc->is_retained = $item['is_retained'];
         }
         else{
-            $db->is_retained = null;
+            $dc->is_retained = null;
         }
         if(array_key_exists('retained_value',$item))
         {
-            $db->retained_value = $item['retained_value'];
+            $dc->retained_value = $item['retained_value'];
         }
 
         if(array_key_exists('current_fund_value',$item)) {
-            $db->current_fund_value = $item['current_fund_value'];
+            $dc->current_fund_value = $item['current_fund_value'];
         }
         if(array_key_exists('current_transfer_value',$item)) {
-            $db->current_transfer_value = $item['current_transfer_value'];
+            $dc->current_transfer_value = $item['current_transfer_value'];
         }
         if(array_key_exists('fund_name',$item)) {
-            $db->fund_name = $item['fund_name'];
+            $dc->fund_name = $item['fund_name'];
         }
         if(array_key_exists('fund_type',$item)) {
-            $db->fund_type = $item['fund_type'];
+            $dc->fund_type = $item['fund_type'];
         }
         if(array_key_exists('crystallised_status',$item)) {
-            $db->crystallised_status = $item['crystallised_status'];
+            $dc->crystallised_status = $item['crystallised_status'];
         }
         if(array_key_exists('crystallised_percentage',$item)) {
-            $db->crystallised_percentage = $item['crystallised_percentage'];
+            $dc->crystallised_percentage = $item['crystallised_percentage'];
+        }
+        if(array_key_exists('frequency',$item)) {
+            $dc->frequency = $item['frequency'];
         }
 
         else{
-            $db->retained_value = null;
+            $dc->retained_value = null;
         }
 
 
 
-        $db->save();
+        $dc->save();
 
 
 
