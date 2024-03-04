@@ -3,7 +3,7 @@ import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
 import 'vue-select/dist/vue-select.css';
-import DraggableTable from "@/Components/DraggableTableRows.vue";
+import DraggableTable from "@/Components/ObjectivesTable.vue";
 import {PlusCircleIcon} from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -65,7 +65,7 @@ async function getObjectiveToEdit(objectiveId) {
     is_edit.value = true;
     addObjective.value = false;
 
-    axios.get('/api/strategy-report-recommendation/get/'+ objectiveId).then(function (response){
+    axios.get('/api/strategy-objective/get/'+ objectiveId).then(function (response){
         stepForm.id = response.data.id
         stepForm.client_id = response.data.client_id
         stepForm.strategy_report_recommendation_id = response.data.strategy_report_recommendation_id

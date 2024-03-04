@@ -869,8 +869,18 @@ return [
             'messages' => []
         ],
         3 => [
-            'name' => 'Call to Action',
-            'rules' => []
+            'name' => 'Call to Actions',
+            'rules' => [
+                'id' => 'sometimes|nullable|numeric',
+                'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'call_to_action' => 'sometimes|nullable|numeric',
+                'call_to_action_custom' => 'sometimes|nullable|string',
+                'actions' => 'sometimes|nullable',
+                'actions.*.id' => 'sometimes|nullable|numeric',
+                'actions.*.strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'actions.*.call_to_action' => 'sometimes|nullable|numeric',
+                'actions.*.call_to_action_custom' => 'sometimes|nullable|string'
+            ]
         ]
     ]
 ];

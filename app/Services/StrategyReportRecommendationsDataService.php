@@ -5,17 +5,17 @@ namespace App\Services;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\Client;
-use App\Repositories\ClientRepository;
 use App\Models\StrategyReportRecommendation;
-use App\Repositories\StrategyReportRecomRepository;
+use App\Repositories\ClientRepository;
+use App\Repositories\StrategyRecomActionsRepository;
 use App\Repositories\StrategyRecomObjectivesRepository;
-use App\Models\StrategyRecomObjectives;
+use App\Repositories\StrategyReportRecomRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
-use Illuminate\Support\Arr;
 
 class StrategyReportRecommendationsDataService
 {
@@ -23,14 +23,17 @@ class StrategyReportRecommendationsDataService
     protected ClientRepository $clientRepository;
     protected StrategyReportRecomRepository $strategyReportRecomRepository;
     protected StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository;
+    protected StrategyRecomActionsRepository $strategyRecomActionsRepository;
     public function __construct(
         ClientRepository $clientRepository,
         StrategyReportRecomRepository $strategyReportRecomRepository,
-        StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository)
+        StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository,
+        StrategyRecomActionsRepository $strategyRecomActionsRepository)
     {
         $this->clientRepository = $clientRepository;
         $this->strategyReportRecomRepository = $strategyReportRecomRepository;
         $this->strategyRecomObjectivesRepository = $strategyRecomObjectivesRepository;
+        $this->strategyRecomActionsRepository = $strategyRecomActionsRepository;
     }
 
     //get the data for a single section of a factfind from a single client
@@ -131,6 +134,47 @@ class StrategyReportRecommendationsDataService
                     $this->strategyRecomObjectivesRepository->updateObjectivesOrder($validatedData['objectives']);
                 }
 
+            }
+        } catch (Throwable $e) {
+            Log::warning($e);
+            dd($e);
+        }
+    }
+
+    private function saveTab3(array $validatedData):void
+    {
+//        dd($validatedData);
+        try {
+            $this->strategyRecomActionsRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
+            $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
+
+            $singleActionData = Arr::except($validatedData, ['actions']);
+            ray(count($singleActionData) > 0)->purple();
+            ray($singleActionData)->purple();
+
+            if (count($singleActionData) > 0) {
+                if (array_key_exists('id',$singleActionData) && $singleActionData['id'] != null) {
+                    ray('update action')->orange();
+                    $this->strategyRecomActionsRepository->setStrategyReportRecomAction(
+                        $this->strategyRecomActionsRepository->getActionById($singleActionData['id'])
+                    );
+
+                    $this->strategyRecomActionsRepository->update($singleActionData);
+
+                } else {
+                    $singleActionData['strategy_report_recommendation_id'] = $recommendation->id;
+
+                    $orderId = $this->strategyRecomActionsRepository->getMaxOrderId($recommendation->id);
+                    $singleActionData['order'] = $orderId;
+
+                    ray('create new action')->green();
+                    $this->strategyRecomActionsRepository->create($singleActionData);
+                }
+                unset($validatedData['actions']);
+            } else {
+                if (array_key_exists('actions',$validatedData) && count($validatedData['actions']) > 0) {
+                    $this->strategyRecomActionsRepository->updateActionsOrder($validatedData['actions']);
+                }
             }
         } catch (Throwable $e) {
             Log::warning($e);

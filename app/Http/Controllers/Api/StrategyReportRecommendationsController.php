@@ -4,16 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
-use App\Models\StrategyRecomObjectives;
 use App\Models\StrategyReportRecommendation;
-use App\Repositories\ClientRepository;
-use App\Services\FactFindSectionDataService;
 use App\Services\StrategyReportRecommendationsDataService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class StrategyReportRecommendationsController extends Controller
 {
@@ -43,20 +40,5 @@ class StrategyReportRecommendationsController extends Controller
         $intStep = (int)$step;
 
         return json_encode(['model' =>  $srr->get(StrategyReportRecommendation::where('id',$client->strategy_report_recommendation_id)->first(),$intStep)['model']]);
-    }
-
-    public function get($id)
-    {
-        ray($id);
-        $objective = null;
-
-        try{
-            $objective = StrategyRecomObjectives::where('id', $id)->first();
-        }
-        catch (Exception $e)
-        {
-            Log::warning($e);
-        }
-        return json_encode($objective);
     }
 }

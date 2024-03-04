@@ -3,7 +3,6 @@
 namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
-use Carbon\Carbon;
 
 class StrategyReportRecomPresenter extends BasePresenter
 {
@@ -24,16 +23,24 @@ class StrategyReportRecomPresenter extends BasePresenter
                         'id' => $item->id,
                         'client_id' => $item->client_id,
                         'strategy_report_recommendation_id' => $item->strategy_report_recommendation_id,
-//                        'is_primary' => $item->is_primary !== null ? array_values(config('enums.strategy_report_recommendations.recom_objective_type'))[$item->is_primary] : null,
                         'is_primary' => $item->is_primary,
-//                        'type' => $item->type !== null ? array_values(config('enums.strategy_report_recommendations.topic'))[$item->type]['name'] : null,
                         'type' => $item->type,
-//                        'objective' => $item->objective !== null ? array_values(config('enums.strategy_report_recommendations.topic'))[$item->type]['objectives'][$item->objective] : null,
                         'objective' => $item->objective,
                         'objective_custom' => $item->objective_custom,
-//                        'what_for' => $item->what_for !== null ? array_values(config('enums.strategy_report_recommendations.topic'))[$item->type]['what_for'][$item->what_for] : null,
                         'what_for' => $item->what_for,
                         'what_for_custom' => $item->what_for_custom,
+                        'order' => $item->order
+                    ];
+                }),
+            ],
+            3 => [
+                'actions' => $this->model->actions()->orderBy('order', 'asc')->get()->map(function ($item){
+                    return [
+                        'id' => $item->id,
+                        'client_id' => $item->client_id,
+                        'strategy_report_recommendation_id' => $item->strategy_report_recommendation_id,
+                        'call_to_action' => $item->call_to_action,
+                        'call_to_action_custom' => $item->call_to_action_custom,
                         'order' => $item->order
                     ];
                 }),

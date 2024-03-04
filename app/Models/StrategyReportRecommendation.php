@@ -37,6 +37,9 @@ class StrategyReportRecommendation extends Model
                 'topics' => config('enums.strategy_report_recommendations.topic'),
                 'recom_objective_types' => config('enums.strategy_report_recommendations.recom_objective_type')
             ],
+            3 => [
+              'call_to_action_types' => config('enums.strategy_report_recommendations.call_to_action_types')
+            ],
             default => [
             ]
         };
