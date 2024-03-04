@@ -271,8 +271,12 @@ class FactFindSectionDataService
                     if ($employment['employer']) {
                         $employment['employer'] = ucfirst($employment['employer']);
                     }
+                    if ($employment['occupation']) {
+                        $employment['occupation'] = ucfirst($employment['occupation']);
+                    }
                     return $employment;
                 });
+
 
                 $validatedData['employment_details'] = $employment_details->toArray();
             }
