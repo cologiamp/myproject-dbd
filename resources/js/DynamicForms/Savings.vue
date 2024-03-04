@@ -253,7 +253,7 @@ async function autosaveLocally(){
                         </div>
                     </div>
 
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-if="asset.regular_contributions == true">
                         <label for="frequency"
                                class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
                         <select @change="autosaveLocally" v-model="asset.frequency"
