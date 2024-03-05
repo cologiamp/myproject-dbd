@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Concerns\ParsesIoClientData;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Repositories\ClientRepository;
@@ -14,6 +15,31 @@ use Exception;
 
 class FactFindController extends Controller
 {
+    use ParsesIoClientData;
+    public function solo(Client $client): true
+    {
+        $cr = App::make(ClientRepository::class);
+        $cr->setClient($client);
+        $cr->updateFromValidated(['declined_relationships' => true,'c2_id' => null,'relation_to_c2' => null]);
+        return true;
+    }
+
+    public function selectClientTwo(Client $client, $c2id, Request $request): void
+    {
+        $client2 = Client::where('io_id',$c2id)->first();
+        if($client2 == null)
+        {
+            $this->fetchAndHandleClient(null,$c2id);
+            $client2 = Client::where('io_id',$c2id)->first();
+        }
+
+        $cr = App::make(ClientRepository::class);
+        $cr->setClient($client);
+        $cr->updateFromValidated(['c2_id' => $client2->id,'relation_to_c2' => array_flip(config('enums.relation_to_c2'))[$request->relationship]]);
+    }
+
+
+
     /**
      * @param Client $client
      * @param $section
@@ -28,9 +54,32 @@ class FactFindController extends Controller
         if ($step == 2 && $section >= 2) {
             $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
         }
-        $thisClient = $client; //Will be replaced when merged with multiple client
+
+        //somehow extract and validate the separate steps for the data
+        $daddyRequest = $request->all();
+        collect($daddyRequest)->each(function ($item, $key) use (&$daddyRequest, $ffsds,$step,$section) {
+            if(is_numeric($key))
+            {
+                 $_client = Client::where('io_id',$key)->first()
+                try{
+                    $ffsds->validate($step, $section, $item, $_client); //throws exception if validation fails - comes back to Inertia as errorbag
+                }
+                catch (Exception $e)
+                {
+                    Log::warning($e);
+                }
+                $ffsds->store(
+                    $_client,
+                    $step,
+                    $section,
+                    $ffsds->validated($step, $section, $item, $_client)
+                );
+                unset($daddyRequest[$key]);
+            }
+        });
+        //validate the rest if it has other keys
         try{
-            $ffsds->validate($step, $section, $request,$thisClient); //throws exception if validation fails - comes back to Inertia as errorbag
+            $ffsds->validate($step, $section, $daddyRequest,$client); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
@@ -40,7 +89,7 @@ class FactFindController extends Controller
             $client,
             $step,
             $section,
-            $ffsds->validated($step, $section, $request,$thisClient)
+            $ffsds->validated($step, $section, $request,$client)
         );
         return json_encode(['model' =>  $ffsds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
     }

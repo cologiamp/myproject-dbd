@@ -153,6 +153,8 @@ return [
                                 Rule::in(array_keys((config('enums.address.residency_status'))))
                             ],
                             'addresses.*.date_from' => 'sometimes|nullable|date',
+                            'addresses.*.percent_ownership' => 'sometimes|nullable',
+                            'addresses.*.owner' => 'sometimes|nullable',
                             'phone_number' => 'sometimes|nullable|max:20',
                             'mobile_number' => 'sometimes|nullable|max:20',
                             'email_address' => 'sometimes|nullable|max:120|unique:clients'
@@ -176,16 +178,12 @@ return [
                             'dependents' => 'sometimes|nullable|array',
                             'dependents.*.name' => 'sometimes|nullable|string',
                             'dependents.*.dependent_id' => 'sometimes|nullable',
-                            'dependents.*.relationship_type' => [
-                                'required',
-                                'numeric',
-                                'integer',
-                                Rule::in(array_keys((config('enums.dependent.relationship_type'))))
-                            ],
+                            'dependents.*.relationships' => 'sometimes|nullable|array',
                             'dependents.*.born_at' => 'sometimes|nullable|date',
                             'dependents.*.financially_dependent_until' => 'sometimes|nullable|date',
                             'dependents.*.financial_dependent' => 'sometimes|nullable|boolean',
-                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean'
+                            'dependents.*.is_living_with_clients' => 'sometimes|nullable|boolean',
+                            'dependents.*.related_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ],
@@ -214,7 +212,8 @@ return [
                             'employment_details.*.occupation' => 'sometimes|nullable|string',
                             'employment_details.*.employer' => 'sometimes|nullable|string',
                             'employment_details.*.start_at' => 'sometimes|nullable|date',
-                            'employment_details.*.end_at' => 'sometimes|nullable|date'
+                            'employment_details.*.end_at' => 'sometimes|nullable|date',
+                            'employment_details.*.employee' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ],
@@ -261,7 +260,7 @@ return [
                             ],
                             'incomes.*.ends_at' => 'sometimes|nullable|date',
                             'incomes.*.starts_at' => 'sometimes|nullable|date',
-                            'incomes.*.belongs_to' => 'sometimes|nullable|integer',
+                            'incomes.*.belongs_to' => 'sometimes|nullable',
                             'incomes.*.record_exists' => 'sometimes|nullable|boolean',
 
                             'incomes.*.is_primary' => 'sometimes|nullable|boolean',
@@ -305,7 +304,8 @@ return [
                             'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
-                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date',
+                            'expenditures.*.belongs_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ],
@@ -346,7 +346,8 @@ return [
                             'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
-                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date',
+                            'expenditures.*.belongs_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ],
@@ -387,7 +388,8 @@ return [
                             'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
-                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date',
+                            'expenditures.*.belongs_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ],
@@ -428,7 +430,8 @@ return [
                             'expenditures.*.currently_active' => 'sometimes|nullable|boolean',
                             'expenditures.*.known_end_date' => 'sometimes|nullable|boolean',
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
-                            'expenditures.*.ends_at' => 'sometimes|nullable|date'
+                            'expenditures.*.ends_at' => 'sometimes|nullable|date',
+                            'expenditures.*.belongs_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ],
@@ -503,7 +506,7 @@ return [
                         'fixed_assets.*.current_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
-                        'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean'
+                        'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean',
                     ],
                     'messages' => []
                 ],
@@ -682,6 +685,7 @@ return [
                         'schemes.*.monthly_saving' => 'sometimes|nullable|string',
                         'schemes.*.number_of_shares' => 'sometimes|nullable|integer',
                         'schemes.*.matures_at' => 'sometimes|nullable|date',
+                        'schemes.*.start_at' => 'sometimes|nullable|date',
                     ],
                     'messages' => []
                 ],
@@ -863,7 +867,392 @@ return [
                     Rule::in(array_keys(config('enums.pension_objectives.lump_sum_death_benefits'))),
                 ],
             ]
+        ]
+    ],
+    'investmentrecommendation' => [
+        1 => [
+            'name' => 'Investment Recommendations',
+            'sections' => [
+                1 => [
+                    'name' => 'Basic Details',
+                    'fields' => [
+                        'investment_recommendations.is_ethical_investor',
+                        'investment_recommendations.risk_profile',
+                        'investment_recommendations.previously_invested_amount',
+                        'investment_recommendations.fee_basis',
+                        'investment_recommendations.fee_basis_discount'
+                    ],
+                    'rules' => [
+                        'is_ethical_investor' => 'sometimes|nullable|boolean',
+                        'risk_profile' => 'sometimes|nullable',
+                        'previously_invested_amount' => 'sometimes|nullable|string',
+                        'fee_basis' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.fee_basis'))),
+                        ],
+                        'fee_basis_discount' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ],
+                2 => [
+                    'name' => 'Income and Growth Report',
+                    'fields' => [
+                        'investment_recommendations.id',
+                        'investment_recommendations.report_for',
+                        'investment_recommendations.report_type',
+                        'investment_recommendations.isa_allowance_used',
+                        'investment_recommendations.cgt_allowance_used',
+                        'investment_recommendations.net_income_required',
+                        'investment_recommendations.regular_cash_required',
+                        'investment_recommendations.regular_cash_duration'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable',
+                        'report_for' => 'sometimes|nullable',
+                        'report_type' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.report_type'))),
+                        ],
+                        'isa_allowance_used' => 'sometimes|nullable|string',
+                        'cgt_allowance_used' => 'sometimes|nullable|string',
+                        'net_income_required' => 'sometimes|nullable|string',
+                        'regular_cash_required' => 'sometimes|nullable|string',
+                        'regular_cash_duration' => [
+                            'sometimes',
+                            'numeric',
+                            'nullable',
+                            'integer',
+                            Rule::in(array_keys(config('enums.investment_recommendation.frequency'))),
+                        ],
+                    ],
+                    'messages' => []
+                ],
+                3 => [
+                    'name' => 'Tax Consequences',
+                    'fields' => [
+                        'investment_recommendations.id',
+                        'investment_recommendations.cta_base_costs_available',
+                        'investment_recommendations.cta_sell_to_cgt_exemption',
+                        'investment_recommendations.cta_sell_all',
+                        'investment_recommendations.cta_sell_set_amount',
+                        'investment_recommendations.dta_base_costs_available',
+                        'investment_recommendations.dta_sell_to_cgt_exemption',
+                        'investment_recommendations.dta_sell_all',
+                        'investment_recommendations.dta_sell_set_amount',
+                        'investment_recommendations.isa_transfer_exit_penalty_not_ascertained',
+                        'investment_recommendations.isa_transfer_exit_penalty_ascertained',
+                        'investment_recommendations.investment_bonds_managed_funds',
+                        'investment_recommendations.investment_bonds_with_profits',
+                        'investment_recommendations.investment_bonds_chargeable_gain_not_calculated',
+                        'investment_recommendations.investment_bonds_exit_penalty_not_ascertained',
+                        'investment_recommendations.investment_bonds_exit_penalty_ascertained',
+                        'investment_bonds.id',
+                        'investment_bonds.provider',
+                        'investment_bonds.initial_investment',
+                        'investment_bonds.surrender_value',
+                        'investment_bonds.withdrawals',
+                        'investment_bonds.total_gain',
+                        'investment_bonds.top_slice',
+                        'investment_bonds.complete_years_held'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable',
+                        'cta_base_costs_available' => 'sometimes|nullable|string',
+                        'cta_sell_to_cgt_exemption' => 'sometimes|nullable|boolean',
+                        'cta_sell_all' => 'sometimes|nullable|boolean',
+                        'cta_sell_set_amount' => 'sometimes|nullable|string',
+                        'dta_base_costs_available' => 'sometimes|nullable|string',
+                        'dta_sell_to_cgt_exemption' => 'sometimes|nullable|boolean',
+                        'dta_sell_all' => 'sometimes|nullable|boolean',
+                        'dta_sell_set_amount' => 'sometimes|nullable|string',
+                        'isa_transfer_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
+                        'isa_transfer_exit_penalty_ascertained' => 'sometimes|nullable|string',
+                        'investment_bonds_managed_funds' => 'sometimes|nullable|boolean',
+                        'investment_bonds_with_profits' => 'sometimes|nullable|boolean',
+                        'investment_bonds_chargeable_gain_not_calculated' => 'sometimes|nullable|boolean',
+                        'investment_bonds_exit_penalty_not_ascertained' => 'sometimes|nullable|boolean',
+                        'investment_bonds_exit_penalty_ascertained' => 'sometimes|nullable|string',
+                        'investment_bonds' => 'sometimes|nullable|array',
+                        'investment_bonds.*.id' => 'sometimes|nullable|integer',
+                        'investment_bonds.*.provider' => 'sometimes|nullable|string',
+                        'investment_bonds.*.initial_investment' => 'sometimes|nullable|string',
+                        'investment_bonds.*.surrender_value' => 'sometimes|nullable|string',
+                        'investment_bonds.*.withdrawals' => 'sometimes|nullable|string',
+                        'investment_bonds.*.total_gain' => 'sometimes|nullable|string',
+                        'investment_bonds.*.top_slice' => 'sometimes|nullable|string',
+                        'investment_bonds.*.complete_years_held' => 'sometimes|nullable|int'
+                    ],
+                    'messages' => []
+                ],
+                4 => [
+                    'name' => 'Investment Recommendations',
+                    'fields' => [
+                        'investment_recommendation_items' => [
+                            'investment_recommendation_items.id',
+                            'investment_recommendation_items.type',
+                            'investment_recommendation_items.source_plan',
+                            'investment_recommendation_items.description',
+                            'investment_recommendation_items.stock_type',
+                            'investment_recommendation_items.number_of_units',
+                            'investment_recommendation_items.amount'
+                        ]
+                    ],
+                    'rules' => [
+                        'investment_recommendation_items' => 'sometimes|nullable|array',
+                        'investment_recommendation_items.*.id' => 'sometimes|nullable|integer',
+                        'investment_recommendation_items.*.type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.investment_recommendation_items.types'))))
+                        ],
+                        'investment_recommendation_items.*.source_plan' => 'sometimes|nullable|string',
+                        'investment_recommendation_items.*.description' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.investment_recommendation_items.descriptions'))))
+                        ],
+                        'investment_recommendation_items.*.stock_type' => 'sometimes|nullable|string',
+                        'investment_recommendation_items.*.number_of_units' => 'sometimes|nullable|integer',
+                        'investment_recommendation_items.*.amount' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ]
+            ]
         ],
+        2 => [
+            'name' => 'Pension Recommendations',
+            'sections' => [
+                1 => [
+                    'name' => 'Pension Basic Details',
+                    'fields' => [
+                        'pension_recommendation.previously_invested_amount',
+                        'pension_recommendation.fee_basis',
+                        'pension_recommendation.fee_basis_discount',
+                        'pension_recommendation.report_type'
+                    ],
+                    'rules' => [
+                        'pension_recommendation' => 'sometimes|nullable',
+                        'pension_recommendation.*.previously_invested_amount' => 'sometimes|nullable|integer',
+                        'pension_recommendation.*.fee_basis' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.fee_basis')))) //change enums to be same with investment recommendation later
+                        ],
+                        'pension_recommendation.*.fee_basis_discount' => 'sometimes|nullable|integer',
+                        'pension_recommendation.*.report_type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.report_type'))))
+                        ]
+                    ],
+                    'messages' => []
+                ],
+                2 => [
+                    'name' => 'Client Details',
+                    'fields' => [
+                        'pension_recommendation.employment_status',
+                        'pension_recommendation.current_employer_name',
+                        'pension_recommendation.workplace_pension_type',
+                        'pension_recommendation.employers_pension_name',
+                        'pension_recommendation.active_pension_member',
+                        'pension_recommendation.active_pension_member_reason_not',
+                        'pension_recommendation.active_pension_review_for_transfer',
+                        'pension_recommendation.active_pension_review_transfer_reason',
+                        'pension_recommendation.pension_draw_age',
+                        'pension_recommendation.retirement_option'
+                    ],
+                    'rules' => [
+                        'pension_recommendation' => 'sometimes|nullable',
+                        'pension_recommendation.*.employment_status' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.employment_status'))))
+                        ],
+                        'pension_recommendation.*.current_employer_name' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.workplace_pension_type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.workplace_pension_type'))))
+                        ],
+                        'pension_recommendation.*.employers_pension_name' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.active_pension_member' => 'sometimes|nullable|boolean',
+                        'pension_recommendation.*.active_pension_member_reason_not' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.active_pension_review_for_transfer' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.pension_review_transfer'))))
+                        ],
+                        'pension_recommendation.*.active_pension_review_transfer_reason' => 'sometimes|nullable|string',
+                        'pension_recommendation.*.pension_draw_age' => 'sometimes|nullable|integer',
+                        'pension_recommendation.*.retirement_option' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.retirement_option'))))
+                        ]
+                    ],
+                    'messages' => []
+                ],
+                3 => [
+                    'name' => 'Existing Pension Plans',
+                    'fields' => [
+                        'existing_pension_plans.client_id',
+                        'existing_pension_plans.employer',
+                        'existing_pension_plans.administrator',
+                        'existing_pension_plans.policy_type',
+                        'existing_pension_plans.policy_number',
+                        'existing_pension_plans.lqa_submitted',
+                        'existing_pension_plans.policy_reviewed_transfer'
+                    ],
+                    'rules' => [
+                        'existing_pension_plans' => 'sometimes|nullable',
+                        'existing_pension_plans.*.client_id' => 'sometimes|nullable|integer',
+                        'existing_pension_plans.*.employer' => 'sometimes|nullable|string',
+                        'existing_pension_plans.*.administrator' => 'sometimes|nullable',
+                        'existing_pension_plans.*.policy_type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.policy_type'))))
+                        ],
+                        'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string',
+                        'existing_pension_plans.*.lqa_submitted' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.lqa_submitted'))))
+                        ],
+                        'existing_pension_plans.*.policy_reviewed_transfer' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.policy_reviewed_transfer'))))
+                        ]
+                    ],
+                    'messages' => []
+                ],
+                4 => [
+                    'name' => 'New Contributions',
+                    'fields' => [
+                        'prnew_contributions.id',
+                        'prnew_contributions.pension_recommendation_id',
+                        'prnew_contributions.tax_year',
+                        'prnew_contributions.estimated_relevant_earnings',
+                        'prnew_contributions.estimated_adjusted_income',
+                        'prnew_contributions.type',
+                        'prnew_contributions.paid_by',
+                        'prnew_contributions.amount_gross',
+                        'prnew_contributions.frequency'
+                    ],
+                    'rules' => [
+                        'prnew_contributions' => 'sometimes|nullable',
+                        'prnew_contributions.*.id' => 'sometimes|nullable|integer',
+                        'prnew_contributions.*.pension_recommendation_id' => 'sometimes|nullable|integer',
+                        'prnew_contributions.*.tax_year' => 'sometimes|nullable|string',
+                        'prnew_contributions.*.estimated_relevant_earnings' => 'sometimes|nullable|string',
+                        'prnew_contributions.*.estimated_adjusted_income' => 'sometimes|nullable|string',
+                        'prnew_contributions.*.type' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.new_contribution_type'))))
+                        ],
+                        'prnew_contributions.*.paid_by' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.new_contribution_paid_by'))))
+                        ],
+                        'prnew_contributions.*.amount_gross' => 'sometimes|nullable|string',
+                        'prnew_contributions.*.frequency' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.frequency')))) //use existing frequency enum
+                        ],
+                    ],
+                    'messages' => []
+                ],
+                5 => [
+                    'name' => 'Annual Allowance and Draw Down',
+                    'fields' => [
+                        'pr_annual_allowances' => [
+                            'pr_annual_allowances.tax_year',
+                            'pr_annual_allowances.annual_allowance',
+                            'pr_annual_allowances.pension_input',
+                            'pr_annual_allowances.unused_allowance'
+                        ],
+                        'pension_recommendation.pension_recommendation_id',
+                        'pension_recommendation.dd_pcls_spend',
+                        'pension_recommendation.dd_pcls_income',
+                        'pension_recommendation.dd_income'
+                    ],
+                    'rules' => [
+                        'pr_annual_allowances' => 'sometimes|nullable',
+                        'pr_annual_allowances.*.tax_year' => 'sometimes|nullable|string',
+                        'pr_annual_allowances.*.annual_allowance' => 'sometimes|nullable|string',
+                        'pr_annual_allowances.*.pension_input' => 'sometimes|nullable|string',
+                        'pr_annual_allowances.*.unused_allowance' => 'sometimes|nullable|string',
+                        'pension_recommendation_id' => 'sometimes|nullable|integer',
+                        'dd_pcls_spend' => 'sometimes|nullable|string',
+                        'dd_pcls_income' => 'sometimes|nullable|string',
+                        'dd_income' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => []
+                ],
+                6 => [
+                    'name' => 'Pension Recommendations',
+                    'fields' => [
+                        'pr_items.type',
+                        'pr_items.value',
+                        'pr_items.percentage',
+                        'pr_items.is_percentage'
+                    ],
+                    'rules' => [
+                        'pr_items' => 'sometimes|nullable|array',
+                        'pr_items.*.id' => 'sometimes|nullable|integer',
+                        'pr_items.*.pension_recommendation_id' => 'sometimes|nullable|integer',
+                        'pr_items.*.type' => [
+                            'sometimes',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.pension_recommendation.item_type'))))
+                        ],
+                        'pr_items.*.value' => 'sometimes',
+                        'pr_items.*.percentage' => 'sometimes|nullable',
+                        'pr_items.*.is_percentage' => 'sometimes|boolean'
+                    ],
+                    'messages' => []
+                ]
+            ]
+        ]
+    ],
 
-    ]
 ];

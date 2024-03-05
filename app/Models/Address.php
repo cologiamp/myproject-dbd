@@ -10,6 +10,6 @@ class Address extends Model
     protected $guarded = [];
     public function clients():BelongsToMany
     {
-        return $this->belongsToMany(Client::class);
+        return $this->belongsToMany(Client::class)->withPivot('percent_ownership');
     }
 }

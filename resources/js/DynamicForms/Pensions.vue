@@ -91,12 +91,6 @@ function saveDate(index, value, type) {
     autosaveLocally();
 }
 
-
-
-// onMounted(() => {
-//     dateRef.value = props.formData.model.born_at;
-// })
-
 const stepForm = useForm({
     dc_pensions: props.formData.model.dc_pensions,
     db_pensions: props.formData.model.db_pensions,
@@ -424,6 +418,9 @@ function removePension(index,type) {
                     </div>
                 </div>
 
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Personal Contribution </h4>
+
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Personal Contribution (gross) (%) </label>
@@ -441,8 +438,12 @@ function removePension(index,type) {
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                 </div>
+                </div>
 
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Employer Contribution </h4>
+
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="employer_contribution_percent" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Employer Contribution (%) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input  type="number" name="employer_contribution_percent" id="employer_contribution_percent"

@@ -191,13 +191,7 @@ class FactFindSectionDataService
     {
         try {
             if (array_key_exists('addresses', $validatedData)) {
-
-                $client = $this->cr->getClient();
-                $passedAddressIds =  collect($validatedData['addresses'])->pluck('address_id')->filter();
-                //addresses can belong to multiple clients, so we don't destroy them, just detach
-                $client->addresses()->detach($client->addresses->whereNotIn('id', $passedAddressIds)->pluck('id'));
-
-                collect($validatedData['addresses'])->each(function ($item) {
+                $addresses = collect($validatedData['addresses'])->map(function ($item) {
                     if (array_key_exists('date_from',$item) && $item['date_from'] && $item['date_from'] != null) {
                         $item['date_from'] = Carbon::parse($item['date_from']);
                     }
@@ -205,18 +199,12 @@ class FactFindSectionDataService
                     {
                         $item['country'] = (int)$item['country'];
                     }
-
-                    $this->cr->createOrUpdateAddress($item);
+                    return $item;
                 });
+                $this->cr->createOrUpdateAddresses($addresses);
             }
 
-            $contactDetails = array(
-                'phone_number' => $validatedData['phone_number'],
-                'email_address' => $validatedData['email_address'],
-                'mobile_number' => $validatedData['mobile_number']
-            );
-
-            $this->cr->updateFromValidated($contactDetails);
+            $this->cr->updateFromValidated(collect($validatedData)->only(['mobile_number','email_address','phone_number'])->toArray());
         } catch (Throwable $e) {
             Log::warning($e);
         }
@@ -638,11 +626,7 @@ class FactFindSectionDataService
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
-
-            if (array_key_exists('employer', $item) && $item['employer'] != '') {
-                $item['employer'] = ucfirst($item['employer']);
-            }
-
+          
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -658,7 +642,9 @@ class FactFindSectionDataService
             else{
                 unset($item['cetv_ends_at']);
             }
-
+            if (array_key_exists('employer', $item) && $item['employer'] != '') {
+                $item['employer'] = ucfirst($item['employer']);
+            }
             if (array_key_exists('prospective_pension_standard',$item) && $item['prospective_pension_standard'] != null){
                 $item['prospective_pension_standard'] = $this->currencyStringToInt($item['prospective_pension_standard']);
             }
@@ -719,6 +705,12 @@ class FactFindSectionDataService
             if (array_key_exists('monthly_saving',$scheme) && $scheme['monthly_saving'] != null){
                 $scheme['monthly_saving'] = $this->currencyStringToInt($scheme['monthly_saving']);
             }
+            if (array_key_exists('start_at',$scheme) && $scheme['start_at'] != null){
+                $scheme['start_at'] = Carbon::parse($scheme['start_at']);
+            }
+            else{
+                unset($scheme['start_at']);
+            }
             return $scheme;
         });
 
@@ -762,6 +754,7 @@ class FactFindSectionDataService
 
         $lscr = App::make(LumpSumCapitalRepository::class);
         try{
+            $lscr->setClient($this->cr->getClient());
             $lscr->createOrUpdateCapitals($capitals);
         }
         catch(Throwable $e){

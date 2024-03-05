@@ -82,9 +82,7 @@ class DependentRepository extends BaseRepository
         {
             $data = $data->safe();
         }
-
-        $syncDependents = [];
-        collect($data['dependents'])->each(function ($dependent) use ($data, &$syncDependents) {
+        collect($data['dependents'])->each(function ($dependent) use ($data) {
 
             if(array_key_exists('dependent_id', $dependent)) {
 
@@ -96,8 +94,7 @@ class DependentRepository extends BaseRepository
                     'financially_dependent_until' => $dependent['financially_dependent_until'],
                     'is_living_with_clients' => $dependent['is_living_with_clients']
                 ]);
-
-                $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
+                $model->clients()->detach();
             } else {
 
                 $model = Dependent::create([
@@ -107,15 +104,18 @@ class DependentRepository extends BaseRepository
                     'financially_dependent_until' => $dependent['financially_dependent_until'],
                     'is_living_with_clients' => $dependent['is_living_with_clients']
                 ]);
-
-
-                $syncDependents[$model->id] = ['relationship_type' => $dependent['relationship_type']];
             }
+            collect($dependent['relationships'])->each(function ($item, $io_id) use ($model){
+                ray($item);
+                if($item['is_related'])
+                {
+                    $c = Client::where('io_id',$io_id)->first();
+                    $c->dependents()->attach($model,['relationship_type' => $item['relationship_type'] ?? 5]);
+                }
+            });
 
         });
 
-        //do sync on all the dependent records updated/registered
-        $this->client->dependents()->sync($syncDependents);
 
     }
 

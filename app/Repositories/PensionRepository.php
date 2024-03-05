@@ -248,7 +248,6 @@ class PensionRepository extends BaseRepository
     private function updateBasePensionSchemeRecord(array $item):PensionScheme
     {
         if(array_key_exists('id', $item) && $item['id'] != null){
-
             //Pension first
             $pension = PensionScheme::where('id',$item['id'])->first();
             $pension = $this->updateBP($pension,$item);
@@ -283,6 +282,20 @@ class PensionRepository extends BaseRepository
         }
         else{
             $pension->retirement_age = null;
+        }
+        if(array_key_exists('lqa_submitted',$item))
+        {
+            $pension->lqa_submitted = $item['lqa_submitted'];
+        }
+        else{
+            $pension->lqa_submitted = null;
+        }
+        if(array_key_exists('policy_reviewed_transfer',$item))
+        {
+            $pension->policy_reviewed_transfer = $item['policy_reviewed_transfer'];
+        }
+        else{
+            $pension->policy_reviewed_transfer = null;
         }
         return $pension;
     }

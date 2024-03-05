@@ -12,6 +12,29 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
     ],
+    purge: {
+        content: [
+            './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+            './vendor/laravel/jetstream/**/*.blade.php',
+            './storage/framework/views/*.php',
+            './resources/views/**/*.blade.php',
+            './resources/js/**/*.vue',
+        ],
+        safelist: [
+            "col-span-1",
+            "col-span-2",
+            "col-span-3",
+            "col-span-4",
+            "col-span-5",
+            "col-span-6",
+            "col-span-7",
+            "col-span-8",
+            "row-span-1",
+            "row-span-2",
+            "row-span-3",
+            "row-span-4",
+        ]
+    },
 
     theme: {
         extend: {

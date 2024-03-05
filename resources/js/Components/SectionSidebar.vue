@@ -22,6 +22,7 @@ const props = defineProps({
 
 const initialSectionKey = inject("onloadKey");
 const selectedSectionId = ref(1);
+const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
 
 function sectionsClick(index, item) {
     console.log('CALLED')
@@ -95,7 +96,7 @@ function nextTab(){
 
 <template>
 
-  <aside id="default-sidebar" class="sticky top-48 z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" aria-label="Sidebar">
+  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" :class="!hide_progress.includes(props.tabName) ? 'top-48' : 'top-36'" aria-label="Sidebar">
       <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
               <ul class="font-medium">
                   <li v-for="(item, index) in props.sidebarItems"
@@ -103,12 +104,12 @@ function nextTab(){
                       :key="item.name"
                       :id="index"
                       @click="toggleDropdown(index); sectionsClick(index, item)" class="cursor-pointer">
-                      <div class="flex items-center p-2 text-aaron-50 gap-x-3 rounded-md text-sm leading-6 font-semibold group">
-                          <div class="rounded-full w-11 h-11 py-2 text-center"
+                      <div class="grid grid-cols-4 items-center p-2 text-aaron-50 rounded-md text-base font-semibold group">
+                          <div class="rounded-full w-11 h-11 py-3 text-center text-sm"
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
-                          <span class="ms-3 text-base">{{ item.name }}</span>
+                          <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>
                       </div>
                   </li>
               </ul>
