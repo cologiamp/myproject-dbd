@@ -119,6 +119,7 @@ class ClientRepository extends BaseRepository
             $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         else{
+            Log::info('creating new address');
             $addr = Address::create(collect($data)->except(['address_id','io_id'])->toArray());
 
             $this->client->addresses()->attach($addr->fresh());

@@ -40,7 +40,7 @@ async function selectRelationship(selectedRelationship)
         })
     }
     else{
-       
+
     }
 
 }

@@ -95,8 +95,8 @@ class ClientPresenter extends BasePresenter
                         'smoked_in_last_12_months' => (bool) $this->model->client_two->health?->smoked_in_last_12_months
                     ]
                 ],
-                '1.3' => [ //merge clients here?
-                    'addresses' => collect($this->model->addresses->map(function ($address){
+                '1.3' => [
+                    'addresses' => collect($this->model->addresses->merge($this->model->client_two->addresses)->sortBy('id')->map(function ($address){
                         return [
                             'address_id' => $address['id'],
                             'address_line_1' => $address['address_line_1'],
@@ -123,7 +123,7 @@ class ClientPresenter extends BasePresenter
                     ],
                 ],
                 '1.4' => [
-                    'dependents' => collect($this->model->dependents->merge($this->model->client_two->dependents)->map(function ($dependent){
+                    'dependents' => collect($this->model->dependents->merge($this->model->client_two->dependents)->sortBy('id')->map(function ($dependent){
                         return [
                             'dependent_id' => $dependent->id,
                             'name' => $dependent->name,
@@ -151,9 +151,10 @@ class ClientPresenter extends BasePresenter
                 }))
                 ],
                 '1.5' => [
-                    'employment_details' => collect($this->model->employment_details->merge($this->model->client_two->employment_details)->map(function ($employment){
+                    'employment_details' => collect($this->model->employment_details->merge($this->model->client_two->employment_details)->sortBy('id')->map(function ($employment){
                         return [
                             'id' => $employment->id,
+                            'employee' => $employment->client->io_id,
                             'employment_status' => $employment->employment_status,
                             'intended_retirement_age' => $employment->intended_retirement_age,
                             'occupation' => $employment->occupation,
@@ -164,7 +165,7 @@ class ClientPresenter extends BasePresenter
                     }))
                 ],
                 '2.1' => [
-                    'incomes' => collect($this->model->incomes->merge($this->model->client_two->incomes))->map(function ($income){
+                    'incomes' => collect($this->model->incomes->merge($this->model->client_two->incomes))->sortBy('id')->map(function ($income){
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
@@ -174,40 +175,40 @@ class ClientPresenter extends BasePresenter
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,
-                            'belongs_to' => $income->pivot->client_id,
+                            'belongs_to' => $income->clients->count() > 1 ? 'Both' : $income->clients->first()->io_id,
                             'record_exists' => $income->pivot->client_id ? true : false,
                         ];
                     }),
-                    'useIncome' => count($this->model->incomes) > 0 ? true : false,
+                    'useIncome' => count(collect($this->model->incomes->merge($this->model->client_two->incomes))) > 0 ? true : false,
                     'total' => count($this->model->incomes) > 0 ? null : $this->model->total_income_basic
                 ],
                 '2.2' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_essential_expenditure')->get())->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_essential_expenditure')->get())->sortBy('id')->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.3' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get())->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get())->sortBy('id')->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.4' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get())->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get())->sortBy('id')->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.5' => [
                     'client_id' => $this->model->io_id,
-                    'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('liability_expenditure')->get())->map(function ($expenditure){
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('liability_expenditure')->get())->sortBy('id')->map(function ($expenditure){
                      return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '2.6' => [
                     'client_id' => $this->model->io_id,
-                      'expenditures' => collect($this->model->expenditures()->inConfigSection('lump_sum_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('lump_sum_expenditure')->get())->map(function ($expenditure){
+                      'expenditures' => collect($this->model->expenditures()->inConfigSection('lump_sum_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('lump_sum_expenditure')->get())->sortBy('id')->map(function ($expenditure){
                           return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
@@ -222,7 +223,7 @@ class ClientPresenter extends BasePresenter
                     }))
                 ],
                 '3.3' => [
-                   'investments' => $this->model->other_investments->merge($this->model->client_two->other_investments)->map(function ($investment){
+                   'investments' => $this->model->other_investments->merge($this->model->client_two->other_investments)->sortBy('id')->map(function ($investment){
                        return [
                           'id' => $investment->id,
                           'owner' => $investment->client->io_id,
@@ -299,7 +300,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '3.5' => [
-                    'schemes' => $this->model->share_save_schemes->merge($this->model->client_two->share_save_schemes)->map(function ($item){
+                    'schemes' => $this->model->share_save_schemes->merge($this->model->client_two->share_save_schemes)->sortBy('id')->map(function ($item){
                         return [
                             'id' => $item->id,
                             'owner' => $item->client->io_id,
@@ -313,7 +314,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '3.6' => [
-                    'capitals' => $this->model->lump_sum_capitals->merge($this->model->client_two->lump_sum_capitals)->map(function ($item){
+                    'capitals' => $this->model->lump_sum_capitals->merge($this->model->client_two->lump_sum_capitals)->sortBy('id')->map(function ($item){
                         return [
                             'id' => $item->id,
                             'owner' => $item->clients->count() > 1 ? 'Both' : $item->clients->first()->io_id,
@@ -326,7 +327,7 @@ class ClientPresenter extends BasePresenter
                     })
                 ],
                 '4.1' => [
-                    'liabilities' => $this->model->liabilities->merge($this->model->client_two->liabilities)->map(function ($liability){
+                    'liabilities' => $this->model->liabilities->merge($this->model->client_two->liabilities)->sortBy('id')->map(function ($liability){
                         return [
                             'id' => $liability->id,
                             'owner' => $liability->clients->count() > 1 ? 'Both' : $liability->clients->first()->io_id,
@@ -426,6 +427,7 @@ class ClientPresenter extends BasePresenter
                     'employment_details' => collect($this->model->employment_details->map(function ($employment){
                         return [
                             'id' => $employment->id,
+                            'employee' => $employment->client->io_id,
                             'employment_status' => $employment->employment_status,
                             'intended_retirement_age' => $employment->intended_retirement_age,
                             'occupation' => $employment->occupation,

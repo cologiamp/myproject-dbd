@@ -25,7 +25,7 @@ const selectedSectionId = ref(1);
 const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
 
 function sectionsClick(index, item) {
-    console.log('CALLED')
+    // alert('happened');
     selectedSectionId.value = index
 
     Object.keys(props.sidebarItems).forEach(key => {
@@ -47,6 +47,17 @@ provide("selectedSectionId", selectedSectionId);
 
 onBeforeMount(() => {
     selectedSectionId.value = initialSectionKey.value
+
+    const url = new URL(window.location);
+    if(url.searchParams.get('step') == null)
+    {
+        url.searchParams.set('step', 1);
+    }
+    if(url.searchParams.get('section') == null)
+    {
+        url.searchParams.set('section', 1);
+    }
+    window.history.pushState({}, '', url);
 });
 
 const currentSelectedSection = ref(1);

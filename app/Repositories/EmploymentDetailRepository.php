@@ -83,10 +83,9 @@ class EmploymentDetailRepository extends BaseRepository
         }
 
         DB::beginTransaction();
-
         try {
             collect($data['employment_details'])->each(function ($employment) {
-                if($employment['employee'] != null)
+                if(array_key_exists('employee',$employment) && $employment['employee'] != null)
                 {
                     $employment['client_id'] = Client::where('io_id',$employment['employee'])->first()->id;
                 }

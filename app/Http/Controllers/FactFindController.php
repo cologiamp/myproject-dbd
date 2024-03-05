@@ -27,13 +27,13 @@ class FactFindController extends Controller
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
         $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
-
         return Inertia::render('FactFind', [
             'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
+            'url' => $request->getBaseUrl().$request->getRequestUri().$request->getQueryString(),
             'progress' => $this->clientRepository->calculateFactFindElementProgress($step) //Chore: This is not used? Can this be refactored?
         ]);
     }
