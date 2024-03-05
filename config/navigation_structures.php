@@ -157,7 +157,7 @@ return [
                             'addresses.*.owner' => 'sometimes|nullable',
                             'phone_number' => 'sometimes|nullable|max:20',
                             'mobile_number' => 'sometimes|nullable|max:20',
-                            'email_address' => 'sometimes|nullable|max:120'
+                            'email_address' => 'sometimes|nullable|max:120|unique:clients'
                         ],
                         'messages' => []
                     ],
@@ -434,6 +434,40 @@ return [
                             'expenditures.*.belongs_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
+                    ],
+                    6 => [
+                        'name' => 'Lump Sum Expenditure',
+                        'fields' => [
+                            'expenditures' => [
+                                'expenditures.type',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.description',
+                                'expenditures.starts_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.lump_sum_expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                        ],
+                        'messages' => []
                     ]
                 ],
             ],
@@ -519,6 +553,13 @@ return [
                         'saving_assets.*.start_date' => 'sometimes|nullable|date',
                         'saving_assets.*.end_date' => 'sometimes|nullable|date',
                         'saving_assets.*.interest_rate' => 'sometimes|nullable|numeric',
+                        'saving_assets.*.frequency' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.assets.frequency'))))
+                        ],
                     ],
                     'messages' => []
                 ],
@@ -611,17 +652,25 @@ return [
                                 'integer',
                                 Rule::in(array_keys((config('enums.assets.pension_crystallised_statuses'))))
                             ],
-                            'dc_pensions.*.fund_type' => [
+                            'dc_pensions.*.crystallised_percentage' => 'sometimes|nullable',
+                            'dc_pensions.*.funds.*.fund_type' => [
                                 'sometimes',
                                 'numeric',
                                 'nullable',
                                 'integer',
                                 Rule::in(array_keys((config('enums.assets.pension_fund_types'))))
                             ],
-                            'dc_pensions.*.crystallised_percentage' => 'sometimes|nullable',
-                            'dc_pensions.*.current_fund_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.fund_name' => 'sometimes|nullable|max:255',
-                            'dc_pensions.*.current_transfer_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.funds.*.id' => 'sometimes|nullable',
+                            'dc_pensions.*.funds.*.current_fund_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.funds.*.fund_name' => 'sometimes|nullable|max:255',
+                            'dc_pensions.*.funds.*.current_transfer_value' => 'sometimes|nullable|string',
+                            'dc_pensions.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.frequency'))))
+                            ],
                     ],
                     'messages' => []
                 ],

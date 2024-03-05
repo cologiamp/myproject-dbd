@@ -68,26 +68,27 @@ class FactFindSectionDataService
         ];
     }
 
-    public function validate(int $step, int $section, $request)
+    public function validate(int $step, int $section, Request $request, Client $client)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
-        if(!is_array($request))
+
+        if($step == 1 && $section == 3)
         {
-           $request = $request->all();
+            $rules['email_address'] = $rules['email_address'] . ',email_address,'.$client->id;
         }
-        return Validator::make($request, $rules, $messages)->validate();
+        return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
-    public function validated(int $step, int $section, $request)
+    public function validated(int $step, int $section, Request $request,  Client $client)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
-        if(!is_array($request))
+        if($step == 1 && $section == 3)
         {
-            $request = $request->all();
+            $rules['email_address'] = $rules['email_address'] . ',email_address,'.$client->id;
         }
-        return Validator::make($request, $rules, $messages)->validated();
+        return Validator::make($request->all(), $rules, $messages)->validated();
     }
 
     /**
@@ -125,6 +126,29 @@ class FactFindSectionDataService
         if (array_key_exists('country_of_residence', $validatedData) && $validatedData['country_of_residence'] != null) {
             $validatedData['country_of_residence'] = array_flip(config('enums.client.iso_2_int'))[$validatedData['country_of_residence']];
         }
+        if (array_key_exists('ni_number', $validatedData)) {
+            $validatedData['ni_number'] = strtoupper($validatedData['ni_number']);
+        }
+        if (array_key_exists('first_name', $validatedData)) {
+            $validatedData['first_name'] = ucfirst($validatedData['first_name']);
+        }
+        if (array_key_exists('middle_name', $validatedData)) {
+            $validatedData['middle_name'] = ucfirst($validatedData['middle_name']);
+        }
+        if (array_key_exists('last_name', $validatedData)) {
+            $validatedData['last_name'] = ucfirst($validatedData['last_name']);
+        }
+        if (array_key_exists('poa_name', $validatedData)) {
+            $validatedData['poa_name'] = ucfirst($validatedData['poa_name']);
+        }
+
+        if (array_key_exists('title', $validatedData)) {
+            if(config('enums.client.gendered_titles')[$validatedData['title']] != 0)
+            {
+                $validatedData['gender'] = config('enums.client.gendered_titles')[$validatedData['title']];
+            }
+        }
+
         //This example only has data from one table. This would be different if not the case. May need multiple repositories.
         $this->cr->updateFromValidated($validatedData);
     }
@@ -207,6 +231,10 @@ class FactFindSectionDataService
                     {
                         $dependent['is_living_with_clients'] = true;
                     }
+                    if ($dependent['name']) {
+                        $dependent['name'] = ucfirst($dependent['name']);
+                    }
+
                     return $dependent;
                 });
 
@@ -236,9 +264,15 @@ class FactFindSectionDataService
                     if ($employment['end_at']) {
                         $employment['end_at'] = Carbon::parse($employment['end_at']);
                     }
-
+                    if ($employment['employer']) {
+                        $employment['employer'] = ucfirst($employment['employer']);
+                    }
+                    if ($employment['occupation']) {
+                        $employment['occupation'] = ucfirst($employment['occupation']);
+                    }
                     return $employment;
                 });
+
 
                 $validatedData['employment_details'] = $employment_details->toArray();
             }
@@ -339,6 +373,11 @@ class FactFindSectionDataService
      * @return void
      */
     private function _25(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
+    private function _26(array $validatedData): void
     {
         $this->parseAndUpdateExpenditure($validatedData);
     }
@@ -516,6 +555,14 @@ class FactFindSectionDataService
     {
         $dc = collect($validatedData['dc_pensions'])->map(function ($item){
 
+            if (array_key_exists('employer', $item) && $item['employer'] != '') {
+                $item['employer'] = ucfirst($item['employer']);
+            }
+
+            if (array_key_exists('fund_name', $item) && $item['fund_name'] != '') {
+                $item['fund_name'] = ucfirst($item['fund_name']);
+            }
+
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -559,10 +606,27 @@ class FactFindSectionDataService
             if (array_key_exists('current_transfer_value',$item) && $item['current_transfer_value'] != null){
                 $item['current_transfer_value'] = $this->currencyStringToInt($item['current_transfer_value']);
             }
+
+            if(array_key_exists('funds',$item) && is_array($item['funds']))
+            {
+                $item['funds'] = collect($item['funds'])->map(function ($fund){
+                    if(array_key_exists('current_fund_value',$fund) && $fund['current_fund_value'] != null)
+                    {
+                        $fund['current_fund_value'] = $this->currencyStringToInt($fund['current_fund_value']);
+                    }
+                    if(array_key_exists('current_transfer_value',$fund) && $fund['current_transfer_value'] != null)
+                    {
+                        $fund['current_transfer_value'] = $this->currencyStringToInt($fund['current_transfer_value']);
+                    }
+                    return $fund;
+                })->toArray();
+            }
+
             return $item;
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
+          
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -578,7 +642,9 @@ class FactFindSectionDataService
             else{
                 unset($item['cetv_ends_at']);
             }
-
+            if (array_key_exists('employer', $item) && $item['employer'] != '') {
+                $item['employer'] = ucfirst($item['employer']);
+            }
             if (array_key_exists('prospective_pension_standard',$item) && $item['prospective_pension_standard'] != null){
                 $item['prospective_pension_standard'] = $this->currencyStringToInt($item['prospective_pension_standard']);
             }
@@ -678,6 +744,11 @@ class FactFindSectionDataService
             if (array_key_exists('retained_value',$capital) && $capital['retained_value'] != null){
                 $capital['retained_value'] = $this->currencyStringToInt($capital['retained_value']);
             }
+
+            if (array_key_exists('description', $capital) && $capital['description'] != '') {
+                $capital['description'] = ucfirst($capital['description']);
+            }
+
             return $capital;
         });
 
@@ -741,13 +812,12 @@ class FactFindSectionDataService
                     if ($expenditure['amount'] && $expenditure['amount'] != null) {
                         $expenditure['amount'] = $this->currencyStringToInt($expenditure['amount']);
                     }
-                    if ($expenditure['starts_at'] && $expenditure['starts_at'] != null) {
+                    if (array_key_exists('starts_at',$expenditure) && $expenditure['starts_at'] && $expenditure['starts_at'] != null) {
                         $expenditure['starts_at'] = Carbon::parse($expenditure['starts_at']);
                     }
-                    if ($expenditure['ends_at'] && $expenditure['ends_at'] != null) {
+                    if (array_key_exists('ends_at',$expenditure) && $expenditure['ends_at'] && $expenditure['ends_at'] != null) {
                         $expenditure['ends_at'] = Carbon::parse($expenditure['ends_at']);
                     }
-
                     return $expenditure;
                 });
 

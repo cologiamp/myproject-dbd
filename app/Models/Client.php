@@ -276,6 +276,11 @@ class Client extends Model
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'owners' => $this->getOwnersForForm(),
             ],
+            '2.6' => [
+                'expenditure_types' => config('enums.expenditures.lump_sum_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
             '3.1' => [
                 'owners' => $this->getOwnersForForm(),
                 'asset_types' => config('enums.assets.types_public_no_cash_invest')
@@ -284,6 +289,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
                 'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
+                'frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -298,6 +304,7 @@ class Client extends Model
                 'pension_crystallised_statuses' => config('enums.assets.pension_crystallised_statuses'),
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
+                'frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),

@@ -13,11 +13,13 @@ use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\InvestmentRecommendationController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+use App\Http\Controllers\Api\PensionFundController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\InvestmentRecommendationItemController;
 use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
     Route::delete('/addresses/{address}',[ClientController::class,'deleteAddress']);
     Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
+    Route::delete('/pension-funds/{pension_fund}',[PensionFundController::class,'delete']);
     Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);

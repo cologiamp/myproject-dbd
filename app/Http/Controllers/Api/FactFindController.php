@@ -58,28 +58,28 @@ class FactFindController extends Controller
         //somehow extract and validate the separate steps for the data
         $daddyRequest = $request->all();
         collect($daddyRequest)->each(function ($item, $key) use (&$daddyRequest, $ffsds,$step,$section) {
-
             if(is_numeric($key))
             {
+                 $_client = Client::where('io_id',$key)->first()
                 try{
-                    $ffsds->validate($step, $section, $item); //throws exception if validation fails - comes back to Inertia as errorbag
+                    $ffsds->validate($step, $section, $item, $_client); //throws exception if validation fails - comes back to Inertia as errorbag
                 }
                 catch (Exception $e)
                 {
                     Log::warning($e);
                 }
                 $ffsds->store(
-                    Client::where('io_id',$key)->first(),
+                    $_client,
                     $step,
                     $section,
-                    $ffsds->validated($step, $section, $item)
+                    $ffsds->validated($step, $section, $item, $_client)
                 );
                 unset($daddyRequest[$key]);
             }
         });
         //validate the rest if it has other keys
         try{
-            $ffsds->validate($step, $section, $daddyRequest); //throws exception if validation fails - comes back to Inertia as errorbag
+            $ffsds->validate($step, $section, $daddyRequest,$client); //throws exception if validation fails - comes back to Inertia as errorbag
         }
         catch (Exception $e)
         {
@@ -89,7 +89,7 @@ class FactFindController extends Controller
             $client,
             $step,
             $section,
-            $ffsds->validated($step, $section, $daddyRequest)
+            $ffsds->validated($step, $section, $request,$client)
         );
         return json_encode(['model' =>  $ffsds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
     }

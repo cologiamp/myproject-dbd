@@ -24,14 +24,14 @@ function tabsClick(index, tab) {
     });
 
     tab.current = true;
-
-    // retrieve saved section for equivalent step from localsession
-    if (localStorage.getItem('step' + selectedTabId.value + 'section')) {
-        cachedSectionForStep.value = localStorage.getItem('step' + selectedTabId.value + 'section');
-    }
+    //
+    // // retrieve saved section for equivalent step from localsession
+    // if (localStorage.getItem('step' + selectedTabId.value + 'section')) {
+    //     cachedSectionForStep.value = localStorage.getItem('step' + selectedTabId.value + 'section');
+    // }
     const url = new URL(window.location);
     url.searchParams.set('step', index);
-    url.searchParams.set('section', cachedSectionForStep.value);
+    url.searchParams.set('section', 1); //cachedSectionForStep.value
     window.history.pushState({}, '', url);
 
 }

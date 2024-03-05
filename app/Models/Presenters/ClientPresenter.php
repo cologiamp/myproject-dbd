@@ -21,9 +21,9 @@ class ClientPresenter extends BasePresenter
     public function formatForExampleForm(): array
     {
         return [
-          'first_name'=> $this->model->first_name,
-          'last_name'=> $this->model->last_name,
-          'title' => $this->model->title
+            'first_name'=> $this->model->first_name,
+            'last_name'=> $this->model->last_name,
+            'title' => $this->model->title
         ];
     }
 
@@ -147,14 +147,13 @@ class ClientPresenter extends BasePresenter
                             'financial_dependent' => (bool)  $dependent->financial_dependent,
                             'financially_dependent_until' => $dependent->financially_dependent_until,
                             'is_living_with_clients' => (bool) $dependent->is_living_with_clients
-                        ];
-                    }))
+                    ];
+                }))
                 ],
                 '1.5' => [
                     'employment_details' => collect($this->model->employment_details->merge($this->model->client_two->employment_details)->map(function ($employment){
                         return [
                             'id' => $employment->id,
-                            'employee' => $employment->client->io_id,
                             'employment_status' => $employment->employment_status,
                             'intended_retirement_age' => $employment->intended_retirement_age,
                             'occupation' => $employment->occupation,
@@ -175,11 +174,11 @@ class ClientPresenter extends BasePresenter
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,
-                            'belongs_to' => $income->clients->count() > 1 ? 'Both' : $income->clients->first()->io_id,
+                            'belongs_to' => $income->pivot->client_id,
                             'record_exists' => $income->pivot->client_id ? true : false,
                         ];
                     }),
-                    'useIncome' => count(collect($this->model->incomes->merge($this->model->client_two->incomes))) > 0 ? true : false,
+                    'useIncome' => count($this->model->incomes) > 0 ? true : false,
                     'total' => count($this->model->incomes) > 0 ? null : $this->model->total_income_basic
                 ],
                 '2.2' => [
@@ -203,7 +202,13 @@ class ClientPresenter extends BasePresenter
                 '2.5' => [
                     'client_id' => $this->model->io_id,
                     'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('liability_expenditure')->get())->map(function ($expenditure){
-                        return $expenditure->presenter()->form();
+                     return $expenditure->presenter()->form();
+                    }))->groupBy('expenditure_type')
+                ],
+                '2.6' => [
+                    'client_id' => $this->model->io_id,
+                      'expenditures' => collect($this->model->expenditures()->inConfigSection('lump_sum_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('lump_sum_expenditure')->get())->map(function ($expenditure){
+                          return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
                 '3.1' => [
@@ -212,36 +217,36 @@ class ClientPresenter extends BasePresenter
                     }))
                 ],
                 '3.2' => [
-                    'saving_assets' => collect(Asset::with('clients')->whereIn('id',$savings_assets_multiple)->get()->map(function ($asset){
+                   'saving_assets' => collect(Asset::with('clients')->whereIn('id',$savings_assets_multiple)->get()->map(function ($asset){
                         return $asset->presenter()->formatForFactFind('savings');
                     }))
                 ],
                 '3.3' => [
-                    'investments' => $this->model->other_investments->merge($this->model->client_two->other_investments)->map(function ($investment){
-                        return [
-                            'id' => $investment->id,
-                            'owner' => $investment->client->io_id,
-                            'provider' => $investment->provider != null ? [
-                                'label' => \Cache::get('io_provider_list')[$investment->provider],
-                                'value' => $investment->provider
-                            ] : null,
-                            'account_type' => $investment->contract_type,
-                            'product_name' => $investment->product_name,
-                            'is_retained' => (bool) $investment->is_retained,
-                            'retained_value' =>  $investment->retained_value != null ? $this->currencyIntToString($investment->retained_value): null,
-                            'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
-                            'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
-                            'frequency' => $investment->frequency,
-                            'lump_sum_contribution' =>  $investment->lump_sum_contribution  != null ? $this->currencyIntToString($investment->lump_sum_contribution): null,
-                            'start_date' =>  $investment->start_date,
-                            'maturity_date' =>  $investment->maturity_date,
-                            'valuation_at' =>  $investment->valuation_at,
-                        ];
+                   'investments' => $this->model->other_investments->merge($this->model->client_two->other_investments)->map(function ($investment){
+                       return [
+                          'id' => $investment->id,
+                          'owner' => $investment->client->io_id,
+                          'provider' => $investment->provider != null ? [
+                              'label' => \Cache::get('io_provider_list')[$investment->provider],
+                              'value' => $investment->provider
+                          ] : null,
+                          'account_type' => $investment->contract_type,
+                          'product_name' => $investment->product_name,
+                          'is_retained' => (bool) $investment->is_retained,
+                          'retained_value' =>  $investment->retained_value != null ? $this->currencyIntToString($investment->retained_value): null,
+                          'current_value' => $investment->current_value != null ? $this->currencyIntToString($investment->current_value): null,
+                          'regular_contribution' =>  $investment->regular_contribution != null ? $this->currencyIntToString($investment->regular_contribution): null,
+                          'frequency' => $investment->frequency,
+                          'lump_sum_contribution' =>  $investment->lump_sum_contribution  != null ? $this->currencyIntToString($investment->lump_sum_contribution): null,
+                          'start_date' =>  $investment->start_date,
+                          'maturity_date' =>  $investment->maturity_date,
+                          'valuation_at' =>  $investment->valuation_at,
+                      ];
                     })
                 ],
                 '3.4' => [
                     'dc_pensions' => PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->whereIn('client_id',[$this->model->id,$this->model->client_two->id])->get()->map(function ($item){
-                        return [
+                         return [
                             'id' => $item->id,
                             'pt' => 'DC',
                             'owner' => $item->client->io_id,
@@ -264,11 +269,16 @@ class ClientPresenter extends BasePresenter
                             'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
                             'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
                             'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
-                            'fund_name'=> $item->defined_contribution_pension->fund_name,
-                            'fund_type'=> $item->defined_contribution_pension->fund_type,
-                            'current_fund_value' => $item->defined_contribution_pension->current_fund_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_fund_value): null,
-                            'current_transfer_value' => $item->defined_contribution_pension->current_transfer_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_transfer_value): null,
-
+                            'funds' => $item->defined_contribution_pension->pension_funds->map(function ($fund){
+                               return [
+                                   'id'=> $fund->id,
+                                   'fund_name'=> $fund->fund_name,
+                                   'fund_type'=> $fund->fund_type,
+                                   'current_fund_value' => $fund->current_fund_value != null ? $this->currencyIntToString($fund->current_fund_value): null,
+                                   'current_transfer_value' => $fund->current_transfer_value != null ? $this->currencyIntToString($fund->current_transfer_value): null,
+                               ];
+                            }),
+                            'frequency' => $item->defined_contribution_pension->frequency,
                         ];
                     }),
                     'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$this->model->id,$this->model->client_two->id])->get()->map(function ($item){
@@ -416,7 +426,6 @@ class ClientPresenter extends BasePresenter
                     'employment_details' => collect($this->model->employment_details->map(function ($employment){
                         return [
                             'id' => $employment->id,
-                            'employee' => $employment->client->io_id,
                             'employment_status' => $employment->employment_status,
                             'intended_retirement_age' => $employment->intended_retirement_age,
                             'occupation' => $employment->occupation,
@@ -465,6 +474,12 @@ class ClientPresenter extends BasePresenter
                 '2.5' => [
                     'client_id' => $this->model->io_id,
                     'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->map(function ($expenditure){
+                        return $expenditure->presenter()->form();
+                    }))->groupBy('expenditure_type')
+                ],
+                '2.6' => [
+                    'client_id' => $this->model->io_id,
+                    'expenditures' => collect($this->model->expenditures()->inConfigSection('lump_sum_expenditure')->get()->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
@@ -526,11 +541,16 @@ class ClientPresenter extends BasePresenter
                             'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
                             'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
                             'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
-                            'fund_name'=> $item->defined_contribution_pension->fund_name,
-                            'fund_type'=> $item->defined_contribution_pension->fund_type,
-                            'current_fund_value' => $item->defined_contribution_pension->current_fund_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_fund_value): null,
-                            'current_transfer_value' => $item->defined_contribution_pension->current_transfer_value != null ? $this->currencyIntToString($item->defined_contribution_pension->current_transfer_value): null,
-
+                            'funds' => $item->defined_contribution_pension->pension_funds->map(function ($fund){
+                                return [
+                                    'id'=> $fund->id,
+                                    'fund_name'=> $fund->fund_name,
+                                    'fund_type'=> $fund->fund_type,
+                                    'current_fund_value' => $fund->current_fund_value != null ? $this->currencyIntToString($fund->current_fund_value): null,
+                                    'current_transfer_value' => $fund->current_transfer_value != null ? $this->currencyIntToString($fund->current_transfer_value): null,
+                                ];
+                            }),
+                            'frequency' => $item->defined_contribution_pension->frequency,
                         ];
                     }),
                     'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){

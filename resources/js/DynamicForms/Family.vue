@@ -112,10 +112,10 @@ async function autosaveLocally(){
             <div v-for="(dependent, index) in stepForm.dependents"
                 class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
-                    <label class="font-bold">Dependent {{ index + 1 }}</label>
+                    <label class="font-bold">Dependant {{ index + 1 }}</label>
                     <button type="button" @click="removeDependent(index)"
                         class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        <XCircleIcon class="w-4 h-4" />Remove Dependent
+                        <XCircleIcon class="w-4 h-4" />Remove Dependant
                     </button>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
@@ -230,7 +230,7 @@ async function autosaveLocally(){
         </div>
         <button type="button" @click="addDependent"
             class="float-right inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            <PlusCircleIcon class="w-6 h-6" />Add Dependent
+            <PlusCircleIcon class="w-6 h-6" />Add Dependant
         </button>
     </div>
 </dynamic-form-wrapper></template>
