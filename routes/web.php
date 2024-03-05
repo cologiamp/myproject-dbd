@@ -54,14 +54,14 @@ Route::middleware([
 ])->group(function () {
     Route::get('/set-password', [SetPasswordController::class,'show'])->name('set-password');
     Route::post('/set-password', [SetPasswordController::class, 'store'])->name('set-password-store');
-//    Route::get('/2fa-setup', [TwoFaController::class,'show'])->name('2fa-setup');
-//    Route::post('/2fa-setup', [TwoFaController::class,'store'])->name('2fa-store');
+    Route::get('/2fa-setup', [TwoFaController::class,'show'])->name('2fa-setup');
+    Route::post('/2fa-setup', [TwoFaController::class,'store'])->name('2fa-store');
 });
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-//     '2fa',
+     '2fa',
     'check_temporary_password'
 ])->group(function () {
 
