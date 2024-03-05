@@ -68,7 +68,7 @@ class FactFindSectionDataService
         ];
     }
 
-    public function validate(int $step, int $section, Request $request, Client $client)
+    public function validate(int $step, int $section, $request, Client $client)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
@@ -77,10 +77,14 @@ class FactFindSectionDataService
         {
             $rules['email_address'] = $rules['email_address'] . ',email_address,'.$client->id;
         }
-        return Validator::make($request->all(), $rules, $messages)->validate();
+        if(!is_array($request))
+        {
+            $request = $request->all();
+        }
+        return Validator::make($request, $rules, $messages)->validate();
     }
 
-    public function validated(int $step, int $section, Request $request,  Client $client)
+    public function validated(int $step, int $section,  $request,  Client $client)
     {
         $messages = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.messages');
         $rules = config('navigation_structures.factfind.' . $step . '.sections.' . $section . '.rules');
@@ -88,7 +92,11 @@ class FactFindSectionDataService
         {
             $rules['email_address'] = $rules['email_address'] . ',email_address,'.$client->id;
         }
-        return Validator::make($request->all(), $rules, $messages)->validated();
+        if(!is_array($request))
+        {
+            $request = $request->all();
+        }
+        return Validator::make($request, $rules, $messages)->validated();
     }
 
     /**
@@ -626,7 +634,7 @@ class FactFindSectionDataService
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
-          
+
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;

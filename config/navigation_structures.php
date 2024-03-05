@@ -466,6 +466,7 @@ return [
                                 Rule::in(array_keys((config('enums.incomes.frequency'))))
                             ],
                             'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                            'expenditures.*.belongs_to' => 'sometimes|nullable',
                         ],
                         'messages' => []
                     ]

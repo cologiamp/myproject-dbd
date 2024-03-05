@@ -612,9 +612,11 @@ function removePension(index,type) {
                     <PlusCircleIcon class="w-6 h-6" />Add DB Pension
                 </button>
             </div>
+        </div>
 
         </div>
-    </dynamic-form-wrapper></template>
+    </dynamic-form-wrapper>
+</template>
 
 <style scoped>.aaron-datepicker {
     --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));

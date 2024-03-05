@@ -292,11 +292,11 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
                                                name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" :required="expenditure.known_end_date == true"/>
                             </div>
-                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
-                        </div>
+                         </div>
                     </template>
                     <template v-else>
                         <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
+                            <label for="starts_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Expenditure Date </label>
                             <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
                                 <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.starts_at, 'starts_at')"
                                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.starts_at"
@@ -305,35 +305,26 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                             <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.starts_at">{{ stepForm.errors.starts_at }}</p>
                         </div>
                     </template>
-                </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
-                    <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                        <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.ends_at, 'ends_at')"
-                                       class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
-                                       name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" :required="expenditure.known_end_date == true"/>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2  mb-8">
+                        <label for="belongs_to" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Belongs To</label>
+                        <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="expenditure.belongs_to"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="belongs_to" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.owners">{{ belongs_to }}</option>
+                        </select>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
+                                stepForm.errors.belongs_to }}</p>
                     </div>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
                 </div>
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2  mb-8">
-                    <label for="belongs_to" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Belongs To</label>
-                    <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="expenditure.belongs_to"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="belongs_to" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.owners">{{ belongs_to }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
-                            stepForm.errors.belongs_to }}</p>
-                </div>
-                >>>>>>> main
+
             </div>
             <button type="button" @click="addExpenditure(typeIndex)" v-if="stepForm.expenditures[typeIndex]"
                     class="float-right inline-flex items-center gap-x-1.5 mb-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 <PlusCircleIcon class="w-6 h-6" />Add {{ expenditureType }} Expenditure
             </button>
         </div>
-        </div>
-    </dynamic-form-wrapper></template>
+    </dynamic-form-wrapper>
+</template>
 
 <style scoped>.aaron-datepicker {
     --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));

@@ -60,7 +60,7 @@ class FactFindController extends Controller
         collect($daddyRequest)->each(function ($item, $key) use (&$daddyRequest, $ffsds,$step,$section) {
             if(is_numeric($key))
             {
-                 $_client = Client::where('io_id',$key)->first()
+                 $_client = Client::where('io_id',$key)->first();
                 try{
                     $ffsds->validate($step, $section, $item, $_client); //throws exception if validation fails - comes back to Inertia as errorbag
                 }
