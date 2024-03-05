@@ -35,7 +35,7 @@ class GenerateAdvisersFromAPI extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $token = Cache::get("datahub_access_token", function () {
            return $this->setAccessToken();
@@ -44,8 +44,6 @@ class GenerateAdvisersFromAPI extends Command
         $response = Http::withHeader("Authorization", $token)->get(config('datahub.url') . "api/advisers?is_enabled=true&adviser_hub_access=true");
 
         // todo: collect and then each - don't use foreach
-
-//        $advisers = collect($response->json()['data']);
 
         foreach($response->json()['data'] as $adviser){
             $inc = User::latest()->first()->id + 1;
@@ -58,33 +56,22 @@ class GenerateAdvisersFromAPI extends Command
                     break;
                 }
 
+                $adviser_email = $inc . $adviser['email'];
                 $temporary_pw = Str::password(10, true, true, false, false);
-                $encrypted_pw = bcrypt($temporary_pw);
 
-                $input = [
-                    'name' => $adviser['name'],
-                    'email' => $inc . $adviser['email'],
-                    'password' => $encrypted_pw,
-                    'password_confirmation' => $encrypted_pw,
-                ];
+                $user = new User();
+                $user->name = $adviser['name'];
+                $user->email = $adviser_email;
+                $user->password = bcrypt($temporary_pw);
+                $user->io_id = $io_id[$i['label']];
+                $user->profile_photo_path = $adviser['profile_pic_url'];
+                $user->has_temporary_password = true;
+                $user->save();
 
-                $user = new CreateNewUser;
-                $response = $user->create($input);
-
-                if(isset($response->id)){
-                    $update_user = User::find($response->id);
-                    $update_user->io_id = $io_id[$i['label']];
-                    $update_user->profile_photo_path = $adviser['profile_pic_url'];
-                    $update_user->has_temporary_password = true;
-                    $update_user->save();
-
-                    // send email
-                    $update_user->notify(new AdviserAccountCreated($temporary_pw));
-                }
+                $user->notify(new AdviserAccountCreated([
+                    "temp_password" => $temporary_pw
+                ]));
             }
         }
-
-
-//        dd($response->json());
     }
 }

@@ -16,9 +16,9 @@ class AdviserAccountCreated extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($temp_password)
+    public function __construct($user_info)
     {
-        $this->password = $temp_password;
+        $this->password = $user_info["temp_password"];
     }
 
     /**
@@ -36,8 +36,6 @@ class AdviserAccountCreated extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-
-//        ray($this)->purple();
         return (new MailMessage)
                     ->greeting('You have been invited to join Adviser Hub ')
                     ->line('Welcome to your new digital tool to significantly reduce administrative time for Advisers and Para-Planners. ')
@@ -48,8 +46,8 @@ class AdviserAccountCreated extends Notification
                         '- Automated PDF’s',
                         '- Interactive visual tools',
                     ])
-                    ->line('Your temporary password is ' . $this->password. ', you will need to reset it the first time you sign in')
-                    ->action('Click here to join', url(env('APP_URL').'/login'));
+                    ->line('Your temporary password is ' . $this->password. ' you will need to reset it the first time you sign in')
+                    ->action('Click here to join', url(env('APP_URL')));
     }
 
 
