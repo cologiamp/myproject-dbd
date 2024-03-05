@@ -15,7 +15,6 @@ trait GetPrimaryClient{
             return $this->clients()->where('c2_id', '!=', null)->first();
         }
 
-        ray($this->clients()->first())->red();
         return $this->clients()->first();
     }
 }
