@@ -3,29 +3,29 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\StrategyRecomObjectives;
-use App\Repositories\StrategyRecomObjectivesRepository;
+use App\Models\StrategyRecommendationObjective;
+use App\Repositories\StrategyReportRecommendationObjectivesRepository;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
 class StrategyObjectivesController extends Controller
 {
-    protected StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository;
+    protected StrategyReportRecommendationObjectivesRepository $strategyReportRecommendationObjectivesRepository;
 
-    public function __construct(StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository)
+    public function __construct(StrategyReportRecommendationObjectivesRepository $strategyReportRecommendationObjectivesRepository)
     {
-        $this->strategyRecomObjectivesRepository = $strategyRecomObjectivesRepository;
+        $this->strategyReportRecommendationObjectivesRepository = $strategyReportRecommendationObjectivesRepository;
     }
 
     /**
-     * @param StrategyRecomObjectives $strategyRecomObjectives
+     * @param StrategyRecommendationObjective $strategyRecommendationObjective
      */
-    public function delete(StrategyRecomObjectives $objective): string
+    public function delete(StrategyRecommendationObjective $objective): string
     {
-        $this->strategyRecomObjectivesRepository->setStrategyReportRecomObjective($objective);
+        $this->strategyReportRecommendationObjectivesRepository->setStrategyReportRecommendationObjective($objective);
 
         try {
-            $this->strategyRecomObjectivesRepository->delete();
+            $this->strategyReportRecommendationObjectivesRepository->delete();
         } catch (Exception $e) {
             Log::warning($e);
         }
@@ -35,17 +35,11 @@ class StrategyObjectivesController extends Controller
         ]);
     }
 
-    public function get($id)
+    /**
+     * @param StrategyRecommendationObjective $strategyRecommendationObjective
+     */
+    public function get(StrategyRecommendationObjective $objective): string
     {
-        $objective = null;
-
-        try{
-            $objective = StrategyRecomObjectives::where('id', $id)->first();
-        }
-        catch (Exception $e)
-        {
-            Log::warning($e);
-        }
         return json_encode($objective);
     }
 }

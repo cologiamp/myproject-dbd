@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\ClientNotFoundException;
 
-class StrategyReportRecomRepository extends BaseRepository
+class StrategyReportRecommendationRepository extends BaseRepository
 {
     protected StrategyReportRecommendation $strategyReportRecommendation;
 
@@ -15,12 +15,12 @@ class StrategyReportRecomRepository extends BaseRepository
         $this->strategyReportRecommendation = $strategyReportRecommendation;
     }
 
-    public function setStrategyReportRecom(StrategyReportRecommendation $strategyReportRecommendation):void
+    public function setStrategyReportRecommendation(StrategyReportRecommendation $strategyReportRecommendation):void
     {
         $this->strategyReportRecommendation = $strategyReportRecommendation;
     }
 
-    public function getStrategyReportRecom() : StrategyReportRecommendation
+    public function getStrategyReportRecommendation() : StrategyReportRecommendation
     {
         if($this->strategyReportRecommendation){
             return $this->strategyReportRecommendation;
@@ -54,7 +54,7 @@ class StrategyReportRecomRepository extends BaseRepository
     }
 
 
-    public function createStrategyReportRecom(): StrategyReportRecommendation
+    public function createStrategyReportRecommendation(): StrategyReportRecommendation
     {
         DB::beginTransaction();
         try {

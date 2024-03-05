@@ -5,10 +5,9 @@ namespace App\Models;
 use App\Models\BaseModels\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class StrategyRecomActions extends Model
+class StrategyRecommendationAction extends Model
 {
     protected $guarded = [];
-    protected $table = 'strategy_recommendation_actions';
 
     public function strategy_report_recommendation():BelongsTo
     {

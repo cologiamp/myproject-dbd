@@ -7,9 +7,9 @@ use App\Concerns\FormatsCurrency;
 use App\Models\Client;
 use App\Models\StrategyReportRecommendation;
 use App\Repositories\ClientRepository;
-use App\Repositories\StrategyRecomActionsRepository;
-use App\Repositories\StrategyRecomObjectivesRepository;
-use App\Repositories\StrategyReportRecomRepository;
+use App\Repositories\StrategyReportRecommendationActionsRepository;
+use App\Repositories\StrategyReportRecommendationObjectivesRepository;
+use App\Repositories\StrategyReportRecommendationRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -21,22 +21,22 @@ class StrategyReportRecommendationsDataService
 {
     use FormatsCurrency;
     protected ClientRepository $clientRepository;
-    protected StrategyReportRecomRepository $strategyReportRecomRepository;
-    protected StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository;
-    protected StrategyRecomActionsRepository $strategyRecomActionsRepository;
+    protected StrategyReportRecommendationRepository $strategyReportRecommendationRepository;
+    protected StrategyReportRecommendationObjectivesRepository $strategyRecommendationObjectivesRepository;
+    protected StrategyReportRecommendationActionsRepository $strategyRecommendationActionsRepository;
     public function __construct(
-        ClientRepository $clientRepository,
-        StrategyReportRecomRepository $strategyReportRecomRepository,
-        StrategyRecomObjectivesRepository $strategyRecomObjectivesRepository,
-        StrategyRecomActionsRepository $strategyRecomActionsRepository)
+        ClientRepository                                 $clientRepository,
+        StrategyReportRecommendationRepository           $strategyReportRecommendationRepository,
+        StrategyReportRecommendationObjectivesRepository $strategyRecommendationObjectivesRepository,
+        StrategyReportRecommendationActionsRepository    $strategyRecommendationActionsRepository)
     {
         $this->clientRepository = $clientRepository;
-        $this->strategyReportRecomRepository = $strategyReportRecomRepository;
-        $this->strategyRecomObjectivesRepository = $strategyRecomObjectivesRepository;
-        $this->strategyRecomActionsRepository = $strategyRecomActionsRepository;
+        $this->strategyReportRecommendationRepository = $strategyReportRecommendationRepository;
+        $this->strategyRecommendationObjectivesRepository = $strategyRecommendationObjectivesRepository;
+        $this->strategyRecommendationActionsRepository = $strategyRecommendationActionsRepository;
     }
 
-    //get the data for a single section of a factfind from a single client
+    //get the data for a single section of a strategy report recommendations from a single client
     public static function get($strategy, $step): array
     {
         return [
@@ -68,7 +68,7 @@ class StrategyReportRecommendationsDataService
     public function store(Client $client, int $step, array $validatedData): true
     {
         $this->clientRepository->setClient($client);
-        $this->strategyReportRecomRepository->setStrategyReportRecom(StrategyReportRecommendation::where('id', $client->strategy_report_recommendation_id)->first());
+        $this->strategyReportRecommendationRepository->setStrategyReportRecommendation(StrategyReportRecommendation::where('id', $client->strategy_report_recommendation_id)->first());
         $this->{"saveTab" . $step}($validatedData);
         return true;
     }
@@ -85,7 +85,7 @@ class StrategyReportRecommendationsDataService
         }
 
         try {
-            $this->strategyReportRecomRepository->update($validatedData);
+            $this->strategyReportRecommendationRepository->update($validatedData);
         }
         catch(Throwable $e){
             Log::warning($e);
@@ -97,8 +97,8 @@ class StrategyReportRecommendationsDataService
     private function saveTab2(array $validatedData):void
     {
         try {
-            $this->strategyRecomObjectivesRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
-            $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
+            $this->strategyRecommendationObjectivesRepository->setStrategyReportRecommendation($this->strategyReportRecommendationRepository->getStrategyReportRecommendation());
+            $recommendation = $this->strategyReportRecommendationRepository->getStrategyReportRecommendation();
 
             $singleObjectiveData = Arr::except($validatedData, ['objectives']);
 
@@ -107,24 +107,24 @@ class StrategyReportRecommendationsDataService
                 unset($singleObjectiveData['objective_type']);
 
                 if (array_key_exists('id',$singleObjectiveData) && $singleObjectiveData['id'] != null) {
-                    $this->strategyRecomObjectivesRepository->setStrategyReportRecomObjective(
-                        $this->strategyRecomObjectivesRepository->getObjectiveById($singleObjectiveData['id'])
+                    $this->strategyRecommendationObjectivesRepository->setStrategyReportRecommendationObjective(
+                        $this->strategyRecommendationObjectivesRepository->getObjectiveById($singleObjectiveData['id'])
                     );
 
-                    $this->strategyRecomObjectivesRepository->update($singleObjectiveData);
+                    $this->strategyRecommendationObjectivesRepository->update($singleObjectiveData);
 
                 } else {
                     $singleObjectiveData['strategy_report_recommendation_id'] = $recommendation->id;
 
-                    $orderId = $this->strategyRecomObjectivesRepository->getMaxOrderId($recommendation->id);
+                    $orderId = $this->strategyRecommendationObjectivesRepository->getMaxOrderId($recommendation->id);
                     $singleObjectiveData['order'] = $orderId;
 
-                    $this->strategyRecomObjectivesRepository->create($singleObjectiveData);
+                    $this->strategyRecommendationObjectivesRepository->create($singleObjectiveData);
                 }
                 unset($validatedData['objectives']);
             } else {
                 if (array_key_exists('objectives',$validatedData) && count($validatedData['objectives']) > 0) {
-                    $this->strategyRecomObjectivesRepository->updateObjectivesOrder($validatedData['objectives']);
+                    $this->strategyRecommendationObjectivesRepository->updateObjectivesOrder($validatedData['objectives']);
                 }
 
             }
@@ -137,31 +137,31 @@ class StrategyReportRecommendationsDataService
     private function saveTab3(array $validatedData):void
     {
         try {
-            $this->strategyRecomActionsRepository->setStrategyReportRecom($this->strategyReportRecomRepository->getStrategyReportRecom());
-            $recommendation = $this->strategyReportRecomRepository->getStrategyReportRecom();
+            $this->strategyRecommendationActionsRepository->setStrategyReportRecommendation($this->strategyReportRecommendationRepository->getStrategyReportRecommendation());
+            $recommendation = $this->strategyReportRecommendationRepository->getStrategyReportRecommendation();
 
             $singleActionData = Arr::except($validatedData, ['actions']);
 
             if (count($singleActionData) > 0) {
                 if (array_key_exists('id',$singleActionData) && $singleActionData['id'] != null) {
-                    $this->strategyRecomActionsRepository->setStrategyReportRecomAction(
-                        $this->strategyRecomActionsRepository->getActionById($singleActionData['id'])
+                    $this->strategyRecommendationActionsRepository->setStrategyReportRecommendationAction(
+                        $this->strategyRecommendationActionsRepository->getActionById($singleActionData['id'])
                     );
 
-                    $this->strategyRecomActionsRepository->update($singleActionData);
+                    $this->strategyRecommendationActionsRepository->update($singleActionData);
 
                 } else {
                     $singleActionData['strategy_report_recommendation_id'] = $recommendation->id;
 
-                    $orderId = $this->strategyRecomActionsRepository->getMaxOrderId($recommendation->id);
+                    $orderId = $this->strategyRecommendationActionsRepository->getMaxOrderId($recommendation->id);
                     $singleActionData['order'] = $orderId;
 
-                    $this->strategyRecomActionsRepository->create($singleActionData);
+                    $this->strategyRecommendationActionsRepository->create($singleActionData);
                 }
                 unset($validatedData['actions']);
             } else {
                 if (array_key_exists('actions',$validatedData) && count($validatedData['actions']) > 0) {
-                    $this->strategyRecomActionsRepository->updateActionsOrder($validatedData['actions']);
+                    $this->strategyRecommendationActionsRepository->updateActionsOrder($validatedData['actions']);
                 }
             }
         } catch (Throwable $e) {

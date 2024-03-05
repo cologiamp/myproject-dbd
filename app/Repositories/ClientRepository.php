@@ -220,7 +220,6 @@ class ClientRepository extends BaseRepository
         return [
             'name' => $config['name'],
             'renderable' => Str::studly($config['name']),
-//            'dynamicData' => StrategyReportRecommendationsDataService::get($this->client->strategy_report_recommendation()->first(), $currentTab),
             'dynamicData' => StrategyReportRecommendationsDataService::get(StrategyReportRecommendation::where('id', $this->client->strategy_report_recommendation_id)->first(), $currentTab),
         ];
     }
@@ -264,7 +263,7 @@ class ClientRepository extends BaseRepository
      * Load in the correct data structure for the sidebar tabs of the page we're on
      * @return array
      */
-    public function loadStrategyReportRecomTabs(int $currentStep = 1):array
+    public function loadStrategyReportRecommendationsTabs(int $currentStep = 1):array
     {
         return collect(config('navigation_structures.strategyreportrecommendations'))->map(function ($value, $key) use ($currentStep){
             return [

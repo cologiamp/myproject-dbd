@@ -95,18 +95,12 @@ function getWhatFor(topicIndex, whatForIndex) {
                     </template>
                 </draggable>
                 <tbody v-else>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-sm col-span-7 px-3 py-4">
+                    <tr class="text-center">
+                        <td colspan="7" class="text-sm px-3 py-4 text-center">
                             No objectives data.
                         </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                     </tr>
-                </tbody>
+                    </tbody>
             </table>
             </div>
         </div>

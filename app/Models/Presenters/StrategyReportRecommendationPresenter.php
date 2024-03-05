@@ -4,7 +4,7 @@ namespace App\Models\Presenters;
 
 use App\Concerns\FormatsCurrency;
 
-class StrategyReportRecomPresenter extends BasePresenter
+class StrategyReportRecommendationPresenter extends BasePresenter
 {
     use FormatsCurrency;
     public function formatForSRRStep($step):array

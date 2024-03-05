@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Models\BaseModels\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Presenters\StrategyReportRecomPresenter;
+use App\Models\Presenters\StrategyReportRecommendationPresenter;
+use App\Concerns\GetPrimaryClient;
 
 class StrategyReportRecommendation extends Model
 {
     protected $guarded = [];
+
+    use GetPrimaryClient;
 
     public function clients():HasMany
     {
@@ -17,12 +20,12 @@ class StrategyReportRecommendation extends Model
 
     public function objectives(): HasMany
     {
-        return $this->hasMany(StrategyRecomObjectives::class);
+        return $this->hasMany(StrategyRecommendationObjective::class);
     }
 
     public function actions(): HasMany
     {
-        return $this->hasMany(StrategyRecomActions::class);
+        return $this->hasMany(StrategyRecommendationAction::class);
     }
 
     public function loadEnumsForStrategyRecommendationsStep($step)
@@ -46,17 +49,14 @@ class StrategyReportRecommendation extends Model
     }
 
 
-    public function presenter() : StrategyReportRecomPresenter
+    public function presenter() : StrategyReportRecommendationPresenter
     {
-        return new StrategyReportRecomPresenter($this);
+        return new StrategyReportRecommendationPresenter($this);
     }
 
     public function getPrimaryClientAttribute()
     {
-        if ($this->clients->count() > 1) {
-            return $this->clients()->where('c2_id', '!=', null)->first();
-        }
-
-        return $this->clients()->first();
+        return $this->getPrimaryClient();
     }
+
 }

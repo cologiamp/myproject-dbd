@@ -76,13 +76,10 @@ function getType(index) {
                     </template>
                 </draggable>
                 <tbody v-else>
-                    <tr>
-                        <td></td>
-                        <td class="text-sm col-span-7 px-3 py-4 text-center">
+                    <tr class="text-center">
+                        <td colspan="7" class="text-sm px-3 py-4 text-center">
                             No call to actions data.
                         </td>
-                        <td></td>
-                        <td></td>
                     </tr>
                 </tbody>
             </table>

@@ -55,10 +55,10 @@ async function getActionToEdit(actionId) {
     is_edit.value = true;
     addAction.value = false;
 
-    axios.get('/api/strategy-action/get/'+ actionId).then(function (response){ //create new API
+    axios.get('/api/strategy-actions/'+ actionId).then(function (response){
         stepForm.id = response.data.id
         stepForm.strategy_report_recommendation_id = response.data.strategy_report_recommendation_id
-        stepForm.call_to_action = response.data.call_to_action
+        stepForm.call_to_action = parseInt(response.data.call_to_action)
         stepForm.call_to_action_custom = response.data.call_to_action_custom
     }).catch(function (e){
         console.log(e)
@@ -153,7 +153,7 @@ function save() {
                     </div>
                 </div>
                 <div class="mb-4 w-full col-start-2">
-                    <div v-if="stepForm.call_to_action === '99'" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                    <div v-if="parseInt(stepForm.call_to_action) === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="call_to_action_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom action </label>
                         <textarea rows="3" name="call_to_action_custom" id="call_to_action_custom"
                                   v-model="stepForm.call_to_action_custom"

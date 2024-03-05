@@ -3,29 +3,29 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\StrategyRecomActions;
-use App\Repositories\StrategyRecomActionsRepository;
+use App\Models\StrategyRecommendationAction;
+use App\Repositories\StrategyReportRecommendationActionsRepository;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
 class StrategyActionsController extends Controller
 {
-    protected StrategyRecomActionsRepository $strategyRecomActionsRepository;
+    protected StrategyReportRecommendationActionsRepository $strategyReportRecommendationActionsRepository;
 
-    public function __construct(StrategyRecomActionsRepository $strategyRecomActionsRepository)
+    public function __construct(StrategyReportRecommendationActionsRepository $strategyReportRecommendationActionsRepository)
     {
-        $this->strategyRecomActionsRepository = $strategyRecomActionsRepository;
+        $this->strategyReportRecommendationActionsRepository = $strategyReportRecommendationActionsRepository;
     }
 
     /**
-     * @param StrategyRecomActionsRepository $strategyRecomActionsRepository
+     * @param StrategyReportRecommendationActionsRepository $strategyReportRecommendationActionsRepository
      */
-    public function delete(StrategyRecomActions $action): string
+    public function delete(StrategyRecommendationAction $action): string
     {
-        $this->strategyRecomActionsRepository->setStrategyReportRecomAction($action);
+        $this->strategyReportRecommendationActionsRepository->setStrategyReportRecommendationAction($action);
 
         try {
-            $this->strategyRecomActionsRepository->delete();
+            $this->strategyReportRecommendationActionsRepository->delete();
         } catch (Exception $e) {
             Log::warning($e);
         }
@@ -35,17 +35,11 @@ class StrategyActionsController extends Controller
         ]);
     }
 
-    public function get($id)
+    /**
+     * @param StrategyReportRecommendationActionsRepository $strategyRecomemndationActionsRepository
+     */
+    public function get(StrategyRecommendationAction $action): string
     {
-        $action = null;
-
-        try{
-            $action = StrategyRecomActions::where('id', $id)->first();
-        }
-        catch (Exception $e)
-        {
-            Log::warning($e);
-        }
         return json_encode($action);
     }
 }

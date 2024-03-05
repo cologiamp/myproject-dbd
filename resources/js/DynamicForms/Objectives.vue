@@ -64,16 +64,16 @@ async function getObjectiveToEdit(objectiveId) {
     is_edit.value = true;
     addObjective.value = false;
 
-    axios.get('/api/strategy-objective/get/'+ objectiveId).then(function (response){
+    axios.get('/api/strategy-objectives/'+ objectiveId).then(function (response){
         stepForm.id = response.data.id
         stepForm.client_id = response.data.client_id
         stepForm.strategy_report_recommendation_id = response.data.strategy_report_recommendation_id
         stepForm.objective_type = response.data.is_primary
         stepForm.type = response.data.type
         setTopicEnums(stepForm.type)
-        stepForm.objective = response.data.objective
+        stepForm.objective = parseInt(response.data.objective)
         stepForm.objective_custom = response.data.objective_custom
-        stepForm.what_for = response.data.what_for
+        stepForm.what_for = parseInt(response.data.what_for)
         stepForm.what_for_custom = response.data.what_for_custom
     }).catch(function (e){
         console.log(e)
@@ -224,7 +224,7 @@ function save() {
                     </div>
                 </div>
                 <div class="mb-4 w-full col-start-2">
-                    <div v-if="stepForm.objective === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                    <div v-if="parseInt(stepForm.objective) === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="objective_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom Topic </label>
                         <textarea rows="3" name="objective_custom" id="objective_custom"
                             v-model="stepForm.objective_custom"
@@ -233,7 +233,7 @@ function save() {
                     </div>
                 </div>
                 <div class="mb-4 w-full">
-                    <div v-if="stepForm.what_for === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                    <div v-if="parseInt(stepForm.what_for) === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="what_for_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom Topic </label>
                         <textarea rows="3" name="what_for_custom" id="what_for_custom"
                           v-model="stepForm.what_for_custom"
