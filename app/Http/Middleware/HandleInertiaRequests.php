@@ -80,6 +80,12 @@ class HandleInertiaRequests extends Middleware
                     'icon' => 'SRIcon',
                     'current' => $request->route()->getName() === 'client.strategy'
                 ],
+                [
+                'name' => 'Strategy Report Recommendations',
+                'href' => '/client/'.$client->io_id.'/strategy-report-recommendations',
+                'icon' => 'SRRIcon',
+                'current' => $request->route()->getName() === 'client.strategyreportrecommendations'
+                ]
             ]);
         }
 //        $client_enabled_nav
