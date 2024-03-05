@@ -103,7 +103,7 @@ class StrategyReportRecommendationsDataService
             $singleObjectiveData = Arr::except($validatedData, ['objectives']);
 
             if (count($singleObjectiveData) > 0) {
-                $singleObjectiveData['is_primary'] = $singleObjectiveData['objective_type'];
+                $singleObjectiveData['is_primary'] = array_key_exists('objective_type',$singleObjectiveData) ? $singleObjectiveData['objective_type'] : 0;
                 unset($singleObjectiveData['objective_type']);
 
                 if (array_key_exists('id',$singleObjectiveData) && $singleObjectiveData['id'] != null) {

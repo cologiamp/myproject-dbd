@@ -6,7 +6,7 @@ trait GetPrimaryClient{
 
 
     /**
-     * Formats currency as required
+     * Get model's primary client
      * @return $client
      */
     private function getPrimaryClient()
@@ -15,7 +15,6 @@ trait GetPrimaryClient{
             return $this->clients()->where('c2_id', '!=', null)->first();
         }
 
-        ray($this->clients()->first())->red();
         return $this->clients()->first();
     }
 }

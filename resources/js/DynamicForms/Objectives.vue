@@ -5,6 +5,7 @@ import {useForm} from "laravel-precognition-vue-inertia";
 import 'vue-select/dist/vue-select.css';
 import DraggableTable from "@/Components/ObjectivesTable.vue";
 import {PlusCircleIcon} from '@heroicons/vue/24/solid';
+import {changeToCurrency} from "@/currency.js";
 
 import {onBeforeMount, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
@@ -146,12 +147,26 @@ function cancel() {
 }
 
 function save() {
-    autosaveLocally();
+    if (stepForm.objective_custom && typeof stepForm.objective_custom !== 'string') {
+        alert('objective_custom')
+        stepForm.objective_custom = stepForm.objective_custom.toString()
+    }
+    if (stepForm.what_for_custom && typeof stepForm.what_for_custom !== 'string') {
+        alert('what_for_custom')
+        stepForm.what_for_custom = stepForm.what_for_custom.toString()
+    }
 
+    autosaveLocally();
     is_edit.value = false;
     addObjective.value = false;
-
     resetData();
+}
+
+function formatAmount(e, typeFieldName) {
+    if(typeFieldName === 'objective_custom') {
+        stepForm.objective_custom = '';
+        stepForm.objective_custom = changeToCurrency(e.target.value);
+    }
 }
 
 </script>
@@ -193,7 +208,7 @@ function save() {
                 </div>
             </div>
             <div v-if="addObjective === true || is_edit === true" class="grid grid-cols-3 gap-2">
-                <div class="mb-4 mt-4 w-full">
+                <div class="w-full">
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Topic </label>
                         <select @change="setTopicEnums(stepForm.type)" v-model="stepForm.type" id="type" name="type"  class="block rounded-md w-full border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
@@ -203,17 +218,18 @@ function save() {
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.type">{{ stepForm.errors.type }}</p>
                     </div>
                 </div>
-                <div class="mb-4 mt-4 w-full">
+                <div class="w-full">
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="objective" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Objective </label>
-                        <select id="objective" name="objective" v-model="stepForm.objective" class="block rounded-md w-full border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <select id="objective" name="objective" v-model="stepForm.objective"
+                                class="block rounded-md w-full border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="objective" :value="null">-</option>
                             <option :id="id" :value="id" v-for="(objective, id) in objectives_enum">{{ objective }}</option>
                         </select>
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective">{{ stepForm.errors.objective }}</p>
                     </div>
                 </div>
-                <div class="mb-4 mt-4 w-full">
+                <div class="w-full">
                     <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="what_for" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> What For? </label>
                         <select id="what_for" name="what_for"  v-model="stepForm.what_for" class="block rounded-md w-full border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
@@ -223,21 +239,59 @@ function save() {
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.what_for">{{ stepForm.errors.what_for }}</p>
                     </div>
                 </div>
-                <div class="mb-4 w-full col-start-2">
+
+                <div class="w-full col-start-2">
+                    <!-- show if objective_type - Other -->
                     <div v-if="parseInt(stepForm.objective) === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="objective_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom Topic </label>
-                        <textarea rows="3" name="objective_custom" id="objective_custom"
-                            v-model="stepForm.objective_custom"
-                            class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        <textarea rows="3" name="objective_custom" id="objective_custom" v-model="stepForm.objective_custom"
+                        class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective_custom">{{ stepForm.errors.objective_custom }}</p>
+                    </div>
+                    <!-- show to input objective amount -->
+                    <div v-if="parseInt(stepForm.type) === 2 && parseInt(stepForm.objective) === 1" class="mt-0 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                        <label for="objective_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Amount </label>
+                        <input type="currency" name="objective_amount" id="objective_amount"
+                               :value="stepForm.objective_custom"
+                               @change="formatAmount($event, 'objective_custom')"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective_custom">{{ stepForm.errors.objective_custom }}</p>
+                    </div>
+                    <div v-if="parseInt(stepForm.type) === 3 && [0,1].includes(parseInt(stepForm.objective))" class="mt-0 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                        <label for="objective_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Amount </label>
+                        <input type="currency" name="objective_amount" id="objective_amount"
+                               :value="stepForm.objective_custom"
+                               @change="formatAmount($event, 'objective_custom')"
+                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective_custom">{{ stepForm.errors.objective_custom }}</p>
+                    </div>
+                    <div v-if="parseInt(stepForm.type) === 8 && [1,2].includes(parseInt(stepForm.objective))" class="mt-0 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                        <label for="objective_years_age" v-if="parseInt(stepForm.objective) === 1"
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Years </label>
+                        <label for="objective_years_age" v-if="parseInt(stepForm.objective) === 2"
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Age </label>
+                        <input type="number" min="0" max="100" name="objective_years_age" id="objective_years_age"
+                           v-model="stepForm.objective_custom"
+                           class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="" />
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective_custom">{{ stepForm.errors.objective_custom }}</p>
                     </div>
                 </div>
-                <div class="mb-4 w-full">
+                <div class="w-full">
+                    <!-- show if what_for_type - Other -->
                     <div v-if="parseInt(stepForm.what_for) === 99" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                         <label for="what_for_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Custom Topic </label>
                         <textarea rows="3" name="what_for_custom" id="what_for_custom"
                           v-model="stepForm.what_for_custom"
                           class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.what_for_custom">{{ stepForm.errors.what_for_custom }}</p>
+                    </div>
+                    <!-- show to input what_for amount / years -->
+                    <div v-if="parseInt(stepForm.type) === 2 && [0,1].includes(parseInt(stepForm.what_for))" class="mt-0 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
+                        <label for="what_for_custom" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Years </label>
+                        <input type="number" min="0" max="100" name="what_for_custom" id="what_for_custom"
+                           v-model="stepForm.what_for_custom"
+                           class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="" />
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.what_for_custom">{{ stepForm.errors.what_for_custom }}</p>
                     </div>
                 </div>
