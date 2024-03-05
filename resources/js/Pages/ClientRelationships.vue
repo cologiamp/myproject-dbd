@@ -20,7 +20,7 @@ const props = defineProps({
     relationships: Array,
 });
 
-const selectedRelationship = null;
+let selectedRelationship = null;
 
 async function selectRelationship(selectedRelationship)
 {
