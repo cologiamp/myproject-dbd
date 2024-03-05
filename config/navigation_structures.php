@@ -636,6 +636,7 @@ return [
                         'schemes.*.monthly_saving' => 'sometimes|nullable|string',
                         'schemes.*.number_of_shares' => 'sometimes|nullable|integer',
                         'schemes.*.matures_at' => 'sometimes|nullable|date',
+                        'schemes.*.start_at' => 'sometimes|nullable|date',
                     ],
                     'messages' => []
                 ],

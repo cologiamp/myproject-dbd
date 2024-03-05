@@ -298,6 +298,7 @@ class ClientPresenter extends BasePresenter
                             'monthly_saving' => $item->monthly_saving != null ? $this->currencyIntToString( $item->monthly_saving): null,
                             'number_of_shares' => $item->number_of_shares,
                             'matures_at' => $item->matures_at,
+                            'start_at' => $item->start_at,
                         ];
                     })
                 ],

@@ -639,6 +639,12 @@ class FactFindSectionDataService
             if (array_key_exists('monthly_saving',$scheme) && $scheme['monthly_saving'] != null){
                 $scheme['monthly_saving'] = $this->currencyStringToInt($scheme['monthly_saving']);
             }
+            if (array_key_exists('start_at',$scheme) && $scheme['start_at'] != null){
+                $scheme['start_at'] = Carbon::parse($scheme['start_at']);
+            }
+            else{
+                unset($scheme['start_at']);
+            }
             return $scheme;
         });
 
