@@ -1570,6 +1570,9 @@ return [
             30 => 'Mortgage',
             31 => 'Other (Liability)',
         ],
+        'lump_sum_expenditure' => [
+            32 => 'Lump sum expenditure',
+        ]
     ],
     'assets' => [
         'categories' => [

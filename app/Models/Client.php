@@ -235,6 +235,11 @@ class Client extends Model
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public'))
             ],
+            '2.6' => [
+                'expenditure_types' => config('enums.expenditures.lump_sum_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
+                'frequencies' => collect(config('enums.incomes.frequency_public'))
+            ],
             '3.1' => [
                 'owners' => $this->getOwnersForForm(),
                 'asset_types' => config('enums.assets.types_public_no_cash_invest')

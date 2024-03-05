@@ -144,6 +144,12 @@ class ClientPresenter extends BasePresenter
                     return $expenditure->presenter()->form();
                 }))->groupBy('expenditure_type')
             ],
+            '2.6' => [
+                'client_id' => $this->model->io_id,
+                'expenditures' => collect($this->model->expenditures()->inConfigSection('lump_sum_expenditure')->get()->map(function ($expenditure){
+                    return $expenditure->presenter()->form();
+                }))->groupBy('expenditure_type')
+            ],
             '3.1' => [
                 'fixed_assets' => collect(Asset::with('clients')->whereIn('id',$this->model->assets->where('category',array_flip(config('enums.assets.categories'))['fixed_assets'])->pluck('id'))->get()->map(function ($asset){
                     return $asset->presenter()->formatForFactFind('fixed');
@@ -212,6 +218,7 @@ class ClientPresenter extends BasePresenter
                            ];
                         }),
                         'frequency' => $item->defined_contribution_pension->frequency,
+
 
                     ];
                 }),

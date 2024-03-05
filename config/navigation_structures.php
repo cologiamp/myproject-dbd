@@ -431,6 +431,40 @@ return [
                             'expenditures.*.ends_at' => 'sometimes|nullable|date'
                         ],
                         'messages' => []
+                    ],
+                    6 => [
+                        'name' => 'Lump Sum Expenditure',
+                        'fields' => [
+                            'expenditures' => [
+                                'expenditures.type',
+                                'expenditures.amount',
+                                'expenditures.frequency',
+                                'expenditures.description',
+                                'expenditures.starts_at'
+                            ]
+                        ],
+                        'rules' => [
+                            'expenditures' => 'sometimes|nullable|array',
+                            'expenditures.*.expenditure_id' => 'sometimes|nullable|integer',
+                            'expenditures.*.expenditure_type' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.expenditures.lump_sum_expenditure'))))
+                            ],
+                            'expenditures.*.description' => 'sometimes|nullable|string',
+                            'expenditures.*.amount' => 'sometimes|nullable|string',
+                            'expenditures.*.frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.incomes.frequency'))))
+                            ],
+                            'expenditures.*.starts_at' => 'sometimes|nullable|date',
+                        ],
+                        'messages' => []
                     ]
                 ],
             ],

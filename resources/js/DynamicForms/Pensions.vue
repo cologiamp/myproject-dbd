@@ -485,8 +485,6 @@ function removePension(index,type) {
                     </div>
 
 
-
-
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="born_at"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2">Valuation Date</label>
@@ -546,7 +544,6 @@ function removePension(index,type) {
                     </div>
 
                 </div>
-
 
                 <div class="col-span-6 rounded-md bg-aaron-950 pt-2 p-4">
                     <h4 class="col-span-6 text-xl font-bold pt-2"> Details </h4>
@@ -614,6 +611,7 @@ function removePension(index,type) {
                     <PlusCircleIcon class="w-6 h-6" />Add DB Pension
                 </button>
             </div>
+
         </div>
     </dynamic-form-wrapper></template>
 

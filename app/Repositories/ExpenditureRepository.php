@@ -79,7 +79,7 @@ class ExpenditureRepository extends BaseRepository
 
         $this->expenditure->delete();
 
-        
+
     }
 
     public function createOrUpdateExpenditureDetails(mixed $data):void
@@ -90,6 +90,7 @@ class ExpenditureRepository extends BaseRepository
         }
 
         collect($data['expenditures'])->each(function ($expenditure) {
+
             if(array_key_exists('expenditure_id', $expenditure)) {
                 $model = Expenditure::where('id', $expenditure['expenditure_id'])->first();
 
@@ -103,7 +104,7 @@ class ExpenditureRepository extends BaseRepository
                         'amount' => $expenditure['amount'],
                         'frequency' => $expenditure['frequency'],
                         'starts_at' => $expenditure['starts_at'],
-                        'ends_at' => $expenditure['ends_at']
+                        'ends_at' => $expenditure['ends_at'] ?? null
                     );
 
                     $model->update($formatExpenditureData);
@@ -128,7 +129,7 @@ class ExpenditureRepository extends BaseRepository
         });
     }
 
-    public function registerExpenditure(array $expenditure) 
+    public function registerExpenditure(array $expenditure)
     {
         $expenditureData = array(
             'type' => $expenditure['expenditure_type'],
@@ -136,7 +137,7 @@ class ExpenditureRepository extends BaseRepository
             'amount' => $expenditure['amount'],
             'frequency' => $expenditure['frequency'],
             'starts_at' => $expenditure['starts_at'],
-            'ends_at' => $expenditure['ends_at']
+            'ends_at' => $expenditure['ends_at'] ?? null
         );
         try {
             $model = $this->expenditure->create($expenditureData);
