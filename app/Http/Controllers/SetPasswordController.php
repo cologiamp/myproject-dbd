@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -13,10 +15,10 @@ class SetPasswordController extends Controller
     use PasswordValidationRules;
     public function show(User $user, Request $request)
     {
-        return Inertia::render('SetPassword');
+        return Inertia::render('Auth/SetPassword');
     }
 
-    public function store(User $user, Request $request): void
+    public function store(Request $request):RedirectResponse
     {
         $input = $request->toArray();
         Validator::make($input, [
@@ -25,9 +27,11 @@ class SetPasswordController extends Controller
             'password_confirmation.password_confirmation' => __('Passwords must match'),
         ])->validateWithBag('updatePassword');
 
-        $update_user = User::find($request->user()->id);
-        $update_user->password = bcrypt($request->password);
-        $update_user->has_temporary_password = false;
-        $update_user->update();
+        $user = $request->user();
+        $user->password = bcrypt($request->password);
+        $user->has_temporary_password = false;
+        $user->update();
+
+        return to_route('login');
     }
 }

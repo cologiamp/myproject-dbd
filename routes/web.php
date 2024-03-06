@@ -26,23 +26,9 @@ use \App\Http\Controllers\SetPasswordController;
 |
 */
 
-
-//Route::get('/', function () {
-//    ray(request())->green();
-//    if(Auth::user()) {
-//        if(Auth::user()->has_temporary_password === false)  {
-//            return redirect()->route('login');
-//        } else {
-//            return redirect()->route('password.request');
-//        }
-//    }
-//    return redirect()->route('login');
-//});
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
 Route::get('/logout',function (){
     \Illuminate\Support\Facades\Auth::logout();
     return redirect()->to('/login');
@@ -61,7 +47,7 @@ Route::middleware([
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-     '2fa',
+    '2fa',
     'check_temporary_password'
 ])->group(function () {
 

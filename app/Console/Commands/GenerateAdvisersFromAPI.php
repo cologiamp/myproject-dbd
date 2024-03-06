@@ -42,36 +42,31 @@ class GenerateAdvisersFromAPI extends Command
         });
 
         $response = Http::withHeader("Authorization", $token)->get(config('datahub.url') . "api/advisers?is_enabled=true&adviser_hub_access=true");
-
-        // todo: collect and then each - don't use foreach
-
-        foreach($response->json()['data'] as $adviser){
-            $inc = User::latest()->first()->id + 1;
-            if(count(User::where('email', $inc . $adviser['email'])->get()) === 0){
-                // grabbing first IO ID for now
-                foreach($adviser['io_ids'] as $i){
-                    $io_id = [
-                        $i['label'] => $i['value']
-                    ];
-                    break;
-                }
-
-                $adviser_email = $inc . $adviser['email'];
-                $temporary_pw = Str::password(10, true, true, false, false);
-
-                $user = new User();
-                $user->name = $adviser['name'];
-                $user->email = $adviser_email;
-                $user->password = bcrypt($temporary_pw);
-                $user->io_id = $io_id[$i['label']];
-                $user->profile_photo_path = $adviser['profile_pic_url'];
-                $user->has_temporary_password = true;
-                $user->save();
-
-                $user->notify(new AdviserAccountCreated([
-                    "temp_password" => $temporary_pw
-                ]));
+        $advisers = collect($response->json()['data'])->filter(function ($info, $key) {
+            return count(User::where('email', $info['email'])->get()) === 0;
+        })->map(function ($adviser, $key) {
+            foreach($adviser['io_ids'] as $i){
+                $io_id = [$i['label'] => $i['value']];
+                break;
             }
-        }
+
+            $adviser_email = $adviser['email'];
+            $temporary_pw = Str::password(10, true, true, false, false);
+            $user = new User();
+            $user->name = $adviser['name'];
+            $user->email = $adviser_email;
+            $user->password = bcrypt($temporary_pw);
+            $user->io_id = $io_id[$i['label']];
+            $user->profile_photo_path = $adviser['profile_pic_url'];
+            $user->has_temporary_password = true;
+            $user->save();
+
+            $user->notify(new AdviserAccountCreated([
+                "temp_password" => $temporary_pw
+            ]));
+        });
+
+        ray($advisers)->red();
+
     }
 }
