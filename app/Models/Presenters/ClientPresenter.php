@@ -96,7 +96,7 @@ class ClientPresenter extends BasePresenter
                     ]
                 ],
                 '1.3' => [
-                    'addresses' => collect($this->model->addresses->merge($this->model->client_two->addresses)->sortBy('id')->map(function ($address){
+                    'addresses' => collect($this->model->addresses->merge($this->model->client_two->addresses)->sortBy('id')->values()->map(function ($address){
                         return [
                             'address_id' => $address['id'],
                             'address_line_1' => $address['address_line_1'],
