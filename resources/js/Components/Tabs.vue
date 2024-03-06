@@ -32,10 +32,16 @@ function tabsClick(index, tab) {
     const url = new URL(window.location);
     url.searchParams.set('step', index);
     url.searchParams.set('section', 1); //cachedSectionForStep.value
-    router.visit(url,{
-        preserveScroll: true,
-        preserveState: true
-    });
+    // router.visit(url,{
+    //     preserveScroll: true,
+    //     preserveState: true
+    // });
+
+    // router.replace(url,{
+    //     preserveScroll: true,
+    //     preserveState: true
+    // });
+    window.history.pushState({}, '', url);
 
 }
 

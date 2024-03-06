@@ -39,8 +39,8 @@ function sectionsClick(index, item) {
     const url = new URL(window.location);
     url.searchParams.set('step', props.tabIndex);
     url.searchParams.set('section', selectedSectionId.value.toString());
-    window.history.pushState({}, '', url);
 
+    window.history.pushState({}, null, url);
 }
 
 provide("selectedSectionId", selectedSectionId);
@@ -57,6 +57,7 @@ onBeforeMount(() => {
     {
         url.searchParams.set('section', 1);
     }
+
     window.history.pushState({}, '', url);
 });
 
@@ -109,7 +110,7 @@ function nextTab(){
 
   <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" :class="!hide_progress.includes(props.tabName) ? 'top-48' : 'top-36'" aria-label="Sidebar">
       <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
-              <ul class="font-medium">
+          <ul class="font-medium">
                   <li v-for="(item, index) in props.sidebarItems"
                       v-bind:class="{'hidden': !menuShow && index !== currentSelectedSection, 'block': menuShow}" ref="btnMenuRef"
                       :key="item.name"

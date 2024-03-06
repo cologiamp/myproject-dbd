@@ -55,6 +55,7 @@ class HandleInertiaRequests extends Middleware
         if($request->route()->hasParameter('client'))
         {
             $client = $request->client;
+
             $nav1 = array_merge($nav1,[
                 [
                     'name' => 'Client Dashboard',
