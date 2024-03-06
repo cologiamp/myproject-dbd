@@ -2,13 +2,12 @@
 //FACTFIND:// you need to make one of these for every step
 import {autoS, autosaveT, delay} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
-import {useForm} from "laravel-precognition-vue-inertia";
+import {useForm, usePage} from "@inertiajs/vue3";
 import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import {computed, onBeforeMount, onMounted, ref, watch} from "vue";
 import {PlusCircleIcon, XCircleIcon} from "@heroicons/vue/24/solid/index.js";
-import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import { DateTime } from "luxon";
 
@@ -102,10 +101,9 @@ onMounted(()=>{
 
 
 
-const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{
+const stepForm = useForm({
     client_id: props.formData.model.client_id,
     addresses: props.formData.model.addresses,
-
 })
 
 onBeforeMount(()=>{

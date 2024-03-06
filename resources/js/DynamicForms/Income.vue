@@ -101,7 +101,7 @@ function removeIncome(index) {
     autosaveLocally();
 }
 
-const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     incomes: props.formData.model.incomes != null ? props.formData.model.incomes : [],
     useIncome: props.formData.model.useIncome,
     total: props.formData.model.total,

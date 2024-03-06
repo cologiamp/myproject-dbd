@@ -103,7 +103,7 @@ function removeExpenditure(typeIndex, expIndex) {
 
 }
 
-const stepForm = useForm(`EditExpenditures${ props.sectionIndex }${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     expenditures: props.formData.model.expenditures != null ? props.formData.model.expenditures : []
 })
 
