@@ -14,24 +14,27 @@ class PensionRepository extends BaseRepository
         collect($dcPensions)->each(function ($item){
             $pension = $this->updateBasePensionSchemeRecord($item);
             $dc_pension = $this->createOrUpdateDC($pension,$item);
+            if(array_key_exists('funds',$item))
+            {
+                collect($item['funds'])->each(function ($fund) use ($dc_pension){
 
-            collect($item['funds'])->each(function ($fund) use ($dc_pension){
+                    if(array_key_exists('id',$fund) && $fund['id'] != null)
+                    {
+                        $fundRecord = PensionFund::find($fund['id']);
+                    }
+                    else{
+                        $fundRecord = new PensionFund();
+                        $fundRecord->defined_contribution_pension_id = $dc_pension['id'];
 
-                if(array_key_exists('id',$fund) && $fund['id'] != null)
-                {
-                    $fundRecord = PensionFund::find($fund['id']);
-                }
-                else{
-                    $fundRecord = new PensionFund();
-                    $fundRecord->defined_contribution_pension_id = $dc_pension['id'];
+                    }
+                    $fundRecord->fund_name = $fund['fund_name'];
+                    $fundRecord->fund_type = $fund['fund_type'];
+                    $fundRecord->current_fund_value = $fund['current_fund_value'];
+                    $fundRecord->current_transfer_value = $fund['current_transfer_value'];
+                    $fundRecord->save();
+                });
+            }
 
-                }
-                $fundRecord->fund_name = $fund['fund_name'];
-                $fundRecord->fund_type = $fund['fund_type'];
-                $fundRecord->current_fund_value = $fund['current_fund_value'];
-                $fundRecord->current_transfer_value = $fund['current_transfer_value'];
-                $fundRecord->save();
-            });
         });
     }
 

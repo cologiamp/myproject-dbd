@@ -26,7 +26,9 @@ class FactFindController extends Controller
         $this->clientRepository->setClient($client);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
+
         $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
+
         return Inertia::render('FactFind', [
             'title' => 'Fact Find',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
