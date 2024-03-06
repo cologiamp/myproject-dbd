@@ -25,7 +25,6 @@ const selectedSectionId = ref(1);
 const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
 
 function sectionsClick(index, item) {
-    // alert('happened');
     selectedSectionId.value = index
 
     Object.keys(props.sidebarItems).forEach(key => {

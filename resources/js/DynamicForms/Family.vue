@@ -74,9 +74,7 @@ function removeDependent(index) {
     autosaveLocally();
 }
 
-
-
-const stepForm = useForm(`EditDependents${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     dependents: props.formData.model.dependents
 })
 

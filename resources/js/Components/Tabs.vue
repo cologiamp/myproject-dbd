@@ -25,6 +25,11 @@ function tabsClick(index, tab) {
 
     tab.current = true;
 
+    const url = new URL(window.location);
+    url.searchParams.set('step', index);
+    url.searchParams.set('section', '1');
+
+    window.history.pushState({}, null, url);
 }
 
 provide("selectedTabId", selectedTabId);

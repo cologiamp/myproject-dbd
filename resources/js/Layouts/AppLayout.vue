@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref, onBeforeMount} from 'vue'
+import {computed, ref} from 'vue'
 import {Head, Link, router, usePage} from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 
@@ -56,20 +56,6 @@ const userNavigation = [
 ]
 
 const sidebarOpen = ref(false)
-
-onBeforeMount(() => {
-    // const url = new URL(window.location);
-    // url.searchParams.set('step', 1);
-    // url.searchParams.set('section', 1); //cachedSectionForStep.value
-    // router.visit(url,{
-    //     preserveScroll: true,
-    //     preserveState: true
-    // });
-});
-
-function navItemClicked(e) {
-    alert(JSON.stringify(e.target.href))
-}
 
 </script>
 
@@ -141,7 +127,7 @@ function navItemClicked(e) {
                             <li>
                                 <ul role="list" class="-mx-2 space-y-1">
                                     <li v-for="item in navigation" :key="item.name">
-                                        <Link :href="item.href" @click="navItemClicked($event)" :class="[item.current ? 'bg-aaron-400 text-aaron-50' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                                        <Link :href="item.name === 'Fact-Find' || item.name === 'Investment Recommendation' ? item.href + '?step=1&section=1' : item.href" :class="[item.current ? 'bg-aaron-400 text-aaron-50' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                                             <component :is="comp(item.icon)"  class='text-aaron-50 h-6 w-6 shrink-0' aria-hidden="true" />
                                             {{ item.name }}
                                         </Link>
