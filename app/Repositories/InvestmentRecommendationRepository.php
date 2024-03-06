@@ -120,8 +120,6 @@ class InvestmentRecommendationRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-//                'progress' => $this->calculateInvestmentRecommendationElementProgress($key),
-                'progress' => 0,
                 'sidebaritems' => $this->loadInvestmentRecommendationSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
                 }), $key, $currentStep, $currentSection)->toArray()
@@ -129,32 +127,7 @@ class InvestmentRecommendationRepository extends BaseRepository
         })->toArray();
     }
 
-    //InvestmentRecommendation://to do - make sure this works for your form
-    /**
-     * Function to work out the progress % for each step.
-     * @param $key
-     * @return int
-     */
-    public function calculateInvestmentRecommendationElementProgress(int $step):int
-    {
-        $progress = collect(config('navigation_structures.investmentrecommendation.' . $step . '.sections'))->map(function ($section){
-            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
-            {
-                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-                    return match ($key) {
-                        'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
-                        // todo write join query here for other places data ends up.
-                        default => collect([]),
-                    };
-                });
-            }
-            else return collect([]);
-        })->flatten();
-
-        if ($progress->count() === 0) return 0;
-        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
-    }
-
+   
     public function createOrUpdateIncomeGrowthReport(mixed $data):void
     {
         if(!is_array($data) && $data::class == Request::class)

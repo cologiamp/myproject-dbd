@@ -336,7 +336,6 @@ class ClientRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
                 }), $key, $currentStep, $currentSection)->toArray()
@@ -354,51 +353,12 @@ class ClientRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                'progress' => 0,
                 'tabcontent' => $this->loadPensionObjectivesTabContent($value, $key)
             ];
         })->toArray();
     }
 
-    //FactFind://to do - make sure this works for your form
-    /**
-     * Function to work out the progress % for each step.
-     * @param $key
-     * @return int
-     */
-    public function calculateFactFindElementProgress(int $step):int
-    {
-        $progress = collect(config('navigation_structures.factfind.' . $step . '.sections'))->map(function ($section){
-            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
-            {
-                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-                    $nestedFieldArrays = ['dependents', 'addresses'];
 
-                    // process field names for nested field arrays
-                    if(in_array($key, $nestedFieldArrays)){
-                        $value = $value->map(function ($val) {
-                            $keyName = explode('.',$val)[1];
-                            return $keyName;
-                        });
-                    }
-
-                    return match ($key) {
-                        'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
-                        'addresses' => $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
-                        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first() ? Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray() : $this->setEmptyFields($value),
-                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
-                        'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get() ? EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get()->toArray() : $this->setEmptyFields($value),
-//                        '//todo write join query here for other places data ends up'.
-                        default => collect([]),
-                    };
-                });
-            }
-            else return collect([]);
-        })->flatten();
-
-        if ($progress->count() === 0) return 0;
-        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
-    }
 
     public function setEmptyFields(Collection $value)
     {

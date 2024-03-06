@@ -1,5 +1,5 @@
 <script setup>
-import { ref, provide, inject, onBeforeMount } from "vue";
+import {ref, provide, inject, onBeforeMount, computed} from "vue";
 import {Link, router} from '@inertiajs/vue3';
 import {ArrowRightIcon} from "@heroicons/vue/24/solid/index.js";
 
@@ -7,10 +7,6 @@ const props = defineProps({
     sidebarItems: {
         type: Object,
         required: true
-    },
-    progress: {
-        type: Number,
-        default: 0
     },
     tabName: {
         type: String,
@@ -22,8 +18,6 @@ const props = defineProps({
 
 const initialSectionKey = inject("onloadKey");
 const selectedSectionId = ref(1);
-const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
-
 function sectionsClick(index, item) {
     selectedSectionId.value = index
 
@@ -84,6 +78,8 @@ const toggleDropdown = (index) => {
     currentSelectedSection.value = index;
 }
 
+
+
 function nextTab(){
     const pathname = window.location.pathname;
     const search = window.location.search;
@@ -107,7 +103,7 @@ function nextTab(){
 
 <template>
 
-  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0" :class="!hide_progress.includes(props.tabName) ? 'top-48' : 'top-36'" aria-label="Sidebar">
+  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0 top-48" aria-label="Sidebar">
       <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
           <ul class="font-medium">
                   <li v-for="(item, index) in props.sidebarItems"
@@ -127,21 +123,13 @@ function nextTab(){
       </div>
   </aside>
 
-    <!-- DISPLAY ON START, HIDE ONSCROLL DOWN AND WHEN MENU IS STICKED -->
-    <div class="hidden md:hidden">
-        <div class="mb-4">
-            <span>{{ props.tabName + ' progress: '+ props.progress + '%' }} </span>
-        </div>
-        <div class="flex w-full mb-16 h-2.5 overflow-hidden bg-gray-700 rounded-md">
-            <div class="bg-aaron-400 w-[50%] rounded-r-md" />
-        </div>
-    </div>
+
 
     <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 mb-4 sm:ml-80">
         <div class="p-4">
             <slot></slot>
         </div>
-        <button type="button" @click="nextTab"
+        <button type="button" v-show="tabIndex != 4" @click="nextTab"
                 class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Next <ArrowRightIcon class="w-6 h-6" />
         </button>

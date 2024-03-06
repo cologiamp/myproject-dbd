@@ -35,8 +35,7 @@ class FactFindController extends Controller
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-            'url' => $request->getBaseUrl().$request->getRequestUri().$request->getQueryString(),
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($step) //Chore: This is not used? Can this be refactored?
+            'url' => $request->getBaseUrl().$request->getRequestUri().$request->getQueryString()
         ]);
     }
 

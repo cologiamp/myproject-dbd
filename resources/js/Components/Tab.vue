@@ -11,7 +11,6 @@ const props = defineProps({
         default: {
             'name' : 'Tab Content',
             'current': true,
-            'progress': 0,
             'sidebaritems': {
                 'name' : 'Section Content',
                 'current': true
@@ -23,7 +22,6 @@ const props = defineProps({
     }
 });
 
-const hide_progress = ['Investment Recommendations', 'Pension Recommendations'];
 
 const emit = defineEmits(['setOnloadKey']);
 const selectedTabId = inject("selectedTabId");
@@ -55,14 +53,6 @@ function handleAutosave(val){
             </div>
             <hr class="-mx-16 h-1 mt-2 mb-6 bg-aaron-950 border-0">
 
-            <span v-show="!hide_progress.includes(tab.name)" class="-mb-3">{{ tab.name + ' progress: ' + tab.progress + '%' }} </span>
-            <div v-show="!hide_progress.includes(tab.name)" class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
-                <div
-                    :class="tab.progress === 100 ? `bg-green-400` : `bg-aaron-400`"
-                    :style="{ width: `${tab.progress}%`}"
-                    class="rounded-r-md duration-300"
-                />
-            </div>
         </div>
         <div class="h-fit min-h-[65vh]">
             <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :tabIndex="tabIndex">
