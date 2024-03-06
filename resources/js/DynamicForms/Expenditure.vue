@@ -316,12 +316,12 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                                 stepForm.errors.belongs_to }}</p>
                     </div>
                 </div>
-
+                <button type="button" @click="addExpenditure(typeIndex)" v-if="stepForm.expenditures[typeIndex]"
+                        class="float-right inline-flex items-center gap-x-1.5 mb-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <PlusCircleIcon class="w-6 h-6" />Add {{ expenditureType }} Expenditure
+                </button>
             </div>
-            <button type="button" @click="addExpenditure(typeIndex)" v-if="stepForm.expenditures[typeIndex]"
-                    class="float-right inline-flex items-center gap-x-1.5 mb-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                <PlusCircleIcon class="w-6 h-6" />Add {{ expenditureType }} Expenditure
-            </button>
+
         </div>
     </dynamic-form-wrapper>
 </template>

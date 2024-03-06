@@ -602,6 +602,8 @@ function removePension(index,type) {
 
             </div>
 
+        </div>
+
             <div v-if="stepForm.db_pensions && stepForm.db_pensions.length > 0">
                 <button type="button" @click="addDc"
                         class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -612,8 +614,6 @@ function removePension(index,type) {
                     <PlusCircleIcon class="w-6 h-6" />Add DB Pension
                 </button>
             </div>
-        </div>
-
         </div>
     </dynamic-form-wrapper>
 </template>

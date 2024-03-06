@@ -24,30 +24,13 @@ function tabsClick(index, tab) {
     });
 
     tab.current = true;
-    //
-    // // retrieve saved section for equivalent step from localsession
-    // if (localStorage.getItem('step' + selectedTabId.value + 'section')) {
-    //     cachedSectionForStep.value = localStorage.getItem('step' + selectedTabId.value + 'section');
-    // }
-    const url = new URL(window.location);
-    url.searchParams.set('step', index);
-    url.searchParams.set('section', 1); //cachedSectionForStep.value
-    // router.visit(url,{
-    //     preserveScroll: true,
-    //     preserveState: true
-    // });
-
-    // router.replace(url,{
-    //     preserveScroll: true,
-    //     preserveState: true
-    // });
-    window.history.pushState({}, '', url);
 
 }
 
 provide("selectedTabId", selectedTabId);
 
 onBeforeMount(() => {
+
     // Emit function from parent component to set selected section onload
     emit('setOnloadKey', props.tabTitles, x => x.current == true);
     selectedTabId.value = initialTabKey.value;

@@ -145,7 +145,7 @@ async function autosaveLocally(){
                     <h4 class="col-span-6 text-xl font-bold pt-2"> Relationship to Client(s) </h4>
                     <div class="col-span-6 grid grid-cols-6" v-for="(model,key,index) in formData.enums.owners">
                         <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                            <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Related to {{model}}</label>
+                            <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Dependant of {{model}}?</label>
                             <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                                 <input @change="autosaveLocally()"
                                        v-model="dependent.relationships[key].is_related" type="radio" id="true" :value="true"

@@ -88,19 +88,19 @@ class LiabilityRepository extends BaseRepository
         }
 
         collect($data['liabilities'])->each(function ($liability) {
+
+            if(array_key_exists('owner',$liability) && $liability['owner'] != null)
+            {
+                $owner = $liability['owner'];
+                unset($liability['owner']);
+            }
+            else{
+                $owner = $this->client->io_id;
+            }
+
+
             if(array_key_exists('id', $liability)) {
                 $model = Liability::where('id', $liability['id'])->first();
-
-                if(array_key_exists('owner',$liability) && $liability['owner'] != null)
-                {
-                    $owner = $liability['owner'];
-                    unset($liability['owner']);
-                }
-                else{
-                    $owner = null;
-                }
-
-
 
                 DB::beginTransaction();
 
