@@ -106,7 +106,6 @@ class DependentRepository extends BaseRepository
                 ]);
             }
             collect($dependent['relationships'])->each(function ($item, $io_id) use ($model){
-                ray($item);
                 if($item['is_related'])
                 {
                     $c = Client::where('io_id',$io_id)->first();

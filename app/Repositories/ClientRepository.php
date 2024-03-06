@@ -129,7 +129,7 @@ class ClientRepository extends BaseRepository
     public function createOrUpdateAddresses(Collection $addresses)
     {
        $addresses->each(function ($item){
-           if(array_key_exists('percent_ownership',$item))
+           if(array_key_exists('percent_ownership',$item) && is_array($item['percent_ownership']))
            {
                $percents = $item['percent_ownership'];
                unset($item['percent_ownership']);
@@ -169,7 +169,6 @@ class ClientRepository extends BaseRepository
            else{
                $addr = Address::create(collect($item)->except('address_id','io_id','id')->toArray());
            }
-
            if($percents != null)
            {
                $addr->clients()->detach();

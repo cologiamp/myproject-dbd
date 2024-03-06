@@ -448,7 +448,7 @@ class ClientPresenter extends BasePresenter
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,
-                            'belongs_to' => $income->pivot->client_id,
+                            'belongs_to' => $income->clients->first()->io_id,
                             'record_exists' => $income->pivot->client_id ? true : false,
                         ];
                     }),
