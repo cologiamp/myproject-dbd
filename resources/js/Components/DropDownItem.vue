@@ -54,7 +54,7 @@ function handleAutosave(val){
                     </h1>
                     <AutoSaveSpinner :autosave="autosaveState" />
                 </div>
-                <div v-show="tab.name != investment_recommendations" class="hidden flex w-full h-2.5 bg-gray-700 rounded-md">
+                <div v-show="!hide_progress.includes(tab.name)" class="hidden flex w-full h-2.5 bg-gray-700 rounded-md">
                     <div class="bg-aaron-400 w-[50%] rounded-r-md" />
                 </div>
 
