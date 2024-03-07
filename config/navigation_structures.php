@@ -1262,8 +1262,32 @@ return [
                 1 => [
                     'name' => 'Knowledge and Experience',
                     'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance'
                     ],
                     'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|boolean',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|json',
+                        'experience_buying_bonds' => 'sometimes|nullable|json',
+                        'experience_buying_equities' => 'sometimes|nullable|json',
+                        'experience_buying_insurance' => 'sometimes|nullable|json'
                     ],
                     'messages' => [
                     ]
@@ -1271,8 +1295,16 @@ return [
                 2 => [
                     'name' => 'Capacity for Loss',
                     'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds'
                     ],
                     'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer'
                     ],
                     'messages' => [
                     ]
@@ -1280,8 +1312,24 @@ return [
                 3 => [
                     'name' => 'Risk Profile',
                     'fields' => [
+                        'id',
+                        'comfort_fluctuate_market',
+                        'day_to_day_volatility',
+                        'short_term_volatility',
+                        'medium_term_volatility',
+                        'volatility_behaviour',
+                        'long_term_volatility',
+                        'time_in_market'
                     ],
                     'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'comfort_fluctuate_market' => 'sometimes|nullable|boolean',
+                        'day_to_day_volatility' => 'sometimes|nullable|integer',
+                        'short_term_volatility' => 'sometimes|nullable|json',
+                        'medium_term_volatility' => 'sometimes|nullable|integer',
+                        'volatility_behaviour' => 'sometimes|nullable|integer',
+                        'long_term_volatility' => 'sometimes|nullable|integer',
+                        'time_in_market' => 'sometimes|nullable|integer'
                     ],
                     'messages' => [
                     ]

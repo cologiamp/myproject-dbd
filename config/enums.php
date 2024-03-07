@@ -1958,5 +1958,36 @@ return [
             0 => 'Transfer',
             1 => 'Information Only'
         ]
+    ],
+    'risk_assessment' => [
+        'cash' => [
+            0 => 'Liquidity Funds',
+            1 => 'Deposit Accounts',
+            2 => 'National Savings'
+        ],
+        'bonds' => [
+            0 => 'Corporate Bonds',
+            1 => 'Government Bonds (Gilts)',
+            2 => 'Bond Funds ie OEICs',
+            3 => 'ixed Rate Deposits'
+        ],
+        'equities' => [
+            0 => 'Shares/Unit Trusts/OEICs',
+            1 => 'Investment Trusts',
+            2 => 'Derivatives'
+        ],
+        'insurance' => [
+            0 => 'With Profit Bonds',
+            1 => 'Investment Bonds',
+            2 => 'Guaranteed Stockmarket Bonds'
+        ],
+        'short_term_volatility' => [
+            0 => '5%',
+            1 => '10%',
+            2 => '20%',
+            3 => '30%',
+            4 => '40%',
+            5 => '50% or more'
+        ],
     ]
 ];

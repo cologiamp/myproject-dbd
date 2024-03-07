@@ -327,7 +327,7 @@ class ClientRepository extends BaseRepository
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => RiskAssessmentSectionDataService::get($this->client->risk_profile,$step,$key),
+               'dynamicData' => RiskAssessmentSectionDataService::get($this->client,$step,$key),
            ];
         });
     }
