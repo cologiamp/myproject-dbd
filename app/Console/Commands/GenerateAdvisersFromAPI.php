@@ -42,21 +42,20 @@ class GenerateAdvisersFromAPI extends Command
         });
 
         $response = Http::withHeader("Authorization", $token)->get(config('datahub.url') . "api/advisers?is_enabled=true&adviser_hub_access=true");
-        $advisers = collect($response->json()['data'])->filter(function ($info, $key) {
-            return count(User::where('email', $info['email'])->get()) === 0;
-        })->map(function ($adviser, $key) {
-            foreach($adviser['io_ids'] as $i){
-                $io_id = [$i['label'] => $i['value']];
-                break;
-            }
 
+      collect($response->json()['data'])->filter(function ($info) {
+            return count(User::where('email', $info['email'])->get()) === 0;
+        })->map(function ($adviser) {
+            if(is_array($adviser["io_ids"])){
+                $io_id = collect($adviser["io_ids"])->first()["value"];
+            }
             $adviser_email = $adviser['email'];
             $temporary_pw = Str::password(10, true, true, false, false);
             $user = new User();
             $user->name = $adviser['name'];
             $user->email = $adviser_email;
             $user->password = bcrypt($temporary_pw);
-            $user->io_id = $io_id[$i['label']];
+            $user->io_id = $io_id;
             $user->profile_photo_path = $adviser['profile_pic_url'];
             $user->has_temporary_password = true;
             $user->save();
@@ -65,8 +64,5 @@ class GenerateAdvisersFromAPI extends Command
                 "temp_password" => $temporary_pw
             ]));
         });
-
-        ray($advisers)->red();
-
     }
 }

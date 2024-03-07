@@ -46,7 +46,9 @@ class AdviserAccountCreated extends Notification
                         '- Automated PDF’s',
                         '- Interactive visual tools',
                     ])
-                    ->line('Your temporary password is ' . $this->password. ' you will need to reset it the first time you sign in')
+                    ->line('Your temporary password is: ')
+                    ->line( $this->password )
+                    ->line( 'You will need to reset it the first time you sign in')
                     ->action('Click here to join', url(env('APP_URL')));
     }
 
