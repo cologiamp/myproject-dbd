@@ -210,6 +210,11 @@ class Client extends Model
         return $this->hasOne(PensionRecommendation::class);
     }
 
+    public function strategy_report_recommendation():HasOne
+    {
+        return $this->hasOne(StrategyReportRecommendation::class);
+    }
+
 
     //Presenter
     public function presenter() : ClientPresenter

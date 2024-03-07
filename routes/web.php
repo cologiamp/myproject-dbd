@@ -10,6 +10,7 @@ use App\Http\Controllers\InvestmentRecommendationController;
 use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\PensionObjectivesController;
 use App\Http\Controllers\StrategyReportController;
+use App\Http\Controllers\StrategyReportRecommendationsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -72,6 +73,7 @@ Route::middleware([
         Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
 
        Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
+       Route::get('/strategy-report-recommendations',[StrategyReportRecommendationsController::class,'show'])->name('strategyreportrecommendations');
 
        Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
        Route::put('/example',[ExampleController::class,'update'])->name('example.update');

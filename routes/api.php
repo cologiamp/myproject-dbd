@@ -19,6 +19,9 @@ use App\Http\Controllers\Api\InvestmentRecommendationItemController;
 use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
+use App\Http\Controllers\Api\StrategyReportRecommendationsController;
+use App\Http\Controllers\APi\StrategyObjectivesController;
+use App\Http\Controllers\Api\StrategyActionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +44,12 @@ Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindControll
 Route::post('/client/{client:io_id}/fact-find-solo',[FactFindController::class,'solo']);
 Route::post('/client/{client:io_id}/fact-find-together/{c2id}',[FactFindController::class,'selectClientTwo']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
+
 Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
+
+Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[StrategyReportRecommendationsController::class,'update'])->name('strategyreportrecommendations.update');
+Route::get('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'get'])->name('strategyobjectives.get');
+Route::get('/strategy-actions/{action}',[StrategyActionsController::class,'get'])->name('strategyactions.get');
 
 
 Route::middleware('auth:sanctum')->group(function (){
@@ -54,10 +62,15 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
+
     Route::delete('/investment-recommendation-items/{item}', [InvestmentRecommendationItemController::class,'delete']);
     Route::delete('/pr-contributions/{contribution}', [PRContributionController::class,'delete']);
     Route::delete('/pr-allowances/{allowance}', [PRAllowanceController::class,'delete']);
     Route::delete('/pr-items/{item}', [PRItemsController::class,'delete']);
+
+    Route::delete('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'delete']);
+    Route::delete('/strategy-actions/{action}',[StrategyActionsController::class,'delete']);
+
 });
 
 Route::get('/client/{client:io_id}/generate-pdf',\App\Http\Controllers\Api\StrategyReportController::class);
