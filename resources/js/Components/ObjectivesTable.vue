@@ -43,11 +43,29 @@ function getType(index) {
     return props.topics[parseInt(index)] ? props.topics[parseInt(index)].name : ''
 }
 
-function getObjective(topicIndex, objIndex) {
+function getObjective(topicIndex, objIndex, objCustom) {
+    let customText = ''
+
+    if ((topicIndex === 2 && objIndex === 1) || topicIndex === 3 && [0,1].includes(objIndex)) {
+        customText = props.topics[parseInt(topicIndex)]['objectives'][parseInt(objIndex)]
+        return customText.replace('£XX', objCustom)
+    }
+
+    if ((topicIndex === 8 && [1,2].includes(objIndex))) {
+        customText = props.topics[parseInt(topicIndex)]['objectives'][parseInt(objIndex)]
+        return customText.replace('XX', objCustom)
+    }
+
     return props.topics[parseInt(topicIndex)] ? props.topics[parseInt(topicIndex)]['objectives'][parseInt(objIndex)] : ''
 }
 
-function getWhatFor(topicIndex, whatForIndex) {
+function getWhatFor(topicIndex, whatForIndex, whatForCustom) {
+    let customText = ''
+
+    if ((topicIndex === 2 && [0,1].includes(whatForIndex))) {
+        customText = props.topics[parseInt(topicIndex)]['what_for'][parseInt(whatForIndex)]
+        return customText.replace('XX', whatForCustom)
+    }
     return props.topics[parseInt(topicIndex)] ? props.topics[parseInt(topicIndex)]['what_for'][parseInt(whatForIndex)] : ''
 }
 
@@ -79,8 +97,8 @@ function getWhatFor(topicIndex, whatForIndex) {
                             </td>
                             <td scope="row" class="text-sm px-3 py-4">{{getIsPrimaryText(element.is_primary)}}</td>
                             <td class="text-sm px-3 py-4">{{ getType(element.type) }}</td>
-                            <td class="text-sm px-3 py-4">{{ element.objective === 99 ? element.objective_custom : getObjective(element.type, element.objective) }}</td>
-                            <td class="text-sm px-3 py-4">{{ element.what_for === 99 ? element.what_for_custom : getWhatFor(element.type, element.what_for) }}</td>
+                            <td class="text-sm px-3 py-4">{{ element.objective === 99 ? element.objective_custom : getObjective(element.type, element.objective, element.objective_custom) }}</td>
+                            <td class="text-sm px-3 py-4">{{ element.what_for === 99 ? element.what_for_custom : getWhatFor(element.type, element.what_for, element.what_for_custom) }}</td>
                             <td class="relative text-sm py-4 pl-3 pr-4 text-right sm:pr-0">
                                 <a href="#" @click="edit(element.id)">
                                     <PencilSquareIcon class="w-5 h-5"></PencilSquareIcon>

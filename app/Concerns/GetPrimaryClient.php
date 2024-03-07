@@ -6,7 +6,7 @@ trait GetPrimaryClient{
 
 
     /**
-     * Formats currency as required
+     * Get model's primary client
      * @return $client
      */
     private function getPrimaryClient()
