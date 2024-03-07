@@ -11,7 +11,6 @@ const props = defineProps({
         default: {
             'name' : 'Tab Content',
             'currrent': true,
-            'progress': 0,
             'sidebaritems': {
                 'name' : 'Section Content',
                 'currrent': true
@@ -52,25 +51,13 @@ function handleAutosave(val){
                     </h1>
                     <AutoSaveSpinner :autosave="autosaveState" />
                 </div>
-                <div class="hidden flex w-full h-2.5 bg-gray-700 rounded-md">
-                    <div class="bg-aaron-400 w-[50%] rounded-r-md" />
-                </div>
 
-                <!-- HIDE ON START, DISPLAY ON SCROLL DOWN AND WHEN MENU IS STICKED -->
-                <div class="px-8 mb-8 w-full">
-                    <div class="mb-4">
-                        <span>{{ tab.name + ' progress: '+ tab.progress + '%' }} </span>
-                    </div>
-                    <div class="flex w-full h-2.5 overflow-hidden bg-gray-700 rounded-md">
-                        <div class="bg-aaron-400 w-[50%] rounded-r-md" />
-                    </div>
-                </div>
             </div>
         </div>
 
 
         <div class="px-8 block">
-            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :progress="tab.progress" :tabName="tab.name" >
+            <SectionSidebar v-if="tab.sidebaritems" :sidebarItems="tab.sidebaritems" :tabName="tab.name" :tabIndex="tabIndex">
                 <SectionContent @auto-save-up="handleAutosave" v-for="(item, index) in tab.sidebaritems" v-bind:key="index" :item="item" :sectionIndex="index"></SectionContent>
             </SectionSidebar>
         </div>

@@ -12,4 +12,8 @@ class DefinedContributionPension extends Model
         return $this->belongsTo(PensionScheme::class);
     }
 
+    public function pension_funds(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PensionFund::class);
+    }
 }

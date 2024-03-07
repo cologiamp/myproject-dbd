@@ -34,8 +34,6 @@ class ExampleController extends Controller
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $request->step,
             'section' => $section,
-//            'formData' => $this->clientRepository->getExampleFormOptions(),
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($section)
         ]);
     }
 

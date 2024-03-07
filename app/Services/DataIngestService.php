@@ -92,4 +92,31 @@ class DataIngestService
             throw $e;
         }
     }
+
+    public function getSecondaryClient($io_id, $clientData): array|null
+    {
+        $i = new Io();
+        try{
+            $relationships = collect($i->getRelationships($io_id));
+            if($relationships->count() > 0)
+            {
+                return $relationships->map(function ($item){
+                    return [
+                        'io_id' => $item['relation']['id'],
+                        'name' => $item['relation']['name'],
+                        'relationship' => $item['relationshipType']
+                    ];
+                })->toArray();
+            }
+            else{
+                return null;
+            }
+
+        }
+        catch(\Exception $e)
+        {
+            Log::critical('Failed to fetch from IO.');
+            throw $e;
+        }
+    }
 }

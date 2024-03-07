@@ -39,6 +39,81 @@ return [
         ]
     ],
     'client' => [
+        'gendered_titles' => [
+            0 => 2,
+            1 => 1,
+            2 => 2,
+            3 => 2,
+            4 => 0,
+            5 => 0,
+            6 => 0,
+            7 => 0,
+            8 => 1,
+            9 => 2,
+            10 =>  0,
+            11 => 0,
+            12 => 0,
+            13 => 0,
+            14 => 0,
+            15 => 0,
+            16 => 0,
+            17 => 0,
+            18 => 1,
+            19 => 2,
+            20 => 2,
+            21 => 1,
+            22 => 2,
+            23 => 0,
+            24 => 1,
+            25 => 2,
+            26 => 1,
+            27 => 0,
+            28 => 0,
+            29 => 0,
+            30 => 0,
+            31 => 2,
+            32 => 0,
+            33 => 0,
+            34 => 0,
+            35 => 0,
+            36 => 1,
+            37 => 2,
+            38 => 0,
+            39 => 0,
+            40 => 1,
+            41 => 1,
+            42 => 0,
+            43 => 0,
+            44 => 1,
+            45 => 1,
+            46 => 2,
+            47 => 0,
+            48 => 0,
+            49 => 0,
+            50 => 0,
+            51 => 0,
+            52 => 0,
+            53 => 0,
+            54 => 0,
+            55 => 0,
+            56 =>0,
+            57 =>0,
+            58 => 0,
+            59 => 1,
+            60 => 2,
+            61 => 0,
+            62 => 0,
+            63 => 0,
+            64 => 1,
+            65 => 0,
+            66 => 0,
+            67 => 0,
+            68 => 0,
+            69 => 0,
+            70 => 1,
+            71 => 2,
+            72 => 0
+        ],
         'title' => [
             0 => 'Miss',
             1 => 'Mr',
@@ -112,6 +187,81 @@ return [
             69 => 'Very Reverend',
             70 => 'Viscount',
             71 => 'Viscountess',
+            72 => 'Wing Commander'
+        ],
+        'title_gender' => [
+            0 => 2,
+            1 => 1,
+            2 => 2,
+            3 => 2,
+            4 => 'Admiral',
+            5 => 'Air Commodore',
+            6 => 'Air Vice Marshall',
+            7 => 'Archdeacon',
+            8 => 1,
+            9 => 2,
+            10 => 'Bishop',
+            11 => 'Brigadier',
+            12 => 'Canon',
+            13 => 1,
+            14 => 1,
+            15 => 1,
+            16 => 'Commodore',
+            17 => 'Corporal',
+            18 => 1,
+            19 => 2,
+            20 => 2,
+            21 => 1,
+            22 => 2,
+            23 => 'Dr',
+            24 => 2,
+            25 => 1,
+            26 => 1,
+            27 => 'Flight Lieutenant',
+            28 => 'General',
+            29 => 'Group Captain',
+            30 => 'Judge',
+            31 => 2,
+            32 => 'Lance Corporal',
+            33 => 'Lieutenant',
+            34 => 'Lieutenant Colonel',
+            35 => 'Lieutenant Commander',
+            36 => 1,
+            37 => 2,
+            38 => 'Major',
+            39 => 'Major General',
+            40 => 'Master',
+            41 => 'Monsignor',
+            42 => 'Mx',
+            43 => 'Other',
+            44 => 1,
+            45 => 1,
+            46 => 2,
+            47 => 'Private',
+            48 => 'Professor',
+            49 => 1,
+            50 => 'Rear Admiral',
+            51 => 'Reverend',
+            52 => 'Reverend Doctor',
+            53 => 'Right Honourable',
+            54 => 1,
+            55 => 'Right Reverend',
+            56 => 'Second Lieutenant',
+            57 => 'Sergeant',
+            58 => 'Sheriff',
+            59 => 1,
+            60 => 2,
+            61 => 'Squadron Leader',
+            62 => 'Staff Sergeant',
+            63 => 'Surgeon Captain',
+            64 => 'The Earl of',
+            65 => 'The Honourable',
+            66 => 'The Reverend Canon',
+            67 => 'Trooper',
+            68 => 'Venerable',
+            69 => 'Very Reverend',
+            70 => 1,
+            71 => 2,
             72 => 'Wing Commander'
         ],
         'gender' => [
@@ -1420,6 +1570,9 @@ return [
             30 => 'Mortgage',
             31 => 'Other (Liability)',
         ],
+        'lump_sum_expenditure' => [
+            32 => 'Lump sum expenditure',
+        ]
     ],
     'assets' => [
         'categories' => [
@@ -1499,6 +1652,7 @@ return [
             8 => 'Structure Product Growth',
             9 => 'Venture Capital Trust',
             10 => 'Other Investment',
+            11 => 'Collectives',
         ],
         'db_pension_statuses' => [
             0 => 'Active',
@@ -1507,9 +1661,7 @@ return [
         ],
         'dc_pension_types' => [
             0 => 'Occupational',
-            1 => 'Personal Pension',
-            2 => 'Retirement Annuity Contract',
-            3 => 'Self-Invested Personal Pension'
+            1 => 'Personal Pension'
         ],
         'pension_crystallised_statuses' => [
             0 => 'Uncrystallised',
@@ -1576,7 +1728,8 @@ return [
             7 => 'Maintenance Alimony',
             8 => 'Other Structured Loans',
             9 => 'Other Mortgages',
-            10 => 'Other'
+            10 => 'Other',
+            11 => 'Mortgage',
         ],
         'repayment_or_interest' => [
             0 => 'Repayment',
@@ -1655,5 +1808,155 @@ return [
             2 => 'Not a primary objective',
             3 => 'Not important',
         ],
+    ],
+    'relation_to_c2' => [
+        0 => 'Partner'
+    ],
+    'investment_recommendation' => [
+        'fee_basis' => [
+            0 => 'Standard',
+            1 => 'Discounted',
+            2 => 'Friends and Family',
+            3 => 'Staff',
+            4 => 'JP Morgan Staff Terms',
+            5 => 'Standard Chartered Staff Terms',
+            6 => 'Saga Terms',
+            7 => 'Staff'
+        ],
+        'report_type' => [
+            0 => 'Growth Only',
+            1 => 'Income & Growth',
+            2 => 'Income Only'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
+        ]
+    ],
+    'investment_recommendation_items' => [
+        'types' => [
+            0 => 'bond_element',
+            1 => 'growth_element',
+            2 => 'cash_element',
+            3 => 'treasured_stock_transfers'
+        ],
+        'types_public' => [
+            0 => 'Bond Element',
+            1 => 'Growth Element',
+            2 => 'Cash Element',
+            3 => 'Treasured Stock Transfers'
+        ],
+        'descriptions' => [
+            0 => 'General Investment Account',
+            1 => 'Stocks and Shares ISA (transfer)',
+            2 => 'Stocks and Shares ISA (new subscription)',
+        ]
+    ],
+    'pension_recommendation' => [
+        'fee_basis' => [
+            0 => 'standard',
+            1 => 'discounted',
+            2 => 'friends_and_family',
+            3 => 'staff',
+            4 => 'jp_morgan_staff_terms',
+            5 => 'standard_chartered_staff_terms',
+            6 => 'saga_terms',
+            7 => 'staff'
+        ],
+        'fee_basis_public' => [
+            0 => 'Standard',
+            1 => 'Discounted',
+            2 => 'Friends and Family',
+            3 => 'Staff',
+            4 => 'JP Morgan Staff Terms',
+            5 => 'Standard Chartered Staff Terms',
+            6 => 'Saga Terms',
+            7 => 'Staff'
+        ],
+        'report_type' => [
+            0 => 'Growth Only',
+            1 => 'Retirement Income Only'
+        ],
+        'employment_status' => [
+            0 => 'Employed',
+            1 => 'Self-employed',
+            2 => 'Unemployed',
+            3 => 'Retired'
+        ],
+        'workplace_pension_type' => [
+            0 => 'Defined Contribution',
+            1 => 'Defined Benefit',
+            2 => 'Hybrid'
+        ],
+        'pension_review_transfer' => [
+            0 => 'No',
+            1 => 'Yes retiring soon',
+            2 => 'Yes leaving employer',
+            3 => 'Yes other'
+        ],
+        'retirement_option' => [
+            0 => 'Income Drawdown',
+            1 => 'Annuity',
+            2 => 'Cash sum'
+        ],
+        'policy_type' => [
+            0 => 'Defined Benefit Pension',
+            1 => 'Defined Contribution Pension'
+        ],
+        'new_contribution_type' => [
+            0 => 'Lump Sum',
+            1 => 'Regular'
+        ],
+        'new_contribution_paid_by' => [
+            0 => 'Client',
+            1 => 'Employer',
+            2 => '3rd Party'
+        ],
+        'frequency' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Fortnightly',
+            3 => 'FourWeekly',
+            4 => 'Quarterly',
+            5 => 'HalfYearly',
+            6 => 'Annually'
+        ],
+        'frequency_public' => [
+            0 => 'Monthly',
+            1 => 'Weekly',
+            2 => 'Once every 2 weeks',
+            3 => 'Every 4 months',
+            4 => 'Quarterly',
+            5 => 'Every 6 months',
+            6 => 'Annually'
+        ],
+        'item_type' => [
+            0 => 'Cash',
+            1 => 'Income',
+            2 => 'Growth'
+        ],
+        'lqa_submitted' => [
+            0 => 'Yes',
+            1 => 'No',
+            2 => 'Have Authority'
+        ],
+        'policy_reviewed_transfer' => [
+            0 => 'Transfer',
+            1 => 'Information Only'
+        ]
     ]
 ];

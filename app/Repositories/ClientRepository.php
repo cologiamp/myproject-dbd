@@ -36,6 +36,12 @@ class ClientRepository extends BaseRepository
     {
         $this->client = $client;
     }
+    public function storeRelationships($data): bool
+    {
+        $this->client->relationships = json_encode($data);
+        $this->client->save();
+        return true;
+    }
 
     public function getClient() : Client
     {
@@ -44,6 +50,13 @@ class ClientRepository extends BaseRepository
         }
         throw new ClientNotFoundException();
     }
+
+    public function createClient($data): void
+    {
+        $this->client->create($data);
+        $this->client->fresh();
+    }
+
 
     //Create the model
     public function create(CreateClientRequest $request): Client
@@ -106,11 +119,106 @@ class ClientRepository extends BaseRepository
             $addr->update(collect($data)->except(['address_id','io_id'])->toArray());
         }
         else{
+            Log::info('creating new address');
             $addr = Address::create(collect($data)->except(['address_id','io_id'])->toArray());
 
             $this->client->addresses()->attach($addr->fresh());
         }
+    }
 
+    public function createOrUpdateAddresses(Collection $addresses)
+    {
+       $addresses->each(function ($item){
+           if(array_key_exists('percent_ownership',$item) && is_array($item['percent_ownership']))
+           {
+               $percents = $item['percent_ownership'];
+               unset($item['percent_ownership']);
+               unset($item['owner']);
+               $owner = null;
+           }
+           elseif(array_key_exists('owner',$item)){
+               $owner = $item['owner'];
+               unset($item['percent_ownership']);
+               unset($item['owner']);
+               $percents = null;
+           }
+           else{
+               $percents = null;
+               $owner = null;
+           }
+
+           if(array_key_exists('date_from',$item) && $item['date_from'] != null)
+           {
+               $item['date_from'] = Carbon::parse($item['date_from']);
+           }
+           if(array_key_exists('id',$item) && $item['id'] != null)
+           {
+               $addr = Address::where('id',$item['id'])->first();
+               $addr->update(collect($item)->except(['address_id','io_id'])->toArray());
+           }
+           elseif(array_key_exists('address_id',$item) && $item['address_id'] != null)
+           {
+               $addr = Address::where('id',$item['address_id'])->first();
+               $addr->update(collect($item)->except(['address_id','io_id'])->toArray());
+           }
+           elseif(array_key_exists('io_id',$item) && $item['io_id'] != null)
+           {
+               $addr = Address::where('io_id',$item['io_id'])->first();
+               $addr->update(collect($item)->except(['address_id','io_id'])->toArray());
+           }
+           else{
+               $addr = Address::create(collect($item)->except('address_id','io_id','id')->toArray());
+           }
+           if($percents != null)
+           {
+               $addr->clients()->detach();
+               collect($percents)->each(function ($item,$key) use ($addr){
+                   $client = Client::with('addresses')->where('io_id',$key)->first();
+                   if(collect($client->addresses->pluck('id'))->doesntContain($addr->id))
+                   {
+                       $client->addresses()->attach($addr->id,['percent_ownership' => $item]);
+                   }
+                   else{
+                       DB::table('address_client')->where('address_id',$addr->id)->where('client_id',$client->id)->update(['percent_ownership'=> $item]);
+                   }
+               });
+           }
+           elseif($owner != null)
+           {
+               if($owner == 'Both')
+               {
+                   dd('need to handle the case where both clients own an address but no percentage');
+               }
+               else{
+                   //case where 100% owned by one client, no percentages
+                   $client = Client::with('addresses')->where('io_id',$owner)->first();
+                   if(collect($client->addresses->pluck('id'))->doesntContain($addr->id))
+                   {
+                       $client->addresses()->attach($addr->id,['percent_ownership' => 100]);
+                   }
+               }
+           }
+           else{
+               $client = $this->client;
+               if(collect($client->addresses->pluck('id'))->doesntContain($addr->id))
+               {
+                   $client->addresses()->attach($addr->id,['percent_ownership' => 100]);
+               }
+           }
+       });
+    }
+
+    /**
+     * Delete a specified address from the system. This should be in a different repository, but all address stuff is with Client right now.
+     * @param $address
+     * @return bool
+     */
+    public function deleteAddress($address): bool
+    {
+        $address->clients()->each(function ($item) use ($address){
+            $item->addresses()->detach($address->id);
+        });
+        return $address->delete();
     }
 
     //Delete the resource from the database, doing any cleanup first
@@ -227,7 +335,6 @@ class ClientRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                'progress' => $this->calculateFactFindElementProgress($key),
                 'sidebaritems' => $this->loadFactFindSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
                 }), $key, $currentStep, $currentSection)->toArray()
@@ -245,51 +352,12 @@ class ClientRepository extends BaseRepository
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
-                'progress' => 0,
                 'tabcontent' => $this->loadPensionObjectivesTabContent($value, $key)
             ];
         })->toArray();
     }
 
-    //FactFind://to do - make sure this works for your form
-    /**
-     * Function to work out the progress % for each step.
-     * @param $key
-     * @return int
-     */
-    public function calculateFactFindElementProgress(int $step):int
-    {
-        $progress = collect(config('navigation_structures.factfind.' . $step . '.sections'))->map(function ($section){
-            if(array_key_exists('fields',$section) && count($section['fields']) > 0)
-            {
-                return collect($section['fields'])->flatten()->groupBy(fn($item) => explode('.',$item)[0])->map(function ($value, $key){
-                    $nestedFieldArrays = ['dependents', 'addresses'];
 
-                    // process field names for nested field arrays
-                    if(in_array($key, $nestedFieldArrays)){
-                        $value = $value->map(function ($val) {
-                            $keyName = explode('.',$val)[1];
-                            return $keyName;
-                        });
-                    }
-
-                    return match ($key) {
-                        'clients' => Client::where("io_id", $this->client->io_id)->select([...$value])->first()->toArray(),
-                        'addresses' => $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->addresses()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
-                        'health' => Health::where("client_id", $this->client->id)->select([...$value])->first() ? Health::where("client_id", $this->client->id)->select([...$value])->first()->toArray() : $this->setEmptyFields($value),
-                        'dependents' => $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get() ? $this->client->dependents()->where("client_id", $this->client->id)->select([...$value])->get()->toArray() : collect([]),
-                        'employment_details' => EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get() ? EmploymentDetail::where("client_id", $this->client->id)->select([...$value])->get()->toArray() : $this->setEmptyFields($value),
-//                        '//todo write join query here for other places data ends up'.
-                        default => collect([]),
-                    };
-                });
-            }
-            else return collect([]);
-        })->flatten();
-
-        if ($progress->count() === 0) return 0;
-        return $progress->filter(fn($element) => $element !== null)->count() / $progress->count() * 100;
-    }
 
     public function setEmptyFields(Collection $value)
     {
