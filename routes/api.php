@@ -60,4 +60,4 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/pr-items/{item}', [PRItemsController::class,'delete']);
 });
 
-
+Route::get('/client/{client:io_id}/generate-pdf',\App\Http\Controllers\Api\StrategyReportController::class);

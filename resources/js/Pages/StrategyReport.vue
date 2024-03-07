@@ -2,7 +2,12 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import FormWell from "@/Components/FormWell.vue";
 
-import {QuestionMarkCircleIcon, LightBulbIcon, GlobeAsiaAustraliaIcon} from "@heroicons/vue/24/solid/index.js";
+import {
+    QuestionMarkCircleIcon,
+    LightBulbIcon,
+    GlobeAsiaAustraliaIcon,
+    ArrowRightIcon
+} from "@heroicons/vue/24/solid/index.js";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -11,6 +16,12 @@ const props = defineProps({
     contentTitle: String,
     clientId: String,
 });
+
+function generateReport(){
+    axios.get('/api/client/' + props.clientId + '/generate-pdf').then(response => {
+       console.log('done');
+    });
+}
 
 </script>
 
@@ -22,10 +33,13 @@ const props = defineProps({
         <div class="overflow-hidden bg-aaron-950 pt-5 rounded-lg ">
                 <div class="bg-aaron-900 shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-base font-semibold leading-6 text-aaron-50">Nothing to see here</h3>
+                        <h3 class="text-base font-semibold leading-6 text-aaron-50">Generate new Strategy Report</h3>
                         <div class="mt-5">
                             <div class="rounded-md text-aaron-50 bg-aaron-700 px-6 py-5 sm:flex sm:items-start sm:justify-between">
-                                <p>This is where you will view, download, generate and email the strategy report from, I expect</p>
+                                <button type="button" @click="generateReport"
+                                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-10 py-8 text-lg font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    GENERATE <ArrowRightIcon class="w-12 h-8" />
+                                </button>
                             </div>
                         </div>
                     </div>
