@@ -12,6 +12,7 @@ use App\Models\Client;
 use App\Models\Health;
 use App\Models\EmploymentDetail;
 use App\Services\FactFindSectionDataService;
+use App\Services\RiskAssessmentSectionDataService;
 use App\Services\PensionObjectivesDataService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
@@ -169,6 +170,7 @@ class ClientRepository extends BaseRepository
            else{
                $addr = Address::create(collect($item)->except('address_id','io_id','id')->toArray());
            }
+
            if($percents != null)
            {
                $addr->clients()->detach();
@@ -314,6 +316,22 @@ class ClientRepository extends BaseRepository
         });
     }
 
+    /**
+     * Load in risk sidebar items dynamically for the tabs
+     * @param int - the step that we want to load the sidebar for
+     */
+    public function loadRiskSidebarItems($sections, $step, $currentStep, $currentSection): Collection
+    {
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
+           return  [
+               'name' => $value,
+               'renderable' => Str::studly($value),
+               'current' => $key === $currentSection,
+               'dynamicData' => RiskAssessmentSectionDataService::get($this->client->risk_profile,$step,$key),
+           ];
+        });
+    }
+
     public function loadPensionObjectivesTabContent(array $config, int $currentTab):array
     {
         return [
@@ -357,6 +375,22 @@ class ClientRepository extends BaseRepository
         })->toArray();
     }
 
+    /**
+     * Load in the correct data structure for the sidebar tabs of the page we're on
+     * @return array
+     */
+    public function loadRiskTabs(int $currentStep = 1,int $currentSection = 1):array
+    {
+        return collect(config('navigation_structures.riskassessment'))->map(function ($value,$key) use ($currentSection,$currentStep){
+            return [
+                'name' => $value['name'],
+                'current' =>  $key === $currentStep,
+                'sidebaritems' => $this->loadRiskSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
+                    return [$key => $value['name']];
+                }), $key, $currentStep, $currentSection)->toArray()
+            ];
+        })->toArray();
+    }
 
 
     public function setEmptyFields(Collection $value)

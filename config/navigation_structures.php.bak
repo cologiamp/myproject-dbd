@@ -1255,38 +1255,5 @@ return [
             ]
         ]
     ],
-    'riskassessment' => [
-            1 => [
-            'name' => 'Investment Risk Assessment',
-            'sections' => [
-                1 => [
-                    'name' => 'Knowledge and Experience',
-                    'fields' => [
-                    ],
-                    'rules' => [
-                    ],
-                    'messages' => [
-                    ]
-                ],
-                2 => [
-                    'name' => 'Capacity for Loss',
-                    'fields' => [
-                    ],
-                    'rules' => [
-                    ],
-                    'messages' => [
-                    ]
-                ],
-                3 => [
-                    'name' => 'Risk Profile',
-                    'fields' => [
-                    ],
-                    'rules' => [
-                    ],
-                    'messages' => [
-                    ]
-                ]
-            ]
-        ]
-    ]
+
 ];

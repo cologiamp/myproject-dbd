@@ -210,6 +210,15 @@ class Client extends Model
         return $this->hasOne(PensionRecommendation::class);
     }
 
+    public function capacity_for_loss(): HasOne
+    {
+        return $this->hasOne(CapacityForLoss::class);
+    }
+
+    public function risk_profile(): HasOne
+    {
+        return $this->hasOne(RiskProfile::class);
+    }
 
     //Presenter
     public function presenter() : ClientPresenter
