@@ -41,7 +41,7 @@ class GenerateAdvisersFromAPI extends Command
       collect($response->json()['data'])->filter(function ($info) {
             return count(User::where('email', $info['email'])->get()) === 0;
         })->map(function ($adviser) {
-            if(is_array($adviser["io_ids"])){
+            if(is_array($adviser["io_ids"]) && count($adviser["io_ids"]) > 0){
                 $io_id = collect($adviser["io_ids"])->first()["value"];
             }
             $adviser_email = $adviser['email'];
