@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Repositories\CapacityForLossRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\RiskProfileRepository;
 use App\Repositories\KnowledgeRepository;
@@ -14,22 +15,30 @@ class RiskAssessmentController extends Controller
     protected ClientRepository $clientRepository;
     protected RiskProfileRepository $riskProfileRepository;
     protected KnowledgeRepository $knowledgeRepository;
-    public function __construct(ClientRepository $cr, RiskProfileRepository $riskProfileRepository, KnowledgeRepository $knowledgeRepository)
+    protected CapacityForLossRepository $capacityForLossRepository;
+    public function __construct(
+        ClientRepository $cr,
+        RiskProfileRepository $riskProfileRepository,
+        KnowledgeRepository $knowledgeRepository,
+        CapacityForLossRepository $capacityForLossRepository)
     {
         $this->clientRepository = $cr;
         $this->riskProfileRepository = $riskProfileRepository;
         $this->knowledgeRepository = $knowledgeRepository;
+        $this->capacityForLossRepository = $capacityForLossRepository;
     }
 
     public function show(Client $client, Request $request)
     {
         $this->clientRepository->setClient($client);
-        if(!$client->risk_profile) {
+        if(!$client->risk_profile->first()) {
             $this->riskProfileRepository->setClient($client);
             $this->knowledgeRepository->setClient($client);
+            $this->capacityForLossRepository->setClient($client);
 
             $client->risk_profile = $this->riskProfileRepository->createInitialRiskProfileForClient();
             $client->knowledge = $this->knowledgeRepository->createInitialKnowledgeForClient();
+            $client->capacity_for_loss = $this->capacityForLossRepository->createInitialCapacityForClient();
         }
 
         $section = $request->section ?? 1;

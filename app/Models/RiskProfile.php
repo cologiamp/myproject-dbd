@@ -9,6 +9,9 @@ use App\Models\Presenters\RiskPresenter;
 class RiskProfile extends Model
 {
     protected $guarded = [];
+
+    public const RISK_INVESTMENT_TYPE = 0;
+    public const RISK_PENSION_TYPE = 1;
     public function client()
     {
         return $this->belongsTo(Client::class);
@@ -42,6 +45,15 @@ class RiskProfile extends Model
                 'risk_assessment_insurance' => config('enums.risk_assessment.insurance')
             ],
             '1.3' => [
+                'risk_assessment_volatility' => config('enums.risk_assessment.short_term_volatility')
+            ],
+            '2.1' => [
+                'risk_assessment_cash' => config('enums.risk_assessment.cash'),
+                'risk_assessment_bonds' => config('enums.risk_assessment.bonds'),
+                'risk_assessment_equities' => config('enums.risk_assessment.equities'),
+                'risk_assessment_insurance' => config('enums.risk_assessment.insurance')
+            ],
+            '2.3' => [
                 'risk_assessment_volatility' => config('enums.risk_assessment.short_term_volatility')
             ],
             default => [

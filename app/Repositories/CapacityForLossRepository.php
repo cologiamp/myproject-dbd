@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Client;
 use App\Models\CapacityForLoss;
+use App\Models\RiskProfile;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -72,6 +73,31 @@ class CapacityForLossRepository extends BaseRepository
     {
         //handle any cleanup required here
         $this->capacityForLoss->delete();
+    }
+
+    public function createInitialCapacityForClient(): CapacityForLoss
+    {
+        $types = [RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE];
+
+        DB::beginTransaction();
+
+        try {
+            for ($x = 0; $x < count($types); $x++) {
+                $risk = array(
+                    'client_id' => $this->client->id,
+                    'type' => $types[$x]
+                );
+
+                $newRecord = CapacityForLoss::create($risk);
+            }
+
+            DB::commit();
+            return $newRecord;
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw new \Exception($e);
+        }
     }
 
     public function createOrUpdate(mixed $capacity):void

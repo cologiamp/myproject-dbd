@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Client;
 use App\Models\Knowledge;
+use App\Models\RiskProfile;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -99,18 +100,24 @@ class KnowledgeRepository extends BaseRepository
 
     public function createInitialKnowledgeForClient(): Knowledge
     {
-        $risk = array(
-            'client_id' => $this->client->id,
-            'type' => 0,
-            'experience_buying_cash' => $this->createDefaultJson(),
-            'experience_buying_bonds' => $this->createDefaultBondJson(),
-            'experience_buying_equities' => $this->createDefaultJson(),
-            'experience_buying_insurance' => $this->createDefaultJson(),
-        );
+        $types = [RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE];
 
         DB::beginTransaction();
+
         try {
-            $newRecord = Knowledge::create($risk);
+            for ($x = 0; $x < count($types); $x++) {
+                $knowledge = array(
+                    'client_id' => $this->client->id,
+                    'type' => $types[$x],
+                    'experience_buying_cash' => $this->createDefaultJson(),
+                    'experience_buying_bonds' => $this->createDefaultBondJson(),
+                    'experience_buying_equities' => $this->createDefaultJson(),
+                    'experience_buying_insurance' => $this->createDefaultJson(),
+                );
+
+                $newRecord = Knowledge::create($knowledge);
+            }
+
             DB::commit();
 
             return $newRecord;
@@ -122,6 +129,7 @@ class KnowledgeRepository extends BaseRepository
 
     public function createOrUpdate(mixed $knowledge):void
     {
+        ray($knowledge)->green();
         if(!is_array($knowledge) && $knowledge::class == Request::class)
         {
             $knowledge = $knowledge->safe();

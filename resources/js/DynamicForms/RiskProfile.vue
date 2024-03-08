@@ -26,13 +26,15 @@ const props = defineProps({
                 risk_assessment_volatility: []
             },
             model: {
-                comfort_fluctuate_market: null,
-                day_to_day_volatility: null,
-                // short_term_volatility: null,
-                medium_term_volatility: null,
-                volatility_behaviour: null,
-                long_term_volatility: null,
-                time_in_market: null
+                risk_profile: {
+                    comfort_fluctuate_market: null,
+                    day_to_day_volatility: null,
+                    short_term_volatility: null,
+                    medium_term_volatility: null,
+                    volatility_behaviour: null,
+                    long_term_volatility: null,
+                    time_in_market: null
+                }
             },
             submit_method: 'post',
             submit_url: '/',
@@ -42,26 +44,26 @@ const props = defineProps({
 });
 
 const stepForm = useForm({
-    id: props.formData.model.id,
-    comfort_fluctuate_market: props.formData.model.comfort_fluctuate_market,
-    day_to_day_volatility: props.formData.model.day_to_day_volatility,
-    short_term_volatility: JSON.parse(props.formData.model.short_term_volatility),
-    medium_term_volatility: props.formData.model.medium_term_volatility,
-    volatility_behaviour: props.formData.model.volatility_behaviour,
-    long_term_volatility: props.formData.model.long_term_volatility,
-    time_in_market: props.formData.model.time_in_market
+    id: props.formData.model.risk_profile.id,
+    comfort_fluctuate_market: props.formData.model.risk_profile.comfort_fluctuate_market,
+    day_to_day_volatility: props.formData.model.risk_profile.day_to_day_volatility,
+    short_term_volatility: JSON.parse(props.formData.model.risk_profile.short_term_volatility),
+    medium_term_volatility: props.formData.model.risk_profile.medium_term_volatility,
+    volatility_behaviour: props.formData.model.risk_profile.volatility_behaviour,
+    long_term_volatility: props.formData.model.risk_profile.long_term_volatility,
+    time_in_market: props.formData.model.risk_profile.time_in_market
 })
 
 async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
-    stepForm.id = props.formData.model.id;
-    stepForm.comfort_fluctuate_market = props.formData.model.comfort_fluctuate_market;
-    stepForm.day_to_day_volatility = props.formData.model.day_to_day_volatility;
-    stepForm.short_term_volatility = JSON.parse(props.formData.model.short_term_volatility);
-    stepForm.medium_term_volatility = props.formData.model.medium_term_volatility;
-    stepForm.volatility_behaviour = props.formData.model.volatility_behaviour;
-    stepForm.long_term_volatility = props.formData.model.long_term_volatility;
-    stepForm.time_in_market = props.formData.model.time_in_market;
+    stepForm.id = props.formData.model.risk_profile.id;
+    stepForm.comfort_fluctuate_market = props.formData.model.risk_profile.comfort_fluctuate_market;
+    stepForm.day_to_day_volatility = props.formData.model.risk_profile.day_to_day_volatility;
+    stepForm.short_term_volatility = JSON.parse(props.formData.model.risk_profile.short_term_volatility);
+    stepForm.medium_term_volatility = props.formData.model.risk_profile.medium_term_volatility;
+    stepForm.volatility_behaviour = props.formData.model.risk_profile.volatility_behaviour;
+    stepForm.long_term_volatility = props.formData.model.risk_profile.long_term_volatility;
+    stepForm.time_in_market = props.formData.model.risk_profile.time_in_market;
 }
 
 function setRating(data) {

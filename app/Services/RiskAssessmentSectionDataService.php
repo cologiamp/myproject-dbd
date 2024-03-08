@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Concerns\FormatsCurrency;
 use App\Models\Client;
+use App\Models\RiskProfile;
 use App\Repositories\CapacityForLossRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\KnowledgeRepository;
@@ -29,9 +30,11 @@ class RiskAssessmentSectionDataService
     //get the data for a single section of a risk from a single client
     public static function get($client, $step, $section): array
     {
+//        dd($client->risk_profile()->where('type', 1)->first());
+        $riskInv = $client->risk_profile()->where('type', 0)->first();
         return [
-            'enums' => $client->risk_profile->loadEnumsForStep($step, $section),
-            'model' => $client->risk_profile->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
+            'enums' => $riskInv->loadEnumsForStep($step, $section),
+            'model' => $riskInv->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
             'submit_url' => '/api/client/' . $client->io_id . '/risk-assessment/' . $step . '/' . $section //here we hydrate the autosave URL
         ];
@@ -89,7 +92,12 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->knowledgeRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = 0; // Investment Risk type
+        $validatedData['type'] = RiskProfile::RISK_INVESTMENT_TYPE;
+        $validatedData['experience_buying_cash'] = json_encode($validatedData['experience_buying_cash']);
+        $validatedData['experience_buying_bonds'] = json_encode($validatedData['experience_buying_bonds']);
+        $validatedData['experience_buying_equities'] = json_encode($validatedData['experience_buying_equities']);
+        $validatedData['experience_buying_insurance'] = json_encode($validatedData['experience_buying_insurance']);
+
         $this->knowledgeRepository->createOrUpdate($validatedData);
     }
 
@@ -98,7 +106,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->capacityForLossRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = 0; // Investment Risk type
+        $validatedData['type'] = RiskProfile::RISK_INVESTMENT_TYPE;
         $this->capacityForLossRepository->createOrUpdate($validatedData);
     }
 
@@ -107,7 +115,37 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->riskProfileRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = 0; // Investment Risk type
+        $validatedData['type'] = RiskProfile::RISK_INVESTMENT_TYPE;
+        $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
+
+        $this->riskProfileRepository->createOrUpdate($validatedData);
+    }
+
+    private function _21(array $validatedData): void
+    {
+        // define any explicit mutators that are not handled
+        $this->knowledgeRepository->setClient($this->clientRepository->getClient());
+
+        $validatedData['type'] = RiskProfile::RISK_PENSION_TYPE;
+        $this->knowledgeRepository->createOrUpdate($validatedData);
+    }
+
+    private function _22(array $validatedData): void
+    {
+        // define any explicit mutators that are not handled
+        $this->capacityForLossRepository->setClient($this->clientRepository->getClient());
+
+        $validatedData['type'] = RiskProfile::RISK_PENSION_TYPE;
+        $this->capacityForLossRepository->createOrUpdate($validatedData);
+    }
+
+    private function _23(array $validatedData): void
+    {
+        // define any explicit mutators that are not handled
+        $this->riskProfileRepository->setClient($this->clientRepository->getClient());
+
+        $validatedData['type'] = RiskProfile::RISK_PENSION_TYPE;
+        $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
         $this->riskProfileRepository->createOrUpdate($validatedData);
     }
 }

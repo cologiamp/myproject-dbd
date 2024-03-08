@@ -215,9 +215,9 @@ class Client extends Model
         return $this->hasOne(CapacityForLoss::class);
     }
 
-    public function risk_profile(): HasOne
+    public function risk_profile(): HasMany
     {
-        return $this->hasOne(RiskProfile::class);
+        return $this->hasMany(RiskProfile::class);
     }
 
     //Presenter

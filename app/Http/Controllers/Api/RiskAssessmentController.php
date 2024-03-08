@@ -31,6 +31,7 @@ class RiskAssessmentController extends Controller
      */
     public function update(Client $client, $step, $section, Request $request): string
     {
+        ray($request)->purple();
         $rasds = App::make(RiskAssessmentSectionDataService::class);
 
         try{

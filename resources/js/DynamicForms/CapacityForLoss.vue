@@ -25,9 +25,11 @@ const props = defineProps({
             enums: {
             },
             model: {
-                investment_length: null,
-                standard_of_living: null,
-                emergency_funds: null
+                capacity_data: {
+                    investment_length: null,
+                    standard_of_living: null,
+                    emergency_funds: null
+                }
             },
             submit_method: 'post',
             submit_url: '/',
@@ -37,18 +39,18 @@ const props = defineProps({
 });
 
 const stepForm = useForm({
-    id: props.formData.model.id,
-    investment_length: props.formData.model.investment_length,
-    standard_of_living: props.formData.model.standard_of_living,
-    emergency_funds: props.formData.model.emergency_funds
+    id: props.formData.model.capacity_data.id,
+    investment_length: props.formData.model.capacity_data.investment_length,
+    standard_of_living: props.formData.model.capacity_data.standard_of_living,
+    emergency_funds: props.formData.model.capacity_data.emergency_funds
 })
 
 async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
-    stepForm.id = props.formData.model.id;
-    stepForm.investment_length = props.formData.model.investment_length;
-    stepForm.standard_of_living = props.formData.model.standard_of_living;
-    stepForm.emergency_funds = props.formData.model.emergency_funds;
+    stepForm.id = props.formData.model.capacity_data.id;
+    stepForm.investment_length = props.formData.model.capacity_data.investment_length;
+    stepForm.standard_of_living = props.formData.model.capacity_data.standard_of_living;
+    stepForm.emergency_funds = props.formData.model.capacity_data.emergency_funds;
 }
 
 onMounted(()=>{

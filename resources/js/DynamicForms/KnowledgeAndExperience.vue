@@ -24,17 +24,19 @@ const props = defineProps({
                 risk_assessment_insurance: []
             },
             model: {
-                particular_issues: null,
-                level_of_knowledge: null,
-                aware_of_market_fluctuations: null,
-                comfort_of_fluctuations: null,
-                active_interest: null,
-                discretionary_experience: null,
-                ever_taken_invest_advice: null,
-                experience_buying_cash: null,
-                experience_buying_bonds: null,
-                experience_buying_equities: null,
-                experience_buying_insurance: null
+                knowledge: {
+                    particular_issues: null,
+                    level_of_knowledge: null,
+                    aware_of_market_fluctuations: null,
+                    comfort_of_fluctuations: null,
+                    active_interest: null,
+                    discretionary_experience: null,
+                    ever_taken_invest_advice: null,
+                    experience_buying_cash: null,
+                    experience_buying_bonds: null,
+                    experience_buying_equities: null,
+                    experience_buying_insurance: null
+                }
             },
             submit_method: 'post',
             submit_url: '/',
@@ -44,34 +46,34 @@ const props = defineProps({
 });
 
 const stepForm = useForm({
-    id: props.formData.model.id,
-    particular_issues: props.formData.model.particular_issues,
-    level_of_knowledge: props.formData.model.level_of_knowledge,
-    aware_of_market_fluctuations: props.formData.model.aware_of_market_fluctuations,
-    comfort_of_fluctuations: props.formData.model.comfort_of_fluctuations,
-    active_interest: props.formData.model.active_interest,
-    discretionary_experience: props.formData.model.discretionary_experience,
-    ever_taken_invest_advice: props.formData.model.ever_taken_invest_advice,
-    experience_buying_cash: JSON.parse(props.formData.model.experience_buying_cash),
-    experience_buying_bonds: JSON.parse(props.formData.model.experience_buying_bonds),
-    experience_buying_equities: JSON.parse(props.formData.model.experience_buying_equities),
-    experience_buying_insurance: JSON.parse(props.formData.model.experience_buying_insurance)
+    id: props.formData.model.knowledge.id,
+    particular_issues: props.formData.model.knowledge.particular_issues,
+    level_of_knowledge: props.formData.model.knowledge.level_of_knowledge,
+    aware_of_market_fluctuations: props.formData.model.knowledge.aware_of_market_fluctuations,
+    comfort_of_fluctuations: props.formData.model.knowledge.comfort_of_fluctuations,
+    active_interest: props.formData.model.knowledge.active_interest,
+    discretionary_experience: props.formData.model.knowledge.discretionary_experience,
+    ever_taken_invest_advice: props.formData.model.knowledge.ever_taken_invest_advice,
+    experience_buying_cash: JSON.parse(props.formData.model.knowledge.experience_buying_cash),
+    experience_buying_bonds: JSON.parse(props.formData.model.knowledge.experience_buying_bonds),
+    experience_buying_equities: JSON.parse(props.formData.model.knowledge.experience_buying_equities),
+    experience_buying_insurance: JSON.parse(props.formData.model.knowledge.experience_buying_insurance)
 })
 
 async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
-    stepForm.id = props.formData.model.id;
-    stepForm.particular_issues = props.formData.model.particular_issues;
-    stepForm.level_of_knowledge = props.formData.model.level_of_knowledge;
-    stepForm.aware_of_market_fluctuations = props.formData.model.aware_of_market_fluctuations;
-    stepForm.comfort_of_fluctuations = props.formData.model.comfort_of_fluctuations;
-    stepForm.active_interest = props.formData.model.active_interest;
-    stepForm.discretionary_experience = props.formData.model.discretionary_experience;
-    stepForm.ever_taken_invest_advice = props.formData.model.ever_taken_invest_advice;
-    stepForm.experience_buying_cash = JSON.parse(props.formData.model.experience_buying_cash);
-    stepForm.experience_buying_bonds = JSON.parse(props.formData.model.experience_buying_bonds);
-    stepForm.experience_buying_equities = JSON.parse(props.formData.model.experience_buying_equities);
-    stepForm.experience_buying_insurance = JSON.parse(props.formData.model.experience_buying_insurance);
+    stepForm.id = props.formData.model.knowledge.id;
+    stepForm.particular_issues = props.formData.model.knowledge.particular_issues;
+    stepForm.level_of_knowledge = props.formData.model.knowledge.level_of_knowledge;
+    stepForm.aware_of_market_fluctuations = props.formData.model.knowledge.aware_of_market_fluctuations;
+    stepForm.comfort_of_fluctuations = props.formData.model.knowledge.comfort_of_fluctuations;
+    stepForm.active_interest = props.formData.model.knowledge.active_interest;
+    stepForm.discretionary_experience = props.formData.model.knowledge.discretionary_experience;
+    stepForm.ever_taken_invest_advice = props.formData.model.knowledge.ever_taken_invest_advice;
+    stepForm.experience_buying_cash = JSON.parse(props.formData.model.knowledge.experience_buying_cash);
+    stepForm.experience_buying_bonds = JSON.parse(props.formData.model.knowledge.experience_buying_bonds);
+    stepForm.experience_buying_equities = JSON.parse(props.formData.model.knowledge.experience_buying_equities);
+    stepForm.experience_buying_insurance = JSON.parse(props.formData.model.knowledge.experience_buying_insurance);
 }
 
 function setRating(data) {
