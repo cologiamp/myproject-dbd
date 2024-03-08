@@ -49,6 +49,11 @@ class Client extends Model
         return $this->client_two ? $this->name . " & ". $this->client_two->name :  $this->name;
     }
 
+    public function getPreferredNameAttribute():string
+    {
+        return $this->salutation ?: $this->first_name;
+    }
+
 
     public function date_of_birth():Attribute
     {
@@ -73,25 +78,6 @@ class Client extends Model
         return $this->formatted_title . ' ' . $this->first_name . ' ' . $this->last_name;
     }
 
-    public function advice_case():BelongsTo
-    {
-        return $this->belongsTo(AdviceCase::class, "case_id");
-    }
-
-    public function assets():BelongsToMany
-    {
-        return $this->belongsToMany(Asset::class);
-    }
-    public function liabilities():BelongsToMany
-    {
-        return $this->belongsToMany(Liability::class);
-    }
-
-    public function incomes():BelongsToMany
-    {
-        return $this->belongsToMany(Income::class)->withPivot('is_primary');
-    }
-
 
     public function getAgeAttribute()
     {
@@ -113,6 +99,30 @@ class Client extends Model
     public function getStatusTextAttribute()
     {
         return $this->advice_case?->status_text ?? "Fact Find";
+    }
+
+
+    public function advice_case():BelongsTo
+    {
+        return $this->belongsTo(AdviceCase::class, "case_id");
+    }
+
+
+
+    //Relations
+
+    public function assets():BelongsToMany
+    {
+        return $this->belongsToMany(Asset::class);
+    }
+    public function liabilities():BelongsToMany
+    {
+        return $this->belongsToMany(Liability::class);
+    }
+
+    public function incomes():BelongsToMany
+    {
+        return $this->belongsToMany(Income::class)->withPivot('is_primary');
     }
 
 

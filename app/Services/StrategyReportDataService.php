@@ -1,13 +1,32 @@
 <?php
 namespace App\Services;
 
+use Illuminate\Support\Str;
+
 class StrategyReportDataService
 {
-    public static function getStrategyReportData():array
+    public static function getStrategyReportData($client):array
     {
+        $client_two = $client->client_two;
+        $name = 'For ';
+        if($client_two)
+        {
+            if(Str::lower($client_two->last_name) == Str::lower($client->last_name))
+            {
+                $name .= $client->preferred_name . ' & ' . $client_two->preferred_name . ' ' . $client->last_name;
+            }
+            else{
+                $name.= $client->preferred_name . ' ' . $client->last_name . ' & ' . $client_two->preferred_name . ' ' . $client_two->last_name;
+            }
+        }
+        else{
+            $name .= $client->preferred_name . ' ' . $client->last_name;
+        }
+
+
         return [
           'cover' => [
-              'name' => '',
+              'name' => $name,
               'date' => ''
           ],
           'about_us' => [
@@ -27,41 +46,41 @@ class StrategyReportDataService
               'report_version'
           ],
           'about_you' => [
-//            'type' => '', //individual, retiring, couple,
-//            'employments' => [
-//                [
-//                    'employment_status' => 'Retiring',
-//                    'employer' => '',
-//                    'job_title' => '',
-//                    'pension_option_p_a' => '',
-//                    'pension_option_l_s' => '',
-//                ],
-//                [
-//                    'employment_status' => 'Employed',
-//                    'employer' => '',
-//                    'job_title' => '',
-//                    'salary' => ''
-//                ],
-//                [
-//                    'employment_status' => 'Retired',
-//                    'retirement_income' => ''
-//                ],
-//            ],
-//            'bottom_left_status' => '',
-//            'bottom_left_description' => '',
-//            'marital_status' => '',
-//            'name' => '',
-//            'age' => '',
-//            'birth_date' => '',
-//            'dependent' => '',
-//            'dependent_description' => '',
-//            'annual_expenditure' => '',
-//            'home_value_status' => '',
-//            'home_value' => '',
-//            'address' => '',
-//            'liquid_assets' => '',
-//            'pension_status' => '',
-//            'pension_value' => ''
+            'type' => '', //individual, retiring, couple,
+            'employments' => [
+                [
+                    'employment_status' => 'Retiring',
+                    'employer' => '',
+                    'job_title' => '',
+                    'pension_option_p_a' => '',
+                    'pension_option_l_s' => '',
+                ],
+                [
+                    'employment_status' => 'Employed',
+                    'employer' => '',
+                    'job_title' => '',
+                    'salary' => ''
+                ],
+                [
+                    'employment_status' => 'Retired',
+                    'retirement_income' => ''
+                ],
+            ],
+            'bottom_left_status' => '',
+            'bottom_left_description' => '',
+            'marital_status' => '',
+            'name' => '',
+            'age' => '',
+            'birth_date' => '',
+            'dependent' => '',
+            'dependent_description' => '',
+            'annual_expenditure' => '',
+            'home_value_status' => '',
+            'home_value' => '',
+            'address' => '',
+            'liquid_assets' => '',
+            'pension_status' => '',
+            'pension_value' => ''
           ],
            'your_objectives' => [
                'primary_objectives' => [
@@ -103,8 +122,8 @@ class StrategyReportDataService
                             'value' => ''
                         ],
                         [
-                        'title' => '',
-                        'value' => ''
+                            'title' => '',
+                            'value' => ''
                         ]
                     ]
                 ],
