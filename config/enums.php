@@ -1989,5 +1989,10 @@ return [
             4 => '40%',
             5 => '50% or more'
         ],
+        'retirement_options' => [
+            0 => 'Annuities',
+            1 => 'Income Drawdown',
+            2 => 'Phased Retirement'
+        ]
     ]
 ];

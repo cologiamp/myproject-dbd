@@ -51,7 +51,8 @@ class RiskProfile extends Model
                 'risk_assessment_cash' => config('enums.risk_assessment.cash'),
                 'risk_assessment_bonds' => config('enums.risk_assessment.bonds'),
                 'risk_assessment_equities' => config('enums.risk_assessment.equities'),
-                'risk_assessment_insurance' => config('enums.risk_assessment.insurance')
+                'risk_assessment_insurance' => config('enums.risk_assessment.insurance'),
+                'risk_assessment_retirement_options' => config('enums.risk_assessment.retirement_options')
             ],
             '2.3' => [
                 'risk_assessment_volatility' => config('enums.risk_assessment.short_term_volatility')

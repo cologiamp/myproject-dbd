@@ -1340,7 +1340,7 @@ return [
             'name' => 'Pension Risk Assessment',
             'sections' => [
                 1 => [
-                    'name' => 'Knowledge and Experience',
+                    'name' => 'Pension Knowledge and Experience',
                     'fields' => [
                         'id',
                         'particular_issues',
@@ -1353,7 +1353,11 @@ return [
                         'experience_buying_cash',
                         'experience_buying_bonds',
                         'experience_buying_equities',
-                        'experience_buying_insurance'
+                        'experience_buying_insurance',
+                        'execution_only_experience',
+                        'experience_details',
+                        'experience_of_annuities',
+                        'spoken_to_pensionwise'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
@@ -1367,13 +1371,17 @@ return [
                         'experience_buying_cash' => 'sometimes|nullable|array',
                         'experience_buying_bonds' => 'sometimes|nullable|array',
                         'experience_buying_equities' => 'sometimes|nullable|array',
-                        'experience_buying_insurance' => 'sometimes|nullable|array'
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'execution_only_experience' => 'sometimes|nullable|boolean',
+                        'experience_details' => 'sometimes|nullable|string',
+                        'experience_of_annuities' => 'sometimes|nullable|array',
+                        'spoken_to_pensionwise' => 'sometimes|nullable|boolean'
                     ],
                     'messages' => [
                     ]
                 ],
                 2 => [
-                    'name' => 'Capacity for Loss',
+                    'name' => 'Pension Capacity for Loss',
                     'fields' => [
                         'id',
                         'investment_length',
@@ -1390,7 +1398,7 @@ return [
                     ]
                 ],
                 3 => [
-                    'name' => 'Risk Profile',
+                    'name' => 'Pension Risk Profile',
                     'fields' => [
                         'id',
                         'comfort_fluctuate_market',
