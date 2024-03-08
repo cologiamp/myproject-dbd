@@ -1273,7 +1273,8 @@ return [
                         'experience_buying_cash',
                         'experience_buying_bonds',
                         'experience_buying_equities',
-                        'experience_buying_insurance'
+                        'experience_buying_insurance',
+                        'experience_details'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
@@ -1287,7 +1288,8 @@ return [
                         'experience_buying_cash' => 'sometimes|nullable|array',
                         'experience_buying_bonds' => 'sometimes|nullable|array',
                         'experience_buying_equities' => 'sometimes|nullable|array',
-                        'experience_buying_insurance' => 'sometimes|nullable|array'
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'experience_details' => 'sometimes|nullable|string'
                     ],
                     'messages' => [
                     ]
@@ -1340,7 +1342,7 @@ return [
             'name' => 'Pension Risk Assessment',
             'sections' => [
                 1 => [
-                    'name' => 'Pension Knowledge and Experience',
+                    'name' => 'Knowledge and Experience',
                     'fields' => [
                         'id',
                         'particular_issues',
@@ -1357,13 +1359,15 @@ return [
                         'execution_only_experience',
                         'experience_details',
                         'experience_of_annuities',
+                        'experience_of_income_drawdown',
+                        'experience_of_phased_retirement',
                         'spoken_to_pensionwise'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
                         'particular_issues' => 'sometimes|nullable|boolean',
                         'level_of_knowledge' => 'sometimes|nullable|integer',
-                        'aware_of_market_fluctuations' => 'sometimes|nullable|boolean',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|integer',
                         'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
                         'active_interest' => 'sometimes|nullable|boolean',
                         'discretionary_experience' => 'sometimes|nullable|boolean',
@@ -1374,14 +1378,16 @@ return [
                         'experience_buying_insurance' => 'sometimes|nullable|array',
                         'execution_only_experience' => 'sometimes|nullable|boolean',
                         'experience_details' => 'sometimes|nullable|string',
-                        'experience_of_annuities' => 'sometimes|nullable|array',
+                        'experience_of_annuities' => 'sometimes|nullable|integer',
+                        'experience_of_income_drawdown' => 'sometimes|nullable|integer',
+                        'experience_of_phased_retirement' => 'sometimes|nullable|integer',
                         'spoken_to_pensionwise' => 'sometimes|nullable|boolean'
                     ],
                     'messages' => [
                     ]
                 ],
                 2 => [
-                    'name' => 'Pension Capacity for Loss',
+                    'name' => 'Capacity for Loss',
                     'fields' => [
                         'id',
                         'investment_length',
@@ -1398,7 +1404,7 @@ return [
                     ]
                 ],
                 3 => [
-                    'name' => 'Pension Risk Profile',
+                    'name' => 'Risk Profile',
                     'fields' => [
                         'id',
                         'comfort_fluctuate_market',

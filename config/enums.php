@@ -1969,7 +1969,7 @@ return [
             0 => 'Corporate Bonds',
             1 => 'Government Bonds (Gilts)',
             2 => 'Bond Funds ie OEICs',
-            3 => 'ixed Rate Deposits'
+            3 => 'Fixed Rate Deposits'
         ],
         'equities' => [
             0 => 'Shares/Unit Trusts/OEICs',

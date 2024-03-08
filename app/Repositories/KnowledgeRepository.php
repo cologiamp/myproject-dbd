@@ -5,9 +5,7 @@ use App\Models\Client;
 use App\Models\Knowledge;
 use App\Models\RiskProfile;
 use Exception;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class KnowledgeRepository extends BaseRepository
@@ -98,20 +96,6 @@ class KnowledgeRepository extends BaseRepository
         return json_encode($experience_buying_bonds);
     }
 
-    private function createDefaultRetirementJson(): string
-    {
-        $retirement_options = [
-            '0' => ['value' => null],
-            '1' => ['value' => null],
-            '2' => ['value' => null],
-            '3' => ['value' => null],
-            '4' => ['value' => null],
-            '5' => ['value' => null]
-        ];
-
-        return json_encode($retirement_options);
-    }
-
     public function createInitialKnowledgeForClient(): Knowledge
     {
         $types = [RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE];
@@ -126,8 +110,7 @@ class KnowledgeRepository extends BaseRepository
                     'experience_buying_cash' => $this->createDefaultJson(),
                     'experience_buying_bonds' => $this->createDefaultBondJson(),
                     'experience_buying_equities' => $this->createDefaultJson(),
-                    'experience_buying_insurance' => $this->createDefaultJson(),
-                    'experience_of_annuities' => $this->createDefaultRetirementJson(),
+                    'experience_buying_insurance' => $this->createDefaultJson()
                 );
 
                 $newRecord = Knowledge::create($knowledge);
