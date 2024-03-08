@@ -48,7 +48,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     '2fa',
-    'check_temporary_password'
+    'check_temporary_password',
 ])->group(function () {
 
 //    Route::get('/test',function (){
