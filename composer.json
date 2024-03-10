@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "diglactic/laravel-breadcrumbs": "^8.1",
+        "docraptor/docraptor": "^4.1",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "laravel/framework": "^10.10",
@@ -72,11 +73,9 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "packages/waw/io",
-            "options": {
-                "symlink": true
-            }
+            "type": "vcs",
+            "url": "https://github.com/wealth-at-work/Intelliflo",
+            "no-api": true
         }
     ],
     "minimum-stability": "dev",
