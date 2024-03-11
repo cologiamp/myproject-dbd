@@ -50,7 +50,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     '2fa',
-    'check_temporary_password'
+    'check_temporary_password',
     'is_not_c2'
 ])->group(function () {
 

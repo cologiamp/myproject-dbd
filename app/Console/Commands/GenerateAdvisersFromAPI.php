@@ -2,18 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\Fortify\CreateNewUser;
 use App\Models\User;
-use App\Actions\Fortify;
 use App\Concerns\InterractsWithDataHub;
 use App\Notifications\AdviserAccountCreated;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Laravel\Jetstream\Jetstream;
-use Illuminate\Support\Facades\Notification;
 
 class GenerateAdvisersFromAPI extends Command
 {

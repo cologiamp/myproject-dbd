@@ -13,7 +13,7 @@ use Inertia\Inertia;
 class SetPasswordController extends Controller
 {
     use PasswordValidationRules;
-    public function show(User $user, Request $request)
+    public function show()
     {
         return Inertia::render('Auth/SetPassword');
     }

@@ -2,9 +2,7 @@
 
 namespace App\Concerns;
 
-use App\Jobs\CacheProviders;
 use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
