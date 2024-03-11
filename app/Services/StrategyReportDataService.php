@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class StrategyReportDataService
@@ -27,7 +28,7 @@ class StrategyReportDataService
         return [
           'cover' => [
               'name' => $name,
-              'date' => ''
+              'date' => Carbon::now()->format('F Y')
           ],
           'about_us' => [
               'group_assets' => '',
