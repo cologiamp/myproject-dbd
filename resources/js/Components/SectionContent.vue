@@ -22,6 +22,8 @@ const props = defineProps({
     }
 });
 
+console.log("props",props);
+
 function dynamicComponent(component){
     // For Expenditure sections
     if (component.includes('Expenditure')) {

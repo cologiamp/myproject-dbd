@@ -89,6 +89,9 @@ class PRAnnualAllowanceRepository extends BaseRepository
 
     public function createOrUpdateAllowance(mixed $data): void
     {
+
+        ray($data)->purple();
+
         if(!is_array($data) && $data::class == Request::class)
         {
             $data = $data->safe();
