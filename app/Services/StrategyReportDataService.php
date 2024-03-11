@@ -1,12 +1,14 @@
 <?php
 namespace App\Services;
 
+use App\Concerns\InterractsWithDataHub;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class StrategyReportDataService
 {
-    public static function getStrategyReportData($client):array
+    use InterractsWithDataHub;
+    public function getStrategyReportData($client):array
     {
         $client_two = $client->client_two;
         $name = 'For ';
@@ -23,7 +25,7 @@ class StrategyReportDataService
         else{
             $name .= $client->preferred_name . ' ' . $client->last_name;
         }
-
+        $adviser = $this->getAdviser($client);
 
         return [
           'cover' => [
@@ -31,17 +33,18 @@ class StrategyReportDataService
               'date' => Carbon::now()->format('F Y')
           ],
           'about_us' => [
-              'group_assets' => '',
-              'group_employees' => '',
-              'corporate_clients' => '',
-              'group_offices' => '',
-              'office_map' => ''
+              'group_assets' => $this->getStat('group-assets'),
+              'group_employees' => $this->getStat('waw-group-employees'),
+              'corporate_clients' => $this->getStat('corporate-clients'),
+              'group_offices' => $this->getStat('group-offices'),
+              'group_offices_description' => $this->getStat('group-offices-desc'),
+              'office_map' => $this->getStat('group-offices-image'),
           ],
           'meet_the_team' => [
-              'adviser_picture' => '',
-              'adviser_name' => '',
-              'adviser_title' => '',
-              'adviser_bio' => ''
+              'adviser_picture' => $adviser['profile_photo'],
+              'adviser_name' => $adviser['name'],
+              'adviser_title' => $adviser['title'],
+              'adviser_bio' => $adviser['short_bio']
           ],
           'a_holistic_approach' => [
               'report_version'
