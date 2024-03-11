@@ -55,6 +55,7 @@ class HandleInertiaRequests extends Middleware
         if($request->route()->hasParameter('client'))
         {
             $client = $request->client;
+
             $nav1 = array_merge($nav1,[
                 [
                     'name' => 'Client Dashboard',
@@ -79,6 +80,12 @@ class HandleInertiaRequests extends Middleware
                     'href' => '/client/'.$client->io_id.'/strategy-report',
                     'icon' => 'SRIcon',
                     'current' => $request->route()->getName() === 'client.strategy'
+                ],
+                [
+                    'name' => 'Investment Recommendation',
+                    'href' => '/client/'.$client->io_id.'/investment-recommendation',
+                    'icon' => 'IRIcon',
+                    'current' => $request->route()->getName() === 'client.investmentrecommendation'
                 ],
             ]);
         }

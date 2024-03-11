@@ -25,20 +25,17 @@ function tabsClick(index, tab) {
 
     tab.current = true;
 
-    // retrieve saved section for equivalent step from localsession
-    if (localStorage.getItem('step' + selectedTabId.value + 'section')) {
-        cachedSectionForStep.value = localStorage.getItem('step' + selectedTabId.value + 'section');
-    }
     const url = new URL(window.location);
     url.searchParams.set('step', index);
-    url.searchParams.set('section', cachedSectionForStep.value);
-    window.history.pushState({}, '', url);
+    url.searchParams.set('section', '1');
 
+    window.history.pushState({}, null, url);
 }
 
 provide("selectedTabId", selectedTabId);
 
 onBeforeMount(() => {
+
     // Emit function from parent component to set selected section onload
     emit('setOnloadKey', props.tabTitles, x => x.current == true);
     selectedTabId.value = initialTabKey.value;
@@ -56,9 +53,8 @@ onBeforeMount(() => {
                 class="list-item !w-auto group cursor-pointer"
                 >
                 <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4 group-hover:text-white transition-all">{{ tab.name }}</p>
-                <!-- tab progress bar -->
-                <div class="flex w-full h-1.5 overflow-hidden group-hover:bg-aaron-400 transition-all" :class="[tab.current ? 'bg-aaron-400' : '']" role="progressbar">
-                </div>
+
+
             </li>
         </ul>
         <slot></slot>

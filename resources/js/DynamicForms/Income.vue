@@ -24,7 +24,7 @@ const props = defineProps({
                 income_types: [],
                 frequencies: [],
                 per_year_frequencies: [],
-                belongs_to: []
+                owners: []
             },
             model: {
                 useIncome: true,
@@ -101,7 +101,7 @@ function removeIncome(index) {
     autosaveLocally();
 }
 
-const stepForm = useForm(`EditIncomes${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     incomes: props.formData.model.incomes != null ? props.formData.model.incomes : [],
     useIncome: props.formData.model.useIncome,
     total: props.formData.model.total,
@@ -201,7 +201,7 @@ function changeToCurrency(amount) {
                 </div>
             </div>
             <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 mb-4 p-4">
-                <h4 class="col-span-6 text-xl font-bold pt-2"> Overall Income </h4>
+                <h4 class="col-span-6 text-xl font-bold pt-2"> Gross Income </h4>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="stepForm.useIncome == false">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total: </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
@@ -333,7 +333,7 @@ function changeToCurrency(amount) {
                     <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="income.belongs_to"
                         class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="belongs_to" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.belongs_to">{{ belongs_to }}</option>
+                        <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.owners">{{ belongs_to }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
                         stepForm.errors.belongs_to }}</p>

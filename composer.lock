@@ -8838,6 +8838,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/153ae662783729388a584b4361f2545e4d841e3c",
                 "reference": "153ae662783729388a584b4361f2545e4d841e3c",
+
                 "shasum": ""
             },
             "require": {
@@ -8883,6 +8884,7 @@
                 "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.2"
             },
             "time": "2024-02-23T11:10:43+00:00"
+
         },
         {
             "name": "phpstan/phpdoc-parser",

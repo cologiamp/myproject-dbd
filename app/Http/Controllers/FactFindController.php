@@ -26,6 +26,7 @@ class FactFindController extends Controller
         $this->clientRepository->setClient($client);
         $section = $request->section ?? 1;
         $step = $request->step ?? 1;
+
         $tabs = $this->clientRepository->loadFactFindTabs($step,$section);
 
         return Inertia::render('FactFind', [
@@ -34,7 +35,7 @@ class FactFindController extends Controller
             'step' =>  $step,
             'section' => $section,
             'tabs' => $tabs,
-            'progress' => $this->clientRepository->calculateFactFindElementProgress($step) //Chore: This is not used? Can this be refactored?
+            'url' => $request->getBaseUrl().$request->getRequestUri().$request->getQueryString()
         ]);
     }
 
