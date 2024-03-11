@@ -11,7 +11,8 @@ use Illuminate\Http\Request;
 use DocRaptor;
 use App\Concerns\HandlesS3Uploads;
 use Illuminate\Http\RedirectResponse;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 class StrategyReportController extends Controller
 {
     protected $srds;
@@ -19,7 +20,7 @@ class StrategyReportController extends Controller
     {
         $this->srds = $srds;
     }
-    public function __invoke(Client $client)
+    public function __invoke(Client $client): RedirectResponse
     {
         $data = $this->srds->getStrategyReportData($client);
 
@@ -44,9 +45,8 @@ class StrategyReportController extends Controller
 
         $create_response = $docraptor->createDoc($doc);
 
-        $this->handleFileUpload($create_response);
-        //dd("HI");
-        //dd($create_response);
+        $fileUploadedPath = $this->handleFileUpload($create_response);
+        dd($fileUploadedPath);
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf');
@@ -64,20 +64,21 @@ class StrategyReportController extends Controller
         //dd($data);
     }
 
-    private function handleFileUpload(String $request):string
+    private function handleFileUpload(String $file):string
     {
-        //dd($request);
-        $this->uploadToS3($request);
-        /*
-        $filetypes = ['profile_pic_data','business_card_data','bio_card_short','bio_card_long'];
-        return collect($filetypes)->mapWithKeys(function ($file_type) use ($request){
-            if($request->hasFile($file_type))
-            {
-                return [$file_type =>$this->uploadToS3($request->file($file_type),$file_type)];
-            }
-            else return [$file_type =>null];
-        })->toArray();
-        */
+        //$binary_data = base64_decode($file);
+        //Storage::disk('s3')->put($s3Path, $binary_data, 'public');
 
+        $path = "/adviser-hub/strategy-report/" . 'new-pdf' . '_' . time() . '.' . 'pdf';
+        try {
+            //Storage::disk('s3')->put($path, $binary_data, 'public');
+            Storage::disk('s3')->putFile($path, new File($file));
+
+        } catch (S3Exception $e) {
+            dd($e);
+        }
+        //Storage::disk('s3')->put($path, $binary_data, 'public');
+//        Storage::disk('s3')->put($path, file_get_contents($binary_data));
+        return $path;
     }
 }
