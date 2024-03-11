@@ -9,17 +9,27 @@ import {
     ArrowRightIcon
 } from "@heroicons/vue/24/solid/index.js";
 import Swal from "sweetalert2";
+import {onMounted, ref} from "vue";
+import {isMobile} from "@/mobileCheck.js";
 
 const props = defineProps({
     title: String,
     breadcrumbs: Array,
     contentTitle: String,
     clientId: String,
+    strategy_reports: Array,
+});
+
+const stratReportRef = ref({});
+
+onMounted( ()=> {
+    stratReportRef.value = props.strategy_reports.data;
 });
 
 function generateReport(){
     axios.get('/api/client/' + props.clientId + '/generate-pdf').then(response => {
-       console.log('done');
+        console.log(response.data.strategy_reports);
+        stratReportRef.value = response.data.strategy_reports;
     });
 }
 
@@ -41,6 +51,13 @@ function generateReport(){
                                     GENERATE <ArrowRightIcon class="w-12 h-8" />
                                 </button>
                             </div>
+                        </div>
+                        <div class="p-4 mt-4 bg-aaron-400">
+                            <ul class="p-4 bg-aaron-950" v-for="report in stratReportRef">
+                                <li class="bg-pink-700 text-aaron-50 p-5">
+                                    {{report}}
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

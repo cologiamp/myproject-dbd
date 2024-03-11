@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StrategyReportResource;
 use App\Models\Client;
+use App\Models\StrategyReport;
 use App\Services\FactFindSectionDataService;
 use App\Services\StrategyReportDataService;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 use DocRaptor;
 use App\Concerns\HandlesS3Uploads;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
+use Illuminate\Support\Str;
+
 class StrategyReportController extends Controller
 {
     protected $srds;
@@ -20,7 +27,7 @@ class StrategyReportController extends Controller
     {
         $this->srds = $srds;
     }
-    public function __invoke(Client $client): RedirectResponse
+    public function __invoke(Client $client): JsonResponse
     {
         $data = $this->srds->getStrategyReportData($client);
 
@@ -43,42 +50,24 @@ class StrategyReportController extends Controller
         $doc->setPrinceOptions($prince_options);
         $prince_options->setMedia("screen"); // use screen styles instead of print styles
 
-        $create_response = $docraptor->createDoc($doc);
+        try{
 
-        $fileUploadedPath = $this->handleFileUpload($create_response);
-        dd($fileUploadedPath);
-
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename='.$fileName);
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: ' . strlen($create_response));
-        if (ob_get_length()) ob_clean();
-        flush();
-        echo($create_response);
-        exit;
-
-        //dd($data);
-    }
-
-    private function handleFileUpload(String $file):string
-    {
-        //$binary_data = base64_decode($file);
-        //Storage::disk('s3')->put($s3Path, $binary_data, 'public');
-
-        $path = "/adviser-hub/strategy-report/" . 'new-pdf' . '_' . time() . '.' . 'pdf';
-        try {
-            //Storage::disk('s3')->put($path, $binary_data, 'public');
-            Storage::disk('s3')->putFile($path, new File($file));
-
-        } catch (S3Exception $e) {
+            $create_response = $docraptor->createDoc($doc);
+        }
+        catch(\Exception $e)
+        {
             dd($e);
         }
-        //Storage::disk('s3')->put($path, $binary_data, 'public');
-//        Storage::disk('s3')->put($path, file_get_contents($binary_data));
-        return $path;
+
+        $path = '/adviser-hub/strategy-report/pdfs/' . $client->id . '/' . 'strategy-report-' . Str::slug(Carbon::now()->toDayDateTimeString()) . '.pdf';
+        $file = Storage::disk('s3')->put($path,$create_response);
+        $sr = new StrategyReport();
+        $sr->client_id = $client->id;
+        $sr->adviser_id = Auth::user()->id;
+        $sr->path = $path;
+        $sr->save();
+
+        return response()->json(['strategy_reports' => StrategyReportResource::collection(StrategyReport::all())]);
+
     }
 }
