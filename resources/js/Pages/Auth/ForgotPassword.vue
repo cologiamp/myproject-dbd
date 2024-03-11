@@ -18,6 +18,7 @@ const form = useForm({
 const submit = () => {
     form.post(route('password.email'));
 };
+
 </script>
 
 <template>

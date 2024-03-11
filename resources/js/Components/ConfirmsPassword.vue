@@ -89,7 +89,7 @@ const closeModal = () => {
                         ref="passwordInput"
                         v-model="form.password"
                         type="password"
-                        class="mt-1 block w-3/4"
+                        class="mt-1 block w-3/4 text-black"
                         placeholder="Password"
                         autocomplete="current-password"
                         @keyup.enter="confirmPassword"
