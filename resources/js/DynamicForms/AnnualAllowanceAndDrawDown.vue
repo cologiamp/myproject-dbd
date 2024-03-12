@@ -129,11 +129,7 @@ function formatAmount(e, dataField, index) {
             </div>
             <div v-for="(allowance, index) in stepForm.pr_annual_allowances" class="grid gap-2 mb-6 md:grid md:grid-cols-6 md:items-start md:gap-y-4 md:gap-x-4 border-b-2 border-aaron-500 pb-12 last-of-type:border-b-0 last-of-type:pb-0">
                 <div class="md:col-span-6 flex flex-row justify-between">
-                    <label class="font-bold">Tax Year (year to be added from API)</label>
-                    <button type="button" @click="removeAllowance(index)"
-                            class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        <XCircleIcon class="w-4 h-4" />Remove Allowance
-                    </button>
+                    <label class="font-bold">Tax Year {{allowance.tax_year}}</label>
                 </div>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="annual_allowance" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Annual Allowance </label>

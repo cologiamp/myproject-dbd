@@ -35,7 +35,6 @@ class GenerateAdvisersFromAPI extends Command
         $token = Cache::get("datahub_access_token", function () {
            return $this->setAccessToken();
         });
-
         $response = Http::withHeader("Authorization", $token)->get(config('datahub.url') . "api/advisers?is_enabled=true&adviser_hub_access=true");
 
       collect($response->json()['data'])->filter(function ($info) {

@@ -22,8 +22,6 @@ const props = defineProps({
     }
 });
 
-console.log("props",props);
-
 function dynamicComponent(component){
     // For Expenditure sections
     if (component.includes('Expenditure')) {
@@ -33,12 +31,9 @@ function dynamicComponent(component){
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
 
-// need to send the section
-// the input fields
 const selectedSectionId = inject("selectedSectionId");
 
 </script>
-
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component :is="dynamicComponent(item.renderable)"
