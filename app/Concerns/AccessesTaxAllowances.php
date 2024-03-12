@@ -12,7 +12,6 @@ trait AccessesTaxAllowances{
      */
     private function getTaxYears()
     {
-        Cache::forget('tax_year_allowances');
         return collect(Cache::get('tax_year_allowances',function (){
             $token = Cache::get("datahub_access_token", function () {
                 return $this->setAccessToken();
@@ -21,7 +20,7 @@ trait AccessesTaxAllowances{
             $tax_year_allowances =  collect($response->json()['data'])->mapWithKeys(function ($item){
                 return [$item['tax_year'] => $item['allowance']];
             });
-            Cache::forever('tax_year_allowances',$tax_year_allowances);
+            Cache::put('tax_year_allowances',$tax_year_allowances, $seconds = ((60 * 60 * 24) * 14)); // 14 days
             return $tax_year_allowances;
         }))->map(function ($key,$item){
             return [
