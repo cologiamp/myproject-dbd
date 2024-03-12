@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\LumpSumCapitalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,7 @@ Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
+    Route::delete('/incomes/{income}', [IncomeController::class,'delete']);
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
     Route::delete('/addresses/{address}',[ClientController::class,'deleteAddress']);
     Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
