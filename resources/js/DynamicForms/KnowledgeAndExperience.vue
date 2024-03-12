@@ -5,7 +5,7 @@ import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {onMounted, ref, watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import {changeToCurrency} from "@/currency.js";
+import ExperienceRatingTable from "@/Components/ExperienceRatingTable.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -335,155 +335,45 @@ onMounted(()=>{
                         Have you experience of buying / selling:
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left font-semibold sm:pl-3">Cash (Inc ISA)</th>
-                                    <th scope="col" class="px-3 py-3.5 text-left font-semibold">1</th>
-                                    <th scope="col" class="px-3 py-3.5 text-left font-semibold">2</th>
-                                    <th scope="col" class="px-3 py-3.5 text-left font-semibold">3</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(experience, index) in stepForm.experience_buying_cash" class="even:bg-aaron-950">
-                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-3 w-1/2">{{ formData.enums.risk_assessment_cash[index] }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                        <input @change="setRating(stepForm.experience_buying_cash)" v-model="stepForm.experience_buying_cash[index].value"
-                                               :checked="experience.value === 1"
-                                               type="radio" id="one" :value="1"
-                                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                    </td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                        <input @change="setRating(stepForm.experience_buying_cash)" v-model="stepForm.experience_buying_cash[index].value"
-                                               :checked="experience.value === 2"
-                                               type="radio" id="two" :value="2"
-                                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                    </td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                        <input @change="setRating(stepForm.experience_buying_cash)" v-model="stepForm.experience_buying_cash[index].value"
-                                               :checked="experience.value === 3"
-                                               type="radio" id="three" :value="3"
-                                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                        <ExperienceRatingTable
+                            :stepFormData="stepForm.experience_buying_cash"
+                            :enumItem="formData.enums.risk_assessment_cash"
+                            @set-rating="setRating">
+                            Cash (Inc ISA)
+                        </ExperienceRatingTable>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.experience_buying_cash">{{ stepForm.errors.experience_buying_cash }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left font-semibold sm:pl-3">Bonds (Inc ISA)</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">1</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">2</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">3</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(experience, index) in stepForm.experience_buying_bonds" class="even:bg-aaron-950">
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-3 w-1/2">{{ formData.enums.risk_assessment_bonds[index] }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_bonds)" v-model="stepForm.experience_buying_bonds[index].value"
-                                           :checked="experience.value === 1"
-                                           type="radio" id="one" :value="1"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_bonds)" v-model="stepForm.experience_buying_bonds[index].value"
-                                           :checked="experience.value === 2"
-                                           type="radio" id="two" :value="2"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_bonds)" v-model="stepForm.experience_buying_bonds[index].value"
-                                           :checked="experience.value === 3"
-                                           type="radio" id="three" :value="3"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-
+                        <ExperienceRatingTable
+                            :stepFormData="stepForm.experience_buying_bonds"
+                            :enumItem="formData.enums.risk_assessment_bonds"
+                            @set-rating="setRating">
+                            Bonds (Inc ISA)
+                        </ExperienceRatingTable>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.experience_buying_bonds">{{ stepForm.errors.experience_buying_bonds }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left font-semibold sm:pl-3">Equities (Inc ISA)</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">1</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">2</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">3</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(experience, index) in stepForm.experience_buying_equities" class="even:bg-aaron-950">
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-3 w-1/2">{{ formData.enums.risk_assessment_equities[index] }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_equities)" v-model="stepForm.experience_buying_equities[index].value"
-                                           :checked="experience.value === 1"
-                                           type="radio" id="one" :value="1"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_equities)" v-model="stepForm.experience_buying_equities[index].value"
-                                           :checked="experience.value === 2"
-                                           type="radio" id="two" :value="2"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_equities)" v-model="stepForm.experience_buying_equities[index].value"
-                                           :checked="experience.value === 3"
-                                           type="radio" id="three" :value="3"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <ExperienceRatingTable
+                            :stepFormData="stepForm.experience_buying_equities"
+                            :enumItem="formData.enums.risk_assessment_equities"
+                            @set-rating="setRating">
+                            Equities (Inc ISA)
+                        </ExperienceRatingTable>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.experience_buying_equities">{{ stepForm.errors.experience_buying_equities }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left font-semibold sm:pl-3">Insurance Products</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">1</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">2</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">3</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(experience, index) in stepForm.experience_buying_insurance" class="even:bg-aaron-950">
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-3 w-1/2">{{ formData.enums.risk_assessment_insurance[index] }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_insurance)" v-model="stepForm.experience_buying_insurance[index].value"
-                                           :checked="experience.value === 1"
-                                           type="radio" id="one" :value="1"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_insurance)" v-model="stepForm.experience_buying_insurance[index].value"
-                                           :checked="experience.value === 2"
-                                           type="radio" id="two" :value="2"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.experience_buying_insurance)" v-model="stepForm.experience_buying_insurance[index].value"
-                                           :checked="experience.value === 3"
-                                           type="radio" id="three" :value="3"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <ExperienceRatingTable
+                            :stepFormData="stepForm.experience_buying_insurance"
+                            :enumItem="formData.enums.risk_assessment_insurance"
+                            @set-rating="setRating">
+                            Insurance Products
+                        </ExperienceRatingTable>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.experience_buying_insurance">{{ stepForm.errors.experience_buying_insurance }}</p>
                 </div>

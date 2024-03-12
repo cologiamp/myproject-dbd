@@ -1993,6 +1993,10 @@ return [
             0 => 'Annuities',
             1 => 'Income Drawdown',
             2 => 'Phased Retirement'
+        ],
+        'type' => [
+            'INVESTMENT_TYPE' => 0,
+            'PENSION_TYPE' => 1
         ]
     ]
 ];

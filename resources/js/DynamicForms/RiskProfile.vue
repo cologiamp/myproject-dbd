@@ -5,18 +5,13 @@ import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {onMounted, ref, watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import {changeToCurrency} from "@/currency.js";
-import { PlusCircleIcon } from '@heroicons/vue/24/solid';
-import { XCircleIcon } from '@heroicons/vue/24/solid';
+import ConcernRatingTable from "@/Components/ConcernRatingTable.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
 watch(autoS,(newValue,oldValue) => {
     emit('autosaveStateChange',newValue)
 })
-
-const cash_element = 2;
-const treasured_stock_transfers = 3;
 
 const props = defineProps({
     formData: {
@@ -133,53 +128,11 @@ onMounted(()=>{
                         How concerned would you be if the value of your investments fell by the following amounts in any one year (% fall)?
                     </label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                        <table class="min-w-full divide-y divide-gray-300">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left font-semibold sm:pl-3"></th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">1</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">2</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">3</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">4</th>
-                                <th scope="col" class="px-3 py-3.5 text-left font-semibold">5</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(vol, index) in stepForm.short_term_volatility" class="even:bg-aaron-950">
-                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-3 w-1/2">{{ formData.enums.risk_assessment_volatility[index] }}</td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.short_term_volatility)" v-model="stepForm.short_term_volatility[index].value"
-                                           :checked="vol.value === 1"
-                                           type="radio" id="one" :value="1"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.short_term_volatility)" v-model="stepForm.short_term_volatility[index].value"
-                                           :checked="vol.value === 2"
-                                           type="radio" id="two" :value="2"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.short_term_volatility)" v-model="stepForm.short_term_volatility[index].value"
-                                           :checked="vol.value === 3"
-                                           type="radio" id="five" :value="3"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.short_term_volatility)" v-model="stepForm.short_term_volatility[index].value"
-                                           :checked="vol.value === 4"
-                                           type="radio" id="five" :value="4"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                                <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                    <input @change="setRating(stepForm.short_term_volatility)" v-model="stepForm.short_term_volatility[index].value"
-                                           :checked="vol.value === 5"
-                                           type="radio" id="six" :value="5"
-                                           class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <ConcernRatingTable
+                            :stepFormData="stepForm.short_term_volatility"
+                            :enumItem="formData.enums.risk_assessment_volatility"
+                            @set-rating="setRating"
+                        ></ConcernRatingTable>
 
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.short_term_volatility">{{ stepForm.errors.short_term_volatility }}</p>

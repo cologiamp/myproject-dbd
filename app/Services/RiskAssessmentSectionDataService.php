@@ -92,7 +92,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->knowledgeRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = RiskProfile::RISK_INVESTMENT_TYPE;
+        $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
         $validatedData['experience_buying_cash'] = json_encode($validatedData['experience_buying_cash']);
         $validatedData['experience_buying_bonds'] = json_encode($validatedData['experience_buying_bonds']);
         $validatedData['experience_buying_equities'] = json_encode($validatedData['experience_buying_equities']);
@@ -106,7 +106,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->capacityForLossRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = RiskProfile::RISK_INVESTMENT_TYPE;
+        $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
         $this->capacityForLossRepository->createOrUpdate($validatedData);
     }
 
@@ -115,7 +115,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->riskProfileRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = RiskProfile::RISK_INVESTMENT_TYPE;
+        $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
         $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
 
         $this->riskProfileRepository->createOrUpdate($validatedData);
@@ -126,7 +126,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->knowledgeRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = RiskProfile::RISK_PENSION_TYPE;
+        $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
         $this->knowledgeRepository->createOrUpdate($validatedData);
     }
 
@@ -135,7 +135,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->capacityForLossRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = RiskProfile::RISK_PENSION_TYPE;
+        $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
         $this->capacityForLossRepository->createOrUpdate($validatedData);
     }
 
@@ -144,7 +144,7 @@ class RiskAssessmentSectionDataService
         // define any explicit mutators that are not handled
         $this->riskProfileRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = RiskProfile::RISK_PENSION_TYPE;
+        $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
         $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
         $this->riskProfileRepository->createOrUpdate($validatedData);
     }

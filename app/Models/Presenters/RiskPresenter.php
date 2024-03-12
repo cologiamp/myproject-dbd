@@ -23,7 +23,7 @@ class RiskPresenter extends BasePresenter
     {
         return match ($step . '.' . $section) {
             '1.1' => [
-                'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', RiskProfile::RISK_INVESTMENT_TYPE)->get()->map(function ($knowledge){
+                'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['INVESTMENT_TYPE'])->get()->map(function ($knowledge){
                     return [
                         'id' => $knowledge?->id,
                         'type' => $knowledge?->type,
@@ -43,7 +43,7 @@ class RiskPresenter extends BasePresenter
                 }))->collapse()
             ],
             '1.2' => [
-                'capacity_data' => collect(CapacityForLoss::where('client_id',$this->model->client->id)->where('type', RiskProfile::RISK_INVESTMENT_TYPE)->get()->map(function ($capacity){
+                'capacity_data' => collect(CapacityForLoss::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['INVESTMENT_TYPE'])->get()->map(function ($capacity){
                     return [
                         'id' => $capacity?->id,
                         'type' => $capacity?->type,
@@ -54,7 +54,7 @@ class RiskPresenter extends BasePresenter
                 }))->collapse()
             ],
             '1.3' => [
-                'risk_profile' => collect(RiskProfile::where('client_id',$this->model->client->id)->where('type', RiskProfile::RISK_INVESTMENT_TYPE)->get()->map(function ($risk){
+                'risk_profile' => collect(RiskProfile::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['INVESTMENT_TYPE'])->get()->map(function ($risk){
                     return [
                         'id' => $risk->id,
                         'type' => $risk?->type,
@@ -69,7 +69,7 @@ class RiskPresenter extends BasePresenter
                 }))->collapse()
             ],
             '2.1' => [
-                'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', RiskProfile::RISK_PENSION_TYPE)->get()->map(function ($knowledge){
+                'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($knowledge){
                     return [
                         'id' => $knowledge?->id,
                         'type' => $knowledge?->type,
@@ -94,7 +94,7 @@ class RiskPresenter extends BasePresenter
                 }))->collapse()
             ],
             '2.2' => [
-                'capacity_data' => collect(CapacityForLoss::where('client_id',$this->model->client->id)->where('type', RiskProfile::RISK_PENSION_TYPE)->get()->map(function ($capacity){
+                'capacity_data' => collect(CapacityForLoss::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($capacity){
                     return [
                         'id' => $capacity?->id,
                         'type' => $capacity?->type,
@@ -105,7 +105,7 @@ class RiskPresenter extends BasePresenter
                 }))->collapse()
             ],
             '2.3' => [
-                'risk_profile' => collect(RiskProfile::where('client_id',$this->model->client->id)->where('type', RiskProfile::RISK_PENSION_TYPE)->get()->map(function ($risk){
+                'risk_profile' => collect(RiskProfile::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($risk){
                     return [
                         'id' => $risk->id,
                         'type' => $risk?->type,
