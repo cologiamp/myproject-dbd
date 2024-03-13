@@ -55,22 +55,22 @@ class InvestmentRecommendationSectionDataService
             'enums' => $investmentRecommendation->loadEnumsForStep($step, $section),
             'model' => $investmentRecommendation->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-            'submit_url' => '/api/client/' . $investmentRecommendation->primary_client->io_id . '/investment-recommendation/' . $step . '/' . $section //here we hydrate the autosave URL
+            'submit_url' => '/api/client/' . $investmentRecommendation->primary_client->io_id . '/recommendations/' . $step . '/' . $section //here we hydrate the autosave URL
         ];
     }
 
     public function validate(int $step, int $section, Request $request)
     {
-        $messages = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.messages');
-        $rules = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.rules');
+        $messages = config('navigation_structures.recommendations.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.recommendations.' . $step . '.sections.' . $section . '.rules');
 
         return Validator::make($request->all(), $rules, $messages)->validate();
     }
 
     public function validated(int $step, int $section, Request $request)
     {
-        $messages = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.messages');
-        $rules = config('navigation_structures.investmentrecommendation.' . $step . '.sections.' . $section . '.rules');
+        $messages = config('navigation_structures.recommendations.' . $step . '.sections.' . $section . '.messages');
+        $rules = config('navigation_structures.recommendations.' . $step . '.sections.' . $section . '.rules');
 
         return Validator::make($request->all(), $rules, $messages)->validated();
     }

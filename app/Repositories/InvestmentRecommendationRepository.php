@@ -115,8 +115,7 @@ class InvestmentRecommendationRepository extends BaseRepository
      */
     public function loadInvestmentRecommendationTabs(int $currentStep = 1,int $currentSection = 1):array
     {
-
-        return collect(config('navigation_structures.investmentrecommendation'))->map(function ($value,$key) use ($currentSection,$currentStep){
+        return collect(config('navigation_structures.recommendations'))->map(function ($value,$key) use ($currentSection,$currentStep){
             return [
                 'name' => $value['name'],
                 'current' =>  $key === $currentStep,
@@ -127,7 +126,6 @@ class InvestmentRecommendationRepository extends BaseRepository
         })->toArray();
     }
 
-   
     public function createOrUpdateIncomeGrowthReport(mixed $data):void
     {
         if(!is_array($data) && $data::class == Request::class)

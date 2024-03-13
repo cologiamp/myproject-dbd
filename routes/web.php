@@ -65,7 +65,7 @@ Route::middleware([
        Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
         Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
-        Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
+        Route::get('/recommendations',[InvestmentRecommendationController::class,'show'])->name('recommendations');
 
        Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
 

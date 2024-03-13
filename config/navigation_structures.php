@@ -870,7 +870,7 @@ return [
             ]
         ]
     ],
-    'investmentrecommendation' => [
+    'recommendations' => [
         1 => [
             'name' => 'Investment Recommendations',
             'sections' => [
