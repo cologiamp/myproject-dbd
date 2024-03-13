@@ -27,7 +27,8 @@ const props = defineProps({
                 pension_statuses: [],
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
-                frequencies: []
+                frequencies: [],
+                loa_submitted: []
             },
             model: {
                 dc_pensions: [{
@@ -50,6 +51,7 @@ const props = defineProps({
                     is_retained: null,
                     funds: [],
                     frequency: null,
+                    loa_submitted: null
                 }],
                 db_pensions: [{
                     id: null,
@@ -62,7 +64,8 @@ const props = defineProps({
                     prospective_pcls_standard: null,
                     prospective_pcls_max: null,
                     cetv: null,
-                    cetv_ends_at: null
+                    cetv_ends_at: null,
+                    loa_submitted: null
                 }]
             },
             submit_method: 'post',
@@ -121,7 +124,8 @@ function addDc() {
         retained_value: null,
         is_retained: null,
         funds: [],
-        frequency: null
+        frequency: null,
+        loa_submitted: null
     });
 }
 
@@ -140,7 +144,8 @@ function addDb() {
         prospective_pcls_standard: null,
         prospective_pcls_max: null,
         cetv: null,
-        cetv_ends_at: null
+        cetv_ends_at: null,
+        loa_submitted: null
     });
 }
 
@@ -262,7 +267,16 @@ function removePension(index,type) {
                         </option>
                     </select>
                 </div>
-
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="loa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LOA Submitted</label>
+                    <select @change="autosaveLocally(index)" v-model="pension.loa_submitted"
+                            id="loa_submitted" name="loa_submitted"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="loa_submitted" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(loa_submitted, id) in formData.enums.loa_submitted">{{ loa_submitted }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.loa_submitted">{{ stepForm.errors.loa_submitted }}</p>
+                </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Retirement Age</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
@@ -360,6 +374,17 @@ function removePension(index,type) {
                             {{owner}}
                         </option>
                     </select>
+                </div>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="loa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LOA Submitted</label>
+                    <select @change="autosaveLocally(index)" v-model="pension.loa_submitted"
+                            id="loa_submitted" name="loa_submitted"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="loa_submitted" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(loa_submitted, id) in formData.enums.loa_submitted">{{ loa_submitted }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.loa_submitted">{{ stepForm.errors.loa_submitted }}</p>
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
@@ -502,13 +527,13 @@ function removePension(index,type) {
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is Retained?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input @change="autosaveLocally()"
-                               v-model="pension.is_retained" type="radio" id="true" :value="true"
-                               :checked="pension.is_retained == true"
+                               v-model="pension.is_retained" type="radio" id="true" :value="1"
+                               :checked="pension.is_retained == 1"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                         <input @change="autosaveLocally()"
-                               v-model="pension.is_retained" type="radio" id="false" :value="false"
-                               :checked="pension.is_retained == false"
+                               v-model="pension.is_retained" type="radio" id="false" :value="0"
+                               :checked="pension.is_retained == 0"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>

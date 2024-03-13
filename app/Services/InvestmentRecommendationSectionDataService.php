@@ -279,6 +279,10 @@ class InvestmentRecommendationSectionDataService
                 $plan['client_id'] = $client->id;
             }
 
+            if ($plan['active_pension_member'] == true) {
+                $plan['active_pension_member_reason_not'] = null;
+            }
+
             if ($plan['policy_type'] == 0) {
                 $pr->createOrUpdateDBPensions(collect([$plan]));
             } else {

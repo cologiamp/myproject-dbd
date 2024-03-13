@@ -1949,14 +1949,14 @@ return [
             1 => 'Income',
             2 => 'Growth'
         ],
-        'lqa_submitted' => [
+        'loa_submitted' => [
             0 => 'Yes',
             1 => 'No',
             2 => 'Have Authority'
         ],
-        'policy_reviewed_transfer' => [
-            0 => 'Transfer',
-            1 => 'Information Only'
+        'is_retained' => [
+            1 => 'Transfer',
+            0 => 'Information Only'
         ]
     ]
 ];

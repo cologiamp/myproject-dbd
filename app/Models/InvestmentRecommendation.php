@@ -63,8 +63,8 @@ class InvestmentRecommendation extends Model
             ],
             '2.3' => [
                 'policy_types' => config('enums.pension_recommendation.policy_type'),
-                'lqa_submitted' => config('enums.pension_recommendation.lqa_submitted'),
-                'policy_reviewed_transfer' => config('enums.pension_recommendation.policy_reviewed_transfer')
+                'loa_submitted' => config('enums.pension_recommendation.loa_submitted'),
+                'is_retained' => config('enums.pension_recommendation.is_retained')
             ],
             '2.4' => [
                 'types' => config('enums.pension_recommendation.new_contribution_type'),
