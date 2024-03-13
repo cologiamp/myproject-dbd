@@ -20,8 +20,7 @@ const props = defineProps({
         default: {
             enums: {
                 policy_types: [],
-                loa_submitted: [],
-                is_retained: []
+                loa_submitted: []
             },
             model: {
                 existing_pension_plans: [{
@@ -145,13 +144,13 @@ function addPensionPlan() {
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Policy being reviewed for transfer?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input @change="autosaveLocally(index)"
-                               v-model="pension.is_retained" type="radio" id="true" :value="1"
-                               :checked="pension.is_retained == 1"
+                               v-model="pension.is_retained" type="radio" id="true" :value="true"
+                               :checked="pension.is_retained === true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Transfer</label>
                         <input @change="autosaveLocally(index)"
-                               v-model="pension.is_retained" type="radio" id="false" :value="0"
-                               :checked="pension.is_retained == 0"
+                               v-model="pension.is_retained" type="radio" id="false" :value="false"
+                               :checked="pension.is_retained === false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">Information Only</label>
                     </div>

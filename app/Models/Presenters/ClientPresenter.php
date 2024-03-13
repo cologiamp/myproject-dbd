@@ -268,7 +268,7 @@ class ClientPresenter extends BasePresenter
                             'valuation_at' => $item->defined_contribution_pension->valuation_at,
                             'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                             'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
-                             'is_retained'=> $item->is_retained,
+                             'is_retained'=> (bool) $item->is_retained,
                             'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
                             'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
                             'funds' => $item->defined_contribution_pension->pension_funds->map(function ($fund){
@@ -543,7 +543,7 @@ class ClientPresenter extends BasePresenter
                             'valuation_at' => $item->defined_contribution_pension->valuation_at,
                             'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                             'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
-                            'is_retained'=> $item->is_retained,
+                            'is_retained'=> (bool) $item->is_retained,
                             'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
                             'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
                             'funds' => $item->defined_contribution_pension->pension_funds->map(function ($fund){

@@ -1953,10 +1953,6 @@ return [
             0 => 'Yes',
             1 => 'No',
             2 => 'Have Authority'
-        ],
-        'is_retained' => [
-            1 => 'Transfer',
-            0 => 'Information Only'
         ]
     ]
 ];

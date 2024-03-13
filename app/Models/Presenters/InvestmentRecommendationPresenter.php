@@ -129,7 +129,7 @@ class InvestmentRecommendationPresenter extends BasePresenter
                         'policy_type' => $pension instanceof DefinedBenefitPension ? 0 : 1,
                         'policy_number' => $pension?->policy_number,
                         'loa_submitted' => $item->loa_submitted,
-                        'is_retained' => $item->is_retained,
+                        'is_retained' => (bool) $item->is_retained,
                         'active_pension_member' => (bool)$item->active_pension_member,
                         'active_pension_member_reason_not' => $item->active_pension_member_reason_not
                     ];

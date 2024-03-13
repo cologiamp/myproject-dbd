@@ -659,7 +659,7 @@ return [
                             'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
                             'dc_pensions.*.value' => 'sometimes|nullable|string',
                             'dc_pensions.*.retained_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.is_retained' => 'sometimes|nullable|integer',
+                            'dc_pensions.*.is_retained' => 'sometimes|nullable|boolean',
                             'dc_pensions.*.crystallised_status' => [
                                 'sometimes',
                                 'numeric',
@@ -1162,13 +1162,7 @@ return [
                             'integer',
                             Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
                         ],
-                        'existing_pension_plans.*.is_retained' => [
-                            'sometimes',
-                            'nullable',
-                            'numeric',
-                            'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.is_retained'))))
-                        ],
+                        'existing_pension_plans.*.is_retained' => 'sometimes|nullable|boolean',
                         'existing_pension_plans.*.active_pension_member' => 'sometimes|nullable|boolean',
                         'existing_pension_plans.*.active_pension_member_reason_not' => 'sometimes|nullable|string'
                     ],
