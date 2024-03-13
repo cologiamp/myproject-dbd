@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import FormWell from "@/Components/FormWell.vue";
 import {Link} from "@inertiajs/vue3";
-import {QuestionMarkCircleIcon, LightBulbIcon, GlobeAsiaAustraliaIcon, BanknotesIcon} from "@heroicons/vue/24/solid/index.js";
+import {QuestionMarkCircleIcon, ShieldExclamationIcon, GlobeAsiaAustraliaIcon, BanknotesIcon} from "@heroicons/vue/24/solid/index.js";
 import Swal from "sweetalert2";
 
 const props = defineProps({
@@ -53,10 +53,10 @@ function syncToIo()
                         <div class="text-3xl">Pension Objectives</div>
                     </div>
                 </Link>
-                <a href="#" class="p-8 h-64 bg-aaron-400 rounded-2xl items-center justify-center flex">
+                <a href="risk-assessment" class="p-8 h-64 bg-aaron-400 rounded-2xl items-center justify-center flex">
                     <div class="flex items-center flex-col">
-                        <light-bulb-icon class="h-32 w-32 flex-1"></light-bulb-icon>
-                        <div class="text-3xl">Example</div>
+                        <ShieldExclamationIcon class="h-32 w-32 flex-1"></ShieldExclamationIcon>
+                        <div class="text-3xl">Risk Assessment</div>
                     </div>
                 </a>
                 <a @click="syncToIo()" href="#" class="p-8 h-64 bg-orange-500 rounded-2xl items-center justify-center flex">

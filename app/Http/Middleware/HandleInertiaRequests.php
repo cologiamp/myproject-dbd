@@ -87,16 +87,18 @@ class HandleInertiaRequests extends Middleware
                     'icon' => 'IRIcon',
                     'current' => $request->route()->getName() === 'client.investmentrecommendation'
                 ],
+                [
+                    'name' => 'Risk Assessment',
+                    'href' => '/client/'.$client->io_id.'/risk-assessment',
+                    'icon' => 'RPIcon',
+                    'current' => $request->route()->getName() === 'client.riskassessment'
+                ]
             ]);
         }
 //        $client_enabled_nav
         return array_merge(parent::share($request), [
             'logo' => config('constants.new_logo'),
             'navigation' => $nav1
-
-
-
-
             //Chore: make when there's a "client" in the URL that the other tabs appear
             //Client Dashboard
 
