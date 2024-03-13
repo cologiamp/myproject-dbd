@@ -30,6 +30,11 @@ Breadcrumbs::for('/client/{client:io_id}/investment-recommendation', function (B
     $trail->push('Investment Recommendation', route('investmentrecommendation'));
 });
 
+//Route::get('/risk-assessment',[RiskAssessmentController::class,'show'])->name('riskassessment');
+Breadcrumbs::for('/client/{client:io_id}/risk-assessment', function (BreadcrumbTrail $trail) {
+    $trail->push('Risk Assessment', route('riskassessment'));
+});
+
 //Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
 Breadcrumbs::for('/client/{client:io_id}/example', function (BreadcrumbTrail $trail) {
     $trail->push('Example', route('client.example'));
@@ -93,4 +98,11 @@ Breadcrumbs::for('client.pensionobjectives', function (BreadcrumbTrail $trail, C
     $trail->parent('clients');
     $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
     $trail->push('Pension Objectives');
+});
+
+// Dashboard > Clients > "Client Name" > Risk Assessment
+Breadcrumbs::for('client.riskassessment', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push('Risk Assessment');
 });

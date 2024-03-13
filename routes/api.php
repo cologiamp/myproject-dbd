@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\InvestmentRecommendationItemController;
 use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
+use App\Http\Controllers\Api\RiskAssessmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,7 @@ Route::post('/client/{client:io_id}/fact-find-solo',[FactFindController::class,'
 Route::post('/client/{client:io_id}/fact-find-together/{c2id}',[FactFindController::class,'selectClientTwo']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
 Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
+Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
 
 
 Route::middleware('auth:sanctum')->group(function (){
