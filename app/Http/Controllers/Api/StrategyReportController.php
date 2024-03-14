@@ -18,6 +18,14 @@ class StrategyReportController extends Controller
     }
     public function __invoke(Client $client)
     {
+        if(!($client->strategy_report_recommendation &&
+            $client->strategy_report_recommendation->report_version !== null &&
+            $client->strategy_report_recommendation->retirement_status  !== null  &&
+            $client->strategy_report_recommendation->objective_type !== null
+        ))
+        {
+            return response()->json(['message' => 'You need to complete a Strategy Report Recommendation first'],422);
+        }
         $data = $this->srds->getStrategyReportData($client);
         dd($data);
     }

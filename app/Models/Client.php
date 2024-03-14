@@ -220,9 +220,9 @@ class Client extends Model
         return $this->hasOne(PensionRecommendation::class);
     }
 
-    public function strategy_report_recommendation():HasOne
+    public function strategy_report_recommendation():BelongsTo
     {
-        return $this->hasOne(StrategyReportRecommendation::class);
+        return $this->belongsTo(StrategyReportRecommendation::class);
     }
 
 

@@ -13,4 +13,15 @@ class StrategyRecommendationObjective extends Model
     {
         return $this->belongsTo(StrategyReportRecommendation::class);
     }
+    //Todo: GetObjective and GetWhatFor here from ObjectivesTable.vue
+    public function getFormattedObjectiveAttribute():string
+    {
+        //todo
+        return '';
+    }
+    public function getFormattedWhatForAttribute():string
+    {
+        //todo
+        return '';
+    }
 }

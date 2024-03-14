@@ -41,13 +41,13 @@ class StrategyReportDataService
               'office_map' => $this->getStat('group-offices-image'),
           ],
           'meet_the_team' => [
-              'adviser_picture' => $adviser['profile_photo'],
-              'adviser_name' => $adviser['name'],
-              'adviser_title' => $adviser['title'],
-              'adviser_bio' => $adviser['short_bio']
+              'adviser_picture' => $adviser['adviser_picture'],
+              'adviser_name' => $adviser['adviser_name'],
+              'adviser_title' => $adviser['adviser_title'],
+              'adviser_bio' => $adviser['adviser_bio']
           ],
           'a_holistic_approach' => [
-              'report_version'
+              'report_version' => config('enums.strategy_report_recommendations.report_version')[$client->strategy_report_recommendation->report_version]
           ],
           'about_you' => [
             'type' => '', //individual, retiring, couple,
@@ -86,32 +86,20 @@ class StrategyReportDataService
             'pension_status' => '',
             'pension_value' => ''
           ],
-           'your_objectives' => [
-               'primary_objectives' => [
-                    [
-                        'icon' => '',
-                        'title' => '',
-                        'description' => ''
-                    ],
-                    [
-                        'icon' => '',
-                        'title' => '',
-                        'description' => ''
-                    ]
-               ],
-               'secondary_objectives' => [
-                   [
-                       'icon' => '',
-                       'title' => '',
-                       'description' => ''
-                   ],
-                   [
-                       'icon' => '',
-                       'title' => '',
-                       'description' => ''
-                   ]
-               ],
-           ],
+           'your_objectives' => $client->strategy_report_recommendation->objectives->groupBy('is_primary')->mapWithKeys(function ($items){
+               return [
+                   $items->first()->is_primary ? 'primary_objectives' : 'secondary_objectives' => $items->map(function ($item){
+                       return  [
+                           'icon' => '',
+                           'title' => '',
+                           'description' => ''
+                       ];
+                   })
+
+
+//
+               ];
+           }),
             'your_finances' => [
                 'total_assets' => '',
                 'property_and_possessions' => [
