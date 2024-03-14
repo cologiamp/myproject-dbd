@@ -102,8 +102,7 @@ function nextTab(){
 
 
 <template>
-
-  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0 top-48" aria-label="Sidebar">
+    <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0 top-48" aria-label="Sidebar">
       <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
           <ul class="font-medium">
                   <li v-for="(item, index) in props.sidebarItems"
@@ -121,10 +120,7 @@ function nextTab(){
                   </li>
               </ul>
       </div>
-  </aside>
-
-
-
+    </aside>
     <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 mb-4 sm:ml-80">
         <div class="p-4">
             <slot></slot>
@@ -134,5 +130,4 @@ function nextTab(){
             Next <ArrowRightIcon class="w-6 h-6" />
         </button>
     </div>
-
 </template>

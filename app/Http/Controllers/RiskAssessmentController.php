@@ -31,14 +31,19 @@ class RiskAssessmentController extends Controller
     public function show(Client $client, Request $request)
     {
         $this->clientRepository->setClient($client);
-        if(!$client->knowledge->first() || !$client->capacity_for_loss->first() || !$client->risk_profile) {
-            $this->knowledgeRepository->setClient($client);
-            $this->capacityForLossRepository->setClient($client);
+        if(!$client->risk_profile) {
             $this->riskProfileRepository->setClient($client);
-
-            $client->knowledge = $this->knowledgeRepository->createInitialKnowledgeForClient();
-            $client->capacity_for_loss = $this->capacityForLossRepository->createInitialCapacityForClient();
             $client->risk_profile = $this->riskProfileRepository->createInitialRiskProfileForClient();
+        }
+
+        if(!$client->knowledge->first()) {
+            $this->knowledgeRepository->setClient($client);
+            $client->knowledge = $this->knowledgeRepository->createInitialKnowledgeForClient();
+        }
+
+        if(!$client->capacity_for_loss->first()) {
+            $this->capacityForLossRepository->setClient($client);
+            $client->capacity_for_loss = $this->capacityForLossRepository->createInitialCapacityForClient();
         }
 
         $section = $request->section ?? 1;
