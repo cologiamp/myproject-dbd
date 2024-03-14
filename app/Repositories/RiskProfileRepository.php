@@ -90,20 +90,15 @@ class RiskProfileRepository extends BaseRepository
 
     public function createInitialRiskProfileForClient(): RiskProfile
     {
-        $types = [RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE];
-
         DB::beginTransaction();
 
         try {
-            for ($x = 0; $x < count($types); $x++) {
-                $risk = array(
-                    'client_id' => $this->client->id,
-                    'type' => $types[$x],
-                    'short_term_volatility' => $this->createDefaultJsonValue()
-                );
+            $risk = array(
+                'client_id' => $this->client->id,
+                'short_term_volatility' => $this->createDefaultJsonValue()
+            );
 
-                $newRecord = RiskProfile::create($risk);
-            }
+            $newRecord = RiskProfile::create($risk);
 
             DB::commit();
             return $newRecord;

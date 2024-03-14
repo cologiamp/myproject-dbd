@@ -1310,31 +1310,6 @@ return [
                     ],
                     'messages' => [
                     ]
-                ],
-                3 => [
-                    'name' => 'Risk Profile',
-                    'fields' => [
-                        'id',
-                        'comfort_fluctuate_market',
-                        'day_to_day_volatility',
-                        'short_term_volatility',
-                        'medium_term_volatility',
-                        'volatility_behaviour',
-                        'long_term_volatility',
-                        'time_in_market'
-                    ],
-                    'rules' => [
-                        'id' => 'sometimes|nullable|integer',
-                        'comfort_fluctuate_market' => 'sometimes|nullable|boolean',
-                        'day_to_day_volatility' => 'sometimes|nullable|integer',
-                        'short_term_volatility' => 'sometimes|nullable|array',
-                        'medium_term_volatility' => 'sometimes|nullable|integer',
-                        'volatility_behaviour' => 'sometimes|nullable|integer',
-                        'long_term_volatility' => 'sometimes|nullable|integer',
-                        'time_in_market' => 'sometimes|nullable|integer'
-                    ],
-                    'messages' => [
-                    ]
                 ]
             ]
         ],
@@ -1402,8 +1377,13 @@ return [
                     ],
                     'messages' => [
                     ]
-                ],
-                3 => [
+                ]
+            ]
+        ],
+        3 => [
+            'name' => 'Risk Profile',
+            'sections' => [
+                1 => [
                     'name' => 'Risk Profile',
                     'fields' => [
                         'id',

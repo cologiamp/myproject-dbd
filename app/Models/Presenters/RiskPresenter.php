@@ -53,21 +53,6 @@ class RiskPresenter extends BasePresenter
                     ];
                 }))->collapse()
             ],
-            '1.3' => [
-                'risk_profile' => collect(RiskProfile::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['INVESTMENT_TYPE'])->get()->map(function ($risk){
-                    return [
-                        'id' => $risk->id,
-                        'type' => $risk?->type,
-                        'comfort_fluctuate_market' => (bool) $risk->comfort_fluctuate_market,
-                        'day_to_day_volatility' => $risk->day_to_day_volatility,
-                        'short_term_volatility' => $risk->short_term_volatility,
-                        'medium_term_volatility' => $risk->medium_term_volatility,
-                        'volatility_behaviour' => $risk->volatility_behaviour,
-                        'long_term_volatility' => $risk->long_term_volatility,
-                        'time_in_market' => $risk->time_in_market,
-                    ];
-                }))->collapse()
-            ],
             '2.1' => [
                 'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($knowledge){
                     return [
@@ -104,22 +89,16 @@ class RiskPresenter extends BasePresenter
                     ];
                 }))->collapse()
             ],
-            '2.3' => [
-                'risk_profile' => collect(RiskProfile::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($risk){
-                    return [
-                        'id' => $risk->id,
-                        'type' => $risk?->type,
-                        'comfort_fluctuate_market' => (bool) $risk->comfort_fluctuate_market,
-                        'day_to_day_volatility' => $risk->day_to_day_volatility,
-                        'short_term_volatility' => $risk->short_term_volatility,
-                        'medium_term_volatility' => $risk->medium_term_volatility,
-                        'volatility_behaviour' => $risk->volatility_behaviour,
-                        'long_term_volatility' => $risk->long_term_volatility,
-                        'time_in_market' => $risk->time_in_market,
-                    ];
-                }))->collapse()
+            '3.1' => [
+                'id' => $this->model->client->risk_profile?->id,
+                'comfort_fluctuate_market' => (bool) $this->model->client->risk_profile?->comfort_fluctuate_market,
+                'day_to_day_volatility' => $this->model->client->risk_profile?->day_to_day_volatility,
+                'short_term_volatility' => $this->model->client->risk_profile?->short_term_volatility,
+                'medium_term_volatility' => $this->model->client->risk_profile?->medium_term_volatility,
+                'volatility_behaviour' => $this->model->client->risk_profile?->volatility_behaviour,
+                'long_term_volatility' => $this->model->client->risk_profile?->long_term_volatility,
+                'time_in_market' => $this->model->client->risk_profile?->time_in_market
             ],
-
             default => [
             ]
         };

@@ -2,7 +2,7 @@
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
-import {onMounted, ref, watch} from "vue";
+import {onMounted, watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import ConcernRatingTable from "@/Components/ConcernRatingTable.vue";
@@ -21,15 +21,13 @@ const props = defineProps({
                 risk_assessment_volatility: []
             },
             model: {
-                risk_profile: {
-                    comfort_fluctuate_market: null,
-                    day_to_day_volatility: null,
-                    short_term_volatility: null,
-                    medium_term_volatility: null,
-                    volatility_behaviour: null,
-                    long_term_volatility: null,
-                    time_in_market: null
-                }
+                comfort_fluctuate_market: null,
+                day_to_day_volatility: null,
+                short_term_volatility: null,
+                medium_term_volatility: null,
+                volatility_behaviour: null,
+                long_term_volatility: null,
+                time_in_market: null
             },
             submit_method: 'post',
             submit_url: '/',
@@ -39,26 +37,26 @@ const props = defineProps({
 });
 
 const stepForm = useForm({
-    id: props.formData.model.risk_profile.id,
-    comfort_fluctuate_market: props.formData.model.risk_profile.comfort_fluctuate_market,
-    day_to_day_volatility: props.formData.model.risk_profile.day_to_day_volatility,
-    short_term_volatility: JSON.parse(props.formData.model.risk_profile.short_term_volatility),
-    medium_term_volatility: props.formData.model.risk_profile.medium_term_volatility,
-    volatility_behaviour: props.formData.model.risk_profile.volatility_behaviour,
-    long_term_volatility: props.formData.model.risk_profile.long_term_volatility,
-    time_in_market: props.formData.model.risk_profile.time_in_market
+    id: props.formData.model.id,
+    comfort_fluctuate_market: props.formData.model.comfort_fluctuate_market,
+    day_to_day_volatility: props.formData.model.day_to_day_volatility,
+    short_term_volatility: JSON.parse(props.formData.model.short_term_volatility),
+    medium_term_volatility: props.formData.model.medium_term_volatility,
+    volatility_behaviour: props.formData.model.volatility_behaviour,
+    long_term_volatility: props.formData.model.long_term_volatility,
+    time_in_market: props.formData.model.time_in_market
 })
 
 async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
-    stepForm.id = props.formData.model.risk_profile.id;
-    stepForm.comfort_fluctuate_market = props.formData.model.risk_profile.comfort_fluctuate_market;
-    stepForm.day_to_day_volatility = props.formData.model.risk_profile.day_to_day_volatility;
-    stepForm.short_term_volatility = JSON.parse(props.formData.model.risk_profile.short_term_volatility);
-    stepForm.medium_term_volatility = props.formData.model.risk_profile.medium_term_volatility;
-    stepForm.volatility_behaviour = props.formData.model.risk_profile.volatility_behaviour;
-    stepForm.long_term_volatility = props.formData.model.risk_profile.long_term_volatility;
-    stepForm.time_in_market = props.formData.model.risk_profile.time_in_market;
+    stepForm.id = props.formData.model.id;
+    stepForm.comfort_fluctuate_market = props.formData.model.comfort_fluctuate_market;
+    stepForm.day_to_day_volatility = props.formData.model.day_to_day_volatility;
+    stepForm.short_term_volatility = JSON.parse(props.formData.model.short_term_volatility);
+    stepForm.medium_term_volatility = props.formData.model.medium_term_volatility;
+    stepForm.volatility_behaviour = props.formData.model.volatility_behaviour;
+    stepForm.long_term_volatility = props.formData.model.long_term_volatility;
+    stepForm.time_in_market = props.formData.model.time_in_market;
 }
 
 function setRating(data) {
@@ -122,7 +120,6 @@ onMounted(()=>{
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.day_to_day_volatility">{{ stepForm.errors.day_to_day_volatility }}</p>
                 </div>
-                <!--       Add range field value here later         -->
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         How concerned would you be if the value of your investments fell by the following amounts in any one year (% fall)?

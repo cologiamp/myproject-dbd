@@ -2,10 +2,7 @@
 
 namespace App\Services;
 
-
-use App\Concerns\FormatsCurrency;
 use App\Models\Client;
-use App\Models\RiskProfile;
 use App\Repositories\CapacityForLossRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\KnowledgeRepository;
@@ -30,8 +27,7 @@ class RiskAssessmentSectionDataService
     //get the data for a single section of a risk from a single client
     public static function get($client, $step, $section): array
     {
-//        dd($client->risk_profile()->where('type', 1)->first());
-        $riskInv = $client->risk_profile()->where('type', 0)->first();
+        $riskInv = $client->risk_profile;
         return [
             'enums' => $riskInv->loadEnumsForStep($step, $section),
             'model' => $riskInv->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
@@ -110,17 +106,6 @@ class RiskAssessmentSectionDataService
         $this->capacityForLossRepository->createOrUpdate($validatedData);
     }
 
-    private function _13(array $validatedData): void
-    {
-        // define any explicit mutators that are not handled
-        $this->riskProfileRepository->setClient($this->clientRepository->getClient());
-
-        $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
-        $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
-
-        $this->riskProfileRepository->createOrUpdate($validatedData);
-    }
-
     private function _21(array $validatedData): void
     {
         // define any explicit mutators that are not handled
@@ -139,12 +124,11 @@ class RiskAssessmentSectionDataService
         $this->capacityForLossRepository->createOrUpdate($validatedData);
     }
 
-    private function _23(array $validatedData): void
+    private function _31(array $validatedData): void
     {
         // define any explicit mutators that are not handled
         $this->riskProfileRepository->setClient($this->clientRepository->getClient());
 
-        $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
         $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
         $this->riskProfileRepository->createOrUpdate($validatedData);
     }
