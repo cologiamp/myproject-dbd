@@ -31,7 +31,19 @@ trait InterractsWithDataHub{
         }
 
     }
-
+    protected function getAdviser($client):array
+    {
+        $adv = $client->adviser;
+        $response = Http::withHeader("Authorization", Cache::get('datahub_access_token', function (){
+            return $this->setAccessToken();
+        }))->get(config('datahub.url').'api/advisers/'. $adv->io_id);
+        return [
+            'adviser_picture' => $response->json()['data']['profile_pic_url'],
+            'adviser_name' => $response->json()['data']['name'],
+            'adviser_title' => $response->json()['data']['title'],
+            'adviser_bio' => $response->json()['data']['bio_short'],
+        ];
+    }
     protected function getStat(string $stat, bool $force = false):string
     {
         if(!$force)
