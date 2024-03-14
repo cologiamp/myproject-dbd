@@ -22,6 +22,8 @@ class Client extends Model
 {
     use ParsesIoClientData, AccessesIoProviders;
     protected $guarded = [];
+    protected $appends = ['name_with_c2'];
+
 
     /**
      * Return the formatted attribute "title" according to the config enum;
@@ -31,6 +33,22 @@ class Client extends Model
     {
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
+
+    public function client_two(): BelongsTo
+    {
+        return $this->belongsTo(Client::class,'c2_id','id');
+    }
+
+    //Client Two functions
+    public function getDashboardTitleAttribute(): string
+    {
+        return 'Welcome to ' . $this->getNameWithC2Attribute() . "'s dashboard";
+    }
+    public function getNameWithC2Attribute():string //->name_with_c2
+    {
+        return $this->client_two ? $this->name . " & ". $this->client_two->name :  $this->name;
+    }
+
 
     public function date_of_birth():Attribute
     {
@@ -100,7 +118,7 @@ class Client extends Model
 
     public function addresses():BelongsToMany
     {
-        return $this->belongsToMany(Address::class);
+        return $this->belongsToMany(Address::class)->withPivot('percent_ownership');
     }
 
     public function health():HasOne
@@ -181,6 +199,21 @@ class Client extends Model
     {
         return $this->hasOne(StrategyReportRecommendation::class);
     }
+  
+    public function investment_recommendation():HasOne
+    {
+        return $this->hasOne(InvestmentRecommendation::class);
+    }
+
+    public function investment_recommendation_items():BelongsToMany
+    {
+        return $this->belongsToMany(InvestmentRecommendationItem::class);
+    }
+
+    public function pension_recommendation():HasOne
+    {
+        return $this->hasOne(PensionRecommendation::class);
+    }
 
 
     //Presenter
@@ -206,39 +239,53 @@ class Client extends Model
                 'residency_status' => collect(config('enums.address.residency_status_public')),
                 'countries' => collect(collect(config('enums.address.country')))->mapWithKeys(function ($item, $key){
                     return ['0'.$key => $item];//hack to allow reordering of JS objects with string keys
-                })
+                }),
+                'owners' => $this->getOwnersForForm(),
             ],
             '1.4' => [
-                'relationship_type' => config('enums.dependent.relationship_type')
+                'relationship_type' => config('enums.dependent.relationship_type'),
+                'owners' => $this->getOwnersForForm(true),
             ],
             '1.5' => [
-                'employment_status' => config('enums.employment.employment_status')
+                'employment_status' => config('enums.employment.employment_status'),
+                'owners' => $this->getOwnersForForm(true),
+
             ],
             '2.1' => [
                 'income_types' => config('enums.incomes.income_type'),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'belongs_to' => $this->getBelongsToEnums()
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.2' => [
                 'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.3' => [
                 'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.4' => [
                 'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '2.5' => [
                 'expenditure_types' => config('enums.expenditures.liability_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
-                'frequencies' => collect(config('enums.incomes.frequency_public'))
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
+            ],
+            '2.6' => [
+                'expenditure_types' => config('enums.expenditures.lump_sum_expenditure'),
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
+                'frequencies' => collect(config('enums.incomes.frequency_public')),
+                'owners' => $this->getOwnersForForm(),
             ],
             '3.1' => [
                 'owners' => $this->getOwnersForForm(),
@@ -248,6 +295,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
                 'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
+                'frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -262,6 +310,7 @@ class Client extends Model
                 'pension_crystallised_statuses' => config('enums.assets.pension_crystallised_statuses'),
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
+                'frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -270,7 +319,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
             ],
             '4.1' => [
-                'owners' => $this->getOwnersForForm(true),
+                'owners' => $this->getOwnersForForm(),
                 'types' => config('enums.liabilities.types_public'),
                 'repayment_or_interest' => config('enums.liabilities.repayment_or_interest'),
             ],

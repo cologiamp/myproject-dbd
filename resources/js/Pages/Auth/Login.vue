@@ -16,7 +16,7 @@ import {isMobile} from "@/mobileCheck.js";
 defineProps({
     canResetPassword: Boolean,
     status: String,
-    halfPageImage: String
+    halfPageImage: String,
 });
 
 const form = useForm({

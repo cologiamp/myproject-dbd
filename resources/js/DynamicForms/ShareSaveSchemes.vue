@@ -31,6 +31,7 @@ const props = defineProps({
                     monthly_saving: null,
                     number_of_shares: null,
                     matures_at: null,
+                    start_at: null,
                 }]
             },
             submit_method: 'post',
@@ -53,6 +54,11 @@ function saveMaturesAt(index, value) {
     autosaveLocally();
 }
 
+function saveStartsAt(index, value) {
+    stepForm.schemes[index].start_at = value;
+    autosaveLocally();
+}
+
 function addScheme() {
     stepForm.schemes.push({
         id: null,
@@ -62,6 +68,7 @@ function addScheme() {
         monthly_saving: null,
         number_of_shares: null,
         matures_at: null,
+        start_at: null,
     });
 }
 
@@ -162,6 +169,19 @@ function removeScheme(index) {
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Number of Shares</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input @change="autosaveLocally()" v-model="scheme.number_of_shares" type="number" step="1" min="0" class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-aaron-800 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"  />
+                    </div>
+                </div>
+
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <label for="born_at"
+                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2">Start Date</label>
+                    <div
+                        class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                        <VueDatePicker
+                            :enable-time-picker="false"
+                            text-input @closed="saveStartsAt(index, scheme.start_at)"
+                            class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="scheme.start_at"
+                            name="start_at" id="start_at" placeholder="dd/mm/yyyy" />
                     </div>
                 </div>
 

@@ -83,13 +83,16 @@ class EmploymentDetailRepository extends BaseRepository
         }
 
         DB::beginTransaction();
-
         try {
-            $this->employmentDetail->whereNotIn('id', collect($data['employment_details'])->pluck('id')->filter()->toArray())->delete();
-
             collect($data['employment_details'])->each(function ($employment) {
-                $employment['client_id'] = $this->client->id;
-
+                if(array_key_exists('employee',$employment) && $employment['employee'] != null)
+                {
+                    $employment['client_id'] = Client::where('io_id',$employment['employee'])->first()->id;
+                }
+                else{
+                    $employment['client_id'] = $this->client->id;
+                }
+                unset($employment['employee']);
                 if(array_key_exists('id', $employment)){
                     $model = $this->employmentDetail->where('id', $employment['id'])->first();
                     $model->update($employment);

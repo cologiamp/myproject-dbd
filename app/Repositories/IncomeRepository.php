@@ -72,6 +72,10 @@ class IncomeRepository extends BaseRepository
     public function delete(): void
     {
         //handle any cleanup required here
+        $this->income->clients()->each(function ($item) {
+            $item->incomes()->detach([$this->income->id]);
+        });
+
         $this->income->delete();
     }
 
@@ -82,8 +86,8 @@ class IncomeRepository extends BaseRepository
             $data = $data->safe();
         }
 
-        $syncIncomes = [];
-        collect($data['incomes'])->each(function ($income) use (&$syncIncomes) {
+        collect($data['incomes'])->each(function ($income){
+
             if(array_key_exists('income_id', $income)) {
                 $model = Income::where('id', $income['income_id'])->first();
 
@@ -102,6 +106,7 @@ class IncomeRepository extends BaseRepository
                     );
 
                     $model->update($formatIncomeData);
+                    $model->clients()->detach();
 
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -110,19 +115,28 @@ class IncomeRepository extends BaseRepository
 
                 DB::commit();
 
-                $syncIncomes[$model->id] = [
-                    'is_primary' => true
-                ];
             } else {
                 //register income
-                $ret = $this->registerIncome($income);
-                $syncIncomes[$ret['id']] = $ret['value'];
+                $model = $this->registerIncome($income);
+            }
+            if($income['belongs_to'] == null)
+            {
+                $income['belongs_to'] = $this->client->io_id;
+            }
+            if($income['belongs_to'] == 'Both'){
+                $client = $this->client->id;
+                $client2 = $this->client->client_two->id;
+                $model->clients()->attach([$client,$client2]);
+            }
+            else{
+                $client = Client::where('io_id',$income['belongs_to'])->first();
+                $model->clients()->attach($client->id);
             }
 
-        });
 
-        //do sync on all the income records updated/registered
-        $this->client->incomes()->sync($syncIncomes);
+
+            //Save the relation based on the belongs_to field
+        });
 
     }
 
@@ -143,12 +157,7 @@ class IncomeRepository extends BaseRepository
             dd($e);
         }
 
-        return [
-            'id' => $model['id'],
-            'value' => [
-                'is_primary' => true
-            ]
-        ];
+        return $model;
 
     }
 }

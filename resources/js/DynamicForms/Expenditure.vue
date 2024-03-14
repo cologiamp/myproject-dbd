@@ -33,6 +33,7 @@ const props = defineProps({
                     currently_active: true,
                     known_end_date: false,
                     starts_at: null,
+                    belongs_to: null,
                     ends_at: null
                 }]
             },
@@ -55,10 +56,11 @@ function addExpenditure(typeIndex) {
             expenditure_type: parseInt(typeIndex),
             description: null,
             amount: null,
-            frequency: null,
+            frequency: parseInt(typeIndex) == 32 ? 7 : null,
             currently_active: true,
             known_end_date: false,
             starts_at: null,
+            belongs_to: null,
             ends_at: null
         });
     } else {
@@ -66,10 +68,11 @@ function addExpenditure(typeIndex) {
             expenditure_type: parseInt(typeIndex),
             description: null,
             amount: null,
-            frequency: null,
+            frequency: parseInt(typeIndex) == 32 ? 7 : null,
             currently_active: true,
             known_end_date: false,
             starts_at: null,
+            belongs_to: null,
             ends_at: null
         }]
     }
@@ -94,13 +97,13 @@ function removeExpenditure(typeIndex, expIndex) {
     stepForm.expenditures[typeIndex].splice(expIndex, 1);
 
     setTimeout(()=> {
-        autosaveLocally();
-      }
-    ,500);
+            autosaveLocally();
+        }
+        ,500);
 
 }
 
-const stepForm = useForm(`EditExpenditures${ props.sectionIndex }${ props.formData.model.client_id }`, {
+const stepForm = useForm({
     expenditures: props.formData.model.expenditures != null ? props.formData.model.expenditures : []
 })
 
@@ -117,16 +120,18 @@ onBeforeMount(() => {
 
 function formatAmountOnload() {
     if (stepForm.expenditures != null) {
-        Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
-            if(stepForm.expenditures[expType]) {
+        if(props.formData.enums.expenditure_types) {
+            Object.keys(props.formData.enums.expenditure_types).forEach(expType => {
+                if(stepForm.expenditures[expType]) {
 
-                stepForm.expenditures[expType].forEach(expenditure => {
-                    if (expenditure['amount'] && expenditure['amount'] != null) {
-                        expenditure['amount'] = changeToCurrency(expenditure['amount'].toString());
-                    }
-                });
-            }
-        });
+                    stepForm.expenditures[expType].forEach(expenditure => {
+                        if (expenditure['amount'] && expenditure['amount'] != null) {
+                            expenditure['amount'] = changeToCurrency(expenditure['amount'].toString());
+                        }
+                    });
+                }
+            });
+        }
     }
 }
 
@@ -140,7 +145,7 @@ function changeToCurrency(amount) {
         style: 'currency',
         currency: 'GBP',
         minimumFractionDigits: 0
-      });
+    });
 
     // Remove non-numeric characters from user input and convert to int
     let tempAmount = amount.replace(/[^\d.]/g, '');
@@ -203,15 +208,15 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     <div class="md:col-span-6 flex flex-row justify-between">
                         <label class="font-bold">{{ expenditureType }} {{ expIndex + 1 }}</label>
                         <button type="button" @click="removeExpenditure(typeIndex, expIndex)"
-                            class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                class="inline-flex items-center gap-x-1.5 rounded-md bg-red-800 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             <XCircleIcon class="w-4 h-4" />Remove Expenditure
                         </button>
                     </div>
                     <div class="mt-2 md:col-span-3 sm:mt-0 md:pr-2">
                         <label for="expenditure_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Expenditure Type</label>
                         <select @change="autosaveLocally()" v-model="expenditure.expenditure_type" :disabled="true"
-                            id="expenditure_type" name="expenditure_type"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-aaron-700 disabled:text-aaron-50 disabled:border-slate-200 disabled:shadow-none">
+                                id="expenditure_type" name="expenditure_type"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-aaron-700 disabled:text-aaron-50 disabled:border-slate-200 disabled:shadow-none">
                             <option id="expenditure_type" :value="null">-</option>
                             <option :id="id" :value="id" v-for="(expenditure_type, id) in formData.enums.expenditure_types">{{ expenditure_type }}</option>
                         </select>
@@ -228,67 +233,98 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                         <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Amount </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                             <input @change="autosaveLocally()" type="currency" name="amount" id="amount"
-                                :value="expenditure.amount"
-                                @input="formatAmount($event, typeIndex, expIndex, 'amount')"
-                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                                   :value="expenditure.amount"
+                                   @input="formatAmount($event, typeIndex, expIndex, 'amount')"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                         </div>
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>
                     </div>
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-if="expenditure.expenditure_type != 32">
                         <label for="frequency" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Frequency</label>
                         <select @change="autosaveLocally()" id="frequency" name="frequency" v-model="expenditure.frequency"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="frequency" :value="null">-</option>
                             <option :id="id" :value="id" v-for="(frequency, id) in formData.enums.frequencies">{{ frequency }}</option>
                         </select>
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.frequency">{{ stepForm.errors.frequency }}</p>
                     </div>
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                        <label for="currently_active" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Currently Active</label>
-                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                            <input @change="expenditureStatus($event, typeIndex, expIndex, 'currently_active')" type="radio" id="true" :value="true" :checked="expenditure.currently_active == true" v-model="expenditure.currently_active" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                            <input type="radio" id="false" :value="false" :checked="expenditure.currently_active == false" v-model="expenditure.currently_active" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
-                        </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.currently_active">{{ stepForm.errors.currently_active }}</p>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2" v-else>
+                        <label for="frequency" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Frequency</label>
+                        <select  id="frequency" name="frequency" v-model="expenditure.frequency"
+                                 class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option :id="id" value="7" selected disabled >One Off</option>
+                        </select>
                     </div>
-                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                        <label for="known_end_date" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Known End Date</label>
-                        <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
-                            <input type="radio" id="true" :value="true" :checked="expenditure.known_end_date == true" v-model="expenditure.known_end_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
-                            <input @change="expenditureStatus($event, typeIndex, expIndex, 'known_end_date')" type="radio" id="false" :value="false" :checked="expenditure.known_end_date == false" v-model="expenditure.known_end_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
-                            <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                    <template v-if="expenditure.expenditure_type != 32">
+                        <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                            <label for="currently_active" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Currently Active</label>
+                            <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                                <input @change="expenditureStatus($event, typeIndex, expIndex, 'currently_active')" type="radio" id="true" :value="true" :checked="expenditure.currently_active == true" v-model="expenditure.currently_active" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                                <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                                <input type="radio" id="false" :value="false" :checked="expenditure.currently_active == false" v-model="expenditure.currently_active" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                                <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                            </div>
+                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.currently_active">{{ stepForm.errors.currently_active }}</p>
                         </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.known_end_date">{{ stepForm.errors.known_end_date }}</p>
-                    </div>
-                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
+                        <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                            <label for="known_end_date" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Known End Date</label>
+                            <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                                <input type="radio" id="true" :value="true" :checked="expenditure.known_end_date == true" v-model="expenditure.known_end_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                                <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
+                                <input @change="expenditureStatus($event, typeIndex, expIndex, 'known_end_date')" type="radio" id="false" :value="false" :checked="expenditure.known_end_date == false" v-model="expenditure.known_end_date" class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                                <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
+                            </div>
+                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.known_end_date">{{ stepForm.errors.known_end_date }}</p>
+                        </div>
+                        <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
                             <label for="starts_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Start Date </label>
                             <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
                                 <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.starts_at, 'starts_at')"
-                                    class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.starts_at"
-                                    name="starts_at" id="starts_at" placeholder="dd/mm/yyyy" :required="expenditure.currently_active == false"/>
+                                               class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.starts_at"
+                                               name="starts_at" id="starts_at" placeholder="dd/mm/yyyy" :required="expenditure.currently_active == false"/>
                             </div>
                             <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.starts_at">{{ stepForm.errors.starts_at }}</p>
-                    </div>
-                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
-                        <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
-                        <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-                            <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.ends_at, 'ends_at')"
-                                class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
-                                name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" :required="expenditure.known_end_date == true"/>
                         </div>
-                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.ends_at">{{ stepForm.errors.ends_at }}</p>
+                        <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
+                            <label for="ends_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> End Date </label>
+                            <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                                <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.ends_at, 'ends_at')"
+                                               class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.ends_at"
+                                               name="ends_at" id="ends_at" placeholder="dd/mm/yyyy" :required="expenditure.known_end_date == true"/>
+                            </div>
+                         </div>
+                    </template>
+                    <template v-else>
+                        <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3 mb-8">
+                            <label for="starts_at" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Expenditure Date </label>
+                            <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
+                                <VueDatePicker text-input @closed="saveDate(typeIndex, expIndex, expenditure.starts_at, 'starts_at')"
+                                               class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" v-model="expenditure.starts_at"
+                                               name="starts_at" id="starts_at" placeholder="dd/mm/yyyy"/>
+                            </div>
+                            <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.starts_at">{{ stepForm.errors.starts_at }}</p>
+                        </div>
+                    </template>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2  mb-8">
+                        <label for="belongs_to" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Belongs To</label>
+                        <select @change="autosaveLocally()" id="belongs_to" name="belongs_to" v-model="expenditure.belongs_to"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="belongs_to" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(belongs_to, id) in formData.enums.owners">{{ belongs_to }}</option>
+                        </select>
+                        <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.belongs_to">{{
+                                stepForm.errors.belongs_to }}</p>
                     </div>
                 </div>
                 <button type="button" @click="addExpenditure(typeIndex)" v-if="stepForm.expenditures[typeIndex]"
-                    class="float-right inline-flex items-center gap-x-1.5 mb-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        class="float-right inline-flex items-center gap-x-1.5 mb-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                     <PlusCircleIcon class="w-6 h-6" />Add {{ expenditureType }} Expenditure
                 </button>
             </div>
-    </div>
-</dynamic-form-wrapper></template>
+
+        </div>
+    </dynamic-form-wrapper>
+</template>
 
 <style scoped>.aaron-datepicker {
     --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));

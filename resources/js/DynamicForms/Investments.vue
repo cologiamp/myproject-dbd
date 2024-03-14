@@ -110,7 +110,12 @@ async function autosaveLocally(){
 }
 
 </script>
-
+<style>
+.ph-style .vs__search::placeholder {
+    color: #6f707d;
+    font-size: 14px;
+}
+</style>
 <template>
     <dynamic-form-wrapper :saving="autoS">
         <div class="form-row flex-1">
@@ -158,7 +163,8 @@ async function autosaveLocally(){
                     <label for="first_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Provider</label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300">
                         <v-select
-                            class="block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+                            placeholder="Begin typing a provider name"
+                            class="ph-style block rounded-md w-full border-0 bg-aaron-950 text-aaron-50 shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
                             v-model="investment.provider"
                             @option:selected="autosaveLocally"
                             @option:deselected="autosaveLocally"
@@ -240,26 +246,32 @@ async function autosaveLocally(){
                     </div>
                 </div>
 
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Regular Contribution </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="formatAmount($event, index, 'regular_contribution')" type="currency" name="regular_contribution" id="regular_contribution"
-                               :value="investment.regular_contribution"
-                               class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+
+                <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
+                    <h4 class="col-span-6 text-xl font-bold pt-2"> Regular Contribution </h4>
+
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Regular Contribution </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="formatAmount($event, index, 'regular_contribution')" type="currency" name="regular_contribution" id="regular_contribution"
+                                   :value="investment.regular_contribution"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
                     </div>
-                </div>
 
 
-                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="frequency"
-                           class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
-                    <select @change="autosaveLocally" v-model="investment.frequency"
-                            id="frequency" name="frequency"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="frequency" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
-                                provider }}</option>
-                    </select>
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label for="frequency"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
+                        <select @change="autosaveLocally" v-model="investment.frequency"
+                                id="frequency" name="frequency"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="frequency" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
+                                    provider }}</option>
+                        </select>
+                    </div>
+
                 </div>
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">

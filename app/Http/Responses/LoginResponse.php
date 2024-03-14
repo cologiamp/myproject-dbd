@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginResponse implements \Laravel\Fortify\Contracts\LoginResponse
 {
-
     public function toResponse($request):RedirectResponse
     {
         if(Auth::user()->two_factor_confirmed_at)

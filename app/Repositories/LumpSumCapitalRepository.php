@@ -15,13 +15,18 @@ use Illuminate\Support\Facades\DB;
 
 class  LumpSumCapitalRepository extends BaseRepository
 {
+    protected Client $client;
     protected LumpSumCapital $capital;
 
-    public function __construct(LumpSumCapital $capital)
+    public function __construct(Client $client, LumpSumCapital $capital)
     {
         $this->capital = $capital;
+        $this->client = $client;
     }
-
+    public function setClient(Client $client): void
+    {
+        $this->client = $client;
+    }
 
     public function setCapital(LumpSumCapital $capital): void
     {
@@ -88,20 +93,31 @@ class  LumpSumCapitalRepository extends BaseRepository
                     $model = $this->capital->create($capital);
                 }
 
-                if($owner)
+                if($owner != null)
                 {
-                    $model = $model->fresh();
+                    $model->clients()->detach();
                     if($owner == 'Both')
                     {
-                        dd('need to handle the case where both clients own a lump sum');
-                    }
-                    else{
-                        $client = Client::with('lump_sum_capitals')->where('io_id',$owner)->first();
-                        if(collect($client->lump_sum_capitals->pluck('id'))->doesntContain($model->id))
+                        $client = $this->client;
+                        $client2 = $this->client->client_two;
+                        if($client && $client2)
                         {
-                            $client->lump_sum_capitals()->attach($model->id);
+                            $model->clients()->attach( $client->id);
+                            $model->clients()->attach( $client2->id);
+                        }
+                        else{
+                            dd('both but not client two');
                         }
                     }
+                    else{
+                        //case where 100% owned by one client, no percentages
+                        $client = Client::where('io_id',$owner)->first();
+                        $client->lump_sum_capitals()->attach($model->id);
+                    }
+                }
+                else{
+                    $client = $this->client;
+                    $client->lump_sum_capitals()->attach($model->id);
                 }
 
             });
