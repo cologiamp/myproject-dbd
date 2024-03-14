@@ -1809,6 +1809,211 @@ return [
             3 => 'Not important',
         ],
     ],
+    'strategy_report_recommendations' => [
+        'report_version' => [
+            0 => 'v1',
+            1 => 'v2'
+        ],
+        'retirement_status' => [
+            0 => 'Employed',
+            1 => 'Retired',
+            2 => 'Retiring',
+            3 => 'Flex Retirement'
+        ],
+        'objective_type' => [
+            0 => 'Considering Retirement',
+            1 => 'Retiring',
+            2 => 'Accumilating Wealth'
+        ],
+        'topic' => [
+            0 => [
+                'name' => 'Legacy Planning',
+                'objectives' => [
+                    0 => 'You wish to ensure that your assets are directed in accordance with your wishes in the event of your death.',
+                    1 => 'You wish to ensure that your chosen beneficiary(ies) benefit in the event of your death.',
+                    2 => 'You wish to reduce the amount of Inheritance Tax payable.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'So that that more of the assets that you have built up during your lifetime are able to be passed onto your children/grandchildren/other chosen beneficiaries when you die.',
+                    1 => 'To give you peace of mind that your dependants/family will be financially secure when you are no longer around.',
+                    99 => 'Other'
+                ]
+            ],
+            1 => [
+                'name' => 'Tax Efficiency',
+                'objectives' => [
+                    0 => 'You wish to reduce the amount of tax you pay in relation to your existing savings/investments.',
+                    1 => 'You wish to reduce the amount of income tax that you are paying.',
+                    2 => 'You wish to reduce the amount of Inheritance Tax payable.',
+                    3 => 'You wish to establish a tax efficient withdrawal strategy',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'To ensure that more of the assets that you have built up during your lifetime are able to be passed onto your chose beneficiary(ies) when you die.',
+                    1 => 'To build up your wealth more quickly.',
+                    2 => 'To reach your financial goals more quickly (e.g. for a specific purpose)',
+                    3 => 'To retire earlier than expected/planned',
+                    4 => 'To give you the option to retire earlier than expected/planned.',
+                    5 => 'To help you fund future expenditure more easily.',
+                    6 => 'So that you retain more of your money.',
+                    7 => 'To improve the likelihood of your money not running out during retirement.',
+                    99 => 'Other'
+                ]
+            ],
+            2 => [
+                'name' => 'Short-Term Cash Needs',
+                'objectives' => [
+                    0 => 'It is important that you retain access to a proportion of your capital.',
+                    1 => 'You wish to retain £XX',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'To cover any expenditure that cannot be met from income over the next XX years',
+                    1 => 'To fund your income requirements in the first XX years of retirement',
+                    2 => 'In case of emergencies.',
+                    3 => 'To fund planned spending on holidays/a new car/gifts to children/gifts to grandchildren',
+                    99 => 'Other'
+                ]
+            ],
+            3 => [
+                'name' => 'Ensure Income Needs Are Met',
+                'objectives' => [
+                    0 => 'You require an additional income of £XX per annum.',
+                    1 => 'You require an income of £XX per annum.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'To cover your basic living expenses.',
+                    1 => 'To cover your day-to-day income needs.',
+                    2 => 'To maintain your lifestyle (eating out/concerts/hobbies etc).',
+                    3 => 'To fund additional holidays.',
+                    4 => 'To assist children/grandchildren (e.g. university/school fees etc).',
+                    5 => 'To top up your income and give you the standard of living you require',
+                    99 => 'Other'
+                ]
+            ],
+            4 => [
+                'name' => 'Capital Growth',
+                'objectives' => [
+                    0 => 'You are looking for your capital to grow in value.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'So that you can pass on more assets to your children and/or grandchildren.',
+                    1 => 'So that you can cover any ad-hoc lump sum expenditure as and when you wish.',
+                    2 => 'So that you can retire earlier than planned.',
+                    3 => 'So that you can maintain your current lifestyle throughout your retirement.',
+                    4 => 'So as to improve the likelihood of your money not running out during retirement.',
+                    5 => 'As you are concerned about inflation eroding the value of your assets over time.',
+                    6 => 'So that it can maintain its purchasing power due to the eroding effects of inflation.',
+                    99 => 'Other'
+                ]
+            ],
+            5 => [
+                'name' => 'Simplify Approach',
+                'objectives' => [
+                    0 => 'You wish to ease the burden of the administration/management of your savings and investments.',
+                    1 => 'You wish to consolidate your savings/investments/pensions.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'To ensure that you have a clear, and easy to understand plan in place.',
+                    1 => 'So that it is easier for your spouse/partner to deal with the family finances in the event of your death.',
+                    2 => 'To give you more time to enjoy your retirement.',
+                    3 => 'To reduce the risks to which you are exposed',
+                    4 => 'To give you peace of mind.',
+                    99 => 'Other'
+                ]
+            ],
+            6 => [
+                'name' => 'Flexibility',
+                'objectives' => [
+                    0 => 'You wish for your financial strategy to be flexible.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'So that it is able to adapt to your changing needs/objectives in the run up to and during retirement.',
+                    99 => 'Other'
+                ]
+            ],
+            7 => [
+                'name' => 'Advice Service',
+                'objectives' => [
+                    0 => 'Investment Planning is a complex area. In light of this you feel that you require expert advice and guidance in order to.',
+                    1 => 'Retirement Planning is a complex area with many considerations. In light of this you feel that you require expert advice and guidance in order to.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'Reduce the risks to which you are exposed.',
+                    1 => 'Improve tax efficiency.',
+                    2 => 'Avoid costly and common mistakes.',
+                    3 => 'Make it easier to reach your financial goals.',
+                    4 => 'Simplify the administration of your finances.',
+                    5 => 'Navigate through the various options available to you',
+                    6 => 'Ensure that you are operating within and taking advantage of ever-changing legislation',
+                    7 => 'Give you peace of mind',
+                    99 => 'Other'
+                ]
+            ],
+            8 => [
+                'name' => 'Repayment of Liabilities',
+                'objectives' => [
+                    0 => 'A key objective for you is the immediate repayment of your outstanding liabilities.',
+                    1 => 'A key objective for you is the repayment of your outstanding liabilities within the next XX years.',
+                    2 => 'A key objective for you is the repayment of your outstanding liabilities by age XX.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'As you wish to be debt free as you enter retirement.',
+                    1 => 'To free up disposable income',
+                    2 => 'As no longer having debt will provide you with peace of mind.',
+                    99 => 'Other'
+                ]
+            ],
+            9 => [
+                'name' => 'Pension Planning',
+                'objectives' => [
+                    0 => 'You wish to increase your pension provision.',
+                    99 => 'Other'
+                ],
+                'what_for' => [
+                    0 => 'To reduce the amount of income tax that you pay.',
+                    1 => 'To build up your wealth more quickly.',
+                    2 => 'To make use of the Annual Allowance.',
+                    3 => 'To increase the funds available to you in retirement',
+                    4 => 'To benefit from tax relief',
+                    5 => 'To allow the prospect of earlier retirement.',
+                    6 => 'To ensure that you have sufficient funds to sustain your lifestyle in retirement.',
+                    7 => 'Allow you to pass assets on to your chosen beneficiaries in the event of your death.',
+                    8 => 'Assist in Inheritance Tax planning.',
+                    99 => 'Other'
+                ]
+            ],
+            99 => 'Other'
+        ],
+        'recom_objective_type' => [
+            0 => 'Secondary Objective',
+            1 => 'Primary Objective'
+        ],
+        'call_to_action_types' => [
+            0 => 'To efficiently reduce your over-exposure to XXX shares',
+            1 => 'To efficiently reduce your over-exposure to cash deposits',
+            2 => 'To avoid a strategy that suffers from inactive management (static asset allocation)',
+            3 => 'An advice-based service can assist you in meeting your financial goals',
+            4 => 'To improve the tax efficiency of your current plan.',
+            5 => 'The consolidation of numerous pension pots can benefit you.',
+            6 => 'The consolidation of numerous ISAs can benefit you.',
+            7 => 'To create a tax efficient withdrawal strategy.',
+            8 => 'To reduce the risks to which you are currently exposed.',
+            9 => 'We can reduce your current level of administration.',
+            10 => 'Diversification can help you reduce the risks to which you are exposed.',
+            11 => 'To meet your income objectives',
+            12 => 'To meet your growth objectives',
+            13 => 'To align your strategy to your risk profile',
+            14 => 'To counter the eroding effects of inflation over the medium to longer term',
+            99 => 'Other'
+    ],
     'relation_to_c2' => [
         0 => 'Partner'
     ],

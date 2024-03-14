@@ -1255,5 +1255,70 @@ return [
             ]
         ]
     ],
-
+    'strategyreportrecommendations' => [
+        1 => [
+            'name' => 'Strategy Report Recommendations',
+            'rules' => [
+                'report_version' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.report_version'))),
+                ],
+                'retirement_status' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.retirement_status'))),
+                ],
+                'objective_type' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.objective_type'))),
+                ],
+                'next_meeting_date' => 'sometimes|nullable|date',
+            ]
+        ],
+        2 => [
+            'name' => 'Objectives',
+            'rules' => [
+                'id' => 'sometimes|nullable|numeric',
+                'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'objective_type' => 'sometimes|nullable|numeric',
+                'type' => 'sometimes|nullable|numeric',
+                'objective' => 'sometimes|nullable|numeric',
+                'objective_custom' => 'sometimes|nullable|string',
+                'what_for' => 'sometimes|nullable|numeric',
+                'what_for_custom' => 'sometimes|nullable|string',
+                'objectives' => 'sometimes|nullable',
+                'objectives.*.id' => 'sometimes|nullable|numeric',
+                'objectives.*.strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'objectives.*.is_primary' => 'sometimes|nullable|numeric',
+                'objectives.*.type' => 'sometimes|nullable|numeric',
+                'objectives.*.objective' => 'sometimes|nullable|numeric',
+                'objectives.*.objective_custom' => 'sometimes|nullable|string',
+                'objectives.*.what_for' => 'sometimes|nullable|numeric',
+                'objectives.*.what_for_custom' => 'sometimes|nullable|string',
+            ],
+            'messages' => []
+        ],
+        3 => [
+            'name' => 'Call to Actions',
+            'rules' => [
+                'id' => 'sometimes|nullable|numeric',
+                'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'call_to_action' => 'sometimes|nullable|numeric',
+                'call_to_action_custom' => 'sometimes|nullable|string',
+                'actions' => 'sometimes|nullable',
+                'actions.*.id' => 'sometimes|nullable|numeric',
+                'actions.*.strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'actions.*.call_to_action' => 'sometimes|nullable|numeric',
+                'actions.*.call_to_action_custom' => 'sometimes|nullable|string'
+            ]
+        ]
+    ]
 ];

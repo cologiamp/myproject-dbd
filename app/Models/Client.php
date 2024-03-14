@@ -195,6 +195,11 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
+    public function strategy_report_recommendation():HasOne
+    {
+        return $this->hasOne(StrategyReportRecommendation::class);
+    }
+  
     public function investment_recommendation():HasOne
     {
         return $this->hasOne(InvestmentRecommendation::class);
