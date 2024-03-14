@@ -2013,6 +2013,7 @@ return [
             13 => 'To align your strategy to your risk profile',
             14 => 'To counter the eroding effects of inflation over the medium to longer term',
             99 => 'Other'
+        ]
     ],
     'relation_to_c2' => [
         0 => 'Partner'
