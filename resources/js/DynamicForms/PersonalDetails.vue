@@ -9,7 +9,6 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import {onBeforeMount, onMounted, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import DateComponent from "@/Components/DateComponent.vue";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -94,27 +93,6 @@ async function autosaveLocally(){
     }
 }
 
-const handleMonthYear = ({ instance, month, year },key) => {
-    let tmp = stepForm[key].date_of_birth.split('-');
-
-    if(Array.isArray(tmp) && tmp.length > 1)
-    {
-        stepForm[key].date_of_birth = (year) + '-' + (month + 1) + '-' + tmp[2];
-    }
-    autosaveLocally()
-}
-
-const handleDate = (date,key) => {
-    let tmp = stepForm[key].date_of_birth.split('-');
-
-    if(Array.isArray(tmp) && tmp.length > 1)
-    {
-        console.log(tmp[0] + '-' + tmp[1] + '-' + date.getDate());
-        stepForm[key].date_of_birth = tmp[0] + '-' + tmp[1] + '-' + date.getDate();
-    }
-    autosaveLocally()
-}
-
 </script>
 
 <template>
@@ -166,16 +144,7 @@ const handleDate = (date,key) => {
                     <div :class="'col-span-'+ (Object.keys(props.formData.model).length * 3)" class="mt-2 sm:mt-0 md:pr-2">
                         <label for="last_name" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Date of Birth </label>
                         <div class="flex shadow-sm  rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md date-wrapper">
-<!--                            <VueDatePicker text-input :enable-time-picker="false" @update:model-value="saveDate($event,key)" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="stepForm[key].date_of_birth" name="date_of_birth" id="date_of_birth"  placeholder="dd/mm/yyyy"/>-->
-<!--                            <VueDatePicker text-input :enable-time-picker="false"-->
-<!--                               @date-update="handleDate($event, key)"-->
-<!--                               @update-month-year="handleMonthYear($event,key)"-->
-<!--                               v-model="stepForm[key].date_of_birth"-->
-<!--                               class="aaron-datepicker ring-aaron-600"-->
-<!--                               dark utc format="dd/MM/yyyy"-->
-<!--                               name="date_of_birth" id="date_of_birth"-->
-<!--                               placeholder="dd/mm/yyyy"/>-->
-                            <DateComponent :name="'date_of_birth'" :stepForm="stepForm" :index="key"/>
+                            <VueDatePicker text-input :enable-time-picker="false" @update:model-value="saveDate($event,key)" class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy" :model-value="stepForm[key].date_of_birth" name="date_of_birth" id="date_of_birth"  placeholder="dd/mm/yyyy"/>
                         </div>
                     </div>
 

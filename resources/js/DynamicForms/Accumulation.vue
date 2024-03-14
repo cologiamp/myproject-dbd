@@ -3,6 +3,7 @@
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {useForm} from "laravel-precognition-vue-inertia";
+import VueDatePicker from "@vuepic/vue-datepicker";
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
