@@ -1,5 +1,6 @@
 <script setup>
 import {autoS, autosaveT} from "@/autosave.js";
+import {calculateRiskProfile} from "@/calculateRiskAssesment.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
 import {onMounted, watch} from "vue";
@@ -62,6 +63,10 @@ async function autosaveLocally(){
 function setRating(data) {
     JSON.stringify(data)
     autosaveLocally()
+}
+
+function submitAssessment() {
+    alert(calculateRiskProfile(stepForm));
 }
 
 onMounted(()=>{
@@ -225,8 +230,6 @@ onMounted(()=>{
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.long_term_volatility">{{ stepForm.errors.long_term_volatility }}</p>
                 </div>
-
-
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         If you didn’t require access to your invested capital for at least 10 years in the future, for how long would you be prepared to see your invested capital go down in value in consecutive years before you decided to take it out of the markets and cash it in?
@@ -268,6 +271,12 @@ onMounted(()=>{
                         </label>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.time_in_market">{{ stepForm.errors.time_in_market }}</p>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
+                    <button type="button" @click="submitAssessment()"
+                            class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Submit Assessment
+                    </button>
                 </div>
             </div>
         </div>

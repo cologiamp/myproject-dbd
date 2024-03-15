@@ -1,5 +1,6 @@
 <script setup>
 import {autoS, autosaveT} from "@/autosave.js";
+import {calculateKnE} from "@/calculateRiskAssesment.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
 import {onMounted, ref, watch} from "vue";
@@ -100,6 +101,8 @@ async function autosaveLocally(){
 function setRating(data) {
     JSON.stringify(data)
     autosaveLocally()
+
+    calculateKnE(data)
 }
 
 onMounted(()=>{

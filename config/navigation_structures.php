@@ -1300,13 +1300,15 @@ return [
                         'id',
                         'investment_length',
                         'standard_of_living',
-                        'emergency_funds'
+                        'emergency_funds',
+                        'capacity_for_loss_investment'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
                         'investment_length' => 'sometimes|nullable|integer',
                         'standard_of_living' => 'sometimes|nullable|integer',
-                        'emergency_funds' => 'sometimes|nullable|integer'
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_investment' => 'sometimes|nullable|integer'
                     ],
                     'messages' => [
                     ]
@@ -1367,13 +1369,15 @@ return [
                         'id',
                         'investment_length',
                         'standard_of_living',
-                        'emergency_funds'
+                        'emergency_funds',
+                        'capacity_for_loss_pension'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
                         'investment_length' => 'sometimes|nullable|integer',
                         'standard_of_living' => 'sometimes|nullable|integer',
-                        'emergency_funds' => 'sometimes|nullable|integer'
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_pension' => 'sometimes|nullable|integer'
                     ],
                     'messages' => [
                     ]

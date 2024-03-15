@@ -1,5 +1,6 @@
 <script setup>
 import {autoS, autosaveT} from "@/autosave.js";
+import {calculateCapacityForLoss} from "@/calculateRiskAssesment.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
 import {onMounted, ref, watch} from "vue";
@@ -24,7 +25,8 @@ const props = defineProps({
                     investment_length: null,
                     standard_of_living: null,
                     emergency_funds: null
-                }
+                },
+                risk_outcome_id: null
             },
             submit_method: 'post',
             submit_url: '/',
@@ -38,7 +40,8 @@ const stepForm = useForm({
     type: props.formData.model.capacity_data.type,
     investment_length: props.formData.model.capacity_data.investment_length,
     standard_of_living: props.formData.model.capacity_data.standard_of_living,
-    emergency_funds: props.formData.model.capacity_data.emergency_funds
+    emergency_funds: props.formData.model.capacity_data.emergency_funds,
+    capacity_for_loss_investment: null
 })
 
 async function autosaveLocally(){
@@ -48,6 +51,14 @@ async function autosaveLocally(){
     stepForm.investment_length = props.formData.model.capacity_data.investment_length;
     stepForm.standard_of_living = props.formData.model.capacity_data.standard_of_living;
     stepForm.emergency_funds = props.formData.model.capacity_data.emergency_funds;
+    stepForm.capacity_for_loss_investment = null;
+}
+
+function submitAssessment() {
+    let total = stepForm.investment_length + stepForm.standard_of_living + stepForm.emergency_funds;
+
+    calculateCapacityForLoss(total, stepForm.type, props.formData.model.risk_outcome_id);
+    // autosaveLocally();
 }
 
 onMounted(()=>{
@@ -194,10 +205,10 @@ onMounted(()=>{
                 </div>
                 <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.emergency_funds">{{ stepForm.errors.emergency_funds }}</p>
             </div>
-            <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
-                <button type="button"
-                    class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    Calculate
+            <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
+                <button type="button" @click="submitAssessment()"
+                    class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Submit Assessment
                 </button>
             </div>
         </div>

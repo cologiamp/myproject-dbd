@@ -46,7 +46,6 @@ Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectives
 Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
 
-
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
     Route::delete('/incomes/{income}', [IncomeController::class,'delete']);
@@ -62,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/pr-contributions/{contribution}', [PRContributionController::class,'delete']);
     Route::delete('/pr-allowances/{allowance}', [PRAllowanceController::class,'delete']);
     Route::delete('/pr-items/{item}', [PRItemsController::class,'delete']);
+    Route::put('/risk-outcome/{outcome}/assess-outcome',[RiskAssessmentController::class,'assessOutcome']);
 });
 
 

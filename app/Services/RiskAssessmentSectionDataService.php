@@ -7,6 +7,7 @@ use App\Repositories\CapacityForLossRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\KnowledgeRepository;
 use App\Repositories\RiskProfileRepository;
+use App\Repositories\RiskOutcomeRepository;
 use Illuminate\Support\Facades\Validator;
 
 class RiskAssessmentSectionDataService
@@ -17,12 +18,14 @@ class RiskAssessmentSectionDataService
         ClientRepository $clientRepository,
         KnowledgeRepository $knowledgeRepository,
         CapacityForLossRepository $capacityForLossRepository,
-        RiskProfileRepository $riskProfileRepository
+        RiskProfileRepository $riskProfileRepository,
+        RiskOutcomeRepository $riskOutcomeRepository
 ) {
         $this->clientRepository = $clientRepository;
         $this->knowledgeRepository = $knowledgeRepository;
         $this->capacityForLossRepository = $capacityForLossRepository;
         $this->riskProfileRepository = $riskProfileRepository;
+        $this->riskOutcomeRepository = $riskOutcomeRepository;
     }
     //get the data for a single section of a risk from a single client
     public static function get($client, $step, $section): array
@@ -131,5 +134,10 @@ class RiskAssessmentSectionDataService
 
         $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
         $this->riskProfileRepository->createOrUpdate($validatedData);
+    }
+
+    public function updateRiskOutcome($validated)
+    {
+        $this->riskOutcomeRepository->update($validated);
     }
 }

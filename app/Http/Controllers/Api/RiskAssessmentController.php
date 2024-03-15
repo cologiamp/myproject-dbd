@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Client;
+use App\Models\RiskOutcome;
 use App\Repositories\ClientRepository;
 use App\Services\RiskAssessmentSectionDataService;
 use Exception;
@@ -49,5 +50,32 @@ class RiskAssessmentController extends Controller
 
         //change later
         return json_encode(['model' =>  $rasds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
+    }
+
+    /**
+     * @param Request $request
+     * @param RiskOutcome $outcome
+     * @return RedirectResponse
+     */
+    public function assessOutcome(Request $request, RiskOutcome $outcome): string
+    {
+        $validated = $request->validate([
+            'score' => 'nullable|integer',
+            'type' => 'required|string',
+            'section' => 'required|string'
+        ]);
+
+        $fieldName = $validated['section'] . '_' . $validated['type'];
+        ray($fieldName);
+
+        try {
+            $outcome->update([$fieldName => $validated['score']]);
+        } catch (Exception $e) {
+            Log::warning($e);
+        }
+
+        return response()->json([
+            'message' => 'Risk outcome updated successfully.'
+        ]);
     }
 }

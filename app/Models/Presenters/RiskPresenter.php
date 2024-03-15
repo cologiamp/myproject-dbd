@@ -51,7 +51,8 @@ class RiskPresenter extends BasePresenter
                         'standard_of_living' => $capacity?->standard_of_living,
                         'emergency_funds' => $capacity?->emergency_funds,
                     ];
-                }))->collapse()
+                }))->collapse(),
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id
             ],
             '2.1' => [
                 'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($knowledge){
@@ -87,7 +88,8 @@ class RiskPresenter extends BasePresenter
                         'standard_of_living' => $capacity?->standard_of_living,
                         'emergency_funds' => $capacity?->emergency_funds,
                     ];
-                }))->collapse()
+                }))->collapse(),
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id
             ],
             '3.1' => [
                 'id' => $this->model->client->risk_profile?->id,
