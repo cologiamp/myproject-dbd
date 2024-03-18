@@ -47,13 +47,12 @@ class InvestmentRecommendationController extends Controller
         $step = $request->step ?? 1;
         $tabs = $this->investmentRecommendationRepository->loadInvestmentRecommendationTabs($step,$section);
 
-        return Inertia::render('InvestmentRecommendation', [
-            'title' => 'Investment Recommendation',
+        return Inertia::render('Recommendations', [
+            'title' => 'Recommendations',
             'breadcrumbs' => $this->investmentRecommendationRepository->loadBreadcrumbs(),
             'step' =>  $step,
             'section' => $section,
-            'tabs' => $tabs,
-//            'progress' => $this->investmentRecommendationRepository->calculateInvestmentRecommendationElementProgress($step)
+            'tabs' => $tabs
         ]);
     }
 }

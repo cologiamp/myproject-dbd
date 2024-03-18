@@ -25,9 +25,9 @@ Breadcrumbs::for('/client/{client:io_id}/strategy-report', function (BreadcrumbT
     $trail->push('Strategy Report', route('strategy-report'));
 });
 
-//Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
-Breadcrumbs::for('/client/{client:io_id}/investment-recommendation', function (BreadcrumbTrail $trail) {
-    $trail->push('Investment Recommendation', route('investmentrecommendation'));
+//Route::get('/recommendations',[InvestmentRecommendationController::class,'show'])->name('recommendations');
+Breadcrumbs::for('/client/{client:io_id}/recommendations', function (BreadcrumbTrail $trail) {
+    $trail->push('Investment Recommendation', route('recommendations'));
 });
 
 //Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
@@ -74,11 +74,11 @@ Breadcrumbs::for('client.strategy', function (BreadcrumbTrail $trail, Client $cl
     $trail->push('Strategy Report');
 });
 
-// Dashboard > Clients > "Client Name" > Investment Recommendation
-Breadcrumbs::for('client.investmentrecommendation', function (BreadcrumbTrail $trail, Client $client): void {
+// Dashboard > Clients > "Client Name" > Recommendations
+Breadcrumbs::for('client.recommendations', function (BreadcrumbTrail $trail, Client $client): void {
     $trail->parent('clients');
     $trail->push("{$client['name']}", route('client.dashboard', $client));
-    $trail->push('Investment Recommendation');
+    $trail->push('Recommendations');
 });
 
 // Dashboard > Clients > "Client Name" > Example
