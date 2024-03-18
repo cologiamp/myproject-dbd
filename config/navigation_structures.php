@@ -619,9 +619,17 @@ return [
                             'db_pensions.*.prospective_pension_max' => 'sometimes|nullable|string',
                             'db_pensions.*.prospective_pcls_standard' => 'sometimes|nullable|string',
                             'db_pensions.*.prospective_pcls_max' => 'sometimes|nullable|string',
+                            'db_pensions.*.chosen' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.chosen'))))
+                            ],
+                            'db_pensions.*.notes' => 'sometimes|nullable|string',
                             'db_pensions.*.cetv' => 'sometimes|nullable|string',
                             'db_pensions.*.cetv_ends_at' => 'sometimes|nullable|date',
-                        'dc_pensions' => 'sometimes|array',
+                            'dc_pensions' => 'sometimes|array',
                             'dc_pensions.*.id' => 'sometimes|nullable|integer',
                             'dc_pensions.*.owner' => 'sometimes|nullable',
                             'dc_pensions.*.type' => [

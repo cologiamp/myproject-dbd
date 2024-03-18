@@ -64,8 +64,8 @@ Route::middleware([
        Route::get('/relationships/select',ClientRelationshipController::class)->name('relationships');
        Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
-        Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
-        Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
+       Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
+       Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
 
        Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
 
@@ -75,7 +75,6 @@ Route::middleware([
         //"API" style requests
         Route::post('/sync',SyncClientController::class)->name('sync');
         Route::post('/commit-to-io',DataIntoIoController::class)->name('commit-to-io');
-
     });
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
