@@ -90,16 +90,14 @@ class StrategyReportDataService
                return [
                    $items->first()->is_primary ? 'primary_objectives' : 'secondary_objectives' => $items->map(function ($item){
                        return  [
-                           'icon' => '',
-                           'title' => '',
-                           'description' => ''
+                           'icon' => $item->icon,
+                           'type' => $item->formatted_type,
+                           'title' => $item->formatted_objective,
+                           'description' => $item->formatted_what_for,
                        ];
-                   })
-
-
-//
+                   })->toArray()
                ];
-           }),
+           })->toArray(),
             'your_finances' => [
                 'total_assets' => '',
                 'property_and_possessions' => [

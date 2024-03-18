@@ -1978,6 +1978,7 @@ return [
         'topic' => [
             0 => [
                 'name' => 'Legacy Planning',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/legacy_planning.svg',
                 'objectives' => [
                     0 => 'You wish to ensure that your assets are directed in accordance with your wishes in the event of your death.',
                     1 => 'You wish to ensure that your chosen beneficiary(ies) benefit in the event of your death.',
@@ -1992,6 +1993,7 @@ return [
             ],
             1 => [
                 'name' => 'Tax Efficiency',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/tax_efficiency.svg',
                 'objectives' => [
                     0 => 'You wish to reduce the amount of tax you pay in relation to your existing savings/investments.',
                     1 => 'You wish to reduce the amount of income tax that you are paying.',
@@ -2013,6 +2015,7 @@ return [
             ],
             2 => [
                 'name' => 'Short-Term Cash Needs',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/short-term-cash-needs.svg',
                 'objectives' => [
                     0 => 'It is important that you retain access to a proportion of your capital.',
                     1 => 'You wish to retain £XX',
@@ -2028,6 +2031,7 @@ return [
             ],
             3 => [
                 'name' => 'Ensure Income Needs Are Met',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/ensure_income_needs_are_met.svg',
                 'objectives' => [
                     0 => 'You require an additional income of £XX per annum.',
                     1 => 'You require an income of £XX per annum.',
@@ -2045,6 +2049,7 @@ return [
             ],
             4 => [
                 'name' => 'Capital Growth',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/capital_growth.svg',
                 'objectives' => [
                     0 => 'You are looking for your capital to grow in value.',
                     99 => 'Other'
@@ -2062,6 +2067,7 @@ return [
             ],
             5 => [
                 'name' => 'Simplify Approach',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/simplify_approach.svg',
                 'objectives' => [
                     0 => 'You wish to ease the burden of the administration/management of your savings and investments.',
                     1 => 'You wish to consolidate your savings/investments/pensions.',
@@ -2078,6 +2084,7 @@ return [
             ],
             6 => [
                 'name' => 'Flexibility',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/flexibility.svg',
                 'objectives' => [
                     0 => 'You wish for your financial strategy to be flexible.',
                     99 => 'Other'
@@ -2089,6 +2096,7 @@ return [
             ],
             7 => [
                 'name' => 'Advice Service',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/advice_service.svg',
                 'objectives' => [
                     0 => 'Investment Planning is a complex area. In light of this you feel that you require expert advice and guidance in order to.',
                     1 => 'Retirement Planning is a complex area with many considerations. In light of this you feel that you require expert advice and guidance in order to.',
@@ -2108,6 +2116,7 @@ return [
             ],
             8 => [
                 'name' => 'Repayment of Liabilities',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/repayment_of_liabilities.svg',
                 'objectives' => [
                     0 => 'A key objective for you is the immediate repayment of your outstanding liabilities.',
                     1 => 'A key objective for you is the repayment of your outstanding liabilities within the next XX years.',
@@ -2123,6 +2132,7 @@ return [
             ],
             9 => [
                 'name' => 'Pension Planning',
+                'icon' => '/adviser-hub/strategy-report/objective-icons/pension_planning.svg',
                 'objectives' => [
                     0 => 'You wish to increase your pension provision.',
                     99 => 'Other'
