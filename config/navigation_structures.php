@@ -1413,6 +1413,44 @@ return [
                     ]
                 ]
             ]
+        ],
+        4 => [
+            'name' => 'Summary',
+            'sections' => [
+                1 => [
+                    'name' => 'Summary',
+                    'fields' => [
+                        'using_calculated_risk_profile_investment',
+                        'using_calculated_risk_profile_pension',
+                        'adviser_recommendation_investment',
+                        'adviser_recommendation_pension',
+                        'why_investment',
+                        'why_pension'
+                    ],
+                    'rules' => [
+                        'using_calculated_risk_profile_investment' => 'sometimes|nullable|boolean',
+                        'using_calculated_risk_profile_pension' => 'sometimes|nullable|boolean',
+                        'adviser_recommendation_investment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'adviser_recommendation_pension' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'why_investment' => 'sometimes|nullable|string',
+                        'why_pension' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ]
+            ]
         ]
     ]
 ];

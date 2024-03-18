@@ -3,10 +3,9 @@ import {autoS, autosaveT} from "@/autosave.js";
 import {calculateCapacityForLoss} from "@/calculateRiskAssesment.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import {ArrowRightIcon} from "@heroicons/vue/24/solid/index.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -58,11 +57,7 @@ function submitAssessment() {
     let total = stepForm.investment_length + stepForm.standard_of_living + stepForm.emergency_funds;
 
     calculateCapacityForLoss(total, stepForm.type, props.formData.model.risk_outcome_id);
-    // autosaveLocally();
 }
-
-onMounted(()=>{
-})
 
 </script>
 

@@ -127,7 +127,6 @@ class KnowledgeRepository extends BaseRepository
 
     public function createOrUpdate(mixed $knowledge):void
     {
-        ray($knowledge)->green();
         if(!is_array($knowledge) && $knowledge::class == Request::class)
         {
             $knowledge = $knowledge->safe();

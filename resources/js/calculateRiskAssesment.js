@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 const CAPACITY_LOW = 0;
 const CAPACITY_MEDIUM = 1;
 const CAPACITY_HIGH = 2;
@@ -15,6 +17,26 @@ function inRange(x, min, max) {
     return x >= min && x <= max;
 }
 
+function saveSectionScore(id, score, type, section) {
+    axios.put(`/api/risk-outcome/${ id }/assess-outcome`, {
+        score: score,
+        type: type,
+        section: section
+    }).then((response) => {
+        Swal.fire({
+            title: 'Done',
+            text: 'Assessment submitted',
+            icon: 'success'
+        });
+    }).catch((error) => {
+        Swal.fire({
+            title: 'Error',
+            text: error,
+            icon: 'error'
+        });
+    });
+}
+
 export function calculateCapacityForLoss(total, type, id) {
     let riskType = type === 0 ? 'investment' : 'pension';
     let capacityScore = CAPACITY_LOW
@@ -30,18 +52,11 @@ export function calculateCapacityForLoss(total, type, id) {
         capacityScore = CAPACITY_HIGH;
     }
 
-    axios.put(`/api/risk-outcome/${ id }/assess-outcome`, {
-        score: capacityScore,
-        type: riskType,
-        section: 'capacity_for_loss'
-    }).then((response) => {
-        console.log(response);
-    }).catch((error) => {
-        console.log(error);
-    });
+    saveSectionScore(id, capacityScore, riskType, 'capacity_for_loss');
 }
 
-export function calculateKnE(equities) {
+export function calculateKnE(equities, type, id) {
+    let riskType = type === 0 ? 'investment' : 'pension';
     let sum = 0;
     Object.entries(equities).forEach(equity => {
         const [key, item] = equity;
@@ -57,10 +72,24 @@ export function calculateKnE(equities) {
         kneScore = KNE_GOOD;
     }
 
-    alert(kneScore)
+    saveSectionScore(id, kneScore, riskType, 'knowledge_and_experience');
 }
 
-export function calculateRiskProfile(stepForm) {
+export function calculateRiskProfile(stepForm, id) {
+    let riskProfileScore = getRiskProfileScore(stepForm);
+
+    if (riskProfileScore === undefined) {
+        Swal.fire({
+            title: "Assessment conflict",
+            text: "A conflict has been detected during assessment please try again.",
+            icon: "warning"
+        });
+    } else {
+        saveSectionScore(id, riskProfileScore, 'risk_profile', 'risk_profile');
+    }
+}
+
+function getRiskProfileScore(stepForm) {
     let cautious = 0;
     let balanced = 0;
     let adventurous = 0;

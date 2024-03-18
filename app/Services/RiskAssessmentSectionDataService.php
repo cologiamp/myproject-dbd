@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Client;
+use App\Models\RiskOutcome;
 use App\Repositories\CapacityForLossRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\KnowledgeRepository;
@@ -136,8 +137,66 @@ class RiskAssessmentSectionDataService
         $this->riskProfileRepository->createOrUpdate($validatedData);
     }
 
-    public function updateRiskOutcome($validated)
+    private function _41(array $validatedData): void
     {
-        $this->riskOutcomeRepository->update($validated);
+        // define any explicit mutators that are not handled
+        if (array_key_exists('using_calculated_risk_profile_investment', $validatedData) && $validatedData['using_calculated_risk_profile_investment']) {
+            $validatedData['adviser_recommendation_investment'] = null;
+            $validatedData['why_investment'] = null;
+        }
+
+        if (array_key_exists('using_calculated_risk_profile_pension', $validatedData) && $validatedData['using_calculated_risk_profile_pension']) {
+            $validatedData['adviser_recommendation_pension'] = null;
+            $validatedData['why_pension'] = null;
+        }
+
+        $client = $this->clientRepository->getClient();
+        $this->riskOutcomeRepository->setClient($client);
+        $this->riskOutcomeRepository->setRiskOutcome(RiskOutcome::where('id', $client->risk_outcome->id)->first());
+
+        $this->riskOutcomeRepository->updateFromValidated($validatedData);
+    }
+
+    public function assessMatrixResult(RiskOutcome $outcome): void
+    {
+        $investmentAssessmentResult = $this->getMatrixAssessmentResult('investment', $outcome);
+        $pensionAssessmentResult = $this->getMatrixAssessmentResult('pension', $outcome);
+
+        $this->riskOutcomeRepository->setRiskOutcome($outcome);
+        $this->riskOutcomeRepository->updateFromValidated([
+            'assessment_result_investment' => $investmentAssessmentResult,
+            'assessment_result_pension' => $pensionAssessmentResult
+        ]);
+    }
+
+    private function getMatrixAssessmentResult(string $type, RiskOutcome $outcome): int
+    {
+        return match (true) {
+            $outcome['attitude_to_risk'] == 3 && $this->checkCapacityForLoss($type, $outcome, 2) && $this->checkKnE($type, $outcome, [0,1,2]) => config('enums.risk_assessment.assessment_result')['ADVENTUROUS'],
+            $outcome['attitude_to_risk'] == 2 && $this->checkCapacityForLoss($type, $outcome, 2) && $this->checkKnE($type, $outcome, [0,1,2]) => config('enums.risk_assessment.assessment_result')['BALANCED'],
+            $outcome['attitude_to_risk'] == 1 && $this->checkCapacityForLoss($type, $outcome, 2) && $this->checkKnE($type, $outcome, [0,1,2]) => config('enums.risk_assessment.assessment_result')['CAUTIOUS'],
+            $outcome['attitude_to_risk'] == 3 && $this->checkCapacityForLoss($type, $outcome, 1) && $this->checkKnE($type, $outcome, [1,2]) => config('enums.risk_assessment.assessment_result')['ADVENTUROUS'],
+            $outcome['attitude_to_risk'] == 3 && $this->checkCapacityForLoss($type, $outcome, 1) && $this->checkKnE($type, $outcome, [0]) => config('enums.risk_assessment.assessment_result')['BALANCED'],
+            $outcome['attitude_to_risk'] == 2 && $this->checkCapacityForLoss($type, $outcome, 1) && $this->checkKnE($type, $outcome, [1,2]) => config('enums.risk_assessment.assessment_result')['BALANCED'],
+            $outcome['attitude_to_risk'] == 2 && $this->checkCapacityForLoss($type, $outcome, 1) && $this->checkKnE($type, $outcome, [0]) => config('enums.risk_assessment.assessment_result')['CAUTIOUS'],
+            $outcome['attitude_to_risk'] == 1 && $this->checkCapacityForLoss($type, $outcome, 1) && $this->checkKnE($type, $outcome, [1,2]) => config('enums.risk_assessment.assessment_result')['CAUTIOUS'],
+            $outcome['attitude_to_risk'] == 1 && $this->checkCapacityForLoss($type, $outcome, 1) && $this->checkKnE($type, $outcome, [0]) => config('enums.risk_assessment.assessment_result')['NOT_SUITABLE'],
+            $outcome['attitude_to_risk'] == 3 && $this->checkCapacityForLoss($type, $outcome, 0) && $this->checkKnE($type, $outcome, [1,2]) => config('enums.risk_assessment.assessment_result')['BALANCED'],
+            $outcome['attitude_to_risk'] == 3 && $this->checkCapacityForLoss($type, $outcome, 0) && $this->checkKnE($type, $outcome, [0]) => config('enums.risk_assessment.assessment_result')['CAUTIOUS'],
+            $outcome['attitude_to_risk'] == 2 && $this->checkCapacityForLoss($type, $outcome, 0) && $this->checkKnE($type, $outcome, [1,2]) => config('enums.risk_assessment.assessment_result')['CAUTIOUS'],
+            $outcome['attitude_to_risk'] == 2 && $this->checkCapacityForLoss($type, $outcome, 0) && $this->checkKnE($type, $outcome, [0]) => config('enums.risk_assessment.assessment_result')['NOT_SUITABLE'],
+            $outcome['attitude_to_risk'] == 1 && $this->checkCapacityForLoss($type, $outcome, 0) && $this->checkKnE($type, $outcome, [0,1,2]) => config('enums.risk_assessment.assessment_result')['NOT_SUITABLE'],
+            default => config('enums.risk_assessment.assessment_result')['NOT_SUITABLE']
+        };
+    }
+
+    private function checkCapacityForLoss(string $type, RiskOutcome $outcome, int $score): bool
+    {
+        return $outcome['capacity_for_loss_' . $type] == $score;
+    }
+
+    private function checkKnE(string $type, RiskOutcome $outcome, array $range): bool
+    {
+        return in_array($outcome['knowledge_and_experience_' . $type], $range);
     }
 }

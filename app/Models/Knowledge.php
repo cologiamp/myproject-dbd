@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Knowledge extends Model
 {
     protected $guarded = [];
+    protected $table = 'knowledge';
+
     public function client():BelongsTo
     {
         return $this->belongsTo(Client::class);

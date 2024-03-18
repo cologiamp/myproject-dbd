@@ -3,7 +3,7 @@ import {autoS, autosaveT} from "@/autosave.js";
 import {calculateKnE} from "@/calculateRiskAssesment.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
-import {onMounted, ref, watch} from "vue";
+import {watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import ExperienceRatingTable from "@/Components/ExperienceRatingTable.vue";
@@ -44,7 +44,8 @@ const props = defineProps({
                     experience_of_income_drawdown: null,
                     experience_of_phased_retirement: null,
                     spoken_to_pensionwise: null
-                }
+                },
+                risk_outcome_id: null
             },
             submit_method: 'post',
             submit_url: '/',
@@ -102,11 +103,11 @@ function setRating(data) {
     JSON.stringify(data)
     autosaveLocally()
 
-    calculateKnE(data)
 }
 
-onMounted(()=>{
-})
+function submitAssessment() {
+    calculateKnE(stepForm.experience_buying_equities, stepForm.type, props.formData.model.risk_outcome_id);
+}
 
 </script>
 
@@ -527,6 +528,12 @@ onMounted(()=>{
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.spoken_to_pensionwise">{{ stepForm.errors.spoken_to_pensionwise }}</p>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
+                    <button type="button" @click="submitAssessment()"
+                            class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Submit Assessment
+                    </button>
                 </div>
             </div>
         </div>

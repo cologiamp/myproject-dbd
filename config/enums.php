@@ -1997,6 +1997,18 @@ return [
         'type' => [
             'INVESTMENT_TYPE' => 0,
             'PENSION_TYPE' => 1
+        ],
+        'assessment_result' => [
+            'NOT_SUITABLE' => 0,
+            'CAUTIOUS' => 1,
+            'BALANCED' => 2,
+            'ADVENTUROUS' => 3
+        ],
+        'assessment_result_public' => [
+            0 => 'Not suitable',
+            1 => 'Cautious',
+            2 => 'Balanced',
+            3 => 'Adventurous'
         ]
     ]
 ];

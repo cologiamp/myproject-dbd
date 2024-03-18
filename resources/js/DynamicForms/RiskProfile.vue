@@ -28,7 +28,8 @@ const props = defineProps({
                 medium_term_volatility: null,
                 volatility_behaviour: null,
                 long_term_volatility: null,
-                time_in_market: null
+                time_in_market: null,
+                risk_outcome_id: null
             },
             submit_method: 'post',
             submit_url: '/',
@@ -66,7 +67,7 @@ function setRating(data) {
 }
 
 function submitAssessment() {
-    alert(calculateRiskProfile(stepForm));
+    calculateRiskProfile(stepForm, props.formData.model.risk_outcome_id)
 }
 
 onMounted(()=>{

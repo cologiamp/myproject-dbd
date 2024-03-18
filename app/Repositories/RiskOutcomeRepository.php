@@ -3,10 +3,10 @@ namespace App\Repositories;
 
 use App\Models\RiskOutcome;
 use App\Models\Client;
-use App\Models\RiskProfile;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\ClientNotFoundException;
 
 class RiskOutcomeRepository extends BaseRepository
 {
@@ -24,7 +24,15 @@ class RiskOutcomeRepository extends BaseRepository
         $this->client = $client;
     }
 
-    public function setCapacity(RiskOutcome $riskOutcome): void
+    public function getClient() : Client
+    {
+        if($this->client){
+            return $this->client;
+        }
+        throw new ClientNotFoundException();
+    }
+
+    public function setRiskOutcome(RiskOutcome $riskOutcome): void
     {
         $this->riskOutcome = $riskOutcome;
     }

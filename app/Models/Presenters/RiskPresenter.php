@@ -5,7 +5,6 @@ namespace App\Models\Presenters;
 use App\Concerns\FormatsCurrency;
 use App\Models\CapacityForLoss;
 use App\Models\Knowledge;
-use App\Models\RiskProfile;
 
 class RiskPresenter extends BasePresenter
 {
@@ -40,7 +39,8 @@ class RiskPresenter extends BasePresenter
                         'experience_buying_insurance' => $knowledge?->experience_buying_insurance,
                         'experience_details' => $knowledge?->experience_details
                     ];
-                }))->collapse()
+                }))->collapse(),
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id
             ],
             '1.2' => [
                 'capacity_data' => collect(CapacityForLoss::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['INVESTMENT_TYPE'])->get()->map(function ($capacity){
@@ -77,7 +77,8 @@ class RiskPresenter extends BasePresenter
                         'experience_of_phased_retirement' => $knowledge?->experience_of_phased_retirement, // pension type
                         'spoken_to_pensionwise' => (bool) $knowledge?->spoken_to_pensionwise // pension type
                     ];
-                }))->collapse()
+                }))->collapse(),
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id
             ],
             '2.2' => [
                 'capacity_data' => collect(CapacityForLoss::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($capacity){
@@ -99,7 +100,18 @@ class RiskPresenter extends BasePresenter
                 'medium_term_volatility' => $this->model->client->risk_profile?->medium_term_volatility,
                 'volatility_behaviour' => $this->model->client->risk_profile?->volatility_behaviour,
                 'long_term_volatility' => $this->model->client->risk_profile?->long_term_volatility,
-                'time_in_market' => $this->model->client->risk_profile?->time_in_market
+                'time_in_market' => $this->model->client->risk_profile?->time_in_market,
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id
+            ],
+            '4.1' => [
+                'assessment_result_investment' => config('enums.risk_assessment.assessment_result_public')[$this->model->client->risk_outcome?->assessment_result_investment],
+                'assessment_result_pension' => config('enums.risk_assessment.assessment_result_public')[$this->model->client->risk_outcome?->assessment_result_pension],
+                'using_calculated_risk_profile_investment' => (bool) $this->model->client->risk_outcome?->using_calculated_risk_profile_investment,
+                'using_calculated_risk_profile_pension' => (bool) $this->model->client->risk_outcome?->using_calculated_risk_profile_pension,
+                'adviser_recommendation_investment' => $this->model->client->risk_outcome?->adviser_recommendation_investment,
+                'adviser_recommendation_pension' => $this->model->client->risk_outcome?->adviser_recommendation_pension,
+                'why_investment' => $this->model->client->risk_outcome?->why_investment,
+                'why_pension' => $this->model->client->risk_outcome?->why_pension
             ],
             default => [
             ]

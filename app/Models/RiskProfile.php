@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\BaseModels\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Presenters\RiskPresenter;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RiskProfile extends Model
 {
@@ -53,6 +53,9 @@ class RiskProfile extends Model
             ],
             '3.1' => [
                 'risk_assessment_volatility' => config('enums.risk_assessment.short_term_volatility')
+            ],
+            '4.1' => [
+                'assessment_result_type' => config('enums.risk_assessment.assessment_result_public')
             ],
             default => [
 
