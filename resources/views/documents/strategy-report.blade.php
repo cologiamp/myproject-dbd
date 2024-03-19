@@ -1043,7 +1043,7 @@
         <div class="w-1/5 pt-3 pl-8">
             <div class="total-assets">
                 <p class="total-assets-title">Total assets</p>
-                <p class="total-assets-value mt-3 -mr-1 font-bold">£944,901</p>
+                <p class="total-assets-value mt-3 -mr-1 font-bold">£{{ $data['your_finances']['total_assets'] }}</p>
             </div>
         </div>
     </div>
@@ -1060,22 +1060,22 @@
         <div class="w-1/4">
             <div class="finances-box pp-box mb-4">
                 <p class="finance-box-title">Property & Possessions</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['total'] }}</p>
             </div>
 
             <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">Main Residence (Equity Value)</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['property_and_possessions']['breakdown'][0]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['breakdown'][0]['value'] }}</p>
             </div>
 
             <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">Other Property (Equity Value)</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['property_and_possessions']['breakdown'][1]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['breakdown'][1]['value'] }}</p>
             </div>
 
             <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">Possessions</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['property_and_possessions']['breakdown'][2]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['breakdown'][2]['value'] }}</p>
             </div>
 
 
@@ -1086,7 +1086,7 @@
             <div class="flex mb-4 ml-44">
                 <div class="finances-box liquid-assets-box">
                     <p class="finance-box-title">Liquid Assets</p>
-                    <p class="finance-box-content">£339,901</p>
+                    <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['total'] }}</p>
                 </div>
             </div>
 
@@ -1107,13 +1107,13 @@
             <div class="flex">
                 <div class="w-1/3 -ml-8 mr-12">
                     <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Cash/Savings Accounts</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][0]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][0]['value'] }}</p>
                     </div>
 
                     <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Fixed Term Cash Deposits</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][1]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][1]['value'] }}</p>
                     </div>
 
                     <div class="finances-box liquid-assets-box-child mb-3">
@@ -1155,13 +1155,13 @@
                 </div>
                 <div class="w-1/3">
                     <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">Cash ISA</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][0]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][0]['value'] }}</p>
                     </div>
 
                     <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">Stocks & Shares ISA</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][1]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][1]['value'] }}</p>
                     </div>
 
                     <div class="finances-box tax-box-child mb-3">
@@ -1176,17 +1176,17 @@
         <div class="w-1/4 ml-32">
             <div class="finances-box pensions-box mb-4">
                 <p class="finance-box-title">Pensions</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['total']  }}</p>
             </div>
 
             <div class="finances-box pensions-box-child mb-3">
-                <p class="finance-box-title">Personal Pension Plan</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][0]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][0]['value'] }}</p>
             </div>
 
             <div class="finances-box pensions-box-child mb-3">
-                <p class="finance-box-title">Occupational Defined Contributio</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][1]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][1]['value'] }}</p>
             </div>
 
         </div>
@@ -1393,7 +1393,7 @@
                         </div>
                         <div class="w-2/3">
                             <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                To avoid a strategy that suffers from static asset allocation
+                                {{ $data['summary']['calls_to_action'][0]['title'] }}
                             </p>
                         </div>
                     </div>
@@ -1406,7 +1406,7 @@
                         </div>
                         <div class="w-2/3">
                             <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                An advice-based service can reduce the level of administration
+                                {{ $data['summary']['calls_to_action'][0]['title'] }}
                             </p>
                         </div>
                     </div>

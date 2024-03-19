@@ -99,34 +99,34 @@ class StrategyReportDataService
                ];
            })->toArray(),
             'your_finances' => [
-                'total_assets' => '',
+                'total_assets' => '944,901',
                 'property_and_possessions' => [
-                    'total' => '',
+                    'total' => '222,222',
                     'breakdown' => [
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Main Residence (Equity Value)',
+                            'value' => 'XXX,XXX'
                         ],
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Other Property (Equity Value)',
+                            'value' => 'XXX,XXX'
                         ],
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Possessions',
+                            'value' => 'XXX,XXX'
                         ]
                     ]
                 ],
                 'liquid_assets' => [
-                    'total' => '',
+                    'total' => '339,901',
                     'taxable' => [
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Cash/Savings Accounts',
+                            'value' => 'XXX,XXX'
                         ],
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Fixed Term Cash Deposits',
+                            'value' => 'XXX,XXX'
                         ],
                         [
                             'title' => '',
@@ -135,12 +135,12 @@ class StrategyReportDataService
                     ],
                     'tax_free' => [
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Cash ISA',
+                            'value' => 'XXX,XXX'
                         ],
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Stocks & Shares ISA',
+                            'value' => 'XXX,XXX'
                         ],
                         [
                             'title' => '',
@@ -149,14 +149,14 @@ class StrategyReportDataService
                     ]
                 ],
                 'pensions' => [
-                    'total' => '',
+                    'total' => 'XXX,XXx',
                     'breakdown' => [
                         [
-                            'title' => '',
-                            'value' => ''
+                            'title' => 'Personal Pension Plan',
+                            'value' => 'XXX,XXX'
                         ],
                         [
-                            'title' => '',
+                            'title' => 'Occupational Defined Contribution',
                             'value' => ''
                         ],
                         [
@@ -167,7 +167,12 @@ class StrategyReportDataService
                 ],
             ],
             'summary' => [
-                'calls_to_action' => $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){
+                'calls_to_action' =>
+                    [
+                        ['title' => 'To avoid a strategy that suffers from static asset allocation'],
+                        ['title' => 'An advice-based service can reduce the level of administration'],
+                    ],
+                    $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){
                     return [
                         'title' => $item->formatted_cta
                     ];
