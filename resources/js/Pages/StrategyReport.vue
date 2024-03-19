@@ -32,7 +32,8 @@ function generateReport(){
         Swal.fire({
             title: 'Error: Something failed. Please try again later.',
             text: error.response.data.message,
-      });
+        });
+    });
  }
 
 </script>

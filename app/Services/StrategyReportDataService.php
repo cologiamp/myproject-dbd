@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Concerns\InterractsWithDataHub;
+use App\Models\EmploymentDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -26,6 +27,31 @@ class StrategyReportDataService
             $name .= $client->preferred_name . ' ' . $client->last_name;
         }
         $adviser = $this->getAdviser($client);
+
+        $bld = null;
+        if($client_two && $client->strategy_report_recommendation->objective_type != null)
+        {
+            $ed1 = EmploymentDetail::where('client_id', $client->id)->first();
+            if($client->strategy_report->objective_type == array_flip(config('enums.strategy_report_recommendations.objective_type'))['Accumulating Wealth'])
+            {
+                $bld = 'To build capital for a better financial future';
+            }
+            elseif($ed1->employment_status === array_flip(config('employment.employment_status'))['Retired'])
+            {
+                $bld = 'In ' . Carbon::parse($ed1->start_at)->format('Y');
+            }
+            else{
+                $ed = EmploymentDetail::where('client_id', $client->id)->where('intended_retirement_age','!=',null)->first();
+                if($ed)
+                {
+                    $date = Carbon::parse($client->date_of_birth)->addYears($ed->intended_retirement_age)->format('Y');
+                    $bld = 'At age ' . $ed->intended_retirement_age . ' (' . $date .')';
+                }
+                else{
+                    $bld = '';
+                }
+            }
+        }
 
         return [
           'cover' => [
@@ -70,8 +96,8 @@ class StrategyReportDataService
                     'retirement_income' => ''
                 ],
             ],
-            'bottom_left_status' => '',
-            'bottom_left_description' => '',
+            'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
+            'bottom_left_description' => $client_two == null ? $bld : null,
             'marital_status' => '',
             'name' => '',
             'age' => '',
@@ -175,7 +201,7 @@ class StrategyReportDataService
             ],
             'next_steps' => [
                 'next_meeting_title' => 'Advice presentation',
-                'next_meeting_date' => $client->strategy_report_recommendation != null ? Carbon::parse($client->strategy_report_recommendation)->format('') : 'Date to be confirmed'
+                'next_meeting_date' => $client->strategy_report_recommendation->next_meeting_date != null ? Carbon::parse($client->strategy_report_recommendation->next_meeting_date)->format('jS F Y \- h.iA') : 'Date to be confirmed'
             ]
         ];
     }
