@@ -169,7 +169,7 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => $income->gross_amount,
+                            'gross_amount' => (string)$income->gross_amount,
                             'net_amount' => $income->net_amount,
                             'expenses' => $income->expenses,
                             'frequency' => $income->frequency,
@@ -442,7 +442,7 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => $income->gross_amount,
+                            'gross_amount' => (string)$income->gross_amount,
                             'net_amount' => $income->net_amount,
                             'expenses' => $income->expenses,
                             'frequency' => $income->frequency,
