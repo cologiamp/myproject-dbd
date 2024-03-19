@@ -27,7 +27,8 @@ const props = defineProps({
                 pension_statuses: [],
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
-                frequencies: []
+                employer_contribution_frequencies: [],
+                employee_contribution_frequencies: []
             },
             model: {
                 dc_pensions: [{
@@ -40,6 +41,7 @@ const props = defineProps({
                     policy_number: null,
                     gross_contribution_percent: null,
                     gross_contribution_absolute: null,
+                    employee_contribution_frequency: null,
                     employer_contribution_percent: null,
                     employer_contribution_absolute: null,
                     crystallised_percentage: null,
@@ -49,7 +51,7 @@ const props = defineProps({
                     retained_value: null,
                     is_retained: null,
                     funds: [],
-                    frequency: null,
+                    employer_contribution_frequency: null,
                 }],
                 db_pensions: [{
                     id: null,
@@ -71,7 +73,6 @@ const props = defineProps({
     },
     errors: Object,
 });
-
 
 
 function formatAmount(e, index, dataField, type) {
@@ -113,6 +114,7 @@ function addDc() {
         policy_number: null,
         gross_contribution_percent: null,
         gross_contribution_absolute: null,
+        employee_contribution_frequency: null,
         employer_contribution_percent: null,
         crystallised_percentage: null,
         crystallised_status: null,
@@ -121,7 +123,7 @@ function addDc() {
         retained_value: null,
         is_retained: null,
         funds: [],
-        frequency: null
+        employer_contribution_frequency: null
     });
 }
 
@@ -438,7 +440,20 @@ function removePension(index,type) {
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                 </div>
+                    <!--                new field here -->
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label for="frequency"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
+                        <select @change="autosaveLocally" v-model="pension.employee_contribution_frequency"
+                                id="employer_contribution_frequency" name="employer_contribution_frequency"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="employer_contribution_frequency" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(provider, id) in formData.enums.employee_contribution_frequencies">{{
+                                    provider }}</option>
+                        </select>
+                    </div><br>
                 </div>
+
 
                 <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 p-4">
                     <h4 class="col-span-6 text-xl font-bold pt-2"> Employer Contribution </h4>
@@ -466,11 +481,11 @@ function removePension(index,type) {
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="frequency"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
-                    <select @change="autosaveLocally" v-model="pension.frequency"
-                            id="frequency" name="frequency"
+                    <select @change="autosaveLocally" v-model="pension.employer_contribution_frequency"
+                            id="employer_contribution_frequency" name="employer_contribution_frequency"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="frequency" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
+                        <option id="employer_contribution_frequency" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.employer_contribution_frequencies">{{
                                 provider }}</option>
                     </select>
                 </div><br>

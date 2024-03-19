@@ -49,7 +49,7 @@ class AssetPresenter extends BasePresenter
                 'interest_rate' =>  $this->model->interest_rate,
                 'regular_contributions' => (bool)  $this->model->regular_contributions,
                 'contribution_amount' =>  $this->model->contribution_amount != null ? $this->currencyIntToString($this->model->contribution_amount) : null,
-                'frequency' => $this->model->frequency,
+                'employer_contribution_frequency' => $this->model->employer_contribution_frequency,
 
             ],
             default => []

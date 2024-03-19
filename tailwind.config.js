@@ -43,7 +43,7 @@ export default {
             },
             colors:{
                 'aaron': {
-                    '50': '#ecf5ff',
+                    '50':  '#ecf5ff',
                     '100': '#ddecff',
                     '200': '#c1dbff',
                     '300': '#9cc2ff',

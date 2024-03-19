@@ -640,6 +640,13 @@ return [
                             'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.gross_contribution_percent' => 'sometimes|nullable',
                             'dc_pensions.*.gross_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.employee_contribution_frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.frequency'))))
+                            ],
                             'dc_pensions.*.employer_contribution_percent' => 'sometimes|nullable',
                             'dc_pensions.*.employer_contribution_absolute' => 'sometimes|nullable|string',
                             'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
@@ -665,7 +672,7 @@ return [
                             'dc_pensions.*.funds.*.current_fund_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.funds.*.fund_name' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.funds.*.current_transfer_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.frequency' => [
+                            'dc_pensions.*.employer_contribution_frequency' => [
                                 'sometimes',
                                 'nullable',
                                 'numeric',

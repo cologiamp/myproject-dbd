@@ -199,7 +199,7 @@ class Client extends Model
     {
         return $this->hasOne(StrategyReportRecommendation::class);
     }
-  
+
     public function investment_recommendation():HasOne
     {
         return $this->hasOne(InvestmentRecommendation::class);
@@ -295,7 +295,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
                 'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
-                'frequencies' => collect(config('enums.assets.frequency')),
+                'employer_contribution_frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -310,7 +310,8 @@ class Client extends Model
                 'pension_crystallised_statuses' => config('enums.assets.pension_crystallised_statuses'),
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
-                'frequencies' => collect(config('enums.assets.frequency')),
+                'employer_contribution_frequencies' => collect(config('enums.assets.frequency')),
+                'employee_contribution_frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),
