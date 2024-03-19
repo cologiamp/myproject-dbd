@@ -33,7 +33,8 @@ function generateReport(){
             title: 'Error: Something failed. Please try again later.',
             text: error.response.data.message,
       });
- }
+ });
+}
 
 </script>
 

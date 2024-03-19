@@ -413,7 +413,7 @@
     .waw-bg-pink { background-color: #DB3B7B; }
 </style>
 <div class="page" id="front-cover">
-    @include('documents.includes.header-front-cover', ['clientName' => 'Clarence Boddicker'])
+    @include('documents.includes.header-front-cover', ['clientName' => $data['cover']['name'], 'date' => $data['cover']['date'] ])
 
     <a href="#introduction" class="btn get-started">Get Started &rarr;</a>
 
@@ -463,7 +463,9 @@
         <div class="w-1/2">
             <div class="flex">
                 <div class="w-1/2 pr-6">
-                    <h4 class="font-bold text-white key-considerations">About us</h4>
+                    <h4 class="font-bold text-white key-considerations">
+                        About Us
+                    </h4>
                     <p class="small-my-wealth mt-3">
                         Working with some of the UK’s leading companies and pension schemes across the private and public sectors, we advise employees on a wide range of financial matters.
                         <br><br>
@@ -493,7 +495,7 @@
                         </p>
 
                         <p class="big-stats pt-2">
-                            £3bn+
+                            {{ $data['about_us']['group_assets'] }}
                         </p>
                     </div>
                     <div class="mb-8">
@@ -501,7 +503,7 @@
                             WAW GROUP EMPLOYEES
                         </p>
                         <p class="big-stats pt-2">
-                            400+
+                            {{ $data['about_us']['group_employees'] }}
                         </p>
                     </div>
                     <div class="mb-8">
@@ -509,7 +511,7 @@
                             COORPORATE CLIENTS
                         </p>
                         <p class="big-stats pt-2">
-                            700+
+                            {{ $data['about_us']['corporate_clients'] }}
                         </p>
                     </div>
                     <div class="mb-8">
@@ -517,7 +519,7 @@
                             GROUP OFFICES
                         </p>
                         <p class="big-stats pt-2">
-                            5
+                            {{ $data['about_us']['group_offices'] }}
                         </p>
                     </div>
                     <div class="offices-label-wrapper">
@@ -528,7 +530,7 @@
                 </div>
 
                 <div class="w-1/2">
-                    <img class="inline map-and-dots -mt-10" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/map-and-dots.svg">
+                    <img class="inline map-and-dots -mt-10" src="{{ $data['about_us']['office_map'] }}">
                 </div>
 
             </div>
@@ -553,12 +555,12 @@
 
         <div class="w-1/4 director-wrapper p-6 mr-4">
             <div class="w-full">
-                <img class="w-28" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                <img class="w-28" src="{{ $data['meet_the_team']['adviser_picture'] }}">
             </div>
-            <p class="font-bold text-white key-considerations mt-7">Paul Morton</p>
-            <h3 class="position">Investment Planning Director</h3>
+            <p class="font-bold text-white key-considerations mt-7">{{ $data['meet_the_team']['adviser_name'] }}</p>
+            <h3 class="position">{{ $data['meet_the_team']['adviser_title'] }}</h3>
             <p class="small-my-wealth mt-3">
-                Paul is a Chartered Member of the Chartered Institute for Securities & Investments and has many years’ experience working in the Financial Services industry.
+                {{ $data['meet_the_team']['adviser_bio'] }}
             </p>
         </div>
 
@@ -691,7 +693,8 @@
 
     <div class="flex mt-14 mb-8">
         <div class="w-9/12">
-            <h1 class="">A holistic approach</h1>
+            <h1 class="">A holistic approach ({{ $data['a_holistic_approach']['report_version'] }})
+            </h1>
         </div>
         <div class="w-3/12 mt-4 ml-32 -pr-44">
             <a class="inline learn-more" href="#">Click on a section below to learn more
@@ -803,9 +806,13 @@
                         <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
                     </div>
                     <div class="flex-1">
-                        <p class="small mb-4 p-0" style="margin-top:-8px;"><strong>Employment Status:</strong><br>Working full time<br><strong>Employer:</strong> Autotrader<br><strong>Job Title:</strong> Digital Project Lead</p>
+                        <p class="small mb-4 p-0" style="margin-top:-8px;">
+                            <strong>Employment Status:</strong><br>{{ $data['about_you']['employments'][1]['employment_status'] }}<br>
+                            <strong>Employer:</strong> {{ $data['about_you']['employments'][1]['employer'] }}<br>
+                            <strong>Job Title:</strong> {{ $data['about_you']['employments'][1]['job_title'] }}
+                        </p>
                         <p class="small mb-2"><strong>Salary p.a.</strong></p>
-                        <p>&pound;75,000</p>
+                        <p>&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
                     </div>
                 </div>
             </div>
@@ -814,7 +821,7 @@
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/sailing.svg" class="w-12">
                 </div>
                 <div class="flex-1 ml-4">
-                    <p>Retiring</p>
+                    <p>{{ $data['about_you']['employments'][0]['employment_status'] }}</p>
                     <p class="small">At age 65 (2034)</p>
                 </div>
             </div>
@@ -850,7 +857,7 @@
             <div class="short-panel waw-bg-pink">
                 <div class="flex-1 mr-4">
                     <h4>Marital Status</h4>
-                    <p>Married</p>
+                    <p>{{ $data['about_you']['marital_status'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/supervised_user_circle.svg" class="w-12">
@@ -860,16 +867,16 @@
                 <p class="mb-3">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
                 </p>
-                <p class="text-center">John Winston Lennon 55</p>
-                <p class="small">8th Feb 1969</p>
+                <p class="text-center">{{ $data['about_you']['name'] . ' ' . $data['about_you']['age'] }}</p>
+                <p class="small"{{ $data['about_you']['birth_date'] }}</p>
             </div>
             <div class="short-panel waw-bg-pink">
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/escalator_warning.svg" class="w-12">
                 </div>
                 <div class="flex-1 ml-4">
-                    <p>3 children</p>
-                    <p class="small">2 of which are financially dependant</p>
+                    <p>{{ $data['about_you']['dependent'] }}</p>
+                    <p class="small">{{ $data['about_you']['dependent_description'] }}</p>
                 </div>
             </div>
 
@@ -878,7 +885,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Annual Expenditure</h4>
-                    <p>&pound;32,655</p>
+                    <p>&pound;{{ $data['about_you']['annual_expenditure'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/bar_chart_4_bars.svg" class="w-12">
@@ -887,8 +894,8 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Home Value</h4>
-                    <p>&pound;750,126</p>
-                    <p class="small">206 Flixton Road, Urmston</p>
+                    <p>&pound;{{ $data['about_you']['home_value'] }}</p>
+                    <p class="small">{{ $data['about_you']['address'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/real_estate_agent.svg" class="w-12">
@@ -897,7 +904,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Liquid Assets</h4>
-                    <p>&pound;62,456</p>
+                    <p>&pound;{{ $data['about_you']['liquid_assets'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/currency_pound.svg" class="w-12">
@@ -906,7 +913,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Defined Contribution Pensions</h4>
-                    <p>&pound;76,000</p>
+                    <p>&pound;{{ $data['about_you']['pension_value'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/savings.svg" class="w-12">
@@ -1500,9 +1507,10 @@
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
     <!-- The Modal -->
+    <!--
     <div id="myModal" class="modal">
 
-        <!-- Modal content -->
+        <!- Modal content ->
         <div class="modal-content">
             <span class="close">&times;</span>
             <p>Some text in the Modal..</p>
@@ -1524,6 +1532,8 @@
         </div>
 
     </div>
+
+    -->
 
     <h1 class="mt-12 mb-8">Meet your team</h1>
     <div class="flex">

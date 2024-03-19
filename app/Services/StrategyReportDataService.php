@@ -63,7 +63,7 @@ class StrategyReportDataService
                     'employment_status' => 'Employed',
                     'employer' => '',
                     'job_title' => '',
-                    'salary' => ''
+                    'salary' => '75,000'
                 ],
                 [
                     'employment_status' => 'Retired',
@@ -72,19 +72,19 @@ class StrategyReportDataService
             ],
             'bottom_left_status' => '',
             'bottom_left_description' => '',
-            'marital_status' => '',
-            'name' => '',
-            'age' => '',
-            'birth_date' => '',
-            'dependent' => '',
-            'dependent_description' => '',
-            'annual_expenditure' => '',
+            'marital_status' => 'Married',
+            'name' => 'John Winston Lenno',
+            'age' => '55',
+            'birth_date' => '8th Feb 1969',
+            'dependent' => '3 children',
+            'dependent_description' => '2 of which are financially dependant',
+            'annual_expenditure' => '32,665',
             'home_value_status' => '',
-            'home_value' => '',
-            'address' => '',
-            'liquid_assets' => '',
+            'home_value' => '750,126',
+            'address' => '206 Flixton Road, Urmston',
+            'liquid_assets' => '62,456',
             'pension_status' => '',
-            'pension_value' => ''
+            'pension_value' => '76,000'
           ],
            'your_objectives' => $client->strategy_report_recommendation->objectives->sortBy('order')->groupBy('is_primary')->mapWithKeys(function ($items){
                return [
@@ -175,7 +175,7 @@ class StrategyReportDataService
             ],
             'next_steps' => [
                 'next_meeting_title' => 'Advice presentation',
-                'next_meeting_date' => $client->strategy_report_recommendation != null ? Carbon::parse($client->strategy_report_recommendation)->format('') : 'Date to be confirmed'
+                'next_meeting_date' => '25th April 2024 - 3.00pm',
             ]
         ];
     }
