@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         '2fa' => TwoFactorAuth::class,
+        'check_temporary_password' => \App\Http\Middleware\CheckTemporaryPassword::class,
         'is_not_c2' => IsNotClientTwo::class
     ];
 }

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use \App\Http\Controllers\DashboardController;
 use \App\Http\Controllers\TwoFaController;
+use \App\Http\Controllers\SetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,28 +37,23 @@ Route::get('/logout',function (){
     return redirect()->to('/login');
 });
 
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
 ])->group(function () {
+    Route::get('/set-password', [SetPasswordController::class,'show'])->name('set-password');
+    Route::post('/set-password', [SetPasswordController::class, 'store'])->name('set-password-store');
     Route::get('/2fa-setup', [TwoFaController::class,'show'])->name('2fa-setup');
     Route::post('/2fa-setup', [TwoFaController::class,'store'])->name('2fa-store');
 });
 
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-     '2fa',
+    '2fa',
+    'check_temporary_password',
     'is_not_c2'
 ])->group(function () {
-
-
-
-
-
-
 
 //    Route::get('/test',function (){
 //       $dis = App::make(\App\Services\DataIngestService::class);
@@ -78,12 +74,9 @@ Route::middleware([
        Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
        Route::put('/example',[ExampleController::class,'update'])->name('example.update');
 
-
-
         //"API" style requests
         Route::post('/sync',SyncClientController::class)->name('sync');
         Route::post('/commit-to-io',DataIntoIoController::class)->name('commit-to-io');
-
 
     });
 

@@ -3,9 +3,6 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import FormWell from "@/Components/FormWell.vue";
 
 import {
-    QuestionMarkCircleIcon,
-    LightBulbIcon,
-    GlobeAsiaAustraliaIcon,
     ArrowRightIcon
 } from "@heroicons/vue/24/solid/index.js";
 import Swal from "sweetalert2";
@@ -30,8 +27,13 @@ function generateReport(){
     axios.get('/api/client/' + props.clientId + '/generate-pdf').then(response => {
         console.log(response.data.strategy_reports);
         stratReportRef.value = response.data.strategy_reports;
-    });
-}
+    }).catch(error => {
+        console.log(error)
+        Swal.fire({
+            title: 'Error: Something failed. Please try again later.',
+            text: error.response.data.message,
+      });
+ }
 
 </script>
 
