@@ -161,6 +161,10 @@ class Client extends Model
         return $this->hasMany(PensionScheme::class);
     }
 
+    public function strategy_reports():HasMany
+    {
+        return $this->hasMany(StrategyReport::class);
+    }
     /**
      * @return HasMany
      */
