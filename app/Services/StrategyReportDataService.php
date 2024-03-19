@@ -86,7 +86,7 @@ class StrategyReportDataService
             'pension_status' => '',
             'pension_value' => ''
           ],
-           'your_objectives' => $client->strategy_report_recommendation->objectives->groupBy('is_primary')->mapWithKeys(function ($items){
+           'your_objectives' => $client->strategy_report_recommendation->objectives->sortBy('order')->groupBy('is_primary')->mapWithKeys(function ($items){
                return [
                    $items->first()->is_primary ? 'primary_objectives' : 'secondary_objectives' => $items->map(function ($item){
                        return  [
@@ -167,18 +167,15 @@ class StrategyReportDataService
                 ],
             ],
             'summary' => [
-                'calls_to_action' => [
-                    [
-                        'title' => ''
-                    ],
-                    [
-                       'title' => ''
-                    ]
-                ]
+                'calls_to_action' => $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){
+                    return [
+                        'title' => $item->formatted_cta
+                    ];
+                })->toArray()
             ],
             'next_steps' => [
-                'next_meeting_title' => '',
-                'next_meeting_date' => ''
+                'next_meeting_title' => 'Advice presentation',
+                'next_meeting_date' => $client->strategy_report_recommendation != null ? Carbon::parse($client->strategy_report_recommendation)->format('') : 'Date to be confirmed'
             ]
         ];
     }
