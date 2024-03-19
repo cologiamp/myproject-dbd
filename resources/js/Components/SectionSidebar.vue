@@ -113,7 +113,7 @@ function nextTab(){
                       @click="toggleDropdown(index); sectionsClick(index, item)" class="cursor-pointer">
                       <div class="grid grid-cols-4 items-center p-2 text-aaron-50 rounded-md text-base font-semibold group">
                           <div class="rounded-full w-11 h-11 py-3 text-center text-sm"
-                               :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
+                               :class="[item.current ? 'bg-aaron-400 text-aaron-950' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
                           <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>
@@ -130,7 +130,7 @@ function nextTab(){
             <slot></slot>
         </div>
         <button type="button" v-show="tabIndex != 4" @click="nextTab"
-                class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-aaron-950 shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Next <ArrowRightIcon class="w-6 h-6" />
         </button>
     </div>

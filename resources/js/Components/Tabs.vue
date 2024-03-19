@@ -50,9 +50,9 @@ onBeforeMount(() => {
                 :key="tab.name"
                 :id="index"
                 @click="tabsClick(index, tab)"
-                class="list-item !w-auto group cursor-pointer"
+                :class="tab.current ? 'border-b-2' : ''" class="list-item !w-auto group cursor-pointer"
                 >
-                <p :class="tab.current ? 'text-white' : 'text-gray-500'" class="p-4 group-hover:text-white transition-all">{{ tab.name }}</p>
+                <p :class="tab.current ? 'text-white' : 'text-white'" class="p-4 group-hover:text-white transition-all">{{ tab.name }}</p>
 
 
             </li>
