@@ -17,9 +17,14 @@ class DataIntoIoController extends Controller
     {
         $this->dataEgressService = $des;
     }
-    public function __invoke(Client $client, Request $request)
+    public function __invoke(Client $client, Request $request): bool
     {
-       //chore: this needs to be more modular, might involve a queue job etc.
-        return $this->dataEgressService->updateClient($client);
+        //chore: this needs to be more modular, might involve a queue job etc.
+
+        $this->dataEgressService->updateEmployment($client);
+
+//        $this->dataEgressService->updateClient($client); // returns true at the moment
+
+        return true;
     }
 }
