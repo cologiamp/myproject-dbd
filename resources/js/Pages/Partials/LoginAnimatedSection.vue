@@ -46,8 +46,8 @@ onMounted(()=> {
 
 <template>
     <div class="z-0 absolute top-1/2 transform -translate-y-1/2">
-        <img src="/images/MAN1-550.png" id="round-elem-1" class="md:w-[350px] md:h-[350px] 2xl:w-[450px] 2xl:h-[450px] w-[550px] h-[550px] scale-0"/>
-    </div> 
+        <img src="/images/MAN1-550.png" id="round-elem-1" alt="" class="md:w-[350px] md:h-[350px] 2xl:w-[450px] 2xl:h-[450px] w-[550px] h-[550px] scale-0"/>
+    </div>
     <!-- top group elements -->
     <div class="z-20 absolute md:top-[45%] md:right-[40%] 3xl:top-[35%] 3xl:right-[38%] top-[35%] right-[40%] transform -translate-x-[38%] -translate-y-full">
         <img src="/images/LOCK.svg" id="round-elem-2" class="md:w-[53px] md:h-[53px] 2xl:w-[73px] 2xl:h-[73px] w-[83px] h-[83px] scale-0"/>

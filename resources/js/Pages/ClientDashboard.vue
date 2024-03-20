@@ -53,13 +53,13 @@ function syncToIo()
                         <div class="text-3xl">Pension Objectives</div>
                     </div>
                 </Link>
-                <a href="#" class="p-8 h-64 bg-aaron-400 rounded-2xl items-center justify-center flex">
+                <a href="#" class="p-8 h-64 bg-aaron-800 rounded-2xl items-center justify-center flex">
                     <div class="flex items-center flex-col">
                         <light-bulb-icon class="h-32 w-32 flex-1"></light-bulb-icon>
                         <div class="text-3xl">Example</div>
                     </div>
                 </a>
-                <a @click="syncToIo()" href="#" class="p-8 h-64 bg-orange-500 rounded-2xl items-center justify-center flex">
+                <a @click="syncToIo()" href="#" class="p-8 h-64 bg-orange-700 rounded-2xl items-center justify-center flex">
                     <div class="flex items-center flex-col">
                         <globe-asia-australia-icon class="h-32 w-32 flex-1"></globe-asia-australia-icon>
                         <div class="text-3xl">Submit to IO</div>
