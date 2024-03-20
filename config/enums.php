@@ -1973,7 +1973,8 @@ return [
         'objective_type' => [
             0 => 'Considering Retirement',
             1 => 'Retiring',
-            2 => 'Accumulating Wealth'
+            2 => 'Accumulating Wealth',
+            3 => 'Retired'
         ],
         'topic' => [
             0 => [

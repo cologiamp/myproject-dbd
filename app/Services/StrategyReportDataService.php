@@ -29,14 +29,14 @@ class StrategyReportDataService
         $adviser = $this->getAdviser($client);
 
         $bld = null;
-        if($client_two && $client->strategy_report_recommendation->objective_type != null)
+        if(!$client_two && $client->strategy_report_recommendation->objective_type !== null)
         {
             $ed1 = EmploymentDetail::where('client_id', $client->id)->first();
-            if($client->strategy_report->objective_type == array_flip(config('enums.strategy_report_recommendations.objective_type'))['Accumulating Wealth'])
+            if($client->strategy_report_recommendation->objective_type == array_flip(config('enums.strategy_report_recommendations.objective_type'))['Accumulating Wealth'])
             {
                 $bld = 'To build capital for a better financial future';
             }
-            elseif($ed1->employment_status === array_flip(config('employment.employment_status'))['Retired'])
+            elseif($ed1->employment_status === array_flip(config('enums.employment.employment_status'))['Retired'])
             {
                 $bld = 'In ' . Carbon::parse($ed1->start_at)->format('Y');
             }
@@ -76,7 +76,12 @@ class StrategyReportDataService
               'report_version' => config('enums.strategy_report_recommendations.report_version')[$client->strategy_report_recommendation->report_version]
           ],
           'about_you' => [
-            'type' => '', //individual, retiring, couple,
+            'type' =>  $client_two == null
+                            ? (in_array($client->strategy_report_recommendation->objective_type,[
+                                array_flip(config('enums.strategy_report_recommendations.objective_type'))['Considering Retirement'],
+                                array_flip(config('enums.strategy_report_recommendations.objective_type'))['Retiring']
+                            ]) ? 'retiring' : 'individual')
+                            : 'couple', //individual, retiring, couple,
             'employments' => [
                 [
                     'employment_status' => 'Retiring',
@@ -98,10 +103,10 @@ class StrategyReportDataService
             ],
             'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
             'bottom_left_description' => $client_two == null ? $bld : null,
-            'marital_status' => '',
-            'name' => '',
-            'age' => '',
-            'birth_date' => '',
+            'marital_status' => config('enums.client.marital_status')[$client->strategy_report_recommendation->marital_status],
+            'personal_details' => $client_two == null ? [
+
+            ] : [],
             'dependent' => '',
             'dependent_description' => '',
             'annual_expenditure' => '',
