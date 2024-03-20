@@ -6,6 +6,7 @@ import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
+import {InformationCircleIcon} from "@heroicons/vue/24/outline/index.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -25,13 +26,15 @@ const props = defineProps({
                     standard_of_living: null,
                     emergency_funds: null
                 },
-                risk_outcome_id: null
+                risk_outcome_id: null,
+                kne_score: null
             },
             submit_method: 'post',
             submit_url: '/',
         },
     },
     errors: Object,
+    sidebarItemsLength: Number
 });
 
 const stepForm = useForm({
@@ -40,7 +43,7 @@ const stepForm = useForm({
     investment_length: props.formData.model.capacity_data.investment_length,
     standard_of_living: props.formData.model.capacity_data.standard_of_living,
     emergency_funds: props.formData.model.capacity_data.emergency_funds,
-    capacity_for_loss_investment: null
+    kne_score: props.formData.model.kne_score
 })
 
 async function autosaveLocally(){
@@ -50,13 +53,22 @@ async function autosaveLocally(){
     stepForm.investment_length = props.formData.model.capacity_data.investment_length;
     stepForm.standard_of_living = props.formData.model.capacity_data.standard_of_living;
     stepForm.emergency_funds = props.formData.model.capacity_data.emergency_funds;
-    stepForm.capacity_for_loss_investment = null;
+    stepForm.kne_score = props.formData.model.kne_score;
 }
 
 function submitAssessment() {
     let total = stepForm.investment_length + stepForm.standard_of_living + stepForm.emergency_funds;
 
-    calculateCapacityForLoss(total, stepForm.type, props.formData.model.risk_outcome_id);
+    calculateCapacityForLoss(total, stepForm.type, props.formData.model.risk_outcome_id, props.sidebarItemsLength);
+    autosaveLocally();
+}
+
+function isSubmitDisabled() {
+    if (props.formData.model.kne_score === null || (stepForm.investment_length === null || stepForm.standard_of_living  === null || stepForm.emergency_funds === null)) {
+        return true;
+    }
+
+    return false;
 }
 
 </script>
@@ -202,9 +214,15 @@ function submitAssessment() {
             </div>
             <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
                 <button type="button" @click="submitAssessment()"
-                    class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    :disabled="isSubmitDisabled()"
+                    class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700">
                     Submit Assessment
                 </button>
+            </div>
+            <div class="sm:col-span-6 sm:mt-0 flex justify-center gap-x-2 text-red-500"
+                 v-if="isSubmitDisabled()">
+                <InformationCircleIcon class="w-5 h-5"></InformationCircleIcon>
+                <span class="text-xs text-center">Please fill out the all necessary fields here and Knowledge and Experience fields <br/>before assessment submission</span>
             </div>
         </div>
     </dynamic-form-wrapper>

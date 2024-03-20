@@ -2,15 +2,22 @@
 import {autoS, autosaveT} from "@/autosave.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
-import {onMounted, watch} from "vue";
+import {watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import Swal from "sweetalert2";
+import {forceRefresh} from "@/calculateRiskAssesment.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
 watch(autoS,(newValue,oldValue) => {
     emit('autosaveStateChange',newValue)
+})
+
+watch(forceRefresh,(newValue,oldValue) => {
+    if (newValue > oldValue) {
+        autosaveLocally()
+    }
 })
 
 const props = defineProps({
@@ -28,7 +35,12 @@ const props = defineProps({
                 adviser_recommendation_investment: null,
                 adviser_recommendation_pension: null,
                 why_investment: null,
-                why_pension: null
+                why_pension: null,
+                knowledge_and_experience_investment: null,
+                knowledge_and_experience_pension: null,
+                capacity_for_loss_investment: null,
+                capacity_for_loss_pension: null,
+                attitude_to_risk: null
             },
             submit_method: 'post',
             submit_url: '/',
@@ -50,15 +62,6 @@ const stepForm = useForm({
 
 async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
-
-    if(props.formData.model) {
-        Swal.fire({
-            title: 'Done',
-            text: 'Assessment submitted',
-            icon: 'success'
-        });
-    }
-
     stepForm.assessment_result_investment = props.formData.model.assessment_result_investment;
     stepForm.assessment_result_pension = props.formData.model.assessment_result_pension;
     stepForm.using_calculated_risk_profile_investment = props.formData.model.using_calculated_risk_profile_investment;
@@ -71,11 +74,44 @@ async function autosaveLocally(){
 
 }
 function submitAssessment() {
-    autosaveLocally()
+    if (autosaveLocally()) {
+        if(props.formData.model) {
+            Swal.fire({
+                title: 'Done',
+                text: 'Assessment submitted',
+                icon: 'success'
+            });
+        }
+    }
 }
 
-onMounted(()=>{
-})
+function isSubmitDisabled() {
+    if ((stepForm.assessment_result_investment == null && stepForm.assessment_result_pension == null) || (stepForm.using_calculated_risk_profile_investment === false && stepForm.adviser_recommendation_investment == null) ||
+        (stepForm.using_calculated_risk_profile_pension === false && stepForm.adviser_recommendation_pension == null)) {
+        return true
+    }
+    return false
+}
+
+function investmentResult() {
+    if (props.formData.model.assessment_result_investment != null && props.formData.model.knowledge_and_experience_investment !== null
+        && props.formData.model.capacity_for_loss_investment !== null
+        && props.formData.model.attitude_to_risk !== null) {
+        return props.formData.model.assessment_result_investment
+    }
+
+    return 'No result available'
+}
+
+function pensionResult() {
+    if (props.formData.model.assessment_result_pension != null && props.formData.model.knowledge_and_experience_pension !== null
+        && props.formData.model.capacity_for_loss_pension !== null
+        && props.formData.model.attitude_to_risk !== null) {
+        return props.formData.model.assessment_result_pension
+    }
+
+    return 'No result available'
+}
 
 </script>
 
@@ -90,7 +126,7 @@ onMounted(()=>{
                         Investment Risk Assessment Result
                     </label>
                     <label class="block text-base font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
-                        {{ props.formData.model.assessment_result_investment }}
+                       {{investmentResult()}}
                     </label>
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 p-4 rounded-md bg-aaron-950 grid grid-cols-2">
@@ -98,7 +134,7 @@ onMounted(()=>{
                         Pension Risk Assessment Result
                     </label>
                     <label class="block text-base font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
-                        {{ props.formData.model.assessment_result_pension }}
+                        {{pensionResult()}}
                     </label>
                 </div>
                 <!-- INVESTMENT -->
@@ -171,10 +207,10 @@ onMounted(()=>{
                           class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                     </div>
                 </div>
-
-                <div class="sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
+                <div class="sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center text-red-500">
                     <button type="button" @click="submitAssessment()"
-                            class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        :disabled="isSubmitDisabled()"
+                        class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700">
                         Submit Assessment
                     </button>
                 </div>

@@ -7,6 +7,7 @@ import {watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import ExperienceRatingTable from "@/Components/ExperienceRatingTable.vue";
+import {InformationCircleIcon} from "@heroicons/vue/24/outline/index.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -52,6 +53,7 @@ const props = defineProps({
         },
     },
     errors: Object,
+    sidebarItemsLength: Number
 });
 
 const stepForm = useForm({
@@ -74,6 +76,7 @@ const stepForm = useForm({
     experience_of_income_drawdown: props.formData.model.knowledge.experience_of_income_drawdown,
     experience_of_phased_retirement: props.formData.model.knowledge.experience_of_phased_retirement,
     spoken_to_pensionwise: props.formData.model.knowledge.spoken_to_pensionwise,
+    risk_outcome_id: props.formData.model.risk_outcome_id
 })
 
 async function autosaveLocally(){
@@ -97,6 +100,7 @@ async function autosaveLocally(){
     stepForm.experience_of_income_drawdown = props.formData.model.knowledge.experience_of_income_drawdown; //Q10 pension
     stepForm.experience_of_phased_retirement = props.formData.model.knowledge.experience_of_phased_retirement; //Q10 pension
     stepForm.spoken_to_pensionwise = props.formData.model.knowledge.spoken_to_pensionwise; //Q10 pension
+    stepForm.risk_outcome_id = props.formData.model.risk_outcome_id;
 }
 
 function setRating(data) {
@@ -106,7 +110,30 @@ function setRating(data) {
 }
 
 function submitAssessment() {
-    calculateKnE(stepForm.experience_buying_equities, stepForm.type, props.formData.model.risk_outcome_id);
+    calculateKnE(stepForm.experience_buying_equities, stepForm.type, props.formData.model.risk_outcome_id, props.sidebarItemsLength);
+    autosaveLocally();
+}
+
+function isSubmitDisabled() {
+    if (isRatingSet(stepForm.experience_buying_cash) === false ||
+        isRatingSet(stepForm.experience_buying_bonds) === false || isRatingSet(stepForm.experience_buying_equities) === false ||
+        isRatingSet(stepForm.experience_buying_insurance) === false) {
+        return true;
+    }
+
+    return false;
+}
+
+function isRatingSet(rangeData) {
+    let flag = true;
+    Object.entries(rangeData).forEach(data => {
+        const [key, item] = data;
+        if (item.value === null) {
+            flag = false;
+        }
+    });
+
+    return flag;
 }
 
 </script>
@@ -531,9 +558,15 @@ function submitAssessment() {
                 </div>
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
                     <button type="button" @click="submitAssessment()"
-                            class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        :disabled="isSubmitDisabled()"
+                        class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700">
                         Submit Assessment
                     </button>
+                </div>
+                <div class="sm:col-span-6 sm:mt-0 flex justify-center gap-x-2 text-red-500"
+                     v-if="isSubmitDisabled()">
+                    <InformationCircleIcon class="w-5 h-5"></InformationCircleIcon>
+                    <span class="text-xs">Please fill out the all necessary fields before assessment submission</span>
                 </div>
             </div>
         </div>

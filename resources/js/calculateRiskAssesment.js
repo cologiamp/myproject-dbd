@@ -1,4 +1,6 @@
+import {ref} from "vue";
 import Swal from "sweetalert2";
+import {nextTab} from "@/nextAction.js";
 
 const CAPACITY_LOW = 0;
 const CAPACITY_MEDIUM = 1;
@@ -13,11 +15,14 @@ const RISK_PROFILE_CAUTIOUS = 1;
 const RISK_PROFILE_BALANCED = 2;
 const RISK_PROFILE_ADVENTUROUS = 3;
 
+export let forceRefresh = ref(1);
+export let tabSections = ref(0);
+
 function inRange(x, min, max) {
     return x >= min && x <= max;
 }
 
-function saveSectionScore(id, score, type, section) {
+function saveSectionScore(id, score, type, section, sidebarItemsLength) {
     axios.put(`/api/risk-outcome/${ id }/assess-outcome`, {
         score: score,
         type: type,
@@ -26,7 +31,14 @@ function saveSectionScore(id, score, type, section) {
         Swal.fire({
             title: 'Done',
             text: 'Assessment submitted',
-            icon: 'success'
+            icon: 'success',
+            showDenyButton: false,
+            showCancelButton: false,
+            confirmButtonText: "OK",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                nextTab(sidebarItemsLength);
+            }
         });
     }).catch((error) => {
         Swal.fire({
@@ -37,7 +49,7 @@ function saveSectionScore(id, score, type, section) {
     });
 }
 
-export function calculateCapacityForLoss(total, type, id) {
+export function calculateCapacityForLoss(total, type, id, sidebarItemsLength) {
     let riskType = type === 0 ? 'investment' : 'pension';
     let capacityScore = CAPACITY_LOW
 
@@ -52,19 +64,19 @@ export function calculateCapacityForLoss(total, type, id) {
         capacityScore = CAPACITY_HIGH;
     }
 
-    saveSectionScore(id, capacityScore, riskType, 'capacity_for_loss');
+    saveSectionScore(id, capacityScore, riskType, 'capacity_for_loss', sidebarItemsLength);
 }
 
-export function calculateKnE(equities, type, id) {
+export function calculateKnE(equities, type, id, sidebarItemsLength) {
     let riskType = type === 0 ? 'investment' : 'pension';
     let sum = 0;
+
     Object.entries(equities).forEach(equity => {
         const [key, item] = equity;
         sum += item.value
     });
 
-    let score = Math.round(sum / equities.length);
-    let kneScore = KNE_NONE;
+    let score = Math.round(sum / equities.length);    let kneScore = KNE_NONE;
 
     if (score === 2) {
         kneScore = KNE_SOME;
@@ -72,10 +84,10 @@ export function calculateKnE(equities, type, id) {
         kneScore = KNE_GOOD;
     }
 
-    saveSectionScore(id, kneScore, riskType, 'knowledge_and_experience');
+    saveSectionScore(id, kneScore, riskType, 'knowledge_and_experience', sidebarItemsLength);
 }
 
-export function calculateRiskProfile(stepForm, id) {
+export function calculateRiskProfile(stepForm, id, sidebarItemsLength) {
     let riskProfileScore = getRiskProfileScore(stepForm);
 
     if (riskProfileScore === undefined) {
@@ -85,7 +97,7 @@ export function calculateRiskProfile(stepForm, id) {
             icon: "warning"
         });
     } else {
-        saveSectionScore(id, riskProfileScore, 'risk_profile', 'risk_profile');
+        saveSectionScore(id, riskProfileScore, 'risk_profile', 'risk_profile', sidebarItemsLength);
     }
 }
 

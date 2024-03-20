@@ -87,7 +87,9 @@ class RiskOutcomeRepository extends BaseRepository
 
         try {
             $data = array(
-                'client_id' => $this->client->id
+                'client_id' => $this->client->id,
+                'using_calculated_risk_profile_investment' => 1,
+                'using_calculated_risk_profile_pension' => 1
             );
 
             $newRecord = RiskOutcome::create($data);

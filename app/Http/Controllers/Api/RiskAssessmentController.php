@@ -77,7 +77,10 @@ class RiskAssessmentController extends Controller
 
         try {
             $outcome->update([$fieldName => $validated['score']]);
-            $this->matrixAssessment($outcome);
+
+            if ($validated['type'] === 'risk_profile') {
+                $this->matrixAssessment($outcome);
+            }
         } catch (Exception $e) {
             Log::warning($e);
         }

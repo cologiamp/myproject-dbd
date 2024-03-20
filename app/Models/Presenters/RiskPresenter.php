@@ -52,7 +52,8 @@ class RiskPresenter extends BasePresenter
                         'emergency_funds' => $capacity?->emergency_funds,
                     ];
                 }))->collapse(),
-                'risk_outcome_id' => $this->model->client->risk_outcome?->id
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id,
+                'kne_score' => $this->model->client->risk_outcome?->knowledge_and_experience_investment
             ],
             '2.1' => [
                 'knowledge' => collect(Knowledge::where('client_id',$this->model->client->id)->where('type', config('enums.risk_assessment.type')['PENSION_TYPE'])->get()->map(function ($knowledge){
@@ -90,7 +91,8 @@ class RiskPresenter extends BasePresenter
                         'emergency_funds' => $capacity?->emergency_funds,
                     ];
                 }))->collapse(),
-                'risk_outcome_id' => $this->model->client->risk_outcome?->id
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id,
+                'kne_score' => $this->model->client->risk_outcome?->knowledge_and_experience_pension
             ],
             '3.1' => [
                 'id' => $this->model->client->risk_profile?->id,
@@ -101,17 +103,25 @@ class RiskPresenter extends BasePresenter
                 'volatility_behaviour' => $this->model->client->risk_profile?->volatility_behaviour,
                 'long_term_volatility' => $this->model->client->risk_profile?->long_term_volatility,
                 'time_in_market' => $this->model->client->risk_profile?->time_in_market,
-                'risk_outcome_id' => $this->model->client->risk_outcome?->id
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id,
+                'capacity_inv_score' => $this->model->client->risk_outcome?->capacity_for_loss_investment,
+                'capacity_pension_score' => $this->model->client->risk_outcome?->capacity_for_loss_pension
             ],
             '4.1' => [
-                'assessment_result_investment' => config('enums.risk_assessment.assessment_result_public')[$this->model->client->risk_outcome?->assessment_result_investment],
-                'assessment_result_pension' => config('enums.risk_assessment.assessment_result_public')[$this->model->client->risk_outcome?->assessment_result_pension],
+                'assessment_result_investment' => $this->model->client->risk_outcome?->assessment_result_investment !== null ? config('enums.risk_assessment.assessment_result_public')[$this->model->client->risk_outcome?->assessment_result_investment] : null,
+                'assessment_result_pension' => $this->model->client->risk_outcome?->assessment_result_pension !== null ? config('enums.risk_assessment.assessment_result_public')[$this->model->client->risk_outcome?->assessment_result_pension] : null,
                 'using_calculated_risk_profile_investment' => (bool) $this->model->client->risk_outcome?->using_calculated_risk_profile_investment,
                 'using_calculated_risk_profile_pension' => (bool) $this->model->client->risk_outcome?->using_calculated_risk_profile_pension,
                 'adviser_recommendation_investment' => $this->model->client->risk_outcome?->adviser_recommendation_investment,
                 'adviser_recommendation_pension' => $this->model->client->risk_outcome?->adviser_recommendation_pension,
                 'why_investment' => $this->model->client->risk_outcome?->why_investment,
-                'why_pension' => $this->model->client->risk_outcome?->why_pension
+                'why_pension' => $this->model->client->risk_outcome?->why_pension,
+                'knowledge_and_experience_investment' => $this->model->client->risk_outcome?->knowledge_and_experience_investment,
+                'knowledge_and_experience_pension' => $this->model->client->risk_outcome?->knowledge_and_experience_pension,
+                'capacity_for_loss_investment' => $this->model->client->risk_outcome?->capacity_for_loss_investment,
+                'capacity_for_loss_pension' => $this->model->client->risk_outcome?->capacity_for_loss_pension,
+                'attitude_to_risk' => $this->model->client->risk_outcome?->attitude_to_risk,
+                'risk_outcome_id' => $this->model->client->risk_outcome?->id
             ],
             default => [
             ]
