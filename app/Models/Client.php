@@ -310,8 +310,7 @@ class Client extends Model
                 'pension_crystallised_statuses' => config('enums.assets.pension_crystallised_statuses'),
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
-                'employer_contribution_frequencies' => collect(config('enums.assets.frequency')),
-                'employee_contribution_frequencies' => collect(config('enums.assets.frequency')),
+                'frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),

@@ -27,8 +27,7 @@ const props = defineProps({
                 pension_statuses: [],
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
-                employer_contribution_frequencies: [],
-                employee_contribution_frequencies: []
+                frequencies: [],
             },
             model: {
                 dc_pensions: [{
@@ -448,7 +447,7 @@ function removePension(index,type) {
                                 id="employer_contribution_frequency" name="employer_contribution_frequency"
                                 class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="employer_contribution_frequency" :value="null">-</option>
-                            <option :id="id" :value="id" v-for="(provider, id) in formData.enums.employee_contribution_frequencies">{{
+                            <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
                                     provider }}</option>
                         </select>
                     </div><br>
@@ -485,7 +484,7 @@ function removePension(index,type) {
                             id="employer_contribution_frequency" name="employer_contribution_frequency"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="employer_contribution_frequency" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.employer_contribution_frequencies">{{
+                        <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
                                 provider }}</option>
                     </select>
                 </div><br>
