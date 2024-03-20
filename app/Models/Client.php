@@ -220,6 +220,11 @@ class Client extends Model
         return $this->hasOne(RiskProfile::class);
     }
 
+    public function risk_outcome(): HasOne
+    {
+        return $this->hasOne(RiskOutcome::class);
+    }
+
     //Presenter
     public function presenter() : ClientPresenter
     {
