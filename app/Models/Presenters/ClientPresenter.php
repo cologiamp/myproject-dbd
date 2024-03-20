@@ -282,6 +282,7 @@ class ClientPresenter extends BasePresenter
                             'frequency' => $item->defined_contribution_pension->frequency,
                         ];
                     }),
+                    //  defined_benefit_pension = model
                     'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$this->model->id,$this->model->client_two->id])->get()->map(function ($item){
                         return [
                             'id' => $item->id,
@@ -294,6 +295,8 @@ class ClientPresenter extends BasePresenter
                             'prospective_pension_max' => $item->defined_benefit_pension->prospective_pension_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pension_max): null,
                             'prospective_pcls_standard' => $item->defined_benefit_pension->prospective_pcls_standard  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_standard): null,
                             'prospective_pcls_max' => $item->defined_benefit_pension->prospective_pcls_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_max): null,
+                            'chosen' => $item->defined_benefit_pension->chosen,
+                            'notes' => $item->defined_benefit_pension->notes,
                             'cetv' => $item->defined_benefit_pension->cetv  != null ? $this->currencyIntToString($item->defined_benefit_pension->cetv): null,
                             'cetv_ends_at' => $item->defined_benefit_pension->cetv_ends_at
                         ];
@@ -567,6 +570,8 @@ class ClientPresenter extends BasePresenter
                             'prospective_pension_max' => $item->defined_benefit_pension->prospective_pension_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pension_max): null,
                             'prospective_pcls_standard' => $item->defined_benefit_pension->prospective_pcls_standard  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_standard): null,
                             'prospective_pcls_max' => $item->defined_benefit_pension->prospective_pcls_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_max): null,
+                            'chosen' => $item->defined_benefit_pension->chosen,
+                            'notes' => $item->defined_benefit_pension->notes,
                             'cetv' => $item->defined_benefit_pension->cetv  != null ? $this->currencyIntToString($item->defined_benefit_pension->cetv): null,
                             'cetv_ends_at' => $item->defined_benefit_pension->cetv_ends_at
                         ];

@@ -1701,7 +1701,12 @@ return [
             5 => 'Every 6 months',
             6 => 'Annually',
             7 => 'One-off'
-        ]
+        ],
+        'chosen' => [
+            0 => 'Standard pension/standard tax free cash',
+            1 => 'Reduced pension/Max tax free cash',
+            2 => 'Other',
+        ],
     ],
     'liabilities' => [
         'types' => [
