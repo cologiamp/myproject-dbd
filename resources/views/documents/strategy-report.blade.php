@@ -524,6 +524,7 @@
                     </div>
                     <div class="offices-label-wrapper">
                         <p class="offices-label -mt-14 ml-4">
+                            <!-- {{ $data['about_us']['group_offices_description'] }} -->
                             Liverpool (head office),<br> Bristol, Manchester, <br> London, Dublin
                         </p>
                     </div>
@@ -1063,21 +1064,12 @@
                 <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['total'] }}</p>
             </div>
 
-            <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">{{ $data['your_finances']['property_and_possessions']['breakdown'][0]['title'] }}</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['breakdown'][0]['value'] }}</p>
-            </div>
-
-            <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">{{ $data['your_finances']['property_and_possessions']['breakdown'][1]['title'] }}</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['breakdown'][1]['value'] }}</p>
-            </div>
-
-            <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">{{ $data['your_finances']['property_and_possessions']['breakdown'][2]['title'] }}</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['breakdown'][2]['value'] }}</p>
-            </div>
-
+            @foreach ($data['your_finances']['property_and_possessions']['breakdown'] as $propertyAndPossession)
+                <div class="finances-box pp-box-child mb-3">
+                    <p class="finance-box-title">{{ $propertyAndPossession['title'] }}</p>
+                    <p class="finance-box-content">£{{ $propertyAndPossession['value'] }}</p>
+                </div>
+            @endforeach
 
 
         </div>
