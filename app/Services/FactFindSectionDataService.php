@@ -329,7 +329,7 @@ class FactFindSectionDataService
             $this->incomeRepository->setClient($this->cr->getClient());
             $this->incomeRepository->createOrUpdateIncomeDetails($validatedData);
 
-            if(count($validatedData['incomes']) == 0 && array_key_exists('total',$validatedData))
+            if(count($validatedData['incomes']) == 0 && array_key_exists('total',$validatedData) && $validatedData['total'] != null)
             {
                 $this->cr->updateFromValidated(['total_income_basic' => $this->currencyStringToInt($validatedData['total'])]);
             }

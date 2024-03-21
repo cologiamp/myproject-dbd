@@ -1255,7 +1255,6 @@ return [
             ]
         ]
     ],
-
     'strategyreportrecommendations' => [
         1 => [
             'name' => 'Strategy Report Recommendations',

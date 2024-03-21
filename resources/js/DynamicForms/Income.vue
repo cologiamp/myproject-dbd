@@ -10,6 +10,7 @@ import { XCircleIcon } from '@heroicons/vue/24/solid';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {computed, onBeforeMount, ref, watch} from "vue";
 import {formatDate} from "@vueuse/core";
+import Swal from "sweetalert2";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -96,6 +97,20 @@ function updateAndSave()
 }
 
 function removeIncome(index) {
+    let incomeId = stepForm.incomes[index]['income_id']
+    let deleteURL = `/api/incomes/${ incomeId }`;
+
+    // delete expenditure record
+    if(incomeId) {
+        axios.delete(deleteURL).then(response=>{
+        }).catch(error=>{
+            Swal.fire({
+                title: 'Error: Something failed. Please try again later.',
+                text: error.response.data.message,
+            })
+        });
+    }
+
     stepForm.incomes.splice(index, 1);
     calculateTotals()
     autosaveLocally();
