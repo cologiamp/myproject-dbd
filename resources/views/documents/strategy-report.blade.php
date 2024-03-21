@@ -949,6 +949,7 @@
     <div class="clear-both"></div>
 
     <div class="flex mt-5">
+
         <div class="w-1/3">
             <div class="flex objective">
                 <div class="objective-icon flex-shrink-0">
@@ -957,7 +958,7 @@
                 <div class="objective-text ml-4 pr-8">
                     <h4 class="font-bold text-white">Legacy Planning</h4>
                     <div class="mt-2 text-sm">
-                        <p class="small">Based on what we spoke about, you wish to ensure your assets will be passed on in the event of your death. This is to ensure that the assets you have built up over your lifetime can be used by your children when you die.</p>
+                        <p class="small"></p>
                     </div>
                 </div>
             </div>
@@ -1377,59 +1378,43 @@
             </div>
 
             <div class="flex mt-12 mb-8">
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                {{ $data['summary']['calls_to_action'][0]['title'] }}
-                            </p>
+                @foreach (array_slice($data['summary']['calls_to_action'], 0, 2) as $callToAction)
+                    <div class="w-1/2">
+                        <div class="flex">
+                            <div class="w-1/3">
+                                <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
+                            </div>
+                            <div class="w-2/3">
+                                <p class="font-bold text-white mt-1 -ml-3 warning-text">
+                                    {{ $callToAction['title'] }}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
 
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                {{ $data['summary']['calls_to_action'][0]['title'] }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="flex">
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                To create a tax-efficient withdrawal strategy
-                            </p>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                The consolidation of numerous pension pots can benefit you
-                            </p>
+
+                @foreach (array_slice($data['summary']['calls_to_action'], 2, 2) as $callToAction)
+                    <div class="w-1/2">
+                        <div class="flex">
+                            <div class="w-1/3">
+                                <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
+                            </div>
+                            <div class="w-2/3">
+                                <p class="font-bold text-white mt-1 -ml-3 warning-text">
+                                    {{ $callToAction['title'] }}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
+
+
+
             </div>
 
         </div>
