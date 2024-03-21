@@ -1312,7 +1312,61 @@ return [
                     ],
                     'messages' => [
                     ]
-                ]
+                ],
+                3 => [
+                    'name' => 'Knowledge and Experience',
+                    'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance',
+                        'experience_details'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|boolean',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|array',
+                        'experience_buying_bonds' => 'sometimes|nullable|array',
+                        'experience_buying_equities' => 'sometimes|nullable|array',
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'experience_details' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                4 => [
+                    'name' => 'Capacity for Loss',
+                    'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds',
+                        'capacity_for_loss_investment'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_investment' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ],
             ]
         ],
         2 => [
@@ -1381,6 +1435,70 @@ return [
                     ],
                     'messages' => [
                     ]
+                ],
+                3 => [
+                    'name' => 'Knowledge and Experience',
+                    'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance',
+                        'execution_only_experience',
+                        'experience_details',
+                        'experience_of_annuities',
+                        'experience_of_income_drawdown',
+                        'experience_of_phased_retirement',
+                        'spoken_to_pensionwise'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|integer',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|array',
+                        'experience_buying_bonds' => 'sometimes|nullable|array',
+                        'experience_buying_equities' => 'sometimes|nullable|array',
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'execution_only_experience' => 'sometimes|nullable|boolean',
+                        'experience_details' => 'sometimes|nullable|string',
+                        'experience_of_annuities' => 'sometimes|nullable|integer',
+                        'experience_of_income_drawdown' => 'sometimes|nullable|integer',
+                        'experience_of_phased_retirement' => 'sometimes|nullable|integer',
+                        'spoken_to_pensionwise' => 'sometimes|nullable|boolean'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                4 => [
+                    'name' => 'Capacity for Loss',
+                    'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds',
+                        'capacity_for_loss_pension'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_pension' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
                 ]
             ]
         ],
@@ -1411,6 +1529,31 @@ return [
                     ],
                     'messages' => [
                     ]
+                ],
+                2 => [
+                    'name' => 'Risk Profile',
+                    'fields' => [
+                        'id',
+                        'comfort_fluctuate_market',
+                        'day_to_day_volatility',
+                        'short_term_volatility',
+                        'medium_term_volatility',
+                        'volatility_behaviour',
+                        'long_term_volatility',
+                        'time_in_market'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'comfort_fluctuate_market' => 'sometimes|nullable|boolean',
+                        'day_to_day_volatility' => 'sometimes|nullable|integer',
+                        'short_term_volatility' => 'sometimes|nullable|array',
+                        'medium_term_volatility' => 'sometimes|nullable|integer',
+                        'volatility_behaviour' => 'sometimes|nullable|integer',
+                        'long_term_volatility' => 'sometimes|nullable|integer',
+                        'time_in_market' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
                 ]
             ]
         ],
@@ -1418,6 +1561,39 @@ return [
             'name' => 'Summary',
             'sections' => [
                 1 => [
+                    'name' => 'Summary',
+                    'fields' => [
+                        'using_calculated_risk_profile_investment',
+                        'using_calculated_risk_profile_pension',
+                        'adviser_recommendation_investment',
+                        'adviser_recommendation_pension',
+                        'why_investment',
+                        'why_pension'
+                    ],
+                    'rules' => [
+                        'using_calculated_risk_profile_investment' => 'sometimes|nullable|boolean',
+                        'using_calculated_risk_profile_pension' => 'sometimes|nullable|boolean',
+                        'adviser_recommendation_investment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'adviser_recommendation_pension' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'why_investment' => 'sometimes|nullable|string',
+                        'why_pension' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                2 => [
                     'name' => 'Summary',
                     'fields' => [
                         'using_calculated_risk_profile_investment',

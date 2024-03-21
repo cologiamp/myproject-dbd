@@ -24,6 +24,7 @@ let selectedRelationship = null;
 
 async function selectRelationship(selectedRelationship)
 {
+    console.log(JSON.stringify(selectedRelationship))
     let ref2 = await Swal.fire({
         title: "Complete fact-find and strategy report with: " + selectedRelationship.name + '? You cannot change this later.',
         showCancelButton: true,

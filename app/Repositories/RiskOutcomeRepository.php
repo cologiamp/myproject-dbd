@@ -83,19 +83,28 @@ class RiskOutcomeRepository extends BaseRepository
 
     public function createInitialRiskOutcomeForClient(): RiskOutcome
     {
+        $clientIds = collect([$this->client->id]);
+
+        if ($this->client->client_two()) {
+            $clientIds->push($this->client->client_two->id);
+        }
+
         DB::beginTransaction();
 
         try {
-            $data = array(
-                'client_id' => $this->client->id,
-                'using_calculated_risk_profile_investment' => 1,
-                'using_calculated_risk_profile_pension' => 1
-            );
+            $clientIds->each(function ($id) {
+                $data = array(
+                    'client_id' => $id,
+                    'using_calculated_risk_profile_investment' => 1,
+                    'using_calculated_risk_profile_pension' => 1
+                );
 
-            $newRecord = RiskOutcome::create($data);
+                RiskOutcome::create($data);
+            });
+
             DB::commit();
+            return RiskOutcome::where('client_id', $this->client->id)->first();
 
-            return $newRecord;
         } catch (\Exception $e) {
             DB::rollback();
             throw new \Exception($e);

@@ -77,22 +77,28 @@ class CapacityForLossRepository extends BaseRepository
 
     public function createInitialCapacityForClient(): CapacityForLoss
     {
-        $types = [RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE];
+        $types = collect([RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE]);
+        $clientIds = collect([$this->client->id]);
+
+        if ($this->client->client_two()) {
+            $clientIds->push($this->client->client_two->id);
+        }
 
         DB::beginTransaction();
 
         try {
-            for ($x = 0; $x < count($types); $x++) {
-                $risk = array(
-                    'client_id' => $this->client->id,
-                    'type' => $types[$x]
-                );
-
-                $newRecord = CapacityForLoss::create($risk);
-            }
+            $types->each(function ($type) use ($clientIds){
+                $clientIds->each(function ($id) use ($type) {
+                    $risk = array(
+                        'client_id' => $id,
+                        'type' => $type
+                    );
+                    CapacityForLoss::create($risk);
+                });
+            });
 
             DB::commit();
-            return $newRecord;
+            return CapacityForLoss::where('client_id', $this->client->id)->first();
 
         } catch (\Exception $e) {
             DB::rollback();

@@ -38,13 +38,13 @@ class RiskProfile extends Model
     public function loadEnumsForStep($step,$section)
     {
         return match ($step.'.'.$section) {
-            '1.1' => [
+            '1.1', '1.3' => [
                 'risk_assessment_cash' => config('enums.risk_assessment.cash'),
                 'risk_assessment_bonds' => config('enums.risk_assessment.bonds'),
                 'risk_assessment_equities' => config('enums.risk_assessment.equities'),
                 'risk_assessment_insurance' => config('enums.risk_assessment.insurance')
             ],
-            '2.1' => [
+            '2.1', '2.3' => [
                 'risk_assessment_cash' => config('enums.risk_assessment.cash'),
                 'risk_assessment_bonds' => config('enums.risk_assessment.bonds'),
                 'risk_assessment_equities' => config('enums.risk_assessment.equities'),
@@ -54,7 +54,13 @@ class RiskProfile extends Model
             '3.1' => [
                 'risk_assessment_volatility' => config('enums.risk_assessment.short_term_volatility')
             ],
+            '3.2' => [
+                'risk_assessment_volatility' => config('enums.risk_assessment.short_term_volatility')
+            ],
             '4.1' => [
+                'assessment_result_type' => config('enums.risk_assessment.assessment_result_public')
+            ],
+            '4.2' => [
                 'assessment_result_type' => config('enums.risk_assessment.assessment_result_public')
             ],
             default => [
