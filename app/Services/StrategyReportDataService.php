@@ -113,10 +113,20 @@ class StrategyReportDataService
         }
         else
         {
-            $home_value_status = 'Renting';
-            $home_value = $this->currencyIntToString($home->current_value);
+            $home_value_status = 'Home Value';
+            $home_value = $this->currencyIntToString(0);
         }
 
+        if($client_two)
+        {
+            $employments = collect($client->employment_detailss()->get()->take(1)->merge($client_two->employment_detailss()->get()->take(1)));
+        }
+        else{
+            $employments = collect($client->employment_details()->get()->take(1));
+        }
+        $employments = $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values();
+
+        dd($employments);
 
         return [
           'cover' => [
@@ -147,9 +157,7 @@ class StrategyReportDataService
                                 $this->enumValueByName('strategy_report_recommendations.objective_type','Retiring')
                             ]) ? 'retiring' : 'individual')
                             : 'couple', //individual, retiring, couple,
-            'employments' => [
-
-            ],
+            'employments' => $employments,
             'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
             'bottom_left_description' => $client_two == null ? $bld : null,
             'marital_status' => config('enums.client.marital_status')[$client->marital_status],

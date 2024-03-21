@@ -27,15 +27,29 @@ class EmploymentPresenter extends BasePresenter
                {
                    $ps = $this->model->client->pension_schemes->first();//take the first one
                }
+               if($ps->defined_benefit_pension)
+               {
+                   //Need to do this next 
+                   return [
+                       'employment_status' => 'Retiring',
+                       'employer' => $this->model->employer,
+                       'job_title' => $this->model->job_title,
+                       'pension_option_p_a' => $ps->defined_benefit_pension->chosen === 0 ? '' : '',
+                       'pension_option_l_s' =>  $ps->defined_benefit_pension->chosen === 0 ? '' : '',
+                   ];
+               }
+               else{
+                   //dc pension
+                   return [
+                       'employment_status' => 'Retiring',
+                       'employer' => $this->model->employer,
+                       'job_title' => $this->model->job_title,
+                       'pension_option_p_a' => $ps->defined_benefit_pension->chosen === 0 ? '' : '',
+                       'pension_option_l_s' =>  $ps->defined_benefit_pension->chosen === 0 ? '' : '',
+                   ];
+               }
 
 
-              return [
-                   'employment_status' => 'Retiring',
-                   'employer' => $this->model->employer,
-                   'job_title' => $this->model->job_title,
-                   'pension_option_p_a' => '',
-                   'pension_option_l_s' => '',
-                ];
            }
            if($this->model->client->strategy_report_recommendation->retirement_status === $this->enumValueByName('strategy_report_recommendations.retirement_status','Flex Retirement'))
            {
