@@ -5,6 +5,7 @@ namespace App\Models\Presenters;
 use App\Concerns\FormatsCurrency;
 use App\Models\Asset;
 use App\Models\PensionScheme;
+use Carbon\Carbon;
 
 class ClientPresenter extends BasePresenter
 {
@@ -622,7 +623,14 @@ class ClientPresenter extends BasePresenter
         }
 
     }
-
+    public function formatForPersonalDetails(): array
+    {
+        return [
+            'name' => $this->model->full_name,
+            'age' => Carbon::parse($this->model->date_of_birth)->diffInYears(Carbon::now()),
+            'date_of_birth' => Carbon::parse($this->model->date_of_birth)->format('jS F Y')
+        ];
+    }
 
     public function formatForClientsIndex(): array
     {

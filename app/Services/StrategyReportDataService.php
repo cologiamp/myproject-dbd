@@ -105,8 +105,15 @@ class StrategyReportDataService
             'bottom_left_description' => $client_two == null ? $bld : null,
             'marital_status' => config('enums.client.marital_status')[$client->strategy_report_recommendation->marital_status],
             'personal_details' => $client_two == null ? [
-
-            ] : [],
+                'icon' => '',
+                'clients' => [$client->presenter()->formatForPersonalDetails()]
+            ] : [
+                'icon' => '',
+                'clients' => [
+                    $client->presenter()->formatForPersonalDetails(),
+                    $client_two->presenter()->formatForPersonalDetails()
+                ]
+            ],
             'dependent' => '',
             'dependent_description' => '',
             'annual_expenditure' => '',

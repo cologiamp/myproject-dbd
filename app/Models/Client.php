@@ -33,6 +33,14 @@ class Client extends Model
     {
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
+    public function getFullNameAttribute(): string
+    {
+        if($this->middle_name && count($this->middle_name) > 0)
+        {
+            return $this->preferred_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        }
+        return $this->preferred_name . ' ' . $this->last_name;
+    }
 
     public function client_two(): BelongsTo
     {
