@@ -97,6 +97,23 @@ function nextTab(){
     }
 }
 
+function sidebarItemName(itemIndex, itemName) {
+    console.log(typeof itemIndex)
+    if (itemName === 'Pension Basic Details') {
+        return 'Basic Details'
+    } else if (itemName === 'Knowledge and Experience' && parseInt(itemIndex) === 3) {
+        return 'Knowledge and Experience Client 2'
+    } else if (itemName === 'Capacity for Loss' && parseInt(itemIndex) === 4) {
+        return 'Capacity for Loss Client 2'
+    } else if (itemName === 'Risk Profile' && parseInt(itemIndex) === 2) {
+        return 'Risk Profile Client 2'
+    } else if (itemName === 'Summary' && parseInt(itemIndex) === 2) {
+        return 'Summary Client 2'
+    } else {
+        return itemName
+    }
+}
+
 </script>
 
 
@@ -115,7 +132,8 @@ function nextTab(){
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
-                          <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>
+<!--                          <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>-->
+                          <span class="col-span-3 text-base">{{ sidebarItemName(index, item.name) }}</span>
                       </div>
                   </li>
               </ul>

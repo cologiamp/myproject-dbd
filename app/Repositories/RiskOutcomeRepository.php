@@ -85,7 +85,7 @@ class RiskOutcomeRepository extends BaseRepository
     {
         $clientIds = collect([$this->client->id]);
 
-        if ($this->client->client_two()) {
+        if ($this->client->client_two) {
             $clientIds->push($this->client->client_two->id);
         }
 

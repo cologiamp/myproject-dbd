@@ -118,25 +118,29 @@ class RiskAssessmentSectionDataService
      */
     private function _13(array $validatedData): void
     {
-        // define any explicit mutators that are not handled
-        $this->knowledgeRepository->setClient($this->clientRepository->getClient()->client_two);
+        if ($this->clientRepository->getClient()->client_two) {
+            // define any explicit mutators that are not handled
+            $this->knowledgeRepository->setClient($this->clientRepository->getClient()->client_two);
 
-        $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
-        $validatedData['experience_buying_cash'] = json_encode($validatedData['experience_buying_cash']);
-        $validatedData['experience_buying_bonds'] = json_encode($validatedData['experience_buying_bonds']);
-        $validatedData['experience_buying_equities'] = json_encode($validatedData['experience_buying_equities']);
-        $validatedData['experience_buying_insurance'] = json_encode($validatedData['experience_buying_insurance']);
+            $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
+            $validatedData['experience_buying_cash'] = json_encode($validatedData['experience_buying_cash']);
+            $validatedData['experience_buying_bonds'] = json_encode($validatedData['experience_buying_bonds']);
+            $validatedData['experience_buying_equities'] = json_encode($validatedData['experience_buying_equities']);
+            $validatedData['experience_buying_insurance'] = json_encode($validatedData['experience_buying_insurance']);
 
-        $this->knowledgeRepository->createOrUpdate($validatedData);
+            $this->knowledgeRepository->createOrUpdate($validatedData);
+        }
     }
 
     private function _14(array $validatedData): void
     {
-        // define any explicit mutators that are not handled
-        $this->capacityForLossRepository->setClient($this->clientRepository->getClient()->client_two);
+        if ($this->clientRepository->getClient()->client_two) {
+            // define any explicit mutators that are not handled
+            $this->capacityForLossRepository->setClient($this->clientRepository->getClient()->client_two);
 
-        $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
-        $this->capacityForLossRepository->createOrUpdate($validatedData);
+            $validatedData['type'] = config('enums.risk_assessment.type')['INVESTMENT_TYPE'];
+            $this->capacityForLossRepository->createOrUpdate($validatedData);
+        }
     }
 
     private function _21(array $validatedData): void
@@ -159,20 +163,24 @@ class RiskAssessmentSectionDataService
 
     private function _23(array $validatedData): void
     {
-        // define any explicit mutators that are not handled
-        $this->knowledgeRepository->setClient($this->clientRepository->getClient()->client_two);
+        if ($this->clientRepository->getClient()->client_two) {
+            // define any explicit mutators that are not handled
+            $this->knowledgeRepository->setClient($this->clientRepository->getClient()->client_two);
 
-        $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
-        $this->knowledgeRepository->createOrUpdate($validatedData);
+            $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
+            $this->knowledgeRepository->createOrUpdate($validatedData);
+        }
     }
 
     private function _24(array $validatedData): void
     {
-        // define any explicit mutators that are not handled
-        $this->capacityForLossRepository->setClient($this->clientRepository->getClient()->client_two);
+        if ($this->clientRepository->getClient()->client_two) {
+            // define any explicit mutators that are not handled
+            $this->capacityForLossRepository->setClient($this->clientRepository->getClient()->client_two);
 
-        $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
-        $this->capacityForLossRepository->createOrUpdate($validatedData);
+            $validatedData['type'] = config('enums.risk_assessment.type')['PENSION_TYPE'];
+            $this->capacityForLossRepository->createOrUpdate($validatedData);
+        }
     }
 
     private function _31(array $validatedData): void
@@ -186,11 +194,13 @@ class RiskAssessmentSectionDataService
 
     private function _32(array $validatedData): void
     {
-        // define any explicit mutators that are not handled
-        $this->riskProfileRepository->setClient($this->clientRepository->getClient()->client_two);
+        if ($this->clientRepository->getClient()->client_two) {
+            // define any explicit mutators that are not handled
+            $this->riskProfileRepository->setClient($this->clientRepository->getClient()->client_two);
 
-        $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
-        $this->riskProfileRepository->createOrUpdate($validatedData);
+            $validatedData['short_term_volatility'] = json_encode($validatedData['short_term_volatility']);
+            $this->riskProfileRepository->createOrUpdate($validatedData);
+        }
     }
 
     private function _41(array $validatedData): void
@@ -215,22 +225,25 @@ class RiskAssessmentSectionDataService
 
     private function _42(array $validatedData): void
     {
-        // define any explicit mutators that are not handled
-        if (array_key_exists('using_calculated_risk_profile_investment', $validatedData) && $validatedData['using_calculated_risk_profile_investment']) {
-            $validatedData['adviser_recommendation_investment'] = null;
-            $validatedData['why_investment'] = null;
+        if ($this->clientRepository->getClient()->client_two) {
+            // define any explicit mutators that are not handled
+            if (array_key_exists('using_calculated_risk_profile_investment', $validatedData) && $validatedData['using_calculated_risk_profile_investment']) {
+                $validatedData['adviser_recommendation_investment'] = null;
+                $validatedData['why_investment'] = null;
+            }
+
+            if (array_key_exists('using_calculated_risk_profile_pension', $validatedData) && $validatedData['using_calculated_risk_profile_pension']) {
+                $validatedData['adviser_recommendation_pension'] = null;
+                $validatedData['why_pension'] = null;
+            }
+
+            $client = $this->clientRepository->getClient()->client_two;
+            $this->riskOutcomeRepository->setClient($client);
+
+            $this->riskOutcomeRepository->setRiskOutcome(RiskOutcome::where('id', $client->risk_outcome->id)->first());
+
+            $this->riskOutcomeRepository->updateFromValidated($validatedData);
         }
-
-        if (array_key_exists('using_calculated_risk_profile_pension', $validatedData) && $validatedData['using_calculated_risk_profile_pension']) {
-            $validatedData['adviser_recommendation_pension'] = null;
-            $validatedData['why_pension'] = null;
-        }
-
-        $client = $this->clientRepository->getClient()->client_two;
-        $this->riskOutcomeRepository->setClient($client);
-        $this->riskOutcomeRepository->setRiskOutcome(RiskOutcome::where('id', $client->risk_outcome->id)->first());
-
-        $this->riskOutcomeRepository->updateFromValidated($validatedData);
     }
 
     public function assessMatrixResult(RiskOutcome $outcome): void

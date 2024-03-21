@@ -80,7 +80,7 @@ class CapacityForLossRepository extends BaseRepository
         $types = collect([RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE]);
         $clientIds = collect([$this->client->id]);
 
-        if ($this->client->client_two()) {
+        if ($this->client->client_two) {
             $clientIds->push($this->client->client_two->id);
         }
 
