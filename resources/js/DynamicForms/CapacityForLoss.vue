@@ -215,7 +215,7 @@ function isSubmitDisabled() {
             <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
                 <button type="button" @click="submitAssessment()"
                     :disabled="isSubmitDisabled()"
-                    class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700">
+                    class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700 disabled:cursor-not-allowed">
                     Submit Assessment
                 </button>
             </div>

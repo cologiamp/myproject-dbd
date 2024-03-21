@@ -5,7 +5,6 @@ import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 import {watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
-import Swal from "sweetalert2";
 import {forceRefresh} from "@/calculateRiskAssesment.js";
 
 const emit = defineEmits(['autosaveStateChange'])
@@ -70,27 +69,6 @@ async function autosaveLocally(){
     stepForm.adviser_recommendation_pension = props.formData.model.adviser_recommendation_pension;
     stepForm.why_investment = props.formData.model.why_investment;
     stepForm.why_pension = props.formData.model.why_pension;
-
-
-}
-function submitAssessment() {
-    if (autosaveLocally()) {
-        if(props.formData.model) {
-            Swal.fire({
-                title: 'Done',
-                text: 'Assessment submitted',
-                icon: 'success'
-            });
-        }
-    }
-}
-
-function isSubmitDisabled() {
-    if ((stepForm.assessment_result_investment == null && stepForm.assessment_result_pension == null) || (stepForm.using_calculated_risk_profile_investment === false && stepForm.adviser_recommendation_investment == null) ||
-        (stepForm.using_calculated_risk_profile_pension === false && stepForm.adviser_recommendation_pension == null)) {
-        return true
-    }
-    return false
 }
 
 function investmentResult() {
@@ -142,11 +120,15 @@ function pensionResult() {
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Use calculated investment risk profile?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input type="radio" id="true" :value="true"
-                               v-model="stepForm.using_calculated_risk_profile_investment" :checked="stepForm.using_calculated_risk_profile_investment === true"
+                               v-model="stepForm.using_calculated_risk_profile_investment"
+                               :checked="stepForm.using_calculated_risk_profile_investment === true"
+                               @change="autosaveLocally()"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                         <input type="radio" id="false" :value="false"
-                               v-model="stepForm.using_calculated_risk_profile_investment" :checked="stepForm.using_calculated_risk_profile_investment === false"
+                               v-model="stepForm.using_calculated_risk_profile_investment"
+                               :checked="stepForm.using_calculated_risk_profile_investment === false"
+                               @change="autosaveLocally()"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
@@ -157,6 +139,7 @@ function pensionResult() {
                         <label for="inv_risk_profile_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Recommendation for Investment Risk Profile</label>
                         <select id="inv_risk_profile_type" name="inv_risk_profile_type"
                                 v-model="stepForm.adviser_recommendation_investment"
+                                @change="autosaveLocally()"
                                 class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="inv_risk_profile_type" :value="null">-</option>
                             <option :id="id" :value="id" v-for="(type, id) in formData.enums.assessment_result_type">{{ type }}</option>
@@ -169,6 +152,7 @@ function pensionResult() {
                     <div class="mt-2">
                         <textarea rows="3" name="why_investment" id="why_investment"
                           v-model="stepForm.why_investment"
+                          @change="autosaveLocally()"
                           class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                     </div>
                 </div>
@@ -177,11 +161,15 @@ function pensionResult() {
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Use calculated pension risk profile?</label>
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input type="radio" id="true" :value="true"
-                               v-model="stepForm.using_calculated_risk_profile_pension" :checked="stepForm.using_calculated_risk_profile_pension === true"
+                               v-model="stepForm.using_calculated_risk_profile_pension"
+                               :checked="stepForm.using_calculated_risk_profile_pension === true"
+                               @change="autosaveLocally()"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                         <input type="radio" id="false" :value="false"
-                               v-model="stepForm.using_calculated_risk_profile_pension" :checked="stepForm.using_calculated_risk_profile_pension === false"
+                               v-model="stepForm.using_calculated_risk_profile_pension"
+                               :checked="stepForm.using_calculated_risk_profile_pension === false"
+                               @change="autosaveLocally()"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
@@ -192,6 +180,7 @@ function pensionResult() {
                         <label for="pension_risk_profile_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Recommendation for Pension Risk Profile</label>
                         <select id="pension_risk_profile_type" name="pension_risk_profile_type"
                                 v-model="stepForm.adviser_recommendation_pension"
+                                @change="autosaveLocally()"
                                 class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                             <option id="pension_risk_profile_type" :value="null">-</option>
                             <option :id="id" :value="id" v-for="(type, id) in formData.enums.assessment_result_type">{{ type }}</option>
@@ -204,15 +193,9 @@ function pensionResult() {
                     <div class="mt-2">
                         <textarea rows="3" name="why_pension" id="why_pension"
                           v-model="stepForm.why_pension"
+                          @change="autosaveLocally()"
                           class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
                     </div>
-                </div>
-                <div class="sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center text-red-500">
-                    <button type="button" @click="submitAssessment()"
-                        :disabled="isSubmitDisabled()"
-                        class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700">
-                        Submit Assessment
-                    </button>
                 </div>
             </div>
         </div>

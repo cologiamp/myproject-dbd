@@ -162,7 +162,7 @@ function getRiskProfileScore(stepForm) {
     }
 
     // Q1 - stepForm.comfort_fluctuate_market
-    alert('cautious= ' + cautious + 'balanced= ' + balanced + 'adventurous= ' + adventurous )
+    console.log('cautious= ' + cautious + 'balanced= ' + balanced + 'adventurous= ' + adventurous )
     if (stepForm.comfort_fluctuate_market === false) {
         return RISK_PROFILE_NOT_SUITABLE;
     }
