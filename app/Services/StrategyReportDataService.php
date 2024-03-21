@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Concerns\FlipsEnums;
+use App\Concerns\FormatsCurrency;
 use App\Concerns\InterractsWithDataHub;
 use App\Models\EmploymentDetail;
 use Carbon\Carbon;
@@ -8,7 +10,7 @@ use Illuminate\Support\Str;
 
 class StrategyReportDataService
 {
-    use InterractsWithDataHub;
+    use InterractsWithDataHub, FormatsCurrency, FlipsEnums;
     public function getStrategyReportData($client):array
     {
         $client_two = $client->client_two;
@@ -32,11 +34,11 @@ class StrategyReportDataService
         if(!$client_two && $client->strategy_report_recommendation->objective_type !== null)
         {
             $ed1 = EmploymentDetail::where('client_id', $client->id)->first();
-            if($client->strategy_report_recommendation->objective_type == array_flip(config('enums.strategy_report_recommendations.objective_type'))['Accumulating Wealth'])
+            if($client->strategy_report_recommendation->objective_type == $this->enumValueByName('strategy_report_recommendations.objective_type','Accumulating Wealth'))
             {
                 $bld = 'To build capital for a better financial future';
             }
-            elseif($ed1->employment_status === array_flip(config('enums.employment.employment_status'))['Retired'])
+            elseif($ed1->employment_status === $this->enumValueByName('employment.employment_status','Retired'))
             {
                 $bld = 'In ' . Carbon::parse($ed1->start_at)->format('Y');
             }
@@ -52,6 +54,69 @@ class StrategyReportDataService
                 }
             }
         }
+        if(!$client_two)
+        {
+            $dependents = $client->dependents->values();
+        }
+        else{
+            $dependents =  collect($client->dependents->merge($client_two->dependents))->values();
+        }
+        $dc = count($dependents);
+        $dependents_title = (string)$dc . ' ';
+        $dependents_title .=   $dependents->filter(fn($i)=> in_array($i->pivot->relationship_type, [
+                $this->enumValueByName('dependent.relationship_type','Daughter'),
+                $this->enumValueByName('dependent.relationship_type','Son')
+            ]))->count() === $dc ? 'child' . ($dc > 1 ? 'ren' : ''): 'dependent' . ($dc > 1 ? 's' : '');
+
+        if($dc == 0)
+        {
+            $dependents_desc = null;
+        }
+        else{
+            $ddd = $dependents->filter(fn($i) => $i->financial_dependent)->count();
+            if($ddd === 1)
+            {
+                if($ddd === $dc)
+                {
+                    $dependents_desc = 'Who is';
+                }
+                else{
+                    $dependents_desc = 'One of whom is';
+                }
+            }
+            else{
+                if($ddd === 0)
+                {
+                    $dependents_desc = 'None';
+                }
+                elseif($ddd == 2 && $ddd === $dc)
+                {
+                    $dependents_desc = 'Both';
+                }
+                elseif($ddd > 2 && $ddd === $dc)
+                {
+                    $dependents_desc = 'All';
+                }
+                else{
+                    $dependents_desc = (string)$ddd;
+                }
+                $dependents_desc .= ' of whom are';
+            }
+            $dependents_desc .= ' financially dependant';
+        }
+
+        $home =  $client->assets()->where('type',$this->enumValueByName('assets.types','MainResidence'))->first();
+        if($home)
+        {
+            $home_value_status = 'Home Value';
+            $home_value = $this->currencyIntToString($home->current_value);
+        }
+        else
+        {
+            $home_value_status = 'Renting';
+            $home_value = $this->currencyIntToString($home->current_value);
+        }
+
 
         return [
           'cover' => [
@@ -78,32 +143,16 @@ class StrategyReportDataService
           'about_you' => [
             'type' =>  $client_two == null
                             ? (in_array($client->strategy_report_recommendation->objective_type,[
-                                array_flip(config('enums.strategy_report_recommendations.objective_type'))['Considering Retirement'],
-                                array_flip(config('enums.strategy_report_recommendations.objective_type'))['Retiring']
+                                $this->enumValueByName('strategy_report_recommendations.objective_type','Considering Retirement'),
+                                $this->enumValueByName('strategy_report_recommendations.objective_type','Retiring')
                             ]) ? 'retiring' : 'individual')
                             : 'couple', //individual, retiring, couple,
             'employments' => [
-                [
-                    'employment_status' => 'Retiring',
-                    'employer' => '',
-                    'job_title' => '',
-                    'pension_option_p_a' => '',
-                    'pension_option_l_s' => '',
-                ],
-                [
-                    'employment_status' => 'Employed',
-                    'employer' => '',
-                    'job_title' => '',
-                    'salary' => ''
-                ],
-                [
-                    'employment_status' => 'Retired',
-                    'retirement_income' => ''
-                ],
+
             ],
             'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
             'bottom_left_description' => $client_two == null ? $bld : null,
-            'marital_status' => config('enums.client.marital_status')[$client->strategy_report_recommendation->marital_status],
+            'marital_status' => config('enums.client.marital_status')[$client->marital_status],
             'personal_details' => $client_two == null ? [
                 'icon' => '',
                 'clients' => [$client->presenter()->formatForPersonalDetails()]
@@ -114,11 +163,12 @@ class StrategyReportDataService
                     $client_two->presenter()->formatForPersonalDetails()
                 ]
             ],
-            'dependent' => '',
-            'dependent_description' => '',
+            'dependent' => $dependents_title,
+            'dependent_description' => $dependents_desc,
+            'dependent_icon' => str_contains($dependents_desc,'child') ? config('enums.strategy_report_icons.dependents')['child'] : config('enums.strategy_report_icons.dependents')['adult'] ,
             'annual_expenditure' => '',
-            'home_value_status' => '',
-            'home_value' => '',
+            'home_value_status' => $home_value_status,
+            'home_value' => $home_value,
             'address' => '',
             'liquid_assets' => '',
             'pension_status' => '',

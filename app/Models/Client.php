@@ -35,7 +35,7 @@ class Client extends Model
     }
     public function getFullNameAttribute(): string
     {
-        if($this->middle_name && count($this->middle_name) > 0)
+        if($this->middle_name && strlen($this->middle_name) > 0)
         {
             return $this->preferred_name . ' ' . $this->middle_name . ' ' . $this->last_name;
         }

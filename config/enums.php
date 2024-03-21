@@ -2175,5 +2175,11 @@ return [
             14 => 'To counter the eroding effects of inflation over the medium to longer term',
             99 => 'Other'
         ]
+    ],
+    'strategy_report_icons' => [
+        'dependents' => [
+            'child' => 'https://child-icon.test',
+            'adult' => 'https://adult-icon.test',
+        ]
     ]
 ];
