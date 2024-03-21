@@ -168,10 +168,6 @@ class StrategyReportDataService
             ],
             'summary' => [
                 'calls_to_action' =>
-                    [
-                        ['title' => 'To avoid a strategy that suffers from static asset allocation'],
-                        ['title' => 'An advice-based service can reduce the level of administration'],
-                    ],
                     $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){
                     return [
                         'title' => $item->formatted_cta

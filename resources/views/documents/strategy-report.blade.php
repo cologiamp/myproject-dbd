@@ -186,6 +186,7 @@
     }
     .offices-label-wrapper {
         margin-left: 25px;
+        width: 95px;
     }
     .offices-label {
         margin-top: -56px;
@@ -350,6 +351,18 @@
        color: #160D50;
     }
     .modal-img {
+    }
+
+    .team-member-picture-wrapper {
+        height: 110px;
+        width: 110px;
+    }
+    .team-member-picture {
+        border-radius: 50%;
+        height: 110px;
+        width: 110px;
+        object-fit: cover;
+        object-position: 20% 5%; /* try 20px 10px */
     }
 </style>
 
@@ -555,7 +568,10 @@
 
         <div class="w-1/4 director-wrapper p-6 mr-4">
             <div class="w-full">
-                <img class="w-28" src="{{ $data['meet_the_team']['adviser_picture'] }}">
+                <div class="team-member-picture-wrapper">
+                    <img class="w-28 team-member-picture" src="{{ $data['meet_the_team']['adviser_picture'] }}">
+                </div>
+
             </div>
             <p class="font-bold text-white key-considerations mt-7">{{ $data['meet_the_team']['adviser_name'] }}</p>
             <h3 class="position">{{ $data['meet_the_team']['adviser_title'] }}</h3>
