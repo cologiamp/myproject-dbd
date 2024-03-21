@@ -524,8 +524,7 @@
                     </div>
                     <div class="offices-label-wrapper">
                         <p class="offices-label -mt-14 ml-4">
-                            <!-- {{ $data['about_us']['group_offices_description'] }} -->
-                            Liverpool (head office),<br> Bristol, Manchester, <br> London, Dublin
+                            {{ $data['about_us']['group_offices_description'] }}
                         </p>
                     </div>
                 </div>
