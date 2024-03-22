@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import { onBeforeMount, watch } from "vue";
+import {changeToCurrency} from "@/currency.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -140,23 +141,6 @@ function formatAmount(e, typeIndex, expIndex, dataField) {
     stepForm.expenditures[typeIndex][expIndex][dataField] = changeToCurrency(e.target.value);
 }
 
-function changeToCurrency(amount) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'GBP',
-        minimumFractionDigits: 0
-    });
-
-    // Remove non-numeric characters from user input and convert to int
-    let tempAmount = amount.replace(/[^\d.]/g, '');
-    let numberValue = ''
-
-    if (tempAmount) {
-        numberValue = tempAmount;
-        // Format input using Intl.NumberFormat
-        return formatter.format(numberValue)
-    }
-}
 
 function expenditureStatus($event, typeIndex, expIndex, dataField) {
     if (dataField == 'currently_active') {
