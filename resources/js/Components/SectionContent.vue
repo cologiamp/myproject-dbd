@@ -43,8 +43,8 @@ const selectedSectionId = inject("selectedSectionId");
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component :is="dynamicComponent(item.renderable)"
-                   :formData="item.dynamicData"
-                   :sidebarItemsLength="sidebarItemsLength"
+           :formData="item.dynamicData"
+           :sidebarItemsLength="sidebarItemsLength"
         />
     </div>
 </template>

@@ -21,7 +21,6 @@ class RiskPresenter extends BasePresenter
     public function formatForStep($step,$section): array
     {
         if ($this->model->client->client_two) {
-            dd('here');
             return match ($step . '.' . $section) {
                 '1.1' => [
                     'knowledge' => collect(Knowledge::where('client_id', $this->model->client->id)->where('type', config('enums.risk_assessment.type')['INVESTMENT_TYPE'])->get()->map(function ($knowledge) {

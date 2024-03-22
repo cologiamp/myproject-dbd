@@ -19,6 +19,10 @@ watch(forceRefresh,(newValue,oldValue) => {
     }
 })
 
+defineOptions({
+    inheritAttrs: false
+})
+
 const props = defineProps({
     formData: {
         type: Object,

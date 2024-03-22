@@ -1,6 +1,6 @@
 <script setup>
-import {ref, provide, inject, onBeforeMount, computed} from "vue";
-import {Link, router} from '@inertiajs/vue3';
+import {inject, onBeforeMount, provide, ref} from "vue";
+import {router} from '@inertiajs/vue3';
 import {ArrowRightIcon} from "@heroicons/vue/24/solid/index.js";
 
 const props = defineProps({
@@ -85,8 +85,8 @@ function nextTab(){
     const search = window.location.search;
 
     let arr = search.split('&');
-    let section = arr[1].slice(-1);
-    let step = arr[0].slice(-1);
+    let section = arr[1] ? arr[1].slice(-1) : 1;
+    let step = arr[0] ? arr[0].slice(-1) : 1;
 
     if(section == Object.keys(props.sidebarItems).length)
     {
@@ -97,21 +97,8 @@ function nextTab(){
     }
 }
 
-function sidebarItemName(itemIndex, itemName) {
-    console.log(typeof itemIndex)
-    if (itemName === 'Pension Basic Details') {
-        return 'Basic Details'
-    } else if (itemName === 'Knowledge and Experience' && parseInt(itemIndex) === 3) {
-        return 'Knowledge and Experience Client 2'
-    } else if (itemName === 'Capacity for Loss' && parseInt(itemIndex) === 4) {
-        return 'Capacity for Loss Client 2'
-    } else if (itemName === 'Risk Profile' && parseInt(itemIndex) === 2) {
-        return 'Risk Profile Client 2'
-    } else if (itemName === 'Summary' && parseInt(itemIndex) === 2) {
-        return 'Summary Client 2'
-    } else {
-        return itemName
-    }
+function isClient2(item) {
+    return item.is_client_two && item.is_client_two === true;
 }
 
 </script>
@@ -132,8 +119,9 @@ function sidebarItemName(itemIndex, itemName) {
                                :class="[item.current ? 'bg-aaron-400' : 'bg-aaron-950']">
                               {{ index }}
                           </div>
-<!--                          <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>-->
-                          <span class="col-span-3 text-base">{{ sidebarItemName(index, item.name) }}</span>
+                          <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>
+                          <div v-if="isClient2(item)" class="rounded-full w-11 h-2 py-0 text-center text-sm"></div>
+                          <span v-if="isClient2(item)" class="col-span-3 text-sm text-pretty">( Client 2 )</span>
                       </div>
                   </li>
               </ul>

@@ -1,8 +1,6 @@
 <?php
 namespace App\Repositories;
 
-
-
 use App\Concerns\ParsesIoClientData;
 use App\Exceptions\ClientNotFoundException;
 use App\Http\Requests\BaseClientRequest;
@@ -322,12 +320,24 @@ class ClientRepository extends BaseRepository
      */
     public function loadRiskSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
+        $uniqueSection = collect([]);
+        if(!$this->client->client_two) {
+            $sections = $sections->unique();
+        }
+
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step, $uniqueSection){
+            $isClientTwo = true;
+            if (!$uniqueSection->contains($value)) {
+                $uniqueSection->push($value);
+                $isClientTwo = false;
+            }
+
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
                'dynamicData' => RiskAssessmentSectionDataService::get($this->client,$step,$key),
+               'is_client_two' => $isClientTwo
            ];
         });
     }
