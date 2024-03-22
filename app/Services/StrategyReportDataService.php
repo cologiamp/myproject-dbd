@@ -4,7 +4,10 @@ namespace App\Services;
 use App\Concerns\FlipsEnums;
 use App\Concerns\FormatsCurrency;
 use App\Concerns\InterractsWithDataHub;
+use App\Models\Asset;
 use App\Models\EmploymentDetail;
+use App\Models\OtherInvestment;
+use App\Models\PensionScheme;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -119,14 +122,57 @@ class StrategyReportDataService
 
         if($client_two)
         {
-            $employments = collect($client->employment_detailss()->get()->take(1)->merge($client_two->employment_detailss()->get()->take(1)));
+            $employments = collect($client->employment_details()->get()->take(1)->merge($client_two->employment_detailss()->get()->take(1)));
+            $c1e = $client->expenditures()->where(function ($q){
+                return $q->where('starts_at',null)->orWhereDate('starts_at','<=',Carbon::now());
+            })->get();
+            $c2e = $client_two->expenditures()->where(function ($q){
+                return $q->where('starts_at',null)->orWhereDate('starts_at','<=',Carbon::now());
+            })->get();
+            $expenditures = $c1e->merge($c2e);
+
+            $assets_ids =  $client->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id')->merge($client_two->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id'));
+            $investments = $client->other_investments->merge($client_two->other_investments);
+            $db_pension =  PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$client->id,$client_two->id])->get();
+            $dc_pension =  PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->whereIn('client_id',[$client->id,$client_two->id])->get();
         }
         else{
+            $assets_ids =  $client->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id');
+
             $employments = collect($client->employment_details()->get()->take(1));
+            $expenditures = $client->expenditures()->where(function ($q){
+                return $q->where('starts_at',null)->orWhereDate('starts_at','<=',Carbon::now());
+            })->get();
+            $investments = $client->other_investments;
+            $db_pension =  PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$client->id)->get();
+            $dc_pension =  PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->where('client_id',$client->id)->get();
         }
         $employments = $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values();
+        $assets =  Asset::with('clients')->whereIn('id',$assets_ids)->get();
 
-        dd($employments);
+        if(count($db_pension) > 0)
+        {
+            if(count($dc_pension) > 0)
+            {
+                $pension_status = 'DB & DC Pensions';
+                $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value) + $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv));
+            }
+            else{
+                $pension_status = 'Defined Benefit Pensions';
+                $pension_value = $this->currencyIntToString($db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv));
+            }
+        }
+        elseif(count($dc_pension) > 0)
+        {
+            $pension_status = 'Defined Contribution Pensions';
+            $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value));
+        }
+        else{
+            $pension_status = 'No Pensions';
+            $pension_value = '£0.00';
+        }
+
+
 
         return [
           'cover' => [
@@ -157,15 +203,15 @@ class StrategyReportDataService
                                 $this->enumValueByName('strategy_report_recommendations.objective_type','Retiring')
                             ]) ? 'retiring' : 'individual')
                             : 'couple', //individual, retiring, couple,
-            'employments' => $employments,
+            'employments' => $employments->toArray(),
             'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
             'bottom_left_description' => $client_two == null ? $bld : null,
             'marital_status' => config('enums.client.marital_status')[$client->marital_status],
             'personal_details' => $client_two == null ? [
-                'icon' => '',
+                'icon' => config('strategy_report.icons.personal_details_one_client'),
                 'clients' => [$client->presenter()->formatForPersonalDetails()]
             ] : [
-                'icon' => '',
+                'icon' => config('strategy_report.icons.personal_details_two_clients'),
                 'clients' => [
                     $client->presenter()->formatForPersonalDetails(),
                     $client_two->presenter()->formatForPersonalDetails()
@@ -174,13 +220,13 @@ class StrategyReportDataService
             'dependent' => $dependents_title,
             'dependent_description' => $dependents_desc,
             'dependent_icon' => str_contains($dependents_desc,'child') ? config('enums.strategy_report_icons.dependents')['child'] : config('enums.strategy_report_icons.dependents')['adult'] ,
-            'annual_expenditure' => '',
+            'annual_expenditure' =>  $this->currencyIntToString($expenditures->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount)),
             'home_value_status' => $home_value_status,
             'home_value' => $home_value,
-            'address' => '',
-            'liquid_assets' => '',
-            'pension_status' => '',
-            'pension_value' => ''
+            'address' => $client->addresses->first()->formatForStrategyReport(),
+            'liquid_assets' => $this->currencyIntToString($assets->sum('current_value') + $investments->sum('current_value')),
+            'pension_status' => $pension_status,
+            'pension_value' => $pension_value
           ],
            'your_objectives' => $client->strategy_report_recommendation->objectives->sortBy('order')->groupBy('is_primary')->mapWithKeys(function ($items){
                return [

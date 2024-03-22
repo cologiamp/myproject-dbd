@@ -22,7 +22,7 @@ class ExpenditurePresenter extends BasePresenter
             'expenditure_id' => $this->model->id,
             'expenditure_type' => $this->model->type,
             'description' => $this->model->description,
-            'amount' => $this->currencyIntToString($this->model->amount),
+            'amount' => $this->model->amount != null ? $this->currencyIntToString($this->model->amount) : null,
             'frequency' => $this->model->frequency,
             'starts_at' => $this->model->starts_at,
             'ends_at' => $this->model->ends_at,

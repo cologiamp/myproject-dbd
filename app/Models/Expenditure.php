@@ -24,6 +24,12 @@ class Expenditure extends Model
         return $query->whereIn('type', collect(config('enums.expenditures.' . $expenditureType))->keys()->all());
     }
 
+
+
+    public function getGrossAnnualAmountAttribute(): float|int
+    {
+        return $this->amount * config('enums.incomes.per_year_frequency')[$this->frequency];
+    }
     //Presenter
     public function presenter() : ExpenditurePresenter
     {
