@@ -76,26 +76,31 @@ class HandleInertiaRequests extends Middleware
                     'current' => $request->route()->getName() === 'client.pensionobjectives'
                 ],
                 [
-                    'name' => 'Strategy Report',
-                    'href' => '/client/'.$client->io_id.'/strategy-report',
-                    'icon' => 'SRIcon',
-                    'current' => $request->route()->getName() === 'client.strategy'
-                ],
-                [
-                    'name' => 'Investment Recommendation',
+                    'name' => 'Recommendations',
                     'href' => '/client/'.$client->io_id.'/investment-recommendation',
                     'icon' => 'IRIcon',
                     'current' => $request->route()->getName() === 'client.investmentrecommendation'
+                ],
+                [
+                    'name' => 'Strategy Report Options',
+                    'href' => '/client/'.$client->io_id.'/strategy-report-recommendations',
+                    'icon' => 'SRRIcon',
+                    'current' => $request->route()->getName() === 'client.strategyreportrecommendations'
                 ],
                 [
                     'name' => 'Risk Assessment',
                     'href' => '/client/'.$client->io_id.'/risk-assessment',
                     'icon' => 'RPIcon',
                     'current' => $request->route()->getName() === 'client.riskassessment'
+                ],
+                [
+                    'name' => 'Strategy Report',
+                    'href' => '/client/'.$client->io_id.'/strategy-report',
+                    'icon' => 'SRIcon',
+                    'current' => $request->route()->getName() === 'client.strategy'
                 ]
             ]);
         }
-//        $client_enabled_nav
         return array_merge(parent::share($request), [
             'logo' => config('constants.new_logo'),
             'navigation' => $nav1
@@ -105,7 +110,7 @@ class HandleInertiaRequests extends Middleware
             //Fact Find
             //Strategy Report
 
-//]
+            //]
 
         ]);
     }

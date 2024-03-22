@@ -9,9 +9,11 @@ use App\Models\Address;
 use App\Models\Client;
 use App\Models\Health;
 use App\Models\EmploymentDetail;
+use App\Models\StrategyReportRecommendation;
 use App\Services\FactFindSectionDataService;
 use App\Services\RiskAssessmentSectionDataService;
 use App\Services\PensionObjectivesDataService;
+use App\Services\StrategyReportRecommendationsDataService;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -351,6 +353,14 @@ class ClientRepository extends BaseRepository
         ];
     }
 
+    public function loadStrategyReportRecommendationsTabContent(array $config, int $currentTab):array
+    {
+        return [
+            'name' => $config['name'],
+            'renderable' => Str::studly($config['name']),
+            'dynamicData' => StrategyReportRecommendationsDataService::get(StrategyReportRecommendation::where('id', $this->client->strategy_report_recommendation_id)->first(), $currentTab),
+        ];
+    }
 
     /**
      * Load in the correct data structure for the sidebar tabs of the page we're on
@@ -385,6 +395,18 @@ class ClientRepository extends BaseRepository
         })->toArray();
     }
 
+    public function loadStrategyReportRecommendationsTabs(int $currentStep = 1):array
+    {
+        return collect(config('navigation_structures.strategyreportrecommendations'))->map(function ($value, $key) use ($currentStep){
+            return [
+                'name' => $value['name'],
+                'current' =>  $key === $currentStep,
+                'progress' => 0,
+                'tabcontent' => $this->loadStrategyReportRecommendationsTabContent($value, $key)
+            ];
+        })->toArray();
+    }
+
     /**
      * Load in the correct data structure for the sidebar tabs of the page we're on
      * @return array
@@ -402,7 +424,6 @@ class ClientRepository extends BaseRepository
             ];
         })->toArray();
     }
-
 
     public function setEmptyFields(Collection $value)
     {

@@ -4,8 +4,12 @@ namespace App\Models;
 
 use App\Models\BaseModels\Model;
 use App\Models\Presenters\InvestmentRecommendationPresenter;
+use App\Observers\PensionRecommendationObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
+#[ObservedBy([PensionRecommendationObserver::class])]
 class PensionRecommendation extends Model
 {
     protected $guarded = [];

@@ -50,7 +50,6 @@ class FactFindController extends Controller
     public function update(Client $client, $step, $section, Request $request): string
     {
         $ffsds = App::make(FactFindSectionDataService::class);
-
         if ($step == 2 && $section >= 2) {
             $request['expenditures'] = collect($request['expenditures'])->filter()->flatten(1)->toArray();
         }
