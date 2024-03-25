@@ -73,6 +73,21 @@ class StrategyReportDataService
             'bottom_left_status' => '',
             'bottom_left_description' => '',
             'marital_status' => 'Married',
+            'personal_details' => [
+                'icon' => 'test.svg',
+                'clients' => [
+                    [
+                        'name' => 'Client Name',
+                        'age' => 55,
+                        'date_of_birth' => '15th February 1960'
+                    ],
+                    [
+                        'name' => 'Client 2 Name',
+                        'age' => 60,
+                        'date_of_birth' => '11th February 1958'
+                    ],
+                ]
+            ],
             'name' => 'John Winston Lenno',
             'age' => '55',
             'birth_date' => '8th Feb 1969',

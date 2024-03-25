@@ -104,6 +104,10 @@
     h4 { font-size:14px; }
     p { font-size: 13px; line-height: 16px; }
     p.small { font-size: 11px; line-height: 14px; }
+    p.pension-value-title {
+        font-size: 9px !important;
+        line-height: 13px;
+    }
     p.small-my-wealth { font-size: 11px; line-height: 15px; }
     p.small-meet-your-team { font-size: 11px; line-height: 18px; }
     .first-description {
@@ -363,6 +367,9 @@
         width: 110px;
         object-fit: cover;
         object-position: 20% 5%; /* try 20px 10px */
+    }
+    p.small-pension-value {
+        font-size: 26px !important;
     }
 </style>
 
@@ -827,8 +834,21 @@
                             <strong>Employer:</strong> {{ $data['about_you']['employments'][1]['employer'] }}<br>
                             <strong>Job Title:</strong> {{ $data['about_you']['employments'][1]['job_title'] }}
                         </p>
-                        <p class="small mb-2"><strong>Salary p.a.</strong></p>
-                        <p>&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                        @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
+                            <p class="small mb-2"><strong>Salary p.a.</strong></p>
+                            <p>&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                        @else
+                            <div class="flex -ml-20">
+                                <div class="w-1/2">
+                                    <p class="small mb-2 pension-value-title"><strong>Pension option p.a.</strong></p>
+                                    <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                                </div>
+                                <div class="w-1/2 ml-6">
+                                    <p class="small mb-2 pension-value-title"><strong>Pension option lump sum</strong></p>
+                                    <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -880,11 +900,26 @@
                 </div>
             </div>
             <div class="tall-panel waw-bg-light-blue flex flex-col items-center justify-center">
-                <p class="mb-3">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
-                </p>
-                <p class="text-center">{{ $data['about_you']['name'] . ' ' . $data['about_you']['age'] }}</p>
-                <p class="small"{{ $data['about_you']['birth_date'] }}</p>
+
+                @if(count($data['about_you']['personal_details']['clients']) <= 1)
+                    <p class="mb-3">
+                        @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
+                            <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
+                        @endif
+                    </p>
+                    <p class="text-center">{{ $data['about_you']['name'] . ' ' . $data['about_you']['age'] }}</p>
+                    <p class="small"{{ $data['about_you']['birth_date'] }}</p>
+                @else
+                    @foreach ($data['about_you']['personal_details']['clients'] as $client)
+                        <p class="mb-3">
+                            @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
+                                <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
+                            @endif
+                        </p>
+                        <p class="text-center">{{ $client['name'] }}</p>
+                        <p class="small">Age {{ $client['age'] . ' (' . $client['date_of_birth'] . ')' }}</p>
+                    @endforeach
+                @endif
             </div>
             <div class="short-panel waw-bg-pink">
                 <div class="flex-shrink-0">
