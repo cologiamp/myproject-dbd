@@ -98,7 +98,7 @@ class HandleInertiaRequests extends Middleware
                     'href' => '/client/'.$client->io_id.'/risk-assessment',
                     'icon' => 'RPIcon',
                     'current' => $request->route()->getName() === 'client.riskassessment'
-                ]
+                ],
             ]);
         }
         return array_merge(parent::share($request), [
@@ -109,8 +109,7 @@ class HandleInertiaRequests extends Middleware
 
             //Fact Find
             //Strategy Report
-
-//]
+            //]
 
         ]);
     }

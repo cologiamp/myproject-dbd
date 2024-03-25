@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
-    stepFormData: [],
-    enumItem: []
+    stepFormData: Array,
+    enumItem: Array
 });
 
 const emit = defineEmits(['setRating'])

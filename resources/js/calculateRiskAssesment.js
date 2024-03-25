@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import Swal from "sweetalert2";
-import {nextTab} from "@/nextAction.js";
+import {submitNext} from "@/nextAction.js";
 
 const CAPACITY_LOW = 0;
 const CAPACITY_MEDIUM = 1;
@@ -37,7 +37,7 @@ function saveSectionScore(id, score, type, section, sidebarItemsLength) {
             confirmButtonText: "OK",
         }).then((result) => {
             if (result.isConfirmed) {
-                nextTab(sidebarItemsLength);
+                submitNext(sidebarItemsLength);
             }
         });
     }).catch((error) => {
