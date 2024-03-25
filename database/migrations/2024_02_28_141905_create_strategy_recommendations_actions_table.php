@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('strategy_recommendation_actions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('strategy_report_recommendation_id')->constrained()->index('srr_id_foreign');;
+            $table->foreignId('strategy_report_recommendation_id')->constrained()->index('srr_id_foreign');
             $table->integer('call_to_action')->nullable();
             $table->string('call_to_action_custom')->nullable();
             $table->integer('order')->nullable();
