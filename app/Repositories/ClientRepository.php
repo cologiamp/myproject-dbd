@@ -407,7 +407,8 @@ class ClientRepository extends BaseRepository
                 'current' =>  $key === $currentStep,
                 'sidebaritems' => $this->loadRiskSidebarItems(collect($value['sections'])->mapWithKeys(function ($value,$key){
                     return [$key => $value['name']];
-                }), $key, $currentStep, $currentSection)->toArray()
+                }), $key, $currentStep, $currentSection)->toArray(),
+                'risk_outcome_id' => $this->client->risk_outcome?->id
             ];
         })->toArray();
     }

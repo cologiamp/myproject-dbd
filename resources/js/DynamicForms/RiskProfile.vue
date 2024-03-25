@@ -1,11 +1,13 @@
 <script setup>
 import {autoS, autosaveT} from "@/autosave.js";
+import {calculateRiskProfile} from "@/calculateRiskAssesment.js";
 import DynamicFormWrapper from "@/Components/DynamicFormWrapper.vue";
 
 import {onMounted, watch} from "vue";
 import {useForm, usePage} from "@inertiajs/vue3";
 import FormErrors from "@/Components/FormErrors.vue";
 import ConcernRatingTable from "@/Components/ConcernRatingTable.vue";
+import {InformationCircleIcon} from "@heroicons/vue/24/outline/index.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -27,13 +29,17 @@ const props = defineProps({
                 medium_term_volatility: null,
                 volatility_behaviour: null,
                 long_term_volatility: null,
-                time_in_market: null
+                time_in_market: null,
+                risk_outcome_id: null,
+                capacity_inv_score: null,
+                capacity_pension_score: null
             },
             submit_method: 'post',
             submit_url: '/',
         },
     },
     errors: Object,
+    sidebarItemsLength: Number
 });
 
 const stepForm = useForm({
@@ -44,7 +50,9 @@ const stepForm = useForm({
     medium_term_volatility: props.formData.model.medium_term_volatility,
     volatility_behaviour: props.formData.model.volatility_behaviour,
     long_term_volatility: props.formData.model.long_term_volatility,
-    time_in_market: props.formData.model.time_in_market
+    time_in_market: props.formData.model.time_in_market,
+    capacity_inv_score: props.formData.model.capacity_inv_score,
+    capacity_pension_score: props.formData.model.capacity_pension_score
 })
 
 async function autosaveLocally(){
@@ -57,11 +65,39 @@ async function autosaveLocally(){
     stepForm.volatility_behaviour = props.formData.model.volatility_behaviour;
     stepForm.long_term_volatility = props.formData.model.long_term_volatility;
     stepForm.time_in_market = props.formData.model.time_in_market;
+    stepForm.capacity_inv_score = props.formData.model.capacity_inv_score;
+    stepForm.capacity_pension_score = props.formData.model.capacity_pension_score;
 }
 
 function setRating(data) {
     JSON.stringify(data)
     autosaveLocally()
+}
+
+function submitAssessment() {
+    calculateRiskProfile(stepForm, props.formData.model.risk_outcome_id, props.sidebarItemsLength)
+}
+
+function isSubmitDisabled() {
+    if (stepForm.comfort_fluctuate_market != null && stepForm.day_to_day_volatility != null &&
+        stepForm.medium_term_volatility != null && stepForm.volatility_behaviour != null &&
+        stepForm.long_term_volatility != null && stepForm.time_in_market != null && isRatingSet(stepForm.short_term_volatility) === true &&
+        (stepForm.capacity_inv_score != null || stepForm.capacity_pension_score != null)) {
+        return false;
+    }
+    return true;
+}
+
+function isRatingSet(rangeData) {
+    let flag = true;
+    Object.entries(rangeData).forEach(data => {
+        const [key, item] = data;
+        if (item.value === null) {
+            flag = false;
+        }
+    });
+
+    return flag;
 }
 
 onMounted(()=>{
@@ -225,8 +261,6 @@ onMounted(()=>{
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.long_term_volatility">{{ stepForm.errors.long_term_volatility }}</p>
                 </div>
-
-
                 <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">
                         If you didn’t require access to your invested capital for at least 10 years in the future, for how long would you be prepared to see your invested capital go down in value in consecutive years before you decided to take it out of the markets and cash it in?
@@ -268,6 +302,18 @@ onMounted(()=>{
                         </label>
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.time_in_market">{{ stepForm.errors.time_in_market }}</p>
+                </div>
+                <div class="mt-2 sm:col-span-6 sm:mt-0 md:pr-2 py-2 flex justify-center">
+                    <button type="button" @click="submitAssessment()"
+                            :disabled="isSubmitDisabled()"
+                            class="inline-flex items-center gap-x-1.5 rounded-md bg-sage px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00b49d] disabled:bg-slate-300 disabled:text-slate-700 disabled:cursor-not-allowed">
+                        Submit Assessment
+                    </button>
+                </div>
+                <div class="sm:col-span-6 sm:mt-0 flex justify-center gap-x-2 text-red-500"
+                     v-if="isSubmitDisabled()">
+                    <InformationCircleIcon class="w-5 h-5"></InformationCircleIcon>
+                    <span class="text-xs text-center">Please fill out the all necessary fields here and Investment Risk Assessment or <br/>Pension Risk Assessment fields before assessment submission</span>
                 </div>
             </div>
         </div>

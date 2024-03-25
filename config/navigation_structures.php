@@ -1374,13 +1374,15 @@ return [
                         'id',
                         'investment_length',
                         'standard_of_living',
-                        'emergency_funds'
+                        'emergency_funds',
+                        'capacity_for_loss_investment'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
                         'investment_length' => 'sometimes|nullable|integer',
                         'standard_of_living' => 'sometimes|nullable|integer',
-                        'emergency_funds' => 'sometimes|nullable|integer'
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_investment' => 'sometimes|nullable|integer'
                     ],
                     'messages' => [
                     ]
@@ -1441,13 +1443,15 @@ return [
                         'id',
                         'investment_length',
                         'standard_of_living',
-                        'emergency_funds'
+                        'emergency_funds',
+                        'capacity_for_loss_pension'
                     ],
                     'rules' => [
                         'id' => 'sometimes|nullable|integer',
                         'investment_length' => 'sometimes|nullable|integer',
                         'standard_of_living' => 'sometimes|nullable|integer',
-                        'emergency_funds' => 'sometimes|nullable|integer'
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_pension' => 'sometimes|nullable|integer'
                     ],
                     'messages' => [
                     ]
@@ -1478,6 +1482,44 @@ return [
                         'volatility_behaviour' => 'sometimes|nullable|integer',
                         'long_term_volatility' => 'sometimes|nullable|integer',
                         'time_in_market' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ]
+            ]
+        ],
+        4 => [
+            'name' => 'Summary',
+            'sections' => [
+                1 => [
+                    'name' => 'Summary',
+                    'fields' => [
+                        'using_calculated_risk_profile_investment',
+                        'using_calculated_risk_profile_pension',
+                        'adviser_recommendation_investment',
+                        'adviser_recommendation_pension',
+                        'why_investment',
+                        'why_pension'
+                    ],
+                    'rules' => [
+                        'using_calculated_risk_profile_investment' => 'sometimes|nullable|boolean',
+                        'using_calculated_risk_profile_pension' => 'sometimes|nullable|boolean',
+                        'adviser_recommendation_investment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'adviser_recommendation_pension' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'why_investment' => 'sometimes|nullable|string',
+                        'why_pension' => 'sometimes|nullable|string'
                     ],
                     'messages' => [
                     ]
