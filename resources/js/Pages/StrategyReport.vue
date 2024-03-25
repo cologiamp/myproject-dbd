@@ -21,6 +21,8 @@ const props = defineProps({
 });
 
 const stratReportRef = ref({});
+const emit = defineEmits(['removeReport'])
+
 
 onMounted( ()=> {
     stratReportRef.value = props.strategy_reports.data;
@@ -39,6 +41,9 @@ function generateReport(){
  });
 }
 
+function removeReport(id) {
+    emit('removeReport', id)
+}
 </script>
 
 <template>
