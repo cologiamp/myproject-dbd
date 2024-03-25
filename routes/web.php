@@ -11,6 +11,7 @@ use App\Http\Controllers\ExampleController;
 use App\Http\Controllers\PensionObjectivesController;
 use App\Http\Controllers\StrategyReportController;
 use App\Http\Controllers\StrategyReportRecommendationsController;
+use App\Http\Controllers\RiskAssessmentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -70,7 +71,7 @@ Route::middleware([
 
        Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
        Route::get('/strategy-report-recommendations',[StrategyReportRecommendationsController::class,'show'])->name('strategyreportrecommendations');
-
+       Route::get('/risk-assessment',[RiskAssessmentController::class,'show'])->name('riskassessment');
        Route::get('/example',[ExampleController::class,'edit'])->name('example.edit');
        Route::put('/example',[ExampleController::class,'update'])->name('example.update');
 

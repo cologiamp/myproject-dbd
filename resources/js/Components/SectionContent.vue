@@ -1,5 +1,5 @@
 <script setup>
-import {defineAsyncComponent, inject, watch} from "vue";
+import {defineAsyncComponent, inject} from "vue";
 
 const props = defineProps({
     item: {
@@ -19,6 +19,9 @@ const props = defineProps({
     },
     tabName: {
         type: String
+    },
+    sidebarItemsLength: {
+        type: Number
     }
 });
 
@@ -37,7 +40,8 @@ const selectedSectionId = inject("selectedSectionId");
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component :is="dynamicComponent(item.renderable)"
-                   :formData="item.dynamicData"
+           :formData="item.dynamicData"
+           :sidebarItemsLength="sidebarItemsLength"
         />
     </div>
 </template>
