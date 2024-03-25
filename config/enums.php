@@ -1681,7 +1681,6 @@ return [
           9 => 'Cash',
           10 => 'Discretionary Managed'
         ],
-
         'frequency' => [
             0 => 'Monthly',
             1 => 'Weekly',

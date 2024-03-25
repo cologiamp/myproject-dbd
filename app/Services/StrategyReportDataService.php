@@ -364,14 +364,14 @@ class StrategyReportDataService
 
              $bd[] = [
                  'title' => 'Defined Benefit Pensions',
-                 'value' => $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv)
+                 'value' =>  $this->currencyIntToString($db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv))
              ];
         }
         if(count($dc_pension) > 0)
         {
             $bd[] = [
                 'title' => 'Defined Contribution Pensions',
-                'value' => $dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value)
+                'value' =>  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value))
             ];
         }
 
@@ -379,21 +379,6 @@ class StrategyReportDataService
             'total' => $pension_value,
             'breakdown' => $bd
         ];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         return [
