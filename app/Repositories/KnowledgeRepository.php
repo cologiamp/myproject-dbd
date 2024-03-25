@@ -98,7 +98,7 @@ class KnowledgeRepository extends BaseRepository
 
     public function createInitialKnowledgeForClient(): Knowledge
     {
-        $types = collect([RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE]);
+        $types = collect([config('enums.risk_assessment.type')['INVESTMENT_TYPE'], config('enums.risk_assessment.type')['PENSION_TYPE']]);
         $clientIds = collect([$this->client->id]);
 
         if ($this->client->client_two) {
