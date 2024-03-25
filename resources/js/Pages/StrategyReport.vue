@@ -70,7 +70,6 @@ function generateReport(){
                                                 <th scope="col" class="px-3 py-3.5 text-left font-semibold">Date</th>
                                                 <th scope="col" class="px-3 py-3.5 text-left font-semibold">File</th>
                                                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0"></th>
-                                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0"></th>
                                             </tr>
                                             </thead>
                                             <draggable v-if="stratReportRef.length > 0" v-model="stratReportRef" tag="tbody" item-key="name" @change="updateOrder" class="divide-y divide-gray-500">
@@ -88,11 +87,6 @@ function generateReport(){
                                                             <Link :href="element.file">
                                                                 {{ element.file }}
                                                             </Link>
-                                                        </td>
-                                                        <td class="relative text-sm py-4 pl-3 pr-4 text-right sm:pr-0">
-                                                            <a href="#" @click="edit(element.id)">
-                                                                <PencilSquareIcon class="w-5 h-5"></PencilSquareIcon>
-                                                            </a>
                                                         </td>
                                                         <td class="relative text-sm py-4 pl-3 pr-4 text-right sm:pr-0">
                                                             <a href="#" @click="removeReport(element.id)">
