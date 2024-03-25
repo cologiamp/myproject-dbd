@@ -23,6 +23,8 @@ class AssetPresenter extends BasePresenter
             'asset_type' => $this->model->type,
             'is_retained' => (bool)$this->model->is_retained,
             'retained_value' =>  $this->model->retained_value != null ? $this->currencyIntToString($this->model->retained_value): null,
+            'is_mortgaged' => $this->model->equity != null,
+            'equity' =>  $this->model->equity != null ? $this->currencyIntToString($this->model->equity): null,
         ];
     }
 

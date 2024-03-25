@@ -92,12 +92,24 @@ class HandleInertiaRequests extends Middleware
                     'href' => '/client/'.$client->io_id.'/strategy-report',
                     'icon' => 'SRIcon',
                     'current' => $request->route()->getName() === 'client.strategy'
-                ]
+                ],
+                [
+                    'name' => 'Risk Assessment',
+                    'href' => '/client/'.$client->io_id.'/risk-assessment',
+                    'icon' => 'RPIcon',
+                    'current' => $request->route()->getName() === 'client.riskassessment'
+                ],
             ]);
         }
         return array_merge(parent::share($request), [
             'logo' => config('constants.new_logo'),
             'navigation' => $nav1
+            //Chore: make when there's a "client" in the URL that the other tabs appear
+            //Client Dashboard
+
+            //Fact Find
+            //Strategy Report
+            //]
 
         ]);
     }

@@ -248,6 +248,20 @@ class PensionRepository extends BaseRepository
         else{
             $db->cetv_ends_at = null;
         }
+        if(array_key_exists('chosen',$item))
+        {
+            $db->chosen = $item['chosen'];
+        }
+        else{
+            $db->chosen = null;
+        }
+        if(array_key_exists('notes',$item))
+        {
+            $db->notes = $item['notes'];
+        }
+        else{
+            $db->notes = null;
+        }
         $db->save();
 
 

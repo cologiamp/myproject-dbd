@@ -56,8 +56,8 @@ export default {
                     '950': '#0b0f28',
                 },
                 'pink': colors.pink,
-                'slate': colors.slate
-
+                'slate': colors.slate,
+                'sage': '#00b49d'
             },
             keyframes: {
                 'fade-from-bottom-50': {
