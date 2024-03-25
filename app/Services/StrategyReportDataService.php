@@ -183,32 +183,35 @@ class StrategyReportDataService
         $employments = $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values();
         $assets =  Asset::with('clients')->whereIn('id',$assets_ids)->get();
 
+        $pensions_total = 0;
         if(count($db_pension) > 0)
         {
             if(count($dc_pension) > 0)
             {
                 $pension_status = 'DB & DC Pensions';
                 $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value) + $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv));
+                $pensions_total = $dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value) + $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv);
             }
             else{
                 $pension_status = 'Defined Benefit Pensions';
                 $pension_value = $this->currencyIntToString($db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv));
+                $pensions_total = $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv);
+
             }
         }
         elseif(count($dc_pension) > 0)
         {
             $pension_status = 'Defined Contribution Pensions';
             $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value));
+            $pensions_total = $dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value);
         }
         else{
             $pension_status = 'No Pensions';
             $pension_value = '£0.00';
         }
 
-        $total_assets = null;
         $property_and_posessions_total = 0; //done
         $liquid_assets_total = 0; //done
-        $pensions_total = 0;
 
 
 
@@ -460,72 +463,13 @@ class StrategyReportDataService
                ];
            })->toArray(),
             'your_finances' => [
-                'total_assets' => '',
+                'total_assets' =>  $this->currencyIntToString($property_and_posessions_total + $liquid_assets_total + $pensions_total),
                 'property_and_possessions' => [
-                    'total' => '',
-                    'breakdown' => [
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ]
-                    ]
+                    'total' =>  $this->currencyIntToString($property_and_posessions_total),
+                    'breakdown' => $property_and_posessions->toArray()
                 ],
-                'liquid_assets' => [
-                    'total' => '',
-                    'taxable' => [
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ]
-                    ],
-                    'tax_free' => [
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ]
-                    ]
-                ],
-                'pensions' => [
-                    'total' => '',
-                    'breakdown' => [
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ],
-                        [
-                            'title' => '',
-                            'value' => ''
-                        ]
-                    ]
-                ],
+                'liquid_assets' => array_merge($liquid_assets,['total' => $this->currencyIntToString($liquid_assets_total)]),
+                'pensions' => $pensions
             ],
             'summary' => [
                 'calls_to_action' => $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){

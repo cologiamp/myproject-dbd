@@ -1,6 +1,6 @@
 <script setup>
-import {ref, provide, inject, onBeforeMount, computed} from "vue";
-import {Link, router} from '@inertiajs/vue3';
+import {inject, onBeforeMount, provide, ref} from "vue";
+import {router} from '@inertiajs/vue3';
 import {ArrowRightIcon} from "@heroicons/vue/24/solid/index.js";
 
 const props = defineProps({
@@ -85,8 +85,8 @@ function nextTab(){
     const search = window.location.search;
 
     let arr = search.split('&');
-    let section = arr[1].slice(-1);
-    let step = arr[0].slice(-1);
+    let section = arr[1] ? arr[1].slice(-1) : 1;
+    let step = arr[0] ? arr[0].slice(-1) : 1;
 
     if(section == Object.keys(props.sidebarItems).length)
     {
@@ -97,13 +97,16 @@ function nextTab(){
     }
 }
 
+function isClient2(item) {
+    return item.is_client_two && item.is_client_two === true;
+}
+
 </script>
 
 
 
 <template>
-
-  <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0 top-48" aria-label="Sidebar">
+    <aside id="default-sidebar" class="sticky z-[400] md:top-auto h-1/4 w-full md:w-80 mb-8 sm:hidden md:block md:h-fit md:absolute md:mb-0 top-48" aria-label="Sidebar">
       <div class="md:px-3 py-4 overflow-y-auto bg-aaron-900 dark:bg-aaron-900 text-white">
           <ul class="font-medium">
                   <li v-for="(item, index) in props.sidebarItems"
@@ -117,14 +120,13 @@ function nextTab(){
                               {{ index }}
                           </div>
                           <span class="col-span-3 text-base">{{ item.name != 'Pension Basic Details' ? item.name : 'Basic Details' }}</span>
+                          <div v-if="isClient2(item)" class="rounded-full w-11 h-2 py-0 text-center text-sm"></div>
+                          <span v-if="isClient2(item)" class="col-span-3 text-sm text-pretty">( Client 2 )</span>
                       </div>
                   </li>
               </ul>
       </div>
-  </aside>
-
-
-
+    </aside>
     <div v-bind:class="{'hidden': !formShow, 'block': formShow }" class="md:p-4 mb-4 sm:ml-80">
         <div class="p-4">
             <slot></slot>
@@ -134,5 +136,4 @@ function nextTab(){
             Next <ArrowRightIcon class="w-6 h-6" />
         </button>
     </div>
-
 </template>

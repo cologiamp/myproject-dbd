@@ -203,9 +203,9 @@ class Client extends Model
     {
         return $this->hasOne(Declaration::class);
     }
-    public function knowledge(): HasOne
+    public function knowledge(): HasMany
     {
-        return $this->hasOne(Knowledge::class);
+        return $this->hasMany(Knowledge::class);
     }
     public function retirement(): HasOne
     {
@@ -238,6 +238,20 @@ class Client extends Model
         return $this->belongsTo(StrategyReportRecommendation::class);
     }
 
+    public function capacity_for_loss(): HasMany
+    {
+        return $this->hasMany(CapacityForLoss::class);
+    }
+
+    public function risk_profile(): HasOne
+    {
+        return $this->hasOne(RiskProfile::class);
+    }
+
+    public function risk_outcome(): HasOne
+    {
+        return $this->hasOne(RiskOutcome::class);
+    }
 
     //Presenter
     public function presenter() : ClientPresenter

@@ -2187,4 +2187,57 @@ return [
             1 => 'Information Only'
         ]
     ],
+
+    'risk_assessment' => [
+        'cash' => [
+            0 => 'Liquidity Funds',
+            1 => 'Deposit Accounts',
+            2 => 'National Savings'
+        ],
+        'bonds' => [
+            0 => 'Corporate Bonds',
+            1 => 'Government Bonds (Gilts)',
+            2 => 'Bond Funds ie OEICs',
+            3 => 'Fixed Rate Deposits'
+        ],
+        'equities' => [
+            0 => 'Shares/Unit Trusts/OEICs',
+            1 => 'Investment Trusts',
+            2 => 'Derivatives'
+        ],
+        'insurance' => [
+            0 => 'With Profit Bonds',
+            1 => 'Investment Bonds',
+            2 => 'Guaranteed Stockmarket Bonds'
+        ],
+        'short_term_volatility' => [
+            0 => '5%',
+            1 => '10%',
+            2 => '20%',
+            3 => '30%',
+            4 => '40%',
+            5 => '50% or more'
+        ],
+        'retirement_options' => [
+            0 => 'Annuities',
+            1 => 'Income Drawdown',
+            2 => 'Phased Retirement'
+        ],
+        'type' => [
+            'INVESTMENT_TYPE' => 0,
+            'PENSION_TYPE' => 1
+        ],
+        'assessment_result' => [
+            'NOT_SUITABLE' => 0,
+            'CAUTIOUS' => 1,
+            'BALANCED' => 2,
+            'ADVENTUROUS' => 3
+        ],
+        'assessment_result_public' => [
+            0 => 'Not suitable',
+            1 => 'Cautious',
+            2 => 'Balanced',
+            3 => 'Adventurous'
+        ]
+    ]
 ];
