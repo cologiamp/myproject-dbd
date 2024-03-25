@@ -410,6 +410,9 @@ class FactFindSectionDataService
                     if (array_key_exists('current_value',$asset) && $asset['current_value'] != null){
                         $asset['current_value'] = $this->currencyStringToInt($asset['current_value']);
                     }
+                    if (array_key_exists('equity',$asset) && $asset['equity'] != null){
+                        $asset['equity'] = $this->currencyStringToInt($asset['equity']);
+                    }
                     unset($asset['asset_type']);//remove
                     return $asset;
                 });
