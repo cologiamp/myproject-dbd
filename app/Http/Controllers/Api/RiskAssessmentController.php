@@ -79,7 +79,7 @@ class RiskAssessmentController extends Controller
             $outcome->update([$fieldName => $validated['score']]);
 
             if ($validated['type'] === 'risk_profile') {
-                $this->matrixAssessment($outcome);
+                App::make(RiskAssessmentSectionDataService::class)->assessMatrixResult($outcome);
             }
         } catch (Exception $e) {
             Log::warning($e);
@@ -88,11 +88,5 @@ class RiskAssessmentController extends Controller
         return response()->json([
             'message' => 'Assessment submitted.'
         ]);
-    }
-
-    private function matrixAssessment(RiskOutcome $outcome): void
-    {
-        $rasds = App::make(RiskAssessmentSectionDataService::class);
-        $rasds->assessMatrixResult($outcome);
     }
 }

@@ -152,7 +152,7 @@ class RiskAssessmentSectionDataService
 
         $client = $this->clientRepository->getClient();
         $this->riskOutcomeRepository->setClient($client);
-        $this->riskOutcomeRepository->setRiskOutcome(RiskOutcome::where('id', $client->risk_outcome->id)->first());
+        $this->riskOutcomeRepository->setRiskOutcome($client->risk_outcome);
 
         $this->riskOutcomeRepository->updateFromValidated($validatedData);
     }
