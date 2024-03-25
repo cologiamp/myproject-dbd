@@ -195,6 +195,11 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
+    public function strategy_report_recommendation():HasOne
+    {
+        return $this->hasOne(StrategyReportRecommendation::class);
+    }
+  
     public function investment_recommendation():HasOne
     {
         return $this->hasOne(InvestmentRecommendation::class);
@@ -320,6 +325,7 @@ class Client extends Model
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
                 'frequencies' => collect(config('enums.assets.frequency')),
+                'chosens' => collect(config('enums.assets.chosen')), // chosen dropdown stuff
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),

@@ -50,6 +50,10 @@ Breadcrumbs::for('/client/{client:io_id}/pension-objectives', function (Breadcru
     $trail->push('Pension Objectives', route('pensionobjectives'));
 });
 
+Breadcrumbs::for('/client/{client:io_id}/strategy-report-recommendations', function (BreadcrumbTrail $trail) {
+    $trail->push('Strategy Report Recommendations', route('strategyreportrecommendations'));
+});
+
 
 //CLIENT MANAGEMENT/SELECTION BREADCRUMBS
 Breadcrumbs::for('client.dashboard', function (BreadcrumbTrail $trail, Client $client): void {
@@ -98,6 +102,13 @@ Breadcrumbs::for('client.pensionobjectives', function (BreadcrumbTrail $trail, C
     $trail->parent('clients');
     $trail->push("{$client['name_with_c2']}", route('client.dashboard', $client));
     $trail->push('Pension Objectives');
+});
+
+// Dashboard > Clients > "Client Name" > Strategy Report Recommendations - should I add this?
+Breadcrumbs::for('client.strategyreportrecommendations', function (BreadcrumbTrail $trail, Client $client): void {
+    $trail->parent('clients');
+    $trail->push("{$client['name']}", route('client.dashboard', $client));
+    $trail->push('Strategy Report Recommendations');
 });
 
 // Dashboard > Clients > "Client Name" > Risk Assessment
