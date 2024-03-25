@@ -34,12 +34,9 @@ function dynamicComponent(component){
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
 
-// need to send the section
-// the input fields
 const selectedSectionId = inject("selectedSectionId");
 
 </script>
-
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component :is="dynamicComponent(item.renderable)"
