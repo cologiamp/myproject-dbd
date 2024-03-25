@@ -395,6 +395,10 @@ class ClientRepository extends BaseRepository
         })->toArray();
     }
 
+    /**
+     * Load in the correct data structure for the sidebar tabs of the page we're on
+     * @return array
+     */
     public function loadStrategyReportRecommendationsTabs(int $currentStep = 1):array
     {
         return collect(config('navigation_structures.strategyreportrecommendations'))->map(function ($value, $key) use ($currentStep){

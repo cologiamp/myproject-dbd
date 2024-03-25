@@ -88,17 +88,17 @@ class HandleInertiaRequests extends Middleware
                     'current' => $request->route()->getName() === 'client.strategyreportrecommendations'
                 ],
                 [
+                    'name' => 'Strategy Report',
+                    'href' => '/client/'.$client->io_id.'/strategy-report',
+                    'icon' => 'SRIcon',
+                    'current' => $request->route()->getName() === 'client.strategy'
+                ],
+                [
                     'name' => 'Risk Assessment',
                     'href' => '/client/'.$client->io_id.'/risk-assessment',
                     'icon' => 'RPIcon',
                     'current' => $request->route()->getName() === 'client.riskassessment'
                 ],
-                [
-                    'name' => 'Strategy Report',
-                    'href' => '/client/'.$client->io_id.'/strategy-report',
-                    'icon' => 'SRIcon',
-                    'current' => $request->route()->getName() === 'client.strategy'
-                ]
             ]);
         }
         return array_merge(parent::share($request), [
@@ -109,7 +109,6 @@ class HandleInertiaRequests extends Middleware
 
             //Fact Find
             //Strategy Report
-
             //]
 
         ]);
