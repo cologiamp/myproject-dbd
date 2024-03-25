@@ -93,7 +93,8 @@ class HandleInertiaRequests extends Middleware
                     'icon' => 'SRIcon',
                     'current' => $request->route()->getName() === 'client.strategy'
                 ],
-                ['name' => 'Risk Assessment',
+                [
+                    'name' => 'Risk Assessment',
                     'href' => '/client/'.$client->io_id.'/risk-assessment',
                     'icon' => 'RPIcon',
                     'current' => $request->route()->getName() === 'client.riskassessment'
