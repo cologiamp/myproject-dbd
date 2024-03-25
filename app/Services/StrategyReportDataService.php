@@ -135,8 +135,41 @@ class StrategyReportDataService
             $investments = $client->other_investments->merge($client_two->other_investments);
             $db_pension =  PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$client->id,$client_two->id])->get();
             $dc_pension =  PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->whereIn('client_id',[$client->id,$client_two->id])->get();
+
+
+            $c1assets = $client->assets->where('category',$this->enumValueByName('assets.categories','fixed_assets'))->reject(fn($v)=>$v->type === $this->enumValueByName('assets.types','Cash'));
+            $c2assets = $client_two->assets->where('category',$this->enumValueByName('assets.categories','fixed_assets'))->reject(fn($v)=>$v->type === $this->enumValueByName('assets.types','Cash'));
+            $pandpassets = $c1assets->merge($c2assets);
+
+            $c1sandiassets = $client->assets()->whereIn('category',[
+                $this->enumValueByName('assets.categories','savings'),
+                $this->enumValueByName('assets.categories','investments'),
+            ])->orWhere(function ($query){
+                $query->where('category',$this->enumValueByName('assets.categories','fixed_assets'))
+                    ->where('type', $this->enumValueByName('assets.types','Cash'));
+            })->get();
+
+            $c2sandiassets = $client_two->assets()->whereIn('category',[
+                $this->enumValueByName('assets.categories','savings'),
+                $this->enumValueByName('assets.categories','investments'),
+            ])->orWhere(function ($query){
+                $query->where('category',$this->enumValueByName('assets.categories','fixed_assets'))
+                    ->where('type', $this->enumValueByName('assets.types','Cash'));
+            })->get();
+            $sandiassets = $c1sandiassets->merge($c2sandiassets);
+
         }
         else{
+            $pandpassets =  $client->assets->where('category',$this->enumValueByName('assets.categories','fixed_assets'))->reject(fn($v)=>$v->type === $this->enumValueByName('assets.types','Cash'));
+            $sandiassets = $client->assets()->whereIn('category',[
+                $this->enumValueByName('assets.categories','savings'),
+                $this->enumValueByName('assets.categories','investments'),
+            ])->orWhere(function ($query){
+                $query->where('category',$this->enumValueByName('assets.categories','fixed_assets'))
+                    ->where('type', $this->enumValueByName('assets.types','Cash'));
+            })->get();
+
+
             $assets_ids =  $client->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id');
 
             $employments = collect($client->employment_details()->get()->take(1));
@@ -171,6 +204,192 @@ class StrategyReportDataService
             $pension_status = 'No Pensions';
             $pension_value = '£0.00';
         }
+
+        $total_assets = null;
+        $property_and_posessions_total = 0; //done
+        $liquid_assets_total = 0; //done
+        $pensions_total = 0;
+
+
+
+
+
+        //Assets fixed_assets -> cash not included yet
+       $property_and_posessions = $pandpassets->tap(function ($collection) use (&$property_and_posessions_total){
+           $property_and_posessions_total += $collection->reduce(function (?int $carry, $item) {
+               $item = $item->toArray();
+               if(array_key_exists('equity',$item) && $item['equity'] != null){
+                   $val = $item['equity'];
+               }
+               else{
+                   $val = $item['current_value'];
+               }
+
+               return $carry + $val;
+           });
+       })->groupBy(function ($item){
+            return match (true) {
+              in_array($item->type,[
+                  $this->enumValueByName('assets.types','MainResidence')
+              ]) => 'Main Residence (Equity Value)',
+              in_array($item->type,[
+                 $this->enumValueByName('assets.types','HolidayHome'),
+                 $this->enumValueByName('assets.types','InvestmentProperty'),
+                 $this->enumValueByName('assets.types','NonIncomeProducingRealEstate'),
+                 $this->enumValueByName('assets.types','OverseasProperty'),
+                 $this->enumValueByName('assets.types','RentalOrOtherProperty'),
+                 $this->enumValueByName('assets.types','BuyToLetProperty'),
+              ]) => 'Other Property (Equity Value)',
+             in_array($item->type,[
+                 $this->enumValueByName('assets.types','Collectibles'),
+                 $this->enumValueByName('assets.types','HomeContents'),
+                 $this->enumValueByName('assets.types','MotorVehicles'),
+                 $this->enumValueByName('assets.types','Boat'),
+                 $this->enumValueByName('assets.types','Other')
+              ]) => 'Possessions',
+             in_array($item->type,[
+                 $this->enumValueByName('assets.types','Investments'),
+                 $this->enumValueByName('assets.types','OwnBusiness'),
+             ]) => 'Business/Investments',
+            };
+       })->map(function ($items, $key){
+
+           return [
+               'title' => $key,
+               'value' => $this->currencyIntToString($items->reduce(function (?int $carry, $item) {
+                   $item = $item->toArray();
+                   if(array_key_exists('equity',$item) && $item['equity'] != null){
+                       $val = $item['equity'];
+                   }
+                   else{
+                       $val = $item['current_value'];
+                   }
+
+                   return $carry + $val;
+               }))
+           ];
+       });
+
+
+        $liquid_assets = array_merge_recursive($investments->tap(function ($collection) use (&$liquid_assets_total){
+            $liquid_assets_total += $collection->reduce(fn(?int $carry, $item) => $carry + $item->current_value);
+        })->groupBy(function ($item){
+            return match (true) {
+                in_array($item->type,[
+                    $this->enumValueByName('assets.investment_account_types','ISA Stocks & Shares'),
+                ]) => 'tax_free',
+                default => 'taxable'
+            };
+        })->mapWithKeys(function ($collection,$key){
+            return [$key => $collection->groupBy(function ($item){
+                return match (true) {
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','Venture Capital Trust'),
+                        $this->enumValueByName('assets.investment_account_types','Other Investment'),
+                        $this->enumValueByName('assets.investment_account_types','Collectives'),
+                    ]) => 'Unit Trusts/OEICs/ETFs',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','Direct Equities'),
+                    ]) => 'Direct Shareholdings',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','Onshore Bond'),
+                        $this->enumValueByName('assets.investment_account_types','Offshore Bond'),
+                    ]) => 'Investment Bonds',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','General Investment Account'),//to check
+                        $this->enumValueByName('assets.investment_account_types','Structured Product Income'),
+                        $this->enumValueByName('assets.investment_account_types','Structure Product Growth'),
+                    ]) => 'Structured Products',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','Discretionary Management Service'),
+                    ]) => 'Discretionary Managed Service',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','ISA Stocks & Shares'),
+                    ]) => 'Stocks & Shares ISA',
+                };
+            })->map(function ($items, $key){
+                return [
+                    'title' => $key,
+                    'value' => $this->currencyIntToString($items->reduce(fn(?int $carry, $item) => $carry + $item->current_value))
+                ];
+            })->values()
+            ];
+        })->toArray(),$sandiassets->tap(function ($collection) use (&$liquid_assets_total){
+            $liquid_assets_total += $collection->reduce(fn(?int $carry, $item) => $carry + $item->current_value);
+        })->groupBy(function ($item){
+            return match (true) {
+                in_array($item->account_type,[
+                    $this->enumValueByName('assets.account_types','NS&I Premium Bonds'),
+                    $this->enumValueByName('assets.account_types','NS&I Savings Certificates'),
+                    $this->enumValueByName('assets.account_types','Cash ISA'),
+                    $this->enumValueByName('assets.account_types','Cash LISA')
+                ]) => 'tax_free',
+                default => 'taxable'
+            };
+        })->mapWithKeys(function ($collection,$key){
+            return [$key => $collection->groupBy(function ($item){
+                return match (true) {
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.account_types','Current Account'),
+                        $this->enumValueByName('assets.account_types','Savings Accounts'),
+                        $this->enumValueByName('assets.account_types','Other cash based account'),
+                    ]) => 'Cash/Savings Accounts',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.account_types','Fixed Term Cash Bond'),
+                    ]) => 'Fixed Term Cash Deposits',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.account_types','Cash ISA'),
+                        $this->enumValueByName('assets.account_types','Cash LISA'),
+                    ]) => 'Cash ISA',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.account_types','NS&I Premium Bonds'),
+                        $this->enumValueByName('assets.account_types','NS&I Savings Certificates'),
+                    ]) => 'National Savings',
+                };
+            })->map(function ($items, $key){
+                return [
+                    'title' => $key,
+                    'value' => $this->currencyIntToString($items->reduce(fn(?int $carry, $item) => $carry + $item->current_value))
+                ];
+            })->values()
+            ];
+        })->toArray());
+
+        $bd = [];
+        if(count($db_pension) > 0)
+        {
+
+             $bd[] = [
+                 'title' => 'Defined Benefit Pensions',
+                 'value' => $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv)
+             ];
+        }
+        if(count($dc_pension) > 0)
+        {
+            $bd[] = [
+                'title' => 'Defined Contribution Pensions',
+                'value' => $dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value)
+            ];
+        }
+
+        $pensions = [
+            'total' => $pension_value,
+            'breakdown' => $bd
+        ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
