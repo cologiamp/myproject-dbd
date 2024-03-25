@@ -36,7 +36,8 @@ const props = defineProps({
                     original_value: null,
                     current_value: null,
                     is_retained: null,
-                    retained_value: null
+                    retained_value: null,
+                    is_mortgaged: null
                 }]
             },
             submit_method: 'post',
@@ -45,6 +46,8 @@ const props = defineProps({
     },
     errors: Object,
 });
+
+const equity_asset_types = [2,4,7,8,10,14];
 
 const ownersNotBoth = computed(() => {
     if(props.formData.enums.owners)
@@ -149,7 +152,14 @@ function resetOwnerPercentages(index)
     }
 }
 
+function isTypeWithEquity(index) {
+    if (!equity_asset_types.includes(stepForm.fixed_assets[index].asset_type)) {
+        stepForm.fixed_assets[index].equity = null;
+        return false;
+    }
 
+    return true;
+}
 
 </script>
 
@@ -174,8 +184,7 @@ function resetOwnerPercentages(index)
                             id="asset_type" name="asset_type"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="asset_type" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(assetType, id) in formData.enums.asset_types">{{
-                                assetType }}</option>
+                        <option :id="id" :value="id" v-for="(assetType, id) in formData.enums.asset_types">{{ assetType }}</option>
                     </select>
                 </div>
 
@@ -263,12 +272,31 @@ function resetOwnerPercentages(index)
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
                 </div>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-show="asset.is_retained">
-                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Retained Value (£) </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="formatAmount($event, index, 'retained_value')" type="currency" name="retained_value" id="retained_value"
-                               :value="asset.retained_value"
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <div v-show="asset.is_retained">
+                        <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Retained Value (£) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="formatAmount($event, index, 'retained_value')" type="currency" name="retained_value" id="retained_value"
+                                   :value="asset.retained_value"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
+                    </div>
+                </div>
+                <div v-if="isTypeWithEquity(index)" class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Is Mortgaged?</label>
+                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                        <input id="is_mortgaged" name="is_mortgaged" type="checkbox" v-model="asset.is_mortgaged"
+                           class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-500" />
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                    <div v-if="isTypeWithEquity(index) && asset.is_mortgaged">
+                        <label for="equity" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Equity Value (£) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="formatAmount($event, index, 'equity')" type="currency" name="equity" id="equity"
+                               :value="asset.equity"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
                     </div>
                 </div>
             </div>
