@@ -1,12 +1,12 @@
 import {router} from '@inertiajs/vue3';
 
-export function nextTab(sidebarItemsLength){
+export function submitNext(sidebarItemsLength){
     const pathname = window.location.pathname;
     const search = window.location.search;
 
     let arr = search.split('&');
-    let section = arr[1].slice(-1);
-    let step = arr[0].slice(-1);
+    let section = arr[1] ? arr[1].slice(-1) : 1;
+    let step = arr[0] ? arr[0].slice(-1) : 1;
 
     if(parseInt(section) === sidebarItemsLength)
     {

@@ -322,12 +322,24 @@ class ClientRepository extends BaseRepository
      */
     public function loadRiskSidebarItems($sections, $step, $currentStep, $currentSection): Collection
     {
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step){
+        $uniqueSection = collect([]);
+        if(!$this->client->client_two) {
+            $sections = $sections->unique();
+        }
+
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step, $uniqueSection){
+            $isClientTwo = true;
+            if (!$uniqueSection->contains($value)) {
+                $uniqueSection->push($value);
+                $isClientTwo = false;
+            }
+
            return  [
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
                'dynamicData' => RiskAssessmentSectionDataService::get($this->client,$step,$key),
+               'is_client_two' => $isClientTwo
            ];
         });
     }
@@ -399,6 +411,10 @@ class ClientRepository extends BaseRepository
         })->toArray();
     }
 
+    /**
+     * Load in the correct data structure for the sidebar tabs of the page we're on
+     * @return array
+     */
     public function loadRiskTabs(int $currentStep = 1,int $currentSection = 1):array
     {
         return collect(config('navigation_structures.riskassessment'))->map(function ($value,$key) use ($currentSection,$currentStep){

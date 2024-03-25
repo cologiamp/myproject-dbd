@@ -98,27 +98,34 @@ class KnowledgeRepository extends BaseRepository
 
     public function createInitialKnowledgeForClient(): Knowledge
     {
-        $types = [RiskProfile::RISK_INVESTMENT_TYPE, RiskProfile::RISK_PENSION_TYPE];
+        $types = collect([config('enums.risk_assessment.type')['INVESTMENT_TYPE'], config('enums.risk_assessment.type')['PENSION_TYPE']]);
+        $clientIds = collect([$this->client->id]);
+
+        if ($this->client->client_two) {
+            $clientIds->push($this->client->client_two->id);
+        }
 
         DB::beginTransaction();
 
         try {
-            for ($x = 0; $x < count($types); $x++) {
-                $knowledge = array(
-                    'client_id' => $this->client->id,
-                    'type' => $types[$x],
-                    'experience_buying_cash' => $this->createDefaultJson(),
-                    'experience_buying_bonds' => $this->createDefaultBondJson(),
-                    'experience_buying_equities' => $this->createDefaultJson(),
-                    'experience_buying_insurance' => $this->createDefaultJson()
-                );
+            $types->each(function ($type) use ($clientIds){
+                $clientIds->each(function ($id) use ($type) {
+                    $knowledge = array(
+                        'client_id' => $id,
+                        'type' => $type,
+                        'experience_buying_cash' => $this->createDefaultJson(),
+                        'experience_buying_bonds' => $this->createDefaultBondJson(),
+                        'experience_buying_equities' => $this->createDefaultJson(),
+                        'experience_buying_insurance' => $this->createDefaultJson()
+                    );
 
-                $newRecord = Knowledge::create($knowledge);
-            }
+                    Knowledge::create($knowledge);
+                });
+            });
 
             DB::commit();
+            return Knowledge::where('client_id', $this->client->id)->first();
 
-            return $newRecord;
         } catch (\Exception $e) {
             DB::rollback();
             throw new \Exception($e);

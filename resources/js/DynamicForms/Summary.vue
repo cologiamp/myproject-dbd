@@ -19,6 +19,10 @@ watch(forceRefresh,(newValue,oldValue) => {
     }
 })
 
+defineOptions({
+    inheritAttrs: false
+})
+
 const props = defineProps({
     formData: {
         type: Object,
@@ -56,7 +60,12 @@ const stepForm = useForm({
     adviser_recommendation_investment: props.formData.model.adviser_recommendation_investment,
     adviser_recommendation_pension: props.formData.model.adviser_recommendation_pension,
     why_investment: props.formData.model.why_investment,
-    why_pension: props.formData.model.why_pension
+    why_pension: props.formData.model.why_pension,
+    knowledge_and_experience_investment: props.formData.model.knowledge_and_experience_investment,
+    knowledge_and_experience_pension: props.formData.model.knowledge_and_experience_pension,
+    capacity_for_loss_investment: props.formData.model.capacity_for_loss_investment,
+    capacity_for_loss_pension: props.formData.model.capacity_for_loss_pension,
+    attitude_to_risk: props.formData.model.attitude_to_risk
 })
 
 async function autosaveLocally(){
@@ -69,6 +78,11 @@ async function autosaveLocally(){
     stepForm.adviser_recommendation_pension = props.formData.model.adviser_recommendation_pension;
     stepForm.why_investment = props.formData.model.why_investment;
     stepForm.why_pension = props.formData.model.why_pension;
+    stepForm.knowledge_and_experience_investment = props.formData.model.knowledge_and_experience_investment;
+    stepForm.knowledge_and_experience_pension = props.formData.model.knowledge_and_experience_pension;
+    stepForm.capacity_for_loss_investment = props.formData.model.capacity_for_loss_investment;
+    stepForm.capacity_for_loss_pension = props.formData.model.capacity_for_loss_pension;
+    stepForm.attitude_to_risk = props.formData.model.attitude_to_risk;
 }
 
 function investmentResult() {
