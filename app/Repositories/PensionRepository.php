@@ -104,6 +104,13 @@ class PensionRepository extends BaseRepository
         else{
             $dc->gross_contribution_absolute = null;
         }
+        if(array_key_exists('employee_contribution_frequency',$item))
+        {
+            $dc->employee_contribution_frequency = $item['employee_contribution_frequency'];
+        }
+        else{
+            $dc->employee_contribution_frequency = null;
+        }
         if(array_key_exists('employer_contribution_percent',$item))
         {
             $dc->employer_contribution_percent = $item['employer_contribution_percent'];
@@ -162,8 +169,8 @@ class PensionRepository extends BaseRepository
         if(array_key_exists('crystallised_percentage',$item)) {
             $dc->crystallised_percentage = $item['crystallised_percentage'];
         }
-        if(array_key_exists('frequency',$item)) {
-            $dc->frequency = $item['frequency'];
+        if(array_key_exists('employer_contribution_frequency',$item)) {
+            $dc->employer_contribution_frequency = $item['employer_contribution_frequency'];
         }
 
         else{
