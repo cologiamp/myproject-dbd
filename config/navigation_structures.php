@@ -488,7 +488,7 @@ return [
                             'assets.current_value',
                             'assets.is_retained',
                             'assets.retained_value',
-
+                            'assets.equity'
                         ]
                     ],
                     'rules' => [
@@ -508,6 +508,7 @@ return [
                         'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
                         'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean',
+                        'fixed_assets.*.equity' => 'sometimes|nullable|string'
                     ],
                     'messages' => []
                 ],
