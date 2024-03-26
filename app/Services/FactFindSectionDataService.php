@@ -108,7 +108,6 @@ class FactFindSectionDataService
      */
     public function store(Client $client, int $step, int $section, array $validatedData): true
     {
-
         $this->cr->setClient($client);
         $this->{"_" . $step . $section}($validatedData);
         return true;
@@ -315,7 +314,7 @@ class FactFindSectionDataService
                     if ($income['net_amount'] && $income['net_amount'] != null) {
                         $income['net_amount'] = $this->currencyStringToInt($income['net_amount']);
                     }
-                    if ($income['expenses'] && $income['expenses'] != null) {
+                    if (array_key_exists('expenses', $income) && $income['expenses'] && $income['expenses'] != null) {
                         $income['expenses'] = $this->currencyStringToInt($income['expenses']);
                     }
 
@@ -329,7 +328,7 @@ class FactFindSectionDataService
             $this->incomeRepository->setClient($this->cr->getClient());
             $this->incomeRepository->createOrUpdateIncomeDetails($validatedData);
 
-            if(count($validatedData['incomes']) == 0 && array_key_exists('total',$validatedData))
+            if(count($validatedData['incomes']) == 0 && array_key_exists('total',$validatedData) && $validatedData['total'] != null)
             {
                 $this->cr->updateFromValidated(['total_income_basic' => $this->currencyStringToInt($validatedData['total'])]);
             }
@@ -410,6 +409,9 @@ class FactFindSectionDataService
                     }
                     if (array_key_exists('current_value',$asset) && $asset['current_value'] != null){
                         $asset['current_value'] = $this->currencyStringToInt($asset['current_value']);
+                    }
+                    if (array_key_exists('equity',$asset) && $asset['equity'] != null){
+                        $asset['equity'] = $this->currencyStringToInt($asset['equity']);
                     }
                     unset($asset['asset_type']);//remove
                     return $asset;
@@ -634,7 +636,6 @@ class FactFindSectionDataService
         });
 
         $db = collect($validatedData['db_pensions'])->map(function ($item){
-
             if(array_key_exists('owner',$item) && $item['owner'] != null)
             {
                 $item['client_id'] = Client::where('io_id',$item['owner'])->first()->id;
@@ -668,7 +669,6 @@ class FactFindSectionDataService
             if (array_key_exists('cetv',$item) && $item['cetv'] != null){
                 $item['cetv'] = $this->currencyStringToInt($item['cetv']);
             }
-
             return $item;
         });
 

@@ -111,7 +111,7 @@ onMounted( ()=> {
                                         </template>
                                     </button>
 
-                                    <PrimaryButton class="ms-4 bg-teal-500 hover:bg-teal-700 w-[155px] h-[49px] justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                    <PrimaryButton class="ms-4 text-aaron-900 bg-teal-500 font-black hover:bg-teal-700 w-[155px] h-[49px] justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                         Log in
                                     </PrimaryButton>
                                 </div>

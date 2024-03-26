@@ -10,6 +10,8 @@ import { XCircleIcon } from '@heroicons/vue/24/solid';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {computed, onBeforeMount, ref, watch} from "vue";
 import {formatDate} from "@vueuse/core";
+import Swal from "sweetalert2";
+import {changeToCurrency} from "@/currency.js";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -89,13 +91,21 @@ function calculateTotals(){
     }
 }
 
-function updateAndSave()
-{
-    calculateTotals()
-    autosaveLocally()
-}
-
 function removeIncome(index) {
+    let incomeId = stepForm.incomes[index]['income_id']
+    let deleteURL = `/api/incomes/${ incomeId }`;
+
+    // delete expenditure record
+    if(incomeId) {
+        axios.delete(deleteURL).then(response=>{
+        }).catch(error=>{
+            Swal.fire({
+                title: 'Error: Something failed. Please try again later.',
+                text: error.response.data.message,
+            })
+        });
+    }
+
     stepForm.incomes.splice(index, 1);
     calculateTotals()
     autosaveLocally();
@@ -145,6 +155,8 @@ function formatAmountOnload() {
 function formatAmount(e, index, dataField) {
     stepForm.incomes[index][dataField] = '';
     stepForm.incomes[index][dataField] = changeToCurrency(e.target.value);
+    calculateTotals()
+    autosaveLocally()
 }
 function formatTotal()
 {
@@ -154,27 +166,6 @@ function saveTotal()
 {
     autosaveLocally()
 }
-
-
-function changeToCurrency(amount) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'GBP',
-        minimumFractionDigits: 0
-      });
-
-    // Remove non-numeric characters from user input and convert to int
-    let tempAmount = amount.replace(/[^\d.]/g, '');
-    let numberValue = ''
-
-    if (tempAmount) {
-        numberValue = tempAmount;
-        // Format input using Intl.NumberFormat
-        return formatter.format(numberValue)
-    }
-}
-
-
 
 
 </script>
@@ -258,9 +249,8 @@ function changeToCurrency(amount) {
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                     <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Gross Amount </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="updateAndSave" type="currency" name="gross_amount" id="gross_amount"
+                        <input @change="formatAmount($event, index, 'gross_amount')" type="currency" name="gross_amount" id="gross_amount"
                             :value="income.gross_amount"
-                            @input="formatAmount($event, index, 'gross_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.gross_amount">{{ stepForm.errors.gross_amount }}</p>
@@ -269,9 +259,8 @@ function changeToCurrency(amount) {
                     <label for="net_amount" v-if="income.income_type != 10" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Amount </label>
                     <label for="net_profit" v-else class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Net Profit </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="autosaveLocally()" type="text" name="net_amount" id="net_amount"
+                        <input @change="formatAmount($event, index, 'net_amount')" type="text" name="net_amount" id="net_amount"
                             :value="income.net_amount"
-                            @input="formatAmount($event, index, 'net_amount')"
                             class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.net_amount">{{ stepForm.errors.net_amount }}</p>
@@ -280,9 +269,8 @@ function changeToCurrency(amount) {
                     <div v-if="income.income_type == 10">
                         <label for="expenses" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Valid Expenses </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveLocally()" type="currency" name="expenses" id="expenses"
+                            <input @change="formatAmount($event, index, 'expenses')" type="currency" name="expenses" id="expenses"
                                 :value="income.expenses"
-                                @input="formatAmount($event, index, 'expenses')"
                                 class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                         </div>
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.expenses">{{ stepForm.errors.expenses }}</p>

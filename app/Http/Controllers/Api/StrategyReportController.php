@@ -35,6 +35,7 @@ class StrategyReportController extends Controller
             return response()->json(['message' => 'You need to complete a Strategy Report Recommendation first'],422);
         }
         $data = $this->srds->getStrategyReportData($client);
+        dd($data);
 
         $docraptor = new DocRaptor\DocApi();
         $docraptor->getConfig()->setUsername(env('DOCRAPTOR_API_KEY'));

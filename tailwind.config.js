@@ -43,7 +43,7 @@ export default {
             },
             colors:{
                 'aaron': {
-                    '50': '#ecf5ff',
+                    '50':  '#ecf5ff',
                     '100': '#ddecff',
                     '200': '#c1dbff',
                     '300': '#9cc2ff',
@@ -56,8 +56,8 @@ export default {
                     '950': '#0b0f28',
                 },
                 'pink': colors.pink,
-                'slate': colors.slate
-
+                'slate': colors.slate,
+                'sage': '#00b49d'
             },
             keyframes: {
                 'fade-from-bottom-50': {

@@ -33,6 +33,14 @@ class Client extends Model
     {
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
+    public function getFullNameAttribute(): string
+    {
+        if($this->middle_name && strlen($this->middle_name) > 0)
+        {
+            return $this->preferred_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        }
+        return $this->preferred_name . ' ' . $this->last_name;
+    }
 
     public function client_two(): BelongsTo
     {
@@ -195,9 +203,9 @@ class Client extends Model
     {
         return $this->hasOne(Declaration::class);
     }
-    public function knowledge(): HasOne
+    public function knowledge(): HasMany
     {
-        return $this->hasOne(Knowledge::class);
+        return $this->hasMany(Knowledge::class);
     }
     public function retirement(): HasOne
     {
@@ -207,6 +215,11 @@ class Client extends Model
     public function adviser(): BelongsTo
     {
         return $this->belongsTo(User::class,'adviser_id');
+    }
+
+    public function strategy_report_recommendation():BelongsTo
+    {
+        return $this->belongsTo(StrategyReportRecommendation::class);
     }
 
     public function investment_recommendation():HasOne
@@ -224,11 +237,20 @@ class Client extends Model
         return $this->hasOne(PensionRecommendation::class);
     }
 
-    public function strategy_report_recommendation():BelongsTo
+    public function capacity_for_loss(): HasMany
     {
-        return $this->belongsTo(StrategyReportRecommendation::class);
+        return $this->hasMany(CapacityForLoss::class);
     }
 
+    public function risk_profile(): HasOne
+    {
+        return $this->hasOne(RiskProfile::class);
+    }
+
+    public function risk_outcome(): HasOne
+    {
+        return $this->hasOne(RiskOutcome::class);
+    }
 
     //Presenter
     public function presenter() : ClientPresenter
@@ -309,7 +331,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
                 'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
-                'frequencies' => collect(config('enums.assets.frequency')),
+                'employer_contribution_frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -325,6 +347,8 @@ class Client extends Model
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
                 'frequencies' => collect(config('enums.assets.frequency')),
+                'loa_submitted' => config('enums.pension_recommendation.loa_submitted'),
+                'chosens' => collect(config('enums.assets.chosen')), // chosen dropdown stuff
             ],
             '3.5' => [
                 'owners' => $this->getOwnersForForm(true),

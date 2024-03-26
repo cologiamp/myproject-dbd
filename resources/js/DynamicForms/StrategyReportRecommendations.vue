@@ -77,16 +77,16 @@ async function autosaveLocally(){
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.retirement_status">{{ stepForm.errors.retirement_status }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
-                    <label for="objective_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Retirement Status </label>
+                    <label for="objective_type" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Report Objective</label>
                     <select @change="autosaveLocally()" v-model="stepForm.objective_type" id="unit" name="objective_type"  class="block rounded-md w-full border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
                         <option id="objective_type" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(retirement_status, id) in formData.enums.objective_types">{{ retirement_status }}</option>
+                        <option :id="id" :value="id" v-for="(objective, id) in formData.enums.objective_types">{{ objective }}</option>
                     </select>
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.objective_type">{{ stepForm.errors.objective_type }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2 py-2">
                     <label for="next_meeting_date" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2"> Date of Next Meeting </label>
-                    <VueDatePicker text-input class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy"
+                    <VueDatePicker text-input class="aaron-datepicker ring-aaron-600" dark utc format="dd/MM/yyyy hh:mm"
                        v-model="stepForm.next_meeting_date" @update:model-value="autosaveLocally()"
                        name="next_meeting_date" id="next_meeting_date"
                        placeholder="dd/mm/yyyy"/>

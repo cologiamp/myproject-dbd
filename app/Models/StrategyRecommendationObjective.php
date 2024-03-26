@@ -17,6 +17,7 @@ class StrategyRecommendationObjective extends Model
     {
         return config('enums.strategy_report_recommendations.topic')[$this->type]['name'];
     }
+
     public function getFormattedObjectiveAttribute():string
     {
         return str_replace('XX',$this['objective_custom'],str_replace('£XX',$this['objective_custom'],config('enums.strategy_report_recommendations.topic')[$this->type]['objectives'][$this->objective]));
