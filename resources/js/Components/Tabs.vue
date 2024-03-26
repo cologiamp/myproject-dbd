@@ -1,6 +1,6 @@
 <script setup>
-import { ref, provide, onBeforeMount, inject } from "vue"
-import { router } from '@inertiajs/vue3'
+import { ref, provide, onBeforeMount, inject } from "vue";
+import {forceRefresh} from "@/calculateRiskAssesment.js";
 
 const props = defineProps({
     tabTitles: {
@@ -30,12 +30,15 @@ function tabsClick(index, tab) {
     url.searchParams.set('section', '1');
 
     window.history.pushState({}, null, url);
+
+    if (tab.name === 'Summary') {
+        forceRefresh.value += 1;
+    }
 }
 
 provide("selectedTabId", selectedTabId);
 
 onBeforeMount(() => {
-
     // Emit function from parent component to set selected section onload
     emit('setOnloadKey', props.tabTitles, x => x.current == true);
     selectedTabId.value = initialTabKey.value;

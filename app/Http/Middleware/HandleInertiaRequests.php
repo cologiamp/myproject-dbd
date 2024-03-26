@@ -76,10 +76,16 @@ class HandleInertiaRequests extends Middleware
                     'current' => $request->route()->getName() === 'client.pensionobjectives'
                 ],
                 [
+                    'name' => 'Strategy Report',
+                    'href' => '/client/'.$client->io_id.'/strategy-report',
+                    'icon' => 'SRIcon',
+                    'current' => $request->route()->getName() === 'client.strategy'
+                ],
+                [
                     'name' => 'Recommendations',
-                    'href' => '/client/'.$client->io_id.'/investment-recommendation',
+                    'href' => '/client/'.$client->io_id.'/recommendations',
                     'icon' => 'IRIcon',
-                    'current' => $request->route()->getName() === 'client.investmentrecommendation'
+                    'current' => $request->route()->getName() === 'client.recommendations'
                 ],
                 [
                     'name' => 'Strategy Report Options',
@@ -92,12 +98,24 @@ class HandleInertiaRequests extends Middleware
                     'href' => '/client/'.$client->io_id.'/strategy-report',
                     'icon' => 'SRIcon',
                     'current' => $request->route()->getName() === 'client.strategy'
-                ]
+                ],
+                [
+                    'name' => 'Risk Assessment',
+                    'href' => '/client/'.$client->io_id.'/risk-assessment',
+                    'icon' => 'RPIcon',
+                    'current' => $request->route()->getName() === 'client.riskassessment'
+                ],
             ]);
         }
         return array_merge(parent::share($request), [
             'logo' => config('constants.new_logo'),
             'navigation' => $nav1
+            //Chore: make when there's a "client" in the URL that the other tabs appear
+            //Client Dashboard
+
+            //Fact Find
+            //Strategy Report
+            //]
 
         ]);
     }

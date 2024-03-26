@@ -20,8 +20,7 @@ const props = defineProps({
         default: {
             enums: {
                 policy_types: [],
-                lqa_submitted: [],
-                policy_reviewed_transfer: []
+                loa_submitted: []
             },
             model: {
                 existing_pension_plans: [{
@@ -30,8 +29,10 @@ const props = defineProps({
                     administrator: null,
                     policy_type: null,
                     policy_number: null,
-                    lqa_submitted: null,
-                    policy_reviewed_transfer: null
+                    loa_submitted: null,
+                    is_retained: null,
+                    active_pension_member: null,
+                    active_pension_member_reason_not: null
                 }]
             },
             submit_method: 'post',
@@ -71,8 +72,10 @@ function addPensionPlan() {
         administrator: null,
         policy_type: null,
         policy_number: null,
-        lqa_submitted: null,
-        policy_reviewed_transfer: null
+        loa_submitted: null,
+        is_retained: null,
+        active_pension_member: null,
+        active_pension_member_reason_not: null
     });
 }
 </script>
@@ -128,24 +131,49 @@ function addPensionPlan() {
                     <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.policy_number">{{ stepForm.errors.policy_number }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="lqa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LQA Submitted</label>
-                    <select @change="autosaveLocally(index)" v-model="pension.lqa_submitted"
-                            id="lqa_submitted" name="lqa_submitted"
+                    <label for="loa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LOA Submitted</label>
+                    <select @change="autosaveLocally(index)" v-model="pension.loa_submitted"
+                            id="loa_submitted" name="loa_submitted"
                             class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="lqa_submitted" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(lqa_submitted, id) in formData.enums.lqa_submitted">{{ lqa_submitted }}</option>
+                        <option id="loa_submitted" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(loa_submitted, id) in formData.enums.loa_submitted">{{ loa_submitted }}</option>
                     </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.lqa_submitted">{{ stepForm.errors.lqa_submitted }}</p>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.loa_submitted">{{ stepForm.errors.loa_submitted }}</p>
                 </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
-                    <label for="policy_reviewed_transfer" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Policy being reviewed for transfer?</label>
-                    <select @change="autosaveLocally(index)" v-model="pension.policy_reviewed_transfer"
-                            id="policy_reviewed_transfer" name="policy_reviewed_transfer"
-                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
-                        <option id="policy_reviewed_transfer" :value="null">-</option>
-                        <option :id="id" :value="id" v-for="(policy_reviewed_transfer, id) in formData.enums.policy_reviewed_transfer">{{ policy_reviewed_transfer }}</option>
-                    </select>
-                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.policy_reviewed_transfer">{{ stepForm.errors.policy_reviewed_transfer }}</p>
+                    <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Policy being reviewed for transfer?</label>
+                    <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
+                        <input @change="autosaveLocally(index)"
+                               v-model="pension.is_retained" type="radio" id="true" :value="true"
+                               :checked="pension.is_retained === true"
+                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Transfer</label>
+                        <input @change="autosaveLocally(index)"
+                               v-model="pension.is_retained" type="radio" id="false" :value="false"
+                               :checked="pension.is_retained === false"
+                               class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
+                        <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">Information Only</label>
+                    </div>
+                </div>
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-6">
+                    <div class="flex items-center pt-2">
+                        <div class="flex h-6 items-center">
+                            <input id="active_pension_member" name="active_pension_member" type="checkbox"
+                               v-model="pension.active_pension_member" @change="autosaveLocally(index)"
+                               class="h-6 w-6 rounded border-gray-300 text-aaron-400 focus:ring-aaron-400" />
+                        </div>
+                        <div class="ml-3">
+                            <label for="dta_base_costs_availability" class="text-sm font-medium leading-6 text-aaron-50">Is client an active member?</label>
+                        </div>
+                    </div>
+                    <div v-if="pension.active_pension_member === false" class="mt-4">
+                        <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">If not, why not</label>
+                        <div class="mt-2">
+                            <textarea rows="3" name="dta_base_costs_available" id="active_pension_member_reason_not"
+                              v-model="pension.active_pension_member_reason_not" @change="autosaveLocally(index)"
+                              class="block w-full rounded-md border-0 py-1.5 text-aaron-50 bg-aaron-950 shadow-sm ring-1 ring-inset ring-aaron-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-aaron-500 sm:text-sm sm:leading-6"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             <button type="button" @click="addPensionPlan"
