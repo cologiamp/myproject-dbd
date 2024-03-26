@@ -437,7 +437,8 @@ class StrategyReportDataService
                 'pensions' => $pensions
             ],
             'summary' => [
-                'calls_to_action' => $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){
+                'calls_to_action' =>
+                    $client->strategy_report_recommendation->actions->sortBy('order')->map(function ($item){
                     return [
                         'title' => $item->formatted_cta
                     ];

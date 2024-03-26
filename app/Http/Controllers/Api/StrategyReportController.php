@@ -43,7 +43,7 @@ class StrategyReportController extends Controller
         $doc = new DocRaptor\Doc();
         $doc->setTest(true); // test documents are free but watermarked
 
-        $documentContent = view('documents.strategy-report', [])->render();
+        $documentContent = view('documents.strategy-report', ['data' => $data])->render();
 
         $doc->setDocumentContent($documentContent);
 

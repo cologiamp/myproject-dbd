@@ -9,5 +9,5 @@
     <div class="logo">
         <img src="https://mywealth.emailresources.co.uk/images/mywealth-logo-white.svg" width="160">
     </div>
-    <div class="client-name"><strong>For Ignacio Giampaoli</strong><br>{{ date('F Y') }}</div>
+    <div class="client-name"><strong> {{ $clientName  }}</strong><br>{{ $date }}</div>
 </div>

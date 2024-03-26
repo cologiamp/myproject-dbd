@@ -104,6 +104,10 @@
     h4 { font-size:14px; }
     p { font-size: 13px; line-height: 16px; }
     p.small { font-size: 11px; line-height: 14px; }
+    p.pension-value-title {
+        font-size: 9px !important;
+        line-height: 13px;
+    }
     p.small-my-wealth { font-size: 11px; line-height: 15px; }
     p.small-meet-your-team { font-size: 11px; line-height: 18px; }
     .first-description {
@@ -186,6 +190,7 @@
     }
     .offices-label-wrapper {
         margin-left: 25px;
+        width: 95px;
     }
     .offices-label {
         margin-top: -56px;
@@ -351,6 +356,21 @@
     }
     .modal-img {
     }
+
+    .team-member-picture-wrapper {
+        height: 110px;
+        width: 110px;
+    }
+    .team-member-picture {
+        border-radius: 50%;
+        height: 110px;
+        width: 110px;
+        object-fit: cover;
+        object-position: 20% 5%; /* try 20px 10px */
+    }
+    p.small-pension-value {
+        font-size: 26px !important;
+    }
 </style>
 
 
@@ -401,6 +421,9 @@
         color:#FFFFFF;
         padding:30px 30px;
     }
+    .tall-panel-couple {
+        height:324px;
+    }
     .short-panel h4 { font-size: 13px; margin-top:-10px; margin-bottom: 10px; padding:0; }
     .short-panel p { font-size: 28px; font-weight:bold; }
     .tall-panel p, .mid-panel p { font-size: 28px; line-height:1; font-weight:bold; }
@@ -413,7 +436,7 @@
     .waw-bg-pink { background-color: #DB3B7B; }
 </style>
 <div class="page" id="front-cover">
-    @include('documents.includes.header-front-cover', ['clientName' => 'Clarence Boddicker'])
+    @include('documents.includes.header-front-cover', ['clientName' => $data['cover']['name'], 'date' => $data['cover']['date'] ])
 
     <a href="#introduction" class="btn get-started">Get Started &rarr;</a>
 
@@ -463,7 +486,9 @@
         <div class="w-1/2">
             <div class="flex">
                 <div class="w-1/2 pr-6">
-                    <h4 class="font-bold text-white key-considerations">About us</h4>
+                    <h4 class="font-bold text-white key-considerations">
+                        About Us
+                    </h4>
                     <p class="small-my-wealth mt-3">
                         Working with some of the UK’s leading companies and pension schemes across the private and public sectors, we advise employees on a wide range of financial matters.
                         <br><br>
@@ -493,7 +518,7 @@
                         </p>
 
                         <p class="big-stats pt-2">
-                            £3bn+
+                            {{ $data['about_us']['group_assets'] }}
                         </p>
                     </div>
                     <div class="mb-8">
@@ -501,7 +526,7 @@
                             WAW GROUP EMPLOYEES
                         </p>
                         <p class="big-stats pt-2">
-                            400+
+                            {{ $data['about_us']['group_employees'] }}
                         </p>
                     </div>
                     <div class="mb-8">
@@ -509,7 +534,7 @@
                             COORPORATE CLIENTS
                         </p>
                         <p class="big-stats pt-2">
-                            700+
+                            {{ $data['about_us']['corporate_clients'] }}
                         </p>
                     </div>
                     <div class="mb-8">
@@ -517,18 +542,18 @@
                             GROUP OFFICES
                         </p>
                         <p class="big-stats pt-2">
-                            5
+                            {{ $data['about_us']['group_offices'] }}
                         </p>
                     </div>
                     <div class="offices-label-wrapper">
                         <p class="offices-label -mt-14 ml-4">
-                            Liverpool (head office),<br> Bristol, Manchester, <br> London, Dublin
+                            {{ $data['about_us']['group_offices_description'] }}
                         </p>
                     </div>
                 </div>
 
                 <div class="w-1/2">
-                    <img class="inline map-and-dots -mt-10" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/map-and-dots.svg">
+                    <img class="inline map-and-dots -mt-10" src="{{ $data['about_us']['office_map'] }}">
                 </div>
 
             </div>
@@ -553,12 +578,15 @@
 
         <div class="w-1/4 director-wrapper p-6 mr-4">
             <div class="w-full">
-                <img class="w-28" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                <div class="team-member-picture-wrapper">
+                    <img class="w-28 team-member-picture" src="{{ $data['meet_the_team']['adviser_picture'] }}">
+                </div>
+
             </div>
-            <p class="font-bold text-white key-considerations mt-7">Paul Morton</p>
-            <h3 class="position">Investment Planning Director</h3>
+            <p class="font-bold text-white key-considerations mt-7">{{ $data['meet_the_team']['adviser_name'] }}</p>
+            <h3 class="position">{{ $data['meet_the_team']['adviser_title'] }}</h3>
             <p class="small-my-wealth mt-3">
-                Paul is a Chartered Member of the Chartered Institute for Securities & Investments and has many years’ experience working in the Financial Services industry.
+                {{ $data['meet_the_team']['adviser_bio'] }}
             </p>
         </div>
 
@@ -691,7 +719,8 @@
 
     <div class="flex mt-14 mb-8">
         <div class="w-9/12">
-            <h1 class="">A holistic approach</h1>
+            <h1 class="">A holistic approach ({{ $data['a_holistic_approach']['report_version'] }})
+            </h1>
         </div>
         <div class="w-3/12 mt-4 ml-32 -pr-44">
             <a class="inline learn-more" href="#">Click on a section below to learn more
@@ -797,27 +826,71 @@
             <div class="short-panel waw-bg-green">
                 <p class="text-center">About you</p>
             </div>
-            <div class="tall-panel waw-bg-blue flexX justify-centerX">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
-                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
-                    </div>
-                    <div class="flex-1">
-                        <p class="small mb-4 p-0" style="margin-top:-8px;"><strong>Employment Status:</strong><br>Working full time<br><strong>Employer:</strong> Autotrader<br><strong>Job Title:</strong> Digital Project Lead</p>
-                        <p class="small mb-2"><strong>Salary p.a.</strong></p>
-                        <p>&pound;75,000</p>
-                    </div>
+            <div class="tall-panel waw-bg-blue flexX justify-centerX {{ count($data['about_you']['personal_details']['clients']) > 1 ? 'tall-panel-couple' : ''  }}">
+
+                        @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
+                        <div class="flex-col items-start">
+                            <div class="flex w-full">
+                                <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
+                                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="small mb-4 mt-20 p-0" style="margin-top:-8px;">
+                                        <strong>Employment Status:</strong><br>{{ $data['about_you']['employments'][1]['employment_status'] }}<br>
+                                        <strong>Employer:</strong> {{ $data['about_you']['employments'][1]['employer'] }}<br>
+                                        <strong>Job Title:</strong> {{ $data['about_you']['employments'][1]['job_title'] }}
+                                    </p>
+                                </div>
+                            </div>
+                        @else
+                        <div class="flex-col items-start">
+                            @foreach (array_slice($data['about_you']['employments'], 0, 2) as $employment)
+                                @if($employment['employment_status'] != 'Retired')
+                                <div class="flex w-full">
+                                    <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
+                                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="small mb-12 p-0 mt-8" style="margin-top:-8px;">
+                                            <strong>Employment Status:</strong><br>{{ $employment['employment_status'] }}<br>
+                                            <strong>Employer:</strong> {{ $employment['employer'] }}<br>
+                                            <strong>Job Title:</strong> {{ $employment['job_title'] }}
+                                        </p>
+                                    </div>
+                                </div>
+                                @endif
+                            @endforeach
+                        @endif
+
+
+                        @if(count($data['about_you']['personal_details']['clients']) <= 1)
+                            <div class="flex-1">
+                                <div class="flex -ml-1">
+                                    <div class="w-1/2">
+                                        <p class="small mb-2 pension-value-title"><strong>Pension option p.a.</strong></p>
+                                        <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                                    </div>
+                                    <div class="w-1/2 ml-6">
+                                        <p class="small mb-2 pension-value-title"><strong>Pension option lump sum</strong></p>
+                                        <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                 </div>
             </div>
-            <div class="short-panel waw-bg-blue">
-                <div class="flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/sailing.svg" class="w-12">
+            @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
+                <div class="short-panel waw-bg-blue">
+                    <div class="flex-shrink-0">
+                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/sailing.svg" class="w-12">
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <p>{{ $data['about_you']['employments'][0]['employment_status'] }}</p>
+                        <p class="small">At age 65 (2034)</p>
+                    </div>
                 </div>
-                <div class="flex-1 ml-4">
-                    <p>Retiring</p>
-                    <p class="small">At age 65 (2034)</p>
-                </div>
-            </div>
+            @endif
 <!--
             <div class="mid-panel waw-bg-blue">
                 <div class="flex items-start">
@@ -850,26 +923,41 @@
             <div class="short-panel waw-bg-pink">
                 <div class="flex-1 mr-4">
                     <h4>Marital Status</h4>
-                    <p>Married</p>
+                    <p>{{ $data['about_you']['marital_status'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/supervised_user_circle.svg" class="w-12">
                 </div>
             </div>
             <div class="tall-panel waw-bg-light-blue flex flex-col items-center justify-center">
-                <p class="mb-3">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
-                </p>
-                <p class="text-center">John Winston Lennon 55</p>
-                <p class="small">8th Feb 1969</p>
+
+                @if(count($data['about_you']['personal_details']['clients']) <= 1)
+                    <p class="mb-3">
+                        @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
+                            <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
+                        @endif
+                    </p>
+                    <p class="text-center">{{ $data['about_you']['name'] . ' ' . $data['about_you']['age'] }}</p>
+                    <p class="small"{{ $data['about_you']['birth_date'] }}</p>
+                @else
+                    @foreach ($data['about_you']['personal_details']['clients'] as $client)
+                        <p class="mb-3">
+                            @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
+                                <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
+                            @endif
+                        </p>
+                        <p class="text-center">{{ $client['name'] }}</p>
+                        <p class="small">Age {{ $client['age'] . ' (' . $client['date_of_birth'] . ')' }}</p>
+                    @endforeach
+                @endif
             </div>
             <div class="short-panel waw-bg-pink">
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/escalator_warning.svg" class="w-12">
                 </div>
                 <div class="flex-1 ml-4">
-                    <p>3 children</p>
-                    <p class="small">2 of which are financially dependant</p>
+                    <p>{{ $data['about_you']['dependent'] }}</p>
+                    <p class="small">{{ $data['about_you']['dependent_description'] }}</p>
                 </div>
             </div>
 
@@ -878,7 +966,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Annual Expenditure</h4>
-                    <p>&pound;32,655</p>
+                    <p>&pound;{{ $data['about_you']['annual_expenditure'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/bar_chart_4_bars.svg" class="w-12">
@@ -887,8 +975,8 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Home Value</h4>
-                    <p>&pound;750,126</p>
-                    <p class="small">206 Flixton Road, Urmston</p>
+                    <p>&pound;{{ $data['about_you']['home_value'] }}</p>
+                    <p class="small">{{ $data['about_you']['address'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/real_estate_agent.svg" class="w-12">
@@ -897,7 +985,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Liquid Assets</h4>
-                    <p>&pound;62,456</p>
+                    <p>&pound;{{ $data['about_you']['liquid_assets'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/currency_pound.svg" class="w-12">
@@ -906,7 +994,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Defined Contribution Pensions</h4>
-                    <p>&pound;76,000</p>
+                    <p>&pound;{{ $data['about_you']['pension_value'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/savings.svg" class="w-12">
@@ -942,6 +1030,7 @@
     <div class="clear-both"></div>
 
     <div class="flex mt-5">
+
         <div class="w-1/3">
             <div class="flex objective">
                 <div class="objective-icon flex-shrink-0">
@@ -950,7 +1039,7 @@
                 <div class="objective-text ml-4 pr-8">
                     <h4 class="font-bold text-white">Legacy Planning</h4>
                     <div class="mt-2 text-sm">
-                        <p class="small">Based on what we spoke about, you wish to ensure your assets will be passed on in the event of your death. This is to ensure that the assets you have built up over your lifetime can be used by your children when you die.</p>
+                        <p class="small"></p>
                     </div>
                 </div>
             </div>
@@ -1036,7 +1125,7 @@
         <div class="w-1/5 pt-3 pl-8">
             <div class="total-assets">
                 <p class="total-assets-title">Total assets</p>
-                <p class="total-assets-value mt-3 -mr-1 font-bold">£944,901</p>
+                <p class="total-assets-value mt-3 -mr-1 font-bold">£{{ $data['your_finances']['total_assets'] }}</p>
             </div>
         </div>
     </div>
@@ -1053,24 +1142,15 @@
         <div class="w-1/4">
             <div class="finances-box pp-box mb-4">
                 <p class="finance-box-title">Property & Possessions</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['total'] }}</p>
             </div>
 
-            <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">Main Residence (Equity Value)</p>
-                <p class="finance-box-content">£XXX,XXX</p>
-            </div>
-
-            <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">Other Property (Equity Value)</p>
-                <p class="finance-box-content">£XXX,XXX</p>
-            </div>
-
-            <div class="finances-box pp-box-child mb-3">
-                <p class="finance-box-title">Possessions</p>
-                <p class="finance-box-content">£XXX,XXX</p>
-            </div>
-
+            @foreach ($data['your_finances']['property_and_possessions']['breakdown'] as $propertyAndPossession)
+                <div class="finances-box pp-box-child mb-3">
+                    <p class="finance-box-title">{{ $propertyAndPossession['title'] }}</p>
+                    <p class="finance-box-content">£{{ $propertyAndPossession['value'] }}</p>
+                </div>
+            @endforeach
 
 
         </div>
@@ -1079,7 +1159,7 @@
             <div class="flex mb-4 ml-44">
                 <div class="finances-box liquid-assets-box">
                     <p class="finance-box-title">Liquid Assets</p>
-                    <p class="finance-box-content">£339,901</p>
+                    <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['total'] }}</p>
                 </div>
             </div>
 
@@ -1100,13 +1180,13 @@
             <div class="flex">
                 <div class="w-1/3 -ml-8 mr-12">
                     <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Cash/Savings Accounts</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][0]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][0]['value'] }}</p>
                     </div>
 
                     <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Fixed Term Cash Deposits</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][1]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][1]['value'] }}</p>
                     </div>
 
                     <div class="finances-box liquid-assets-box-child mb-3">
@@ -1148,13 +1228,13 @@
                 </div>
                 <div class="w-1/3">
                     <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">Cash ISA</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][0]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][0]['value'] }}</p>
                     </div>
 
                     <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">Stocks & Shares ISA</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
+                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][1]['title'] }}</p>
+                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][1]['value'] }}</p>
                     </div>
 
                     <div class="finances-box tax-box-child mb-3">
@@ -1169,17 +1249,17 @@
         <div class="w-1/4 ml-32">
             <div class="finances-box pensions-box mb-4">
                 <p class="finance-box-title">Pensions</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['total']  }}</p>
             </div>
 
             <div class="finances-box pensions-box-child mb-3">
-                <p class="finance-box-title">Personal Pension Plan</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][0]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][0]['value'] }}</p>
             </div>
 
             <div class="finances-box pensions-box-child mb-3">
-                <p class="finance-box-title">Occupational Defined Contributio</p>
-                <p class="finance-box-content">£XXX,XXX</p>
+                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][1]['title'] }}</p>
+                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][1]['value'] }}</p>
             </div>
 
         </div>
@@ -1379,59 +1459,43 @@
             </div>
 
             <div class="flex mt-12 mb-8">
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                To avoid a strategy that suffers from static asset allocation
-                            </p>
+                @foreach (array_slice($data['summary']['calls_to_action'], 0, 2) as $callToAction)
+                    <div class="w-1/2">
+                        <div class="flex">
+                            <div class="w-1/3">
+                                <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
+                            </div>
+                            <div class="w-2/3">
+                                <p class="font-bold text-white mt-1 -ml-3 warning-text">
+                                    {{ $callToAction['title'] }}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
 
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                An advice-based service can reduce the level of administration
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="flex">
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                To create a tax-efficient withdrawal strategy
-                            </p>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="w-1/2">
-                    <div class="flex">
-                        <div class="w-1/3">
-                            <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
-                        </div>
-                        <div class="w-2/3">
-                            <p class="font-bold text-white mt-1 -ml-3 warning-text">
-                                The consolidation of numerous pension pots can benefit you
-                            </p>
+
+                @foreach (array_slice($data['summary']['calls_to_action'], 2, 2) as $callToAction)
+                    <div class="w-1/2">
+                        <div class="flex">
+                            <div class="w-1/3">
+                                <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
+                            </div>
+                            <div class="w-2/3">
+                                <p class="font-bold text-white mt-1 -ml-3 warning-text">
+                                    {{ $callToAction['title'] }}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
+
+
+
             </div>
 
         </div>
@@ -1500,9 +1564,10 @@
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
     <!-- The Modal -->
+    <!--
     <div id="myModal" class="modal">
 
-        <!-- Modal content -->
+        <!- Modal content ->
         <div class="modal-content">
             <span class="close">&times;</span>
             <p>Some text in the Modal..</p>
@@ -1524,6 +1589,8 @@
         </div>
 
     </div>
+
+    -->
 
     <h1 class="mt-12 mb-8">Meet your team</h1>
     <div class="flex">
