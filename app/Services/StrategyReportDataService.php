@@ -133,9 +133,7 @@ class StrategyReportDataService
 
             $assets_ids =  $client->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id')->merge($client_two->assets->where('category',array_flip(config('enums.assets.categories'))['savings'])->pluck('id'));
             $investments = $client->other_investments->merge($client_two->other_investments);
-            $db_pension =  PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$client->id,$client_two->id])->get();
             $dc_pension =  PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->whereIn('client_id',[$client->id,$client_two->id])->get();
-
 
             $c1assets = $client->assets->where('category',$this->enumValueByName('assets.categories','fixed_assets'))->reject(fn($v)=>$v->type === $this->enumValueByName('assets.types','Cash'));
             $c2assets = $client_two->assets->where('category',$this->enumValueByName('assets.categories','fixed_assets'))->reject(fn($v)=>$v->type === $this->enumValueByName('assets.types','Cash'));
@@ -177,29 +175,13 @@ class StrategyReportDataService
                 return $q->where('starts_at',null)->orWhereDate('starts_at','<=',Carbon::now());
             })->get();
             $investments = $client->other_investments;
-            $db_pension =  PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$client->id)->get();
             $dc_pension =  PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->where('client_id',$client->id)->get();
         }
         $employments = $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values();
         $assets =  Asset::with('clients')->whereIn('id',$assets_ids)->get();
 
         $pensions_total = 0;
-        if(count($db_pension) > 0)
-        {
-            if(count($dc_pension) > 0)
-            {
-                $pension_status = 'DB & DC Pensions';
-                $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value) + $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv));
-                $pensions_total = $dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value) + $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv);
-            }
-            else{
-                $pension_status = 'Defined Benefit Pensions';
-                $pension_value = $this->currencyIntToString($db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv));
-                $pensions_total = $db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv);
-
-            }
-        }
-        elseif(count($dc_pension) > 0)
+        if(count($dc_pension) > 0)
         {
             $pension_status = 'Defined Contribution Pensions';
             $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value));
@@ -280,6 +262,8 @@ class StrategyReportDataService
             return match (true) {
                 in_array($item->type,[
                     $this->enumValueByName('assets.investment_account_types','ISA Stocks & Shares'),
+                    $this->enumValueByName('assets.investment_account_types','Other Investment (Tax Free)'),
+                    $this->enumValueByName('assets.investment_account_types','Seed Enterprise Investment Scheme'),
                 ]) => 'tax_free',
                 default => 'taxable'
             };
@@ -287,8 +271,6 @@ class StrategyReportDataService
             return [$key => $collection->groupBy(function ($item){
                 return match (true) {
                     in_array($item->account_type,[
-                        $this->enumValueByName('assets.investment_account_types','Venture Capital Trust'),
-                        $this->enumValueByName('assets.investment_account_types','Other Investment'),
                         $this->enumValueByName('assets.investment_account_types','Collectives'),
                     ]) => 'Unit Trusts/OEICs/ETFs',
                     in_array($item->account_type,[
@@ -299,13 +281,18 @@ class StrategyReportDataService
                         $this->enumValueByName('assets.investment_account_types','Offshore Bond'),
                     ]) => 'Investment Bonds',
                     in_array($item->account_type,[
-                        $this->enumValueByName('assets.investment_account_types','General Investment Account'),//to check
                         $this->enumValueByName('assets.investment_account_types','Structured Product Income'),
                         $this->enumValueByName('assets.investment_account_types','Structure Product Growth'),
                     ]) => 'Structured Products',
                     in_array($item->account_type,[
                         $this->enumValueByName('assets.investment_account_types','Discretionary Management Service'),
                     ]) => 'Discretionary Managed Service',
+                    in_array($item->account_type,[
+                        $this->enumValueByName('assets.investment_account_types','Venture Capital Trust'),
+                        $this->enumValueByName('assets.investment_account_types','Other Investment'),
+                        $this->enumValueByName('assets.investment_account_types','Other Investment (Tax Free)'),
+                        $this->enumValueByName('assets.investment_account_types','Seed Enterprise Investment Scheme'),
+                    ]) => 'Other Investment',
                     in_array($item->account_type,[
                         $this->enumValueByName('assets.investment_account_types','ISA Stocks & Shares'),
                     ]) => 'Stocks & Shares ISA',
@@ -359,14 +346,7 @@ class StrategyReportDataService
         })->toArray());
 
         $bd = [];
-        if(count($db_pension) > 0)
-        {
 
-             $bd[] = [
-                 'title' => 'Defined Benefit Pensions',
-                 'value' =>  $this->currencyIntToString($db_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_benefit_pension->cetv))
-             ];
-        }
         if(count($dc_pension) > 0)
         {
             $bd[] = [

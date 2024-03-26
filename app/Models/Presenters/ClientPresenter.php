@@ -447,9 +447,9 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => $this->currencyIntToString($income->gross_amount),
-                            'net_amount' => $this->currencyIntToString($income->net_amount),
-                            'expenses' => $this->currencyIntToString($income->expenses),
+                            'gross_amount' => $income->gross_amount > 0 ? $this->currencyIntToString($income->gross_amount) : 0,
+                            'net_amount' =>  $income->net_amount > 0 ?$this->currencyIntToString($income->net_amount)  : 0,
+                            'expenses' =>  $income->expenses > 0 ? $this->currencyIntToString($income->expenses) : 0,
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,

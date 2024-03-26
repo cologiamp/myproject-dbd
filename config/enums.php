@@ -1643,7 +1643,7 @@ return [
         'investment_account_types' => [
             0 => 'Direct Equities',
             1 => 'Discretionary Management Service',
-            2 => 'General Investment Account',
+//            2 => 'General Investment Account', - as per Tom Cassidy, take off dropdown for FF.
             3 => 'ISA Stocks & Shares',
             4 => 'Onshore Bond',
             5 => 'Offshore Bond',
@@ -1651,8 +1651,9 @@ return [
             7 => 'Structured Product Income',
             8 => 'Structure Product Growth',
             9 => 'Venture Capital Trust',
-            10 => 'Other Investment',
             11 => 'Collectives',
+            10 => 'Other Investment',
+            12 => 'Other Investment (Tax Free)',//put through into IO as "Other Investment"
         ],
         'db_pension_statuses' => [
             0 => 'Active',
