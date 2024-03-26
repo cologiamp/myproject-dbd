@@ -169,7 +169,7 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => $income->gross_amount,
+                            'gross_amount' => (string)$income->gross_amount,
                             'net_amount' => $income->net_amount,
                             'expenses' => $income->expenses,
                             'frequency' => $income->frequency,
@@ -263,6 +263,7 @@ class ClientPresenter extends BasePresenter
                             'policy_number' => $item->defined_contribution_pension->policy_number,
                             'gross_contribution_percent' => $item->defined_contribution_pension->gross_contribution_percent,
                             'gross_contribution_absolute' => $item->defined_contribution_pension->gross_contribution_absolute != null ? $this->currencyIntToString($item->defined_contribution_pension->gross_contribution_absolute): null,
+                            'employee_contribution_frequency' =>$item->defined_contribution_pension->employee_contribution_frequency,
                             'employer_contribution_percent' =>$item->defined_contribution_pension->employer_contribution_percent,
                             'employer_contribution_absolute' => $item->defined_contribution_pension->employer_contribution_absolute != null ? $this->currencyIntToString($item->defined_contribution_pension->employer_contribution_absolute): null,
                             'valuation_at' => $item->defined_contribution_pension->valuation_at,
@@ -280,9 +281,10 @@ class ClientPresenter extends BasePresenter
                                    'current_transfer_value' => $fund->current_transfer_value != null ? $this->currencyIntToString($fund->current_transfer_value): null,
                                ];
                             }),
-                            'frequency' => $item->defined_contribution_pension->frequency,
+                            'employer_contribution_frequency' => $item->defined_contribution_pension->employer_contribution_frequency,
                         ];
                     }),
+                    //  defined_benefit_pension = model
                     'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->whereIn('client_id',[$this->model->id,$this->model->client_two->id])->get()->map(function ($item){
                         return [
                             'id' => $item->id,
@@ -296,6 +298,8 @@ class ClientPresenter extends BasePresenter
                             'prospective_pension_max' => $item->defined_benefit_pension->prospective_pension_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pension_max): null,
                             'prospective_pcls_standard' => $item->defined_benefit_pension->prospective_pcls_standard  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_standard): null,
                             'prospective_pcls_max' => $item->defined_benefit_pension->prospective_pcls_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_max): null,
+                            'chosen' => $item->defined_benefit_pension->chosen,
+                            'notes' => $item->defined_benefit_pension->notes,
                             'cetv' => $item->defined_benefit_pension->cetv  != null ? $this->currencyIntToString($item->defined_benefit_pension->cetv): null,
                             'cetv_ends_at' => $item->defined_benefit_pension->cetv_ends_at
                         ];
@@ -444,7 +448,7 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => $income->gross_amount,
+                            'gross_amount' => (string)$income->gross_amount,
                             'net_amount' => $income->net_amount,
                             'expenses' => $income->expenses,
                             'frequency' => $income->frequency,
@@ -539,6 +543,7 @@ class ClientPresenter extends BasePresenter
                             'gross_contribution_percent' => $item->defined_contribution_pension->gross_contribution_percent,
                             'gross_contribution_absolute' => $item->defined_contribution_pension->gross_contribution_absolute != null ? $this->currencyIntToString($item->defined_contribution_pension->gross_contribution_absolute): null,
                             'employer_contribution_percent' =>$item->defined_contribution_pension->employer_contribution_percent,
+                            'employee_contribution_frequency' =>$item->defined_contribution_pension->employee_contribution_frequency,
                             'employer_contribution_absolute' => $item->defined_contribution_pension->employer_contribution_absolute != null ? $this->currencyIntToString($item->defined_contribution_pension->employer_contribution_absolute): null,
                             'valuation_at' => $item->defined_contribution_pension->valuation_at,
                             'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
@@ -555,7 +560,7 @@ class ClientPresenter extends BasePresenter
                                     'current_transfer_value' => $fund->current_transfer_value != null ? $this->currencyIntToString($fund->current_transfer_value): null,
                                 ];
                             }),
-                            'frequency' => $item->defined_contribution_pension->frequency,
+                            'employer_contribution_frequency' => $item->defined_contribution_pension->employer_contribution_frequency,
                         ];
                     }),
                     'db_pensions' => PensionScheme::with('defined_benefit_pension')->whereHas('defined_benefit_pension')->where('client_id',$this->model->id)->get()->map(function ($item){
@@ -571,6 +576,8 @@ class ClientPresenter extends BasePresenter
                             'prospective_pension_max' => $item->defined_benefit_pension->prospective_pension_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pension_max): null,
                             'prospective_pcls_standard' => $item->defined_benefit_pension->prospective_pcls_standard  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_standard): null,
                             'prospective_pcls_max' => $item->defined_benefit_pension->prospective_pcls_max  != null ? $this->currencyIntToString($item->defined_benefit_pension->prospective_pcls_max): null,
+                            'chosen' => $item->defined_benefit_pension->chosen,
+                            'notes' => $item->defined_benefit_pension->notes,
                             'cetv' => $item->defined_benefit_pension->cetv  != null ? $this->currencyIntToString($item->defined_benefit_pension->cetv): null,
                             'cetv_ends_at' => $item->defined_benefit_pension->cetv_ends_at
                         ];
