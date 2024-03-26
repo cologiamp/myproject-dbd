@@ -421,6 +421,9 @@
         color:#FFFFFF;
         padding:30px 30px;
     }
+    .tall-panel-couple {
+        height:324px;
+    }
     .short-panel h4 { font-size: 13px; margin-top:-10px; margin-bottom: 10px; padding:0; }
     .short-panel p { font-size: 28px; font-weight:bold; }
     .tall-panel p, .mid-panel p { font-size: 28px; line-height:1; font-weight:bold; }
@@ -823,49 +826,61 @@
             <div class="short-panel waw-bg-green">
                 <p class="text-center">About you</p>
             </div>
-            <div class="tall-panel waw-bg-blue flexX justify-centerX">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
-                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
-                    </div>
-                    <div class="flex-1">
-                        @if(count($data['about_you']['employments']) <= 1)
-                            <p class="small mb-4 p-0" style="margin-top:-8px;">
-                                <strong>Employment Status:</strong><br>{{ $data['about_you']['employments'][1]['employment_status'] }}<br>
-                                <strong>Employer:</strong> {{ $data['about_you']['employments'][1]['employer'] }}<br>
-                                <strong>Job Title:</strong> {{ $data['about_you']['employments'][1]['job_title'] }}
-                            </p>
+            <div class="tall-panel waw-bg-blue flexX justify-centerX {{ count($data['about_you']['personal_details']['clients']) > 1 ? 'tall-panel-couple' : ''  }}">
+
+                        @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
+                        <div class="flex-col items-start">
+                            <div class="flex w-full">
+                                <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
+                                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="small mb-4 mt-20 p-0" style="margin-top:-8px;">
+                                        <strong>Employment Status:</strong><br>{{ $data['about_you']['employments'][1]['employment_status'] }}<br>
+                                        <strong>Employer:</strong> {{ $data['about_you']['employments'][1]['employer'] }}<br>
+                                        <strong>Job Title:</strong> {{ $data['about_you']['employments'][1]['job_title'] }}
+                                    </p>
+                                </div>
+                            </div>
                         @else
+                        <div class="flex-col items-start">
                             @foreach (array_slice($data['about_you']['employments'], 0, 2) as $employment)
                                 @if($employment['employment_status'] != 'Retired')
-                                    <p class="small mb-4 p-0" style="margin-top:-8px;">
-                                        <strong>Employment Status:</strong><br>{{ $employment['employment_status'] }}<br>
-                                        <strong>Employer:</strong> {{ $employment['employer'] }}<br>
-                                        <strong>Job Title:</strong> {{ $employment['job_title'] }}
-                                    </p>
+                                <div class="flex w-full">
+                                    <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
+                                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="small mb-12 p-0 mt-8" style="margin-top:-8px;">
+                                            <strong>Employment Status:</strong><br>{{ $employment['employment_status'] }}<br>
+                                            <strong>Employer:</strong> {{ $employment['employer'] }}<br>
+                                            <strong>Job Title:</strong> {{ $employment['job_title'] }}
+                                        </p>
+                                    </div>
+                                </div>
                                 @endif
                             @endforeach
                         @endif
 
-                        @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
-                            <p class="small mb-2"><strong>Salary p.a.</strong></p>
-                            <p>&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
-                        @else
-                            <div class="flex -ml-20">
-                                <div class="w-1/2">
-                                    <p class="small mb-2 pension-value-title"><strong>Pension option p.a.</strong></p>
-                                    <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
-                                </div>
-                                <div class="w-1/2 ml-6">
-                                    <p class="small mb-2 pension-value-title"><strong>Pension option lump sum</strong></p>
-                                    <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+
+                        @if(count($data['about_you']['personal_details']['clients']) <= 1)
+                            <div class="flex-1">
+                                <div class="flex -ml-1">
+                                    <div class="w-1/2">
+                                        <p class="small mb-2 pension-value-title"><strong>Pension option p.a.</strong></p>
+                                        <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                                    </div>
+                                    <div class="w-1/2 ml-6">
+                                        <p class="small mb-2 pension-value-title"><strong>Pension option lump sum</strong></p>
+                                        <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
+                                    </div>
                                 </div>
                             </div>
                         @endif
-                    </div>
+
                 </div>
             </div>
-            @if(count($data['about_you']['employments']) <= 1)
+            @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
                 <div class="short-panel waw-bg-blue">
                     <div class="flex-shrink-0">
                         <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/sailing.svg" class="w-12">
