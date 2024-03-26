@@ -10,6 +10,7 @@ import { XCircleIcon } from '@heroicons/vue/24/solid';
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import {onMounted, ref, watch} from "vue";
+import Swal from "sweetalert2";
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -32,7 +33,8 @@ const props = defineProps({
                     employer: null,
                     start_at: null,
                     employee: null,
-                    end_at: null
+                    end_at: null,
+                    employment_id: null
                 }]
             },
             submit_method: 'post',
@@ -66,8 +68,25 @@ function addEmployment() {
 }
 
 function removeEmployment(index) {
-    stepForm.employment_details.splice(index, 1);
-    autosaveLocally();
+    if(stepForm.employment_details[index].id)
+    {
+        axios.delete('/api/employments/'+ stepForm.employment_details[index].id).then(function (response){
+            stepForm.employment_details.splice(index, 1);
+
+        }).catch(function (e){
+            Swal.fire({
+                title: 'Error!',
+                text: "Could not delete employment",
+                confirmButtonText: "OK",
+            })
+        });
+    }
+    else{
+        stepForm.employment_details.splice(index, 1);
+        autosaveLocally();
+    }
+
+
 }
 
 const stepForm = useForm(props.formData.submit_method, props.formData.submit_url,{

@@ -5,6 +5,7 @@ namespace App\Models\Presenters;
 use App\Concerns\FormatsCurrency;
 use App\Models\Asset;
 use App\Models\PensionScheme;
+use Carbon\Carbon;
 
 class ClientPresenter extends BasePresenter
 {
@@ -169,9 +170,9 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => (string)$income->gross_amount,
-                            'net_amount' => $income->net_amount,
-                            'expenses' => $income->expenses,
+                            'gross_amount' => $this->currencyIntToString($income->gross_amount),
+                            'net_amount' => $this->currencyIntToString($income->net_amount),
+                            'expenses' => $this->currencyIntToString($income->expenses),
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,
@@ -448,9 +449,9 @@ class ClientPresenter extends BasePresenter
                         return [
                             'income_id' => $income->id,
                             'income_type' => $income->category,
-                            'gross_amount' => (string)$income->gross_amount,
-                            'net_amount' => $income->net_amount,
-                            'expenses' => $income->expenses,
+                            'gross_amount' => $income->gross_amount > 0 ? $this->currencyIntToString($income->gross_amount) : "0",
+                            'net_amount' =>  $income->net_amount > 0 ?$this->currencyIntToString($income->net_amount)  : "0",
+                            'expenses' =>  $income->expenses > 0 ? $this->currencyIntToString($income->expenses) : "0",
                             'frequency' => $income->frequency,
                             'starts_at' => $income->starts_at,
                             'ends_at' => $income->ends_at,
@@ -633,7 +634,14 @@ class ClientPresenter extends BasePresenter
         }
 
     }
-
+    public function formatForPersonalDetails(): array
+    {
+        return [
+            'name' => $this->model->full_name,
+            'age' => Carbon::parse($this->model->date_of_birth)->diffInYears(Carbon::now()),
+            'date_of_birth' => Carbon::parse($this->model->date_of_birth)->format('jS F Y')
+        ];
+    }
 
     public function formatForClientsIndex(): array
     {
