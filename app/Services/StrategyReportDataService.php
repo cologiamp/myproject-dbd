@@ -122,7 +122,7 @@ class StrategyReportDataService
 
         if($client_two)
         {
-            $employments = collect($client->employment_details()->get()->take(1)->merge($client_two->employment_detailss()->get()->take(1)));
+            $employments = collect($client->employment_details()->get()->take(1)->merge($client_two->employment_details()->get()->take(1)));
             $c1e = $client->expenditures()->where(function ($q){
                 return $q->where('starts_at',null)->orWhereDate('starts_at','<=',Carbon::now());
             })->get();
@@ -177,7 +177,6 @@ class StrategyReportDataService
             $investments = $client->other_investments;
             $dc_pension =  PensionScheme::with('defined_contribution_pension')->whereHas('defined_contribution_pension')->where('client_id',$client->id)->get();
         }
-        $employments = $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values();
         $assets =  Asset::with('clients')->whereIn('id',$assets_ids)->get();
 
         $pensions_total = 0;
@@ -390,15 +389,15 @@ class StrategyReportDataService
                                 $this->enumValueByName('strategy_report_recommendations.objective_type','Retiring')
                             ]) ? 'retiring' : 'individual')
                             : 'couple', //individual, retiring, couple,
-            'employments' => $employments->toArray(),
+            'employments' => $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values()->toArray(),
             'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
             'bottom_left_description' => $client_two == null ? $bld : null,
             'marital_status' => config('enums.client.marital_status')[$client->marital_status],
             'personal_details' => $client_two == null ? [
-                'icon' => config('strategy_report.icons.personal_details_one_client'),
+                'icon' => config('constants.cdn_url') . config('strategy_report.base_icon_path') . config('strategy_report.icons.personal_details_one_client'),
                 'clients' => [$client->presenter()->formatForPersonalDetails()]
             ] : [
-                'icon' => config('strategy_report.icons.personal_details_two_clients'),
+                'icon' =>  config('constants.cdn_url') . config('strategy_report.base_icon_path') . config('strategy_report.icons.personal_details_two_clients'),
                 'clients' => [
                     $client->presenter()->formatForPersonalDetails(),
                     $client_two->presenter()->formatForPersonalDetails()

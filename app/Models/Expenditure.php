@@ -28,7 +28,8 @@ class Expenditure extends Model
 
     public function getGrossAnnualAmountAttribute(): float|int
     {
-        return $this->amount * config('enums.incomes.per_year_frequency')[$this->frequency];
+        //frequency defaults to "annually"
+        return $this->amount * config('enums.incomes.per_year_frequency')[$this->frequency ?? 0];
     }
     //Presenter
     public function presenter() : ExpenditurePresenter

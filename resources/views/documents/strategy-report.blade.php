@@ -424,10 +424,16 @@
     .tall-panel-couple {
         height:324px;
     }
+    .less-confusing-name{
+        margin-left: 72px;
+    }
     .short-panel h4 { font-size: 13px; margin-top:-10px; margin-bottom: 10px; padding:0; }
     .short-panel p { font-size: 28px; font-weight:bold; }
     .tall-panel p, .mid-panel p { font-size: 28px; line-height:1; font-weight:bold; }
     .short-panel p.small { font-size: 10px; font-weight:normal; margin-top:10px; }
+    .short-panel p.semi-small{
+        font-size: 20px; font-weight: bold; line-height:1.1;
+    }
     .tall-panel p.small, .mid-panel p.small { font-size: 12px; line-height:1.4; font-weight:normal; margin-top:10px; }
     .waw-bg-green { background-color: #78BE20; }
     .waw-bg-purple { background-color: #7474C1; }
@@ -828,55 +834,76 @@
             </div>
             <div class="tall-panel waw-bg-blue flexX justify-centerX {{ count($data['about_you']['personal_details']['clients']) > 1 ? 'tall-panel-couple' : ''  }}">
 
-                        @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
-                        <div class="flex-col items-start">
+                    <div class="flex-col items-start">
+                        @foreach ($data['about_you']['employments'] as $employment)
                             <div class="flex w-full">
                                 <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
                                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
                                 </div>
                                 <div class="flex-1">
                                     <p class="small mb-4 mt-20 p-0" style="margin-top:-8px;">
-                                        <strong>Employment Status:</strong><br>{{ $data['about_you']['employments'][1]['employment_status'] }}<br>
-                                        <strong>Employer:</strong> {{ $data['about_you']['employments'][1]['employer'] }}<br>
-                                        <strong>Job Title:</strong> {{ $data['about_you']['employments'][1]['job_title'] }}
+                                        <strong>Employment Status:</strong><br>{{ $employment['employment_status'] }}<br>
+                                        @switch($employment['employment_status'])
+                                            @case('Employed')
+                                                <strong>Employer:</strong> {{ $employment['employer'] }}<br>
+                                                <strong>Job Title:</strong> {{ $employment['job_title'] }}<br>
+    {{--                                                <strong>Salary:</strong> {{ $employment['salary'] }}<br>--}}
+                                                @break
+                                            @case('Retired')
+    {{--                                                <strong>Retirement Income:</strong> {{ $employment['retirement_income'] }}--}}
+                                                @break
+                                            @case('Flex Retirement')
+                                                <strong>Employer:</strong> {{ $employment['employer'] }}<br>
+                                                <strong>Job Title:</strong> {{ $employment['job_title'] }}<br>
+    {{--                                                <strong>Retirement Income:</strong> {{ $employment['retirement_income'] }}--}}
+                                                @break
+                                            @case('Retiring')
+                                                <strong>Employer:</strong> {{ $employment['employer'] }}<br>
+                                                <strong>Job Title:</strong> {{ $employment['job_title'] }}<br>
+    {{--                                                <strong>Pension Option p.a:</strong> {{ $employment['salary'] }}<br>--}}
+                                                @break
+                                            @default
+                                        @endswitch
                                     </p>
                                 </div>
                             </div>
-                        @else
-                        <div class="flex-col items-start">
-                            @foreach (array_slice($data['about_you']['employments'], 0, 2) as $employment)
-                                @if($employment['employment_status'] != 'Retired')
-                                <div class="flex w-full">
-                                    <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
-                                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="small mb-12 p-0 mt-8" style="margin-top:-8px;">
-                                            <strong>Employment Status:</strong><br>{{ $employment['employment_status'] }}<br>
-                                            <strong>Employer:</strong> {{ $employment['employer'] }}<br>
-                                            <strong>Job Title:</strong> {{ $employment['job_title'] }}
-                                        </p>
-                                    </div>
-                                </div>
-                                @endif
-                            @endforeach
-                        @endif
-
-
-                        @if(count($data['about_you']['personal_details']['clients']) <= 1)
                             <div class="flex-1">
-                                <div class="flex -ml-1">
-                                    <div class="w-1/2">
-                                        <p class="small mb-2 pension-value-title"><strong>Pension option p.a.</strong></p>
-                                        <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
-                                    </div>
-                                    <div class="w-1/2 ml-6">
-                                        <p class="small mb-2 pension-value-title"><strong>Pension option lump sum</strong></p>
-                                        <p class="small-pension-value">&pound; {{ $data['about_you']['employments'][1]['salary'] }}</p>
-                                    </div>
+                                <div class="flex less-confusing-name">
+                                    @switch($employment['employment_status'])
+                                        @case('Employed')
+                                            <div class="w-1">
+                                                <p class="small mb-2 pension-value-title"><strong>Salary</strong></p>
+                                                <p class="small-pension-value">{{ $employment['salary'] }}</p>
+                                            </div>
+                                            @break
+                                        @case('Retired')
+                                            <div class="w-1">
+                                                <p class="small mb-2 pension-value-title"><strong>Retirement Income</strong></p>
+                                                <p class="small-pension-value">{{ $employment['retirement_income'] }}</p>
+                                            </div>
+                                            @break
+                                        @case('Flex Retirement')
+                                            <div class="w-1">
+                                                <p class="small mb-2 pension-value-title"><strong>Retirement Income</strong></p>
+                                                <p class="small-pension-value">{{ $employment['retirement_income'] }}</p>
+                                            </div>
+                                            @break
+                                        @case('Retiring')
+                                            <div class="w-1/2">
+                                                <p class="small mb-2 pension-value-title"><strong>Pension option p.a.</strong></p>
+                                                <p class="small-pension-value">{{$employment['pension_option_p_a']}}</p>
+                                            </div>
+                                            <div class="w-1/2 ml-6">
+                                                <p class="small mb-2 pension-value-title"><strong>Pension option lump sum</strong></p>
+                                                <p class="small-pension-value">{{$employment['pension_option_l_s']}}</p>
+                                            </div>
+                                            @break
+                                        @default
+                                    @endswitch
                                 </div>
                             </div>
-                        @endif
+                        @endforeach
+
 
                 </div>
             </div>
@@ -886,8 +913,12 @@
                         <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/sailing.svg" class="w-12">
                     </div>
                     <div class="flex-1 ml-4">
-                        <p>{{ $data['about_you']['employments'][0]['employment_status'] }}</p>
-                        <p class="small">At age 65 (2034)</p>
+                        @if( strlen($data['about_you']['bottom_left_status']) < 14 )
+                        <p>{{ $data['about_you']['bottom_left_status'] }}</p>
+                        @else
+                        <p class="semi-small">{{ $data['about_you']['bottom_left_status'] }}</p>
+                        @endif
+                        <p class="small"> {{$data['about_you']['bottom_left_description']}}</p>
                     </div>
                 </div>
             @endif
@@ -930,26 +961,15 @@
                 </div>
             </div>
             <div class="tall-panel waw-bg-light-blue flex flex-col items-center justify-center">
-
-                @if(count($data['about_you']['personal_details']['clients']) <= 1)
+                @foreach ($data['about_you']['personal_details']['clients'] as $client)
                     <p class="mb-3">
                         @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
-                            <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
+                            <img src="{{$data['about_you']['personal_details']['icon']}}" class="w-16">
                         @endif
                     </p>
-                    <p class="text-center">{{ $data['about_you']['name'] . ' ' . $data['about_you']['age'] }}</p>
-                    <p class="small"{{ $data['about_you']['birth_date'] }}</p>
-                @else
-                    @foreach ($data['about_you']['personal_details']['clients'] as $client)
-                        <p class="mb-3">
-                            @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
-                                <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/account_circle.svg" class="w-16">
-                            @endif
-                        </p>
-                        <p class="text-center">{{ $client['name'] }}</p>
-                        <p class="small">Age {{ $client['age'] . ' (' . $client['date_of_birth'] . ')' }}</p>
-                    @endforeach
-                @endif
+                    <p class="text-center">{{ $client['name'] }}</p>
+                    <p class="small">Age {{ $client['age'] . ' (' . $client['date_of_birth'] . ')' }}</p>
+                @endforeach
             </div>
             <div class="short-panel waw-bg-pink">
                 <div class="flex-shrink-0">
@@ -966,7 +986,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Annual Expenditure</h4>
-                    <p>&pound;{{ $data['about_you']['annual_expenditure'] }}</p>
+                    <p>{{ $data['about_you']['annual_expenditure'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/bar_chart_4_bars.svg" class="w-12">
@@ -975,7 +995,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Home Value</h4>
-                    <p>&pound;{{ $data['about_you']['home_value'] }}</p>
+                    <p>{{ $data['about_you']['home_value'] }}</p>
                     <p class="small">{{ $data['about_you']['address'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
@@ -985,7 +1005,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Liquid Assets</h4>
-                    <p>&pound;{{ $data['about_you']['liquid_assets'] }}</p>
+                    <p>{{ $data['about_you']['liquid_assets'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/currency_pound.svg" class="w-12">
@@ -994,7 +1014,7 @@
             <div class="short-panel waw-bg-purple">
                 <div class="flex-1 mr-4">
                     <h4>Defined Contribution Pensions</h4>
-                    <p>&pound;{{ $data['about_you']['pension_value'] }}</p>
+                    <p>{{ $data['about_you']['pension_value'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
                     <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/savings.svg" class="w-12">
@@ -1114,161 +1134,161 @@
 </div>
 
 <!-- YOUR FINANCES -->
-<div class="page" id="your-finances">
+{{--<div class="page" id="your-finances">--}}
 
-    @include('documents.includes.header', ['activeLink' => 'your-objectives'])
+{{--    @include('documents.includes.header', ['activeLink' => 'your-objectives'])--}}
 
-    <div class="flex mt-3">
-        <div class="w-5/6 mr-5 mt-2">
-            <h1>Your finances</h1>
-        </div>
-        <div class="w-1/5 pt-3 pl-8">
-            <div class="total-assets">
-                <p class="total-assets-title">Total assets</p>
-                <p class="total-assets-value mt-3 -mr-1 font-bold">£{{ $data['your_finances']['total_assets'] }}</p>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="flex mt-3">
-        <div class="w-full absolute">
-            <img class="finances-line-map" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/finances-line-map.svg">
-        </div>
-    </div>
+{{--    <div class="flex mt-3">--}}
+{{--        <div class="w-5/6 mr-5 mt-2">--}}
+{{--            <h1>Your finances</h1>--}}
+{{--        </div>--}}
+{{--        <div class="w-1/5 pt-3 pl-8">--}}
+{{--            <div class="total-assets">--}}
+{{--                <p class="total-assets-title">Total assets</p>--}}
+{{--                <p class="total-assets-value mt-3 -mr-1 font-bold">£{{ $data['your_finances']['total_assets'] }}</p>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
 
-    <div class="flex finance-map-content w-full mt-10">
-        <div class="w-1/4">
-            <div class="finances-box pp-box mb-4">
-                <p class="finance-box-title">Property & Possessions</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['total'] }}</p>
-            </div>
-
-            @foreach ($data['your_finances']['property_and_possessions']['breakdown'] as $propertyAndPossession)
-                <div class="finances-box pp-box-child mb-3">
-                    <p class="finance-box-title">{{ $propertyAndPossession['title'] }}</p>
-                    <p class="finance-box-content">£{{ $propertyAndPossession['value'] }}</p>
-                </div>
-            @endforeach
+{{--    <div class="flex mt-3">--}}
+{{--        <div class="w-full absolute">--}}
+{{--            <img class="finances-line-map" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/finances-line-map.svg">--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
 
-        </div>
+{{--    <div class="flex finance-map-content w-full mt-10">--}}
+{{--        <div class="w-1/4">--}}
+{{--            <div class="finances-box pp-box mb-4">--}}
+{{--                <p class="finance-box-title">Property & Possessions</p>--}}
+{{--                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['total'] }}</p>--}}
+{{--            </div>--}}
 
-        <div class="w-2/4 ml-14">
-            <div class="flex mb-4 ml-44">
-                <div class="finances-box liquid-assets-box">
-                    <p class="finance-box-title">Liquid Assets</p>
-                    <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['total'] }}</p>
-                </div>
-            </div>
-
-            <div class="flex">
-                <div class="w-1/2 ml-5 mr-32">
-                    <div class="taxable-box mb-3">
-                        <p class="finance-box-title tax-title">Taxable</p>
-                    </div>
-                </div>
-                <div class="w-1/2 mr-12 ml-48">
-                    <div class="tax-free-box mb-3">
-                        <p class="finance-box-title tax-title">Tax free</p>
-                    </div>
-                </div>
-            </div>
+{{--            @foreach ($data['your_finances']['property_and_possessions']['breakdown'] as $propertyAndPossession)--}}
+{{--                <div class="finances-box pp-box-child mb-3">--}}
+{{--                    <p class="finance-box-title">{{ $propertyAndPossession['title'] }}</p>--}}
+{{--                    <p class="finance-box-content">£{{ $propertyAndPossession['value'] }}</p>--}}
+{{--                </div>--}}
+{{--            @endforeach--}}
 
 
-            <div class="flex">
-                <div class="w-1/3 -ml-8 mr-12">
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][0]['title'] }}</p>
-                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][0]['value'] }}</p>
-                    </div>
+{{--        </div>--}}
 
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][1]['title'] }}</p>
-                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][1]['value'] }}</p>
-                    </div>
+{{--        <div class="w-2/4 ml-14">--}}
+{{--            <div class="flex mb-4 ml-44">--}}
+{{--                <div class="finances-box liquid-assets-box">--}}
+{{--                    <p class="finance-box-title">Liquid Assets</p>--}}
+{{--                    <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['total'] }}</p>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">National Savings</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
-
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Unit Trusts/OEICs/ETFs</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
-
-
-
-
-                </div>
-                <div class="w-1/3 mr-14">
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Direct Shareholdings</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
-
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Investment Bonds</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
-
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Structured Products</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
-
-                    <div class="finances-box liquid-assets-box-child mb-3">
-                        <p class="finance-box-title">Discretionary Managed Service</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
+{{--            <div class="flex">--}}
+{{--                <div class="w-1/2 ml-5 mr-32">--}}
+{{--                    <div class="taxable-box mb-3">--}}
+{{--                        <p class="finance-box-title tax-title">Taxable</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="w-1/2 mr-12 ml-48">--}}
+{{--                    <div class="tax-free-box mb-3">--}}
+{{--                        <p class="finance-box-title tax-title">Tax free</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
 
-                </div>
-                <div class="w-1/3">
-                    <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][0]['title'] }}</p>
-                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][0]['value'] }}</p>
-                    </div>
+{{--            <div class="flex">--}}
+{{--                <div class="w-1/3 -ml-8 mr-12">--}}
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][0]['title'] }}</p>--}}
+{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][0]['value'] }}</p>--}}
+{{--                    </div>--}}
 
-                    <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][1]['title'] }}</p>
-                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][1]['value'] }}</p>
-                    </div>
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][1]['title'] }}</p>--}}
+{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][1]['value'] }}</p>--}}
+{{--                    </div>--}}
 
-                    <div class="finances-box tax-box-child mb-3">
-                        <p class="finance-box-title">National Savings</p>
-                        <p class="finance-box-content">£XXX,XXX</p>
-                    </div>
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">National Savings</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
 
-                </div>
-            </div>
-        </div>
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">Unit Trusts/OEICs/ETFs</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
 
-        <div class="w-1/4 ml-32">
-            <div class="finances-box pensions-box mb-4">
-                <p class="finance-box-title">Pensions</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['total']  }}</p>
-            </div>
 
-            <div class="finances-box pensions-box-child mb-3">
-                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][0]['title'] }}</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][0]['value'] }}</p>
-            </div>
 
-            <div class="finances-box pensions-box-child mb-3">
-                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][1]['title'] }}</p>
-                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][1]['value'] }}</p>
-            </div>
 
-        </div>
+{{--                </div>--}}
+{{--                <div class="w-1/3 mr-14">--}}
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">Direct Shareholdings</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
 
-    </div>
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">Investment Bonds</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
 
-    <div class="page-number"></div>
-    @include('documents.includes.footer', ['previousLink' => '#your-objectives2', 'nextLink' => 'your-strategy'])
-</div>
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">Structured Products</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">Discretionary Managed Service</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
+
+
+{{--                </div>--}}
+{{--                <div class="w-1/3">--}}
+{{--                    <div class="finances-box tax-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][0]['title'] }}</p>--}}
+{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][0]['value'] }}</p>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="finances-box tax-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][1]['title'] }}</p>--}}
+{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][1]['value'] }}</p>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="finances-box tax-box-child mb-3">--}}
+{{--                        <p class="finance-box-title">National Savings</p>--}}
+{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
+{{--                    </div>--}}
+
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
+{{--        <div class="w-1/4 ml-32">--}}
+{{--            <div class="finances-box pensions-box mb-4">--}}
+{{--                <p class="finance-box-title">Pensions</p>--}}
+{{--                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['total']  }}</p>--}}
+{{--            </div>--}}
+
+{{--            <div class="finances-box pensions-box-child mb-3">--}}
+{{--                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][0]['title'] }}</p>--}}
+{{--                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][0]['value'] }}</p>--}}
+{{--            </div>--}}
+
+{{--            <div class="finances-box pensions-box-child mb-3">--}}
+{{--                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][1]['title'] }}</p>--}}
+{{--                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][1]['value'] }}</p>--}}
+{{--            </div>--}}
+
+{{--        </div>--}}
+
+{{--    </div>--}}
+
+{{--    <div class="page-number"></div>--}}
+{{--    @include('documents.includes.footer', ['previousLink' => '#your-objectives2', 'nextLink' => 'your-strategy'])--}}
+{{--</div>--}}
 
 <!-- YOUR STRATEGY -->
 <!-- YOUR CASHFLOW FORECAST -->

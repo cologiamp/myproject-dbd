@@ -89,9 +89,9 @@ function removeReport(id) {
                                                         </td>
                                                         <td scope="row" class="text-sm px-3 py-4">{{ element.date }}</td>
                                                         <td class="text-sm px-3 py-4">
-                                                            <Link :href="element.file">
+                                                            <a target="_blank" :href="element.file">
                                                                 {{ element.file }}
-                                                            </Link>
+                                                            </a>
                                                         </td>
                                                         <td class="relative text-sm py-4 pl-3 pr-4 text-right sm:pr-0">
                                                             <a href="#" @click="removeReport(element.id)">
