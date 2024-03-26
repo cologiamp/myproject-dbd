@@ -28,6 +28,7 @@ const props = defineProps({
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
                 frequencies: [],
+                loa_submitted: []
                 chosens: [],
             },
             model: {
@@ -51,6 +52,7 @@ const props = defineProps({
                     retained_value: null,
                     is_retained: null,
                     funds: [],
+                    loa_submitted: null
                     employer_contribution_frequency: null,
                 }],
                 db_pensions: [{
@@ -66,7 +68,8 @@ const props = defineProps({
                     chosen: null,
                     notes: null,
                     cetv: null,
-                    cetv_ends_at: null
+                    cetv_ends_at: null,
+                    loa_submitted: null
                 }]
             },
             submit_method: 'post',
@@ -125,6 +128,7 @@ function addDc() {
         retained_value: null,
         is_retained: null,
         funds: [],
+        loa_submitted: null
         employer_contribution_frequency: null
     });
 }
@@ -146,7 +150,8 @@ function addDb() {
         chosen: null,
         notes: null,
         cetv: null,
-        cetv_ends_at: null
+        cetv_ends_at: null,
+        loa_submitted: null
     });
 }
 
@@ -255,7 +260,16 @@ function removePension(index,type) {
                         </option>
                     </select>
                 </div>
-
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="loa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LOA Submitted</label>
+                    <select @change="autosaveLocally(index)" v-model="pension.loa_submitted"
+                            id="loa_submitted" name="loa_submitted"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="loa_submitted" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(loa_submitted, id) in formData.enums.loa_submitted">{{ loa_submitted }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.loa_submitted">{{ stepForm.errors.loa_submitted }}</p>
+                </div>
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Retirement Age</label>
                     <div class="flex shadow-sm rounded-md   focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
@@ -390,6 +404,17 @@ function removePension(index,type) {
                 </div>
 
                 <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                    <label for="loa_submitted" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">LOA Submitted</label>
+                    <select @change="autosaveLocally(index)" v-model="pension.loa_submitted"
+                            id="loa_submitted" name="loa_submitted"
+                            class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                        <option id="loa_submitted" :value="null">-</option>
+                        <option :id="id" :value="id" v-for="(loa_submitted, id) in formData.enums.loa_submitted">{{ loa_submitted }}</option>
+                    </select>
+                    <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.loa_submitted">{{ stepForm.errors.loa_submitted }}</p>
+                </div>
+
+                <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
                     <label for="type"
                            class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Pension Type</label>
                     <select @change="autosaveLocally()" v-model="pension.type"
@@ -484,21 +509,43 @@ function removePension(index,type) {
                     <h4 class="col-span-6 text-xl font-bold pt-2"> Employer Contribution </h4>
 
                     <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="employer_contribution_percent" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Employer Contribution (%) </label>
-                    <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input  type="number" name="employer_contribution_percent" id="employer_contribution_percent"
-                                @change="autosaveLocally()" v-model="pension.employer_contribution_percent"
-                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2
-                                text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50
-                                 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="%" />
+                        <label for="employer_contribution_percent" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Employer Contribution (%) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input  type="number" name="employer_contribution_percent" id="employer_contribution_percent"
+                                    @change="autosaveLocally()" v-model="pension.employer_contribution_percent"
+                                    class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2
+                                    text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50
+                                     disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="%" />
+                        </div>
                     </div>
+
+                    <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
+                        <label for="employer_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Employer Contribution (£) </label>
+                        <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
+                            <input @change="formatAmount($event, index, 'employer_contribution_absolute','dc_pensions')" type="currency" name="ppm" id="ppm"
+                                   :value="pension.employer_contribution_absolute"
+                                   class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
+                        </div>
+                    </div>
+
+                    <div class="mt-2 sm:col-span-3 sm:mt-0 md:pr-2">
+                        <label for="frequency"
+                               class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 sm:pb-2">Contribution Frequency</label>
+                        <select @change="autosaveLocally" v-model="pension.frequency"
+                                id="frequency" name="frequency"
+                                class="block rounded-md  w-full  border-0 py-1.5 bg-aaron-700 text-aaron-50 sm:max-w-md shadow-sm ring-1 ring-inset ring-aaron-600 focus:ring-2 focus:ring-inset focus:ring-red-300  sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none">
+                            <option id="frequency" :value="null">-</option>
+                            <option :id="id" :value="id" v-for="(provider, id) in formData.enums.frequencies">{{
+                                    provider }}</option>
+                        </select>
+                    </div><br>
                 </div>
 
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
-                    <label for="employer_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Employer Contribution (£) </label>
+                    <label for="gross_amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Current Value (£) </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                        <input @change="formatAmount($event, index, 'employer_contribution_absolute','dc_pensions')" type="currency" name="ppm" id="ppm"
-                               :value="pension.employer_contribution_absolute"
+                        <input @change="formatAmount($event, index, 'value','dc_pensions')" type="currency" name="current_value" id="current_value"
+                               :value="pension.value"
                                class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                     </div>
                 </div>
@@ -543,12 +590,12 @@ function removePension(index,type) {
                     <div class="pt-1 flex items-center space-x-4 space-y-0 md:mt-0 md:pr-2 md:col-span-2">
                         <input @change="autosaveLocally()"
                                v-model="pension.is_retained" type="radio" id="true" :value="true"
-                               :checked="pension.is_retained == true"
+                               :checked="pension.is_retained === true"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="true" class="ml-2 block text-sm font-medium leading-6 text-white">Yes</label>
                         <input @change="autosaveLocally()"
                                v-model="pension.is_retained" type="radio" id="false" :value="false"
-                               :checked="pension.is_retained == false"
+                               :checked="pension.is_retained === false"
                                class="h-4 w-4 border-gray-300 text-aaron-700 focus:ring-aaron-700" />
                         <label for="false" class="ml-2 block text-sm font-medium leading-6 text-white">No</label>
                     </div>
@@ -639,8 +686,6 @@ function removePension(index,type) {
                         <PlusCircleIcon class="w-6 h-6" />Add Fund
                     </button>
                 </div>
-
-            </div>
 
         </div>
 

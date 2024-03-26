@@ -46,12 +46,11 @@ Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindControll
 Route::post('/client/{client:io_id}/fact-find-solo',[FactFindController::class,'solo']);
 Route::post('/client/{client:io_id}/fact-find-together/{c2id}',[FactFindController::class,'selectClientTwo']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
-
+Route::put('/client/{client:io_id}/recommendations/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[StrategyReportRecommendationsController::class,'update'])->name('strategyreportrecommendations.update');
 Route::get('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'get'])->name('strategyobjectives.get');
 Route::get('/strategy-actions/{action}',[StrategyActionsController::class,'get'])->name('strategyactions.get');
 
-Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
 
 Route::middleware('auth:sanctum')->group(function (){

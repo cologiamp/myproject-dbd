@@ -251,6 +251,7 @@ class ClientPresenter extends BasePresenter
                             'id' => $item->id,
                             'pt' => 'DC',
                             'owner' => $item->client->io_id,
+                             'loa_submitted' => $item->loa_submitted,
                             'type' => $item->defined_contribution_pension->type,
                             'employer' => $item->employer,
                             'administrator' =>   $item->defined_contribution_pension->administrator != null ?
@@ -268,7 +269,7 @@ class ClientPresenter extends BasePresenter
                             'valuation_at' => $item->defined_contribution_pension->valuation_at,
                             'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                             'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
-                            'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
+                             'is_retained'=> (bool) $item->is_retained,
                             'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
                             'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
                             'funds' => $item->defined_contribution_pension->pension_funds->map(function ($fund){
@@ -289,6 +290,7 @@ class ClientPresenter extends BasePresenter
                             'id' => $item->id,
                             'pt' => 'DB',
                             'owner' => $item->client->io_id,
+                            'loa_submitted' => $item->loa_submitted,
                             'status' => $item->defined_benefit_pension->status,
                             'employer' => $item->employer,
                             'retirement_age' => $item->retirement_age,
@@ -528,6 +530,7 @@ class ClientPresenter extends BasePresenter
                             'id' => $item->id,
                             'pt' => 'DC',
                             'owner' => $item->client->io_id,
+                            'loa_submitted' => $item->loa_submitted,
                             'type' => $item->defined_contribution_pension->type,
                             'employer' => $item->employer,
                             'administrator' =>   $item->defined_contribution_pension->administrator != null ?
@@ -545,7 +548,7 @@ class ClientPresenter extends BasePresenter
                             'valuation_at' => $item->defined_contribution_pension->valuation_at,
                             'value' => $item->defined_contribution_pension->value != null ? $this->currencyIntToString($item->defined_contribution_pension->value): null,
                             'retained_value'=> $item->defined_contribution_pension->retained_value != null ? $this->currencyIntToString($item->defined_contribution_pension->retained_value): null,
-                            'is_retained'=> (bool) $item->defined_contribution_pension->is_retained,
+                            'is_retained'=> (bool) $item->is_retained,
                             'crystallised_status'=> $item->defined_contribution_pension->crystallised_status,
                             'crystallised_percentage'=> $item->defined_contribution_pension->crystallised_percentage,
                             'funds' => $item->defined_contribution_pension->pension_funds->map(function ($fund){
@@ -565,6 +568,7 @@ class ClientPresenter extends BasePresenter
                             'id' => $item->id,
                             'pt' => 'DB',
                             'owner' => $item->client->io_id,
+                            'loa_submitted' => $item->loa_submitted,
                             'status' => $item->defined_benefit_pension->status,
                             'employer' => $item->employer,
                             'retirement_age' => $item->retirement_age,

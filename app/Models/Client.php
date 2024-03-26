@@ -325,6 +325,7 @@ class Client extends Model
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
                 'frequencies' => collect(config('enums.assets.frequency')),
+                'loa_submitted' => config('enums.pension_recommendation.loa_submitted')
                 'chosens' => collect(config('enums.assets.chosen')), // chosen dropdown stuff
             ],
             '3.5' => [

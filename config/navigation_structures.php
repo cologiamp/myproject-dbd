@@ -607,6 +607,13 @@ return [
                         'db_pensions' => 'sometimes|array',
                             'db_pensions.*.id' => 'sometimes|nullable|integer',
                             'db_pensions.*.owner' => 'sometimes|nullable',
+                            'db_pensions.*.loa_submitted' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
+                            ],
                             'db_pensions.*.status' => [
                                 'sometimes',
                                 'numeric',
@@ -633,6 +640,13 @@ return [
                             'dc_pensions' => 'sometimes|array',
                             'dc_pensions.*.id' => 'sometimes|nullable|integer',
                             'dc_pensions.*.owner' => 'sometimes|nullable',
+                            'dc_pensions.*.loa_submitted' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
+                            ],
                             'dc_pensions.*.type' => [
                                 'sometimes',
                                 'numeric',
@@ -886,7 +900,7 @@ return [
             ]
         ]
     ],
-    'investmentrecommendation' => [
+    'recommendations' => [
         1 => [
             'name' => 'Investment Recommendations',
             'sections' => [
@@ -1139,8 +1153,10 @@ return [
                         'existing_pension_plans.administrator',
                         'existing_pension_plans.policy_type',
                         'existing_pension_plans.policy_number',
-                        'existing_pension_plans.lqa_submitted',
-                        'existing_pension_plans.policy_reviewed_transfer'
+                        'existing_pension_plans.loa_submitted',
+                        'existing_pension_plans.is_retained',
+                        'existing_pension_plans.active_pension_member',
+                        'existing_pension_plans.active_pension_member_reason_not'
                     ],
                     'rules' => [
                         'existing_pension_plans' => 'sometimes|nullable',
@@ -1155,20 +1171,16 @@ return [
                             Rule::in(array_keys((config('enums.pension_recommendation.policy_type'))))
                         ],
                         'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string',
-                        'existing_pension_plans.*.lqa_submitted' => [
+                        'existing_pension_plans.*.loa_submitted' => [
                             'sometimes',
                             'nullable',
                             'numeric',
                             'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.lqa_submitted'))))
+                            Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
                         ],
-                        'existing_pension_plans.*.policy_reviewed_transfer' => [
-                            'sometimes',
-                            'nullable',
-                            'numeric',
-                            'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.policy_reviewed_transfer'))))
-                        ]
+                        'existing_pension_plans.*.is_retained' => 'sometimes|nullable|boolean',
+                        'existing_pension_plans.*.active_pension_member' => 'sometimes|nullable|boolean',
+                        'existing_pension_plans.*.active_pension_member_reason_not' => 'sometimes|nullable|string'
                     ],
                     'messages' => []
                 ],

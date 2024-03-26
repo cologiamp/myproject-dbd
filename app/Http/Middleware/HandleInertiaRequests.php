@@ -76,10 +76,16 @@ class HandleInertiaRequests extends Middleware
                     'current' => $request->route()->getName() === 'client.pensionobjectives'
                 ],
                 [
+                    'name' => 'Strategy Report',
+                    'href' => '/client/'.$client->io_id.'/strategy-report',
+                    'icon' => 'SRIcon',
+                    'current' => $request->route()->getName() === 'client.strategy'
+                ],
+                [
                     'name' => 'Recommendations',
-                    'href' => '/client/'.$client->io_id.'/investment-recommendation',
+                    'href' => '/client/'.$client->io_id.'/recommendations',
                     'icon' => 'IRIcon',
-                    'current' => $request->route()->getName() === 'client.investmentrecommendation'
+                    'current' => $request->route()->getName() === 'client.recommendations'
                 ],
                 [
                     'name' => 'Strategy Report Options',
