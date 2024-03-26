@@ -25,9 +25,11 @@ const props = defineProps({
     }
 });
 
+const expenditure_sections = ['BasicEssentialExpenditure', 'BasicQualityOfLivingExpenditure', 'NonEssentialOutgoingsExpenditure', 'LiabilityExpenditure', 'LumpSumExpenditure'];
+
 function dynamicComponent(component){
     // For Expenditure sections
-    if (component.includes('Expenditure')) {
+    if (expenditure_sections.includes(component)) {
        component = 'Expenditure'
     }
 

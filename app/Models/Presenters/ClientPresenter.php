@@ -183,30 +183,39 @@ class ClientPresenter extends BasePresenter
                     'total' => count($this->model->incomes) > 0 ? null : $this->model->total_income_basic
                 ],
                 '2.2' => [
+                    'useExpenditure' => false,
+                    'total' => count($this->model->expenditures) > 0 ? null : $this->currencyIntToString($this->model->total_expenditure_basic),
+                    'expenditures' => collect($this->model->expenditures()->get()->merge($this->model->client_two->expenditures()->get())->sortBy('id')->values()->map(function ($expenditure){
+                        return [
+                            'amount' => $expenditure->amount
+                        ];
+                    }))
+                ],
+                '2.3' => [
                     'client_id' => $this->model->io_id,
                     'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_essential_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_essential_expenditure')->get())->sortBy('id')->values()->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
-                '2.3' => [
+                '2.4' => [
                     'client_id' => $this->model->io_id,
                     'expenditures' => collect($this->model->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('basic_quality_of_living_expenditure')->get())->sortBy('id')->values()->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
-                '2.4' => [
+                '2.5' => [
                     'client_id' => $this->model->io_id,
                     'expenditures' => collect($this->model->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('non_essential_outgoings_expenditure')->get())->sortBy('id')->values()->map(function ($expenditure){
                         return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
-                '2.5' => [
+                '2.6' => [
                     'client_id' => $this->model->io_id,
                     'expenditures' => collect($this->model->expenditures()->inConfigSection('liability_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('liability_expenditure')->get())->sortBy('id')->values()->map(function ($expenditure){
                      return $expenditure->presenter()->form();
                     }))->groupBy('expenditure_type')
                 ],
-                '2.6' => [
+                '2.7' => [
                     'client_id' => $this->model->io_id,
                       'expenditures' => collect($this->model->expenditures()->inConfigSection('lump_sum_expenditure')->get()->merge($this->model->client_two->expenditures()->inConfigSection('lump_sum_expenditure')->get())->sortBy('id')->values()->map(function ($expenditure){
                           return $expenditure->presenter()->form();
