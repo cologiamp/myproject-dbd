@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('pension_schemes', function (Blueprint $table) {
             $table->renameColumn('lqa_submitted', 'loa_submitted');
             $table->renameColumn('policy_reviewed_transfer', 'is_retained');
-            $table->boolean('active_pension_member')->after('is_retained')->nullable();
-            $table->text('active_pension_member_reason_not')->after('active_pension_member')->nullable();
+            $table->boolean('active_pension_member')->nullable();
+            $table->text('active_pension_member_reason_not')->nullable();
         });
     }
 
