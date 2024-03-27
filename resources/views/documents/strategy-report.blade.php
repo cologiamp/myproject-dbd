@@ -1045,8 +1045,7 @@
     <div class="flex mt-5">
 
 
-
-        @foreach ($data['your_objectives']['primary_objectives'] as $primaryObjective)
+        @foreach (array_slice($data['your_objectives']['primary_objectives'], 0, 3) as $primaryObjective)
             <div class="w-1/3">
                 <div class="flex objective">
                     <div class="objective-icon flex-shrink-0">
@@ -1078,7 +1077,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
     <div class="clear-both"></div>
@@ -1092,7 +1091,7 @@
     <div class="flex mt-6">
 
 
-        @foreach ($data['your_objectives']['secondary_objectives'] as $secondaryObjective)
+        @foreach (array_slice($data['your_objectives']['secondary_objectives'], 0, 3) as $secondaryObjective)
             <div class="w-1/3">
                 <div class="flex objective">
                     <div class="objective-icon flex-shrink-0">
