@@ -1045,23 +1045,23 @@
     <div class="flex mt-5">
 
 
-        <!--
-        foreach ($data['about_you']['your_objectives']['primary_objectives'] as $primaryObjective)
+
+        @foreach ($data['your_objectives']['primary_objectives'] as $primaryObjective)
             <div class="w-1/3">
                 <div class="flex objective">
                     <div class="objective-icon flex-shrink-0">
-                        <img src="{ $primaryObjective['icon'] }}" class="w-12">
+                        <img src="{{ $primaryObjective['icon'] }}" class="w-12">
                     </div>
                     <div class="objective-text ml-4 pr-8">
-                        <h4 class="font-bold text-white">{ $primaryObjective['title'] }}</h4>
+                        <h4 class="font-bold text-white">{{ $primaryObjective['title'] }}</h4>
                         <div class="mt-2 text-sm">
-                            <p class="small">{ $primaryObjective['description'] }}</p>
+                            <p class="small">{{ $primaryObjective['description'] }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-        endforeach
-        -->
+        @endforeach
+
 
 
 
@@ -1078,32 +1078,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-1/3">
-            <div class="flex objective">
-                <div class="objective-icon flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-tax-efficiency.svg" class="w-12">
-                </div>
-                <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">Tax efficiency</h4>
-                    <div class="mt-2 text-sm">
-                        <p class="small">Based on our discussions, you wish to reduce the amount of tax you pay on your existing savings/investments. This is to ensure that more of the assets that you have built up during your lifetime can be passed onto your chosen beneficiary(ies) when you die.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="w-1/3">
-            <div class="flex objective">
-                <div class="objective-icon flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-cash.svg" class="w-12">
-                </div>
-                <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">Short-term cash needs</h4>
-                    <div class="mt-2 text-sm">
-                        <p class="small">You’ve indicated that it is important for you to retain access to a proportion of your capital. This covers any expenditure that cannot be met from income over the next XX years.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     <div class="clear-both"></div>
@@ -1116,23 +1091,23 @@
 
     <div class="flex mt-6">
 
-        <!--
-        foreach ($data['about_you']['your_objectives']['secondary_objectives'] as $secondaryObjective)
-        <div class="w-1/3">
-            <div class="flex objective">
-                <div class="objective-icon flex-shrink-0">
-                    <img src="{ $secondaryObjective['icon'] }}" class="w-12">
-                </div>
-                <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">{ $secondaryObjective['title'] }}</h4>
-                    <div class="mt-2 text-sm">
-                        <p class="small">{ $secondaryObjective['description'] }}</p>
+
+        @foreach ($data['your_objectives']['secondary_objectives'] as $secondaryObjective)
+            <div class="w-1/3">
+                <div class="flex objective">
+                    <div class="objective-icon flex-shrink-0">
+                        <img src="{{ $secondaryObjective['icon'] }}" class="w-12">
+                    </div>
+                    <div class="objective-text ml-4 pr-8">
+                        <h4 class="font-bold text-white">{{ $secondaryObjective['title'] }}</h4>
+                        <div class="mt-2 text-sm">
+                            <p class="small">{{ $secondaryObjective['description'] }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        endforeach
-        -->
+        @endforeach
+
 
 
         <div class="w-1/3">
@@ -1148,19 +1123,7 @@
                 </div>
             </div>
         </div>
-        <div class="w-1/3">
-            <div class="flex objective">
-                <div class="objective-icon flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-growth.svg" class="w-12">
-                </div>
-                <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">Capital growth</h4>
-                    <div class="mt-2 text-sm">
-                        <p class="small">You’re looking to grow the value of your capital, so you can retire earlier and continue to afford more holidays.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 
 
