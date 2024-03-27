@@ -1044,6 +1044,27 @@
 
     <div class="flex mt-5">
 
+
+        <!--
+        foreach ($data['about_you']['your_objectives']['primary_objectives'] as $primaryObjective)
+            <div class="w-1/3">
+                <div class="flex objective">
+                    <div class="objective-icon flex-shrink-0">
+                        <img src="{{ $primaryObjective['icon'] }}" class="w-12">
+                    </div>
+                    <div class="objective-text ml-4 pr-8">
+                        <h4 class="font-bold text-white">{{ $primaryObjective['title'] }}</h4>
+                        <div class="mt-2 text-sm">
+                            <p class="small">{{ $primaryObjective['description'] }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        endforeach
+        -->
+
+
+
         <div class="w-1/3">
             <div class="flex objective">
                 <div class="objective-icon flex-shrink-0">
@@ -1094,6 +1115,26 @@
     <div class="clear-both"></div>
 
     <div class="flex mt-6">
+
+        <!--
+        foreach ($data['about_you']['your_objectives']['secondary_objectives'] as $secondaryObjective)
+        <div class="w-1/3">
+            <div class="flex objective">
+                <div class="objective-icon flex-shrink-0">
+                    <img src="{{ $secondaryObjective['icon'] }}" class="w-12">
+                </div>
+                <div class="objective-text ml-4 pr-8">
+                    <h4 class="font-bold text-white">{{ $secondaryObjective['title'] }}</h4>
+                    <div class="mt-2 text-sm">
+                        <p class="small">{{ $secondaryObjective['description'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        endforeach
+        -->
+
+
         <div class="w-1/3">
             <div class="flex objective">
                 <div class="objective-icon flex-shrink-0">
@@ -1489,9 +1530,7 @@
 
             </div>
 
-            <div class="flex">
-
-
+            <div class="flex mb-8">
                 @foreach (array_slice($data['summary']['calls_to_action'], 2, 2) as $callToAction)
                     <div class="w-1/2">
                         <div class="flex">
@@ -1506,9 +1545,23 @@
                         </div>
                     </div>
                 @endforeach
+            </div>
 
-
-
+            <div class="flex">
+                @foreach (array_slice($data['summary']['calls_to_action'], 4, 2) as $callToAction)
+                    <div class="w-1/2">
+                        <div class="flex">
+                            <div class="w-1/3">
+                                <img class="w-12" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/warning-icon.svg">
+                            </div>
+                            <div class="w-2/3">
+                                <p class="font-bold text-white mt-1 -ml-3 warning-text">
+                                    {{ $callToAction['title'] }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
         </div>
