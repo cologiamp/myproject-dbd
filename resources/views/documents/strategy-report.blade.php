@@ -468,7 +468,7 @@
     </div>
 
     <div class="w-full journey-line">
-        <img class="upload-to-s3 w-5/6" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/journey-line.svg">
+        <img class="upload-to-s3 w-full ml-4" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/journey-line.svg">
     </div>
 
     @include('documents.includes.footer', ['previousLink' => '#front-cover', 'nextLink' => '#the-my-wealth-service'])
@@ -1050,12 +1050,12 @@
             <div class="w-1/3">
                 <div class="flex objective">
                     <div class="objective-icon flex-shrink-0">
-                        <img src="{{ $primaryObjective['icon'] }}" class="w-12">
+                        <img src="{ $primaryObjective['icon'] }}" class="w-12">
                     </div>
                     <div class="objective-text ml-4 pr-8">
-                        <h4 class="font-bold text-white">{{ $primaryObjective['title'] }}</h4>
+                        <h4 class="font-bold text-white">{ $primaryObjective['title'] }}</h4>
                         <div class="mt-2 text-sm">
-                            <p class="small">{{ $primaryObjective['description'] }}</p>
+                            <p class="small">{ $primaryObjective['description'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -1121,12 +1121,12 @@
         <div class="w-1/3">
             <div class="flex objective">
                 <div class="objective-icon flex-shrink-0">
-                    <img src="{{ $secondaryObjective['icon'] }}" class="w-12">
+                    <img src="{ $secondaryObjective['icon'] }}" class="w-12">
                 </div>
                 <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">{{ $secondaryObjective['title'] }}</h4>
+                    <h4 class="font-bold text-white">{ $secondaryObjective['title'] }}</h4>
                     <div class="mt-2 text-sm">
-                        <p class="small">{{ $secondaryObjective['description'] }}</p>
+                        <p class="small">{ $secondaryObjective['description'] }}</p>
                     </div>
                 </div>
             </div>
@@ -1609,13 +1609,23 @@
             </div>
         </div>
         <div class="w-1/3">
-            <img class="ml-28 mt-14 float-right next-steps-presentation-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/your-journey.svg">
+            <div class="flex">
+                <img class="ml-12 mt-14 w-5/6 float-right next-steps-presentation-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/your-journey.svg">
+            </div>
+            <div class="flex-col justify-center pt-5">
+                <p class="w-full font-bold pl-24">
+                    Advice presentation
+                </p>
+                <p class="w-full pl-20 mt-2">
+                    25th April 2024 - 3.00pm
+                </p>
+            </div>
         </div>
     </div>
 
 
     <div class="w-full journey-line">
-        <img class="upload-to-s3 w-5/6 mt-14 ml-20" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/next-steps-timeline.svg">
+        <img class="upload-to-s3 w-5/6 mt-8 ml-20" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/next-steps-timeline.svg">
     </div>
 
     @include('documents.includes.footer', ['previousLink' => '#next-steps-summary', 'nextLink' => '#meet-your-team-popup'])
