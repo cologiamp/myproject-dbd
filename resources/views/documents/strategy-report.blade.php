@@ -1614,10 +1614,10 @@
             </div>
             <div class="flex-col justify-center pt-5">
                 <p class="w-full font-bold pl-24">
-                    Advice presentation
+                    {{ $data['next_steps']['next_meeting_title'] }}
                 </p>
                 <p class="w-full pl-20 mt-2">
-                    25th April 2024 - 3.00pm
+                    {{ $data['next_steps']['next_meeting_date'] }}
                 </p>
             </div>
         </div>
