@@ -758,12 +758,12 @@
         </div>
     </div>
 
-    @include('documents.includes.footer', ['previousLink' => '#key-considerations', 'nextLink' => '#your-objectives'])
+    @include('documents.includes.footer', ['previousLink' => '#key-considerations', 'nextLink' => '#a-holistic-approach-2'])
 </div>
 
 
 <!-- A HOLISTIC APPROACH V2-->
-<div class="page" id="a-holistic-approach">
+<div class="page" id="a-holistic-approach-2">
 
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
@@ -810,13 +810,13 @@
         </div>
     </div>
 
-    @include('documents.includes.footer', ['previousLink' => '#key-considerations', 'nextLink' => '#your-objectives'])
+    @include('documents.includes.footer', ['previousLink' => '#key-considerations', 'nextLink' => '#about-you'])
 </div>
 <!-- A HOLISTIC APPROACH V2-->
 
 
 <!-- YOUR OBJECTIVES -->
-<div class="page" id="your-objectives">
+<div class="page" id="about-you">
 
     @include('documents.includes.header', ['activeLink' => 'your-objectives'])
 
@@ -1016,14 +1016,14 @@
         </div>
     </div>
 
-    @include('documents.includes.footer', ['previousLink' => '#a-holistic-approach', 'nextLink' => '#your-objectives2'])
+    @include('documents.includes.footer', ['previousLink' => '#a-holistic-approach-2', 'nextLink' => '#your-objectives'])
 </div>
 <!-- END OF YOUR OBJECTIVES VARIBLE LAYOUT, PIERS -->
 
 
 
 <!-- YOUR OBJECTIVES -->
-<div class="page" id="your-objectives2">
+<div class="page" id="your-objectives">
 
     @include('documents.includes.header', ['activeLink' => 'your-objectives'])
 
@@ -1123,7 +1123,7 @@
     </div>
 
 
-    @include('documents.includes.footer', ['previousLink' => '#your-objectives', 'nextLink' => '#your-finances'])
+    @include('documents.includes.footer', ['previousLink' => '#about-you', 'nextLink' => '#your-strategy'])
 </div>
 
 <!-- YOUR FINANCES -->
@@ -1309,12 +1309,12 @@
     </div>
 
     <div class="page-number"></div>
-    @include('documents.includes.footer', ['previousLink' => '#your-finances', 'nextLink' => '#'])
+    @include('documents.includes.footer', ['previousLink' => '#your-objectives', 'nextLink' => '#your-strategy-2'])
 </div>
 
 <!-- YOUR STRATEGY -->
 <!-- UNDERSTANDING YOUR CASHFLOW CHARTS V1 -->
-<div class="page" id="your-strategy">
+<div class="page" id="your-strategy-2">
 
     @include('documents.includes.header', ['activeLink' => 'your-strategy'])
 
@@ -1452,7 +1452,7 @@
 
 
     <div class="page-number"></div>
-    @include('documents.includes.footer', ['previousLink' => '#your-finances', 'nextLink' => '#'])
+    @include('documents.includes.footer', ['previousLink' => '#your-strategy', 'nextLink' => '#next-steps-summary'])
 </div>
 
 
@@ -1460,7 +1460,7 @@
 <!-- SUMMARY -->
 <div class="page" id="next-steps-summary">
 
-    @include('documents.includes.header', ['activeLink' => 'introduction'])
+    @include('documents.includes.header', ['activeLink' => 'next-steps'])
 
     <div class="flex">
         <div class="w-1/2 mt-10">
@@ -1519,7 +1519,7 @@
         </div>
     </div>
 
-    @include('documents.includes.footer', ['previousLink' => '#front-cover', 'nextLink' => '#the-my-wealth-service'])
+    @include('documents.includes.footer', ['previousLink' => '#your-strategy-2', 'nextLink' => '#next-steps'])
 
 </div>
 
@@ -1527,9 +1527,9 @@
 
 <!-- NEXT STEPS -->
 <!-- YOUR OBJECTIVES (VARIABLE CONTENT) -->
-<div class="page" id="next-steps-your-objectives">
+<div class="page" id="next-steps">
 
-    @include('documents.includes.header', ['activeLink' => 'introduction'])
+    @include('documents.includes.header', ['activeLink' => 'next-steps'])
 
     <div class="flex">
         <div class="w-2/3 mt-16">
@@ -1565,7 +1565,7 @@
         <img class="upload-to-s3 w-5/6 mt-14 ml-20" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/next-steps-timeline.svg">
     </div>
 
-    @include('documents.includes.footer', ['previousLink' => '#front-cover', 'nextLink' => '#the-my-wealth-service'])
+    @include('documents.includes.footer', ['previousLink' => '#next-steps-summary', 'nextLink' => '#meet-your-team-popup'])
 
 </div>
 
