@@ -453,13 +453,6 @@
 
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
-    <div class="green-menu py-4 px-4 absolute ml-96">
-        <p class="green-menu-option">Your journey</p>
-        <p class="green-menu-option">The my wealth service</p>
-        <p class="green-menu-option">Meet your team</p>
-        <p class="green-menu-option">Key considerations</p>
-        <p>A holistic approach</p>
-    </div>
     <div class="flex">
         <div class="w-1/2 mt-16">
             <div class="w-3/4">
