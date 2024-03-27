@@ -4,7 +4,8 @@ import {autoS, autosaveT} from "@/autosave.js";
 import {useForm, usePage} from "@inertiajs/vue3";
 import {XCircleIcon} from "@heroicons/vue/24/solid/index.js";
 import {changeToCurrency} from "@/currency.js";
-import {computed, onBeforeMount, ref} from "vue";
+import {computed, onBeforeMount, ref, watch} from "vue";
+import {forceCalculateExpenditures} from "@/calculateExpenditureTotal.js";
 
 const props = defineProps({
     formData: {
@@ -18,7 +19,7 @@ const props = defineProps({
                 expenditures: null
             },
             submit_method: 'post',
-            submit_url: '/',
+            submit_url: '/'
         },
     },
     errors: Object,
@@ -38,6 +39,12 @@ async function autosaveLocally(){
     // formatAmountOnload()
     calculateTotals();
 }
+
+watch(forceCalculateExpenditures,(newValue,oldValue) => {
+    if (newValue > oldValue) {
+        autosaveLocally()
+    }
+})
 
 function formatTotal()
 {
@@ -98,7 +105,7 @@ onBeforeMount(() => {
             </div>
             <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 mb-4 p-4">
                 <h4 class="col-span-6 text-xl font-bold pt-2"> Expenditure Total </h4>
-                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="stepForm.useExpenditure === false">
+                <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="stepForm.useExpenditure == false && stepForm.expenditures.length == 0">
                     <label for="total" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total: </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
                         <input v-model="stepForm.total" @change="formatTotal"

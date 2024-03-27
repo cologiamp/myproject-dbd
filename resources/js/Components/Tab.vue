@@ -63,8 +63,7 @@ function handleAutosave(val){
                     :item="item"
                     :sectionIndex="index"
                     :tabIndex="tabIndex"
-                    :tabName="tab.name"
-                    :sidebarItemsLength="Object.keys(tab.sidebaritems).length">
+                    :tabName="tab.name">
                 </SectionContent>
             </SectionSidebar>
             <SectionContent v-else-if="tab.tabcontent" @auto-save-up="handleAutosave" :item="tab.tabcontent"  :tabIndex="tabIndex"></SectionContent>
