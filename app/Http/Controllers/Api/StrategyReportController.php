@@ -38,7 +38,6 @@ class StrategyReportController extends Controller
         //Client has 0 employments - please enter one
 
         $data = $this->srds->getStrategyReportData($client);
-        ray($data)->blue();
         $docraptor = new DocRaptor\DocApi();
         $docraptor->getConfig()->setUsername(env('DOCRAPTOR_API_KEY'));
 

@@ -43,7 +43,6 @@ Route::get('/test', function() {
 
     $client = \App\Models\Client::find(2);
     $data = $srds->getStrategyReportData($client);
-    ray($data)->blue();
     return view('documents.strategy-report', ['data' => $data]);
 });
 

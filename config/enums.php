@@ -2031,12 +2031,6 @@ return [
             99 => 'Other'
         ]
     ],
-    'strategy_report_icons' => [
-        'dependents' => [
-            'child' => 'https://child-icon.test',
-            'adult' => 'https://adult-icon.test',
-        ]
-    ],
     'relation_to_c2' => [
         0 => 'Partner'
     ],
