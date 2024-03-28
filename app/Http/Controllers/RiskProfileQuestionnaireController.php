@@ -25,8 +25,11 @@ class RiskProfileQuestionnaireController extends Controller
     public function show(Client $client): \Inertia\Response
     {
         $this->clientRepository->setClient($client);
+        $this->riskProfileRepository->setClient($client);
 
-        return Inertia::render('RiskProfileQuestionnaire');
+        return Inertia::render('RiskProfileQuestionnaire',[
+            'client_id' => $client->id
+        ]);
     }
     public function submitQ1(Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -61,8 +64,6 @@ class RiskProfileQuestionnaireController extends Controller
             'concern40percent' => 'required|numeric',
             'concern50percent' => 'required|numeric',
         ]);
-
-        $this->riskProfileRepository->setClient($client);
 
         $short_term_volatility = [
             '0' => ['value' => $request->concern5percent],

@@ -4,6 +4,10 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { ArrowLongRightIcon, ArrowLongLeftIcon } from '@heroicons/vue/24/solid';
 
+const props = defineProps({
+    client_id: { type: String }
+});
+
 const formStep = ref(0); // 0 = Front Cover, Questionnaire starts at 1
 
 // On pages with graphs, reset the slide counter just in case the page is revisited
@@ -45,7 +49,7 @@ const q1Options = [
     { id: 2, label: 'No', value: false },
 ]
 const submitQ1 = () => {
-    formQ1.post(route('client.risk.q1.submit'), {
+    formQ1.post(`/api/risk-profile-questionnaire/q1/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value++,
         preserveScroll: false
     })
@@ -64,7 +68,7 @@ const q2Options = [
 const graphCollectionQ2 = document.getElementsByClassName("q2-graph-data");
 const graphCounterQ2 = ref(0);
 const submitQ2 = () => {
-    formQ2.post(route('client.risk.q2.submit'), {
+    formQ2.post(`/api/risk-profile-questionnaire/q2/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value++,
         preserveScroll: false
     })
@@ -90,7 +94,7 @@ reduction[30] = computed(() => (formQ3.amount_invested * 0.30));
 reduction[40] = computed(() => (formQ3.amount_invested * 0.40));
 reduction[50] = computed(() => (formQ3.amount_invested * 0.50));
 const submitQ3 = () => {
-    formQ3.post(route('client.risk.q3.submit'), {
+    formQ3.post(`/api/risk-profile-questionnaire/q3/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value++,
         preserveScroll: false
     })
@@ -110,7 +114,7 @@ const q4Options = [
 const graphCollectionQ4 = document.getElementsByClassName("q4-graph-data");
 const graphCounterQ4 = ref(0);
 const submitQ4 = () => {
-    formQ4.post(route('client.risk.q4.submit'), {
+    formQ4.post(`/api/risk-profile-questionnaire/q4/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value++,
         preserveScroll: false
     })
@@ -128,7 +132,7 @@ const q5Options = [
     { id: 3, label: 'Invest more into my portfolio', value: 2 },
 ]
 const submitQ5 = () => {
-    formQ5.post(route('client.risk.q5.submit'), {
+    formQ5.post(`/api/risk-profile-questionnaire/q5/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value++,
         preserveScroll: false
     })
@@ -148,7 +152,7 @@ const q6Options = [
 const graphCollectionQ6 = document.getElementsByClassName("q6-graph-data");
 const graphCounterQ6 = ref(0);
 const submitQ6 = () => {
-    formQ6.post(route('client.risk.q6.submit'), {
+    formQ6.post(`/api/risk-profile-questionnaire/q6/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value++,
         preserveScroll: false
     })
@@ -167,7 +171,7 @@ const q7Options = [
     { id: 4, label: '3 years or more', value: 3 },
 ]
 const submitQ7 = () => {
-    formQ7.post(route('client.risk.q7.submit'), {
+    formQ7.post(`/api/risk-profile-questionnaire/q7/submit/${ props.client_id }/`, {
         onSuccess: () => formStep.value = 0,
         preserveScroll: false
     })
