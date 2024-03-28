@@ -1564,13 +1564,12 @@
 
 
 <!-- MEET YOUR TEAM POPUP TEAM MEMBER-->
+<!--
 <div class="page" id="meet-your-team-popup">
 
-    @include('documents.includes.header', ['activeLink' => 'introduction'])
+    include('documents.includes.header', ['activeLink' => 'introduction'])
 
-    <!-- The Modal -->
 
-    <!--
     <div id="myModal" class="modal">
 
         <div class="modal-content">
@@ -1595,7 +1594,6 @@
 
     </div>
 
-    -->
 
     <h1 class="mt-12 mb-8">Meet your team</h1>
     <div class="flex">
@@ -1654,8 +1652,8 @@
 
     </div>
 
-    @include('documents.includes.footer', ['previousLink' => '#introduction', 'nextLink' => '#key-considerations'])
+    include('documents.includes.footer', ['previousLink' => '#introduction', 'nextLink' => '#key-considerations'])
 </div>
-
+-->
 </body>
 </html>
