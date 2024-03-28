@@ -187,7 +187,8 @@ class ClientPresenter extends BasePresenter
                     'total' => count($this->model->expenditures) > 0 ? null : $this->currencyIntToString($this->model->total_expenditure_basic),
                     'expenditures' => collect($this->model->expenditures()->get()->merge($this->model->client_two->expenditures()->get())->sortBy('id')->values()->map(function ($expenditure){
                         return [
-                            'amount' => $expenditure->amount
+                            'amount' => $expenditure->amount,
+                            'frequency' => $expenditure->frequency
                         ];
                     }))
                 ],

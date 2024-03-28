@@ -12,6 +12,7 @@ const props = defineProps({
         type: Object,
         default: {
             enums: {
+                per_year_frequencies: []
             },
             model: {
                 useExpenditure: true,
@@ -66,7 +67,7 @@ function calculateTotals(){
         calculatedTotals.value = stepForm.expenditures.map(function (item){
             if(item.gross_amount !== null)
             {
-                return item.amount;
+                return item.amount * props.formData.enums.per_year_frequencies[item.frequency];
             }
             return 0;
         })
@@ -104,7 +105,7 @@ onBeforeMount(() => {
                 </div>
             </div>
             <div class="col-span-6 grid grid-cols-6 rounded-md bg-aaron-950 pt-2 mb-4 p-4">
-                <h4 class="col-span-6 text-xl font-bold pt-2"> Expenditure Total </h4>
+                <h4 class="col-span-6 text-xl font-bold pt-2"> Annual Expenditure Total </h4>
                 <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3" v-if="stepForm.useExpenditure == false && stepForm.expenditures.length == 0">
                     <label for="total" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Total: </label>
                     <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
