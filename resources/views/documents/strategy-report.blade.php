@@ -1061,23 +1061,6 @@
             </div>
         @endforeach
 
-
-
-
-        <div class="w-1/3">
-            <div class="flex objective">
-                <div class="objective-icon flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-legacy-planning.svg" class="w-12">
-                </div>
-                <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">Legacy Planning</h4>
-                    <div class="mt-2 text-sm">
-                        <p class="small"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <div class="clear-both"></div>
@@ -1106,22 +1089,6 @@
                 </div>
             </div>
         @endforeach
-
-
-
-        <div class="w-1/3">
-            <div class="flex objective">
-                <div class="objective-icon flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-income.svg" class="w-12">
-                </div>
-                <div class="objective-text ml-4 pr-8">
-                    <h4 class="font-bold text-white">Ensure income needs are met</h4>
-                    <div class="mt-2 text-sm">
-                        <p class="small">You’re looking to obtain a regular income of £50,000 per annum to help your children and/or grandchildren with things like university and school fees etc.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
 
