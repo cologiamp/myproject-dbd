@@ -337,7 +337,7 @@ class ClientRepository extends BaseRepository
             $sections = $sections->unique();
         }
 
-        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step, $uniqueSection){
+        return collect($sections)->map(function ($value,$key) use ($currentStep, $currentSection, $step, $uniqueSection, $sections){
             $isClientTwo = true;
             if (!$uniqueSection->contains($value)) {
                 $uniqueSection->push($value);
@@ -348,7 +348,7 @@ class ClientRepository extends BaseRepository
                'name' => $value,
                'renderable' => Str::studly($value),
                'current' => $key === $currentSection,
-               'dynamicData' => RiskAssessmentSectionDataService::get($this->client,$step,$key),
+               'dynamicData' => RiskAssessmentSectionDataService::get($this->client,$step,$key, count($sections)),
                'is_client_two' => $isClientTwo
            ];
         });

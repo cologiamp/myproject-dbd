@@ -31,10 +31,10 @@ const props = defineProps({
             },
             submit_method: 'post',
             submit_url: '/',
+            sectionCount: null
         },
     },
-    errors: Object,
-    sidebarItemsLength: Number
+    errors: Object
 });
 
 const stepForm = useForm({
@@ -59,7 +59,7 @@ async function autosaveLocally(){
 function submitAssessment() {
     let total = stepForm.investment_length + stepForm.standard_of_living + stepForm.emergency_funds;
 
-    calculateCapacityForLoss(total, stepForm.type, props.formData.model.risk_outcome_id, props.sidebarItemsLength);
+    calculateCapacityForLoss(total, stepForm.type, props.formData.model.risk_outcome_id, props.formData.sectionCount);
     autosaveLocally();
 }
 

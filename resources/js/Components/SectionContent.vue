@@ -19,15 +19,14 @@ const props = defineProps({
     },
     tabName: {
         type: String
-    },
-    sidebarItemsLength: {
-        type: Number
     }
 });
 
+const expenditure_sections = ['BasicEssentialExpenditure', 'BasicQualityOfLivingExpenditure', 'NonEssentialOutgoingsExpenditure', 'LiabilityExpenditure', 'LumpSumExpenditure'];
+
 function dynamicComponent(component){
     // For Expenditure sections
-    if (component.includes('Expenditure')) {
+    if (expenditure_sections.includes(component)) {
        component = 'Expenditure'
     }
 
@@ -41,7 +40,6 @@ const selectedSectionId = inject("selectedSectionId");
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component :is="dynamicComponent(item.renderable)"
            :formData="item.dynamicData"
-           :sidebarItemsLength="sidebarItemsLength"
         />
     </div>
 </template>

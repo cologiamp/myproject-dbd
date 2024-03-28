@@ -359,7 +359,8 @@ function changeToCurrency(amount) {
             <PlusCircleIcon class="w-6 h-6" />Add Income
         </button>
     </div>
-</dynamic-form-wrapper></template>
+    </dynamic-form-wrapper>
+</template>
 
 <style scoped>.aaron-datepicker {
     --dp-background-color: rgb(49 63 167 / var(--tw-bg-opacity));
