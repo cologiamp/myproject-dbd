@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\EmploymentDetailController;
 use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\LumpSumCapitalController;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\InvestmentRecommendationController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+
 use App\Http\Controllers\Api\StrategyReportRecommendationsController;
 use App\Http\Controllers\APi\StrategyObjectivesController;
 use App\Http\Controllers\Api\StrategyActionsController;
@@ -24,6 +26,8 @@ use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
 use App\Http\Controllers\Api\RiskAssessmentController;
+use App\Http\Controllers\Api\StrategyReportController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +54,6 @@ Route::put('/client/{client:io_id}/recommendations/{section}/{step}',[Investment
 Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[StrategyReportRecommendationsController::class,'update'])->name('strategyreportrecommendations.update');
 Route::get('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'get'])->name('strategyobjectives.get');
 Route::get('/strategy-actions/{action}',[StrategyActionsController::class,'get'])->name('strategyactions.get');
-
 Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
 
 Route::middleware('auth:sanctum')->group(function (){
@@ -59,11 +62,14 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
     Route::delete('/addresses/{address}',[ClientController::class,'deleteAddress']);
     Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
+    Route::delete('/employments/{employment_detail}',[EmploymentDetailController::class,'delete']);
     Route::delete('/pension-funds/{pension_fund}',[PensionFundController::class,'delete']);
     Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
+    Route::delete('/strategy-report/{strategy_report}',[StrategyReportController::class,'delete']);
+
     Route::delete('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'delete']);
     Route::delete('/strategy-actions/{action}',[StrategyActionsController::class,'delete']);
     Route::delete('/investment-recommendation-items/{item}', [InvestmentRecommendationItemController::class,'delete']);
@@ -73,4 +79,4 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::put('/risk-outcome/{outcome}/assess-outcome',[RiskAssessmentController::class,'assessOutcome']);
 });
 
-
+Route::get('/client/{client:io_id}/generate-pdf',[StrategyReportController::class,'generate']);

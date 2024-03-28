@@ -7,12 +7,14 @@
     "require": {
         "php": "^8.2",
         "diglactic/laravel-breadcrumbs": "^8.1",
+        "docraptor/docraptor": "^4.1",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.8",
         "laravel/framework": "^10.10",
         "laravel/jetstream": "^4.1",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-permission": "^6.1",
         "spatie/laravel-ray": "^1.33",
@@ -67,7 +69,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "repositories": [

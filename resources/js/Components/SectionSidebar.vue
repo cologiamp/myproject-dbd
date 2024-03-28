@@ -2,7 +2,7 @@
 import {ref, provide, inject, onBeforeMount, computed} from "vue";
 import {Link, router} from '@inertiajs/vue3';
 import {ArrowRightIcon, ArrowLeftIcon} from "@heroicons/vue/24/solid/index.js";
-import {router} from '@inertiajs/vue3';
+
 
 const props = defineProps({
     sidebarItems: {
@@ -157,7 +157,7 @@ function isClient2(item) {
 
 
         <button type="button" v-if="parseInt(tabIndex) !== 1 || parseInt(selectedSectionId) !== 1" @click="prevTab"
-                class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-aaron-950 shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                class="float-left mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-3 py-2 text-sm font-semibold text-aaron-950 shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Back <ArrowLeftIcon class="w-6 h-6" />
         </button>
         <button type="button" v-show="tabIndex != 4" @click="nextTab"
