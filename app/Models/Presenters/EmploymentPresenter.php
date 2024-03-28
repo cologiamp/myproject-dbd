@@ -14,6 +14,41 @@ class EmploymentPresenter extends BasePresenter
     use FlipsEnums, FormatsCurrency;
    public function formatForStrategyReport()
    {
+       switch ($this->model->employment_status){
+           case $this->enumValueByName('employment.employment_status','Self Employed'):
+           case $this->enumValueByName('employment.employment_status','Employed'):
+           case $this->enumValueByName('employment.employment_status','Company Director'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.employed');
+               break;
+           case $this->enumValueByName('employment.employment_status','Unemployed'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.unemployed');
+               break;
+           case $this->enumValueByName('employment.employment_status','Retired'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.retired');
+               break;
+           case $this->enumValueByName('employment.employment_status','Houseperson'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.house-person');
+               break;
+           case $this->enumValueByName('employment.employment_status','Student'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.student');
+               break;
+           case $this->enumValueByName('employment.employment_status','Maternity Leave'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.maternity-leave');
+               break;
+           case $this->enumValueByName('employment.employment_status','Long Term Illness'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.long-term-illness');
+               break;
+           case $this->enumValueByName('employment.employment_status','Contract Worker'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.contract-worker');
+               break;
+           case $this->enumValueByName('employment.employment_status','Carer Of a Child Under 16'):
+           case $this->enumValueByName('employment.employment_status','Carer Of a Person Over 16'):
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.carer');
+               break;
+           default:
+               $empicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.employed');
+       }
+
        if(in_array($this->model->employment_status,[
            $this->enumValueByName('employment.employment_status','Self Employed'),
            $this->enumValueByName('employment.employment_status','Company Director'),
@@ -34,22 +69,24 @@ class EmploymentPresenter extends BasePresenter
                    //case where they chose "other" is not accounted for
                    return [
                        'employment_status' => 'Retiring',
+                       'icon' => $empicon,
                        'employer' => $this->model->employer,
                        'job_title' => $this->model->occupation,
-                       'pension_option_p_a' => $ps->defined_benefit_pension->chosen === $this->enumValueByName('assets.chosen','Standard pension/standard tax free cash') ? $this->currencyIntToString( $ps->defined_benefit_pension->prospective_pension_standard) : $this->currencyIntToString( $ps->defined_benefit_pension->prospective_pension_max) ,
-                       'pension_option_l_s' =>  $ps->defined_benefit_pension->chosen === $this->enumValueByName('assets.chosen','Standard pension/standard tax free cash') ?$this->currencyIntToString( $ps->defined_benefit_pension->prospective_pcls_standard) : $this->currencyIntToString( $ps->defined_benefit_pension->prospective_pcls_max)
+                       'pension_option_p_a' => $ps->defined_benefit_pension->chosen === $this->enumValueByName('assets.chosen','Standard pension/standard tax free cash') ? $this->currencyIntToString( $ps->defined_benefit_pension->prospective_pension_standard,0) : $this->currencyIntToString( $ps->defined_benefit_pension->prospective_pension_max,0) ,
+                       'pension_option_l_s' =>  $ps->defined_benefit_pension->chosen === $this->enumValueByName('assets.chosen','Standard pension/standard tax free cash') ?$this->currencyIntToString( $ps->defined_benefit_pension->prospective_pcls_standard,0) : $this->currencyIntToString( $ps->defined_benefit_pension->prospective_pcls_max,0)
                    ];
                }
                else{
                    //dc pension
                    return [
                        'employment_status' => 'Retiring',
+                       'icon' => $empicon,
                        'employer' => $this->model->employer,
                        'job_title' => $this->model->occupation,
                        'pension_option_p_a' => $this->currencyIntToString($this->model->client->incomes()->whereIn('category',[
                            $this->enumValueByName('incomes.income_type','Regular Pension Income'),
                            $this->enumValueByName('incomes.income_type','State Pension Income'),
-                       ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount))
+                       ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0)
                    ];
                }
 
@@ -59,27 +96,29 @@ class EmploymentPresenter extends BasePresenter
            {
                return [
                    'employment_status' => 'Flex Retirement',
+                   'icon' => $empicon,
                    'employer' => $this->model->employer,
                    'job_title' => $this->model->occupation,
                    'retirement_income' => $this->currencyIntToString($this->model->client->incomes()->whereIn('category',[
                        $this->enumValueByName('incomes.income_type','Regular Pension Income'),
                        $this->enumValueByName('incomes.income_type','State Pension Income'),
-                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount))
+                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0)
                ];
            }
            else{
                return [
                    'employment_status' => 'Employed',
+                   'icon' => $empicon,
                    'employer' => $this->model->employer,
                    'job_title' => $this->model->occupation,
                    'salary' => $this->currencyIntToString($this->model->client->incomes()->whereIn('category', [
                        $this->enumValueByName('incomes.income_type','Salary'),
                        $this->enumValueByName('incomes.income_type','Self-Employment Annual Profit'),
-                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount)),
+                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0),
                    'benefits' => $this->currencyIntToString($this->model->client->incomes()->whereIn('category',[
                        $this->enumValueByName('incomes.income_type','Regular Pension Income'),
                        $this->enumValueByName('incomes.income_type','State Pension Income'),
-                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount))
+                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0)
                ];
            }
        }
@@ -87,27 +126,21 @@ class EmploymentPresenter extends BasePresenter
        {
            return [
                    'employment_status' => 'Retired',
+                    'icon' => $empicon,
                    'retirement_income' => $this->currencyIntToString($this->model->client->incomes()->whereIn('category',[
                        $this->enumValueByName('incomes.income_type','Regular Pension Income'),
                        $this->enumValueByName('incomes.income_type','State Pension Income'),
-                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount))
+                   ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0)
            ];
        }
        else{
            return [
                'employment_status' => config('enums.employment.employment_status')[$this->model->employment_status],
-               'income' => $this->currencyIntToString($this->model->client->incomes()->whereIn('category',[
-                   $this->enumValueByName('incomes.income_type','Regular Pension Income'),
-                   $this->enumValueByName('incomes.income_type','State Pension Income'),
-               ])->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount))
+               'icon' => $empicon,
+               'income' => $this->currencyIntToString($this->model->client->incomes()->get()->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0)
            ];
        }
 
-
-//],
-//[
-
-//],
 
    }
 

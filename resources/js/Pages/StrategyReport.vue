@@ -22,17 +22,20 @@ const props = defineProps({
 
 const stratReportRef = ref({});
 const emit = defineEmits(['removeReport'])
-
+const generatingStatus = ref(0);
 
 onMounted( ()=> {
     stratReportRef.value = props.strategy_reports.data;
 });
 
 function generateReport(){
+    generatingStatus.value = 1;
     axios.get('/api/client/' + props.clientId + '/generate-pdf').then(response => {
         console.log(response.data.strategy_reports);
         stratReportRef.value = response.data.strategy_reports;
+        generatingStatus.value = 0;
     }).catch(error => {
+        generatingStatus.value = 2;
         console.log(error)
         Swal.fire({
             title: 'Error: Something failed. Please try again later.',
@@ -42,7 +45,15 @@ function generateReport(){
  }
 
 function removeReport(id) {
-    emit('removeReport', id)
+    axios.delete('/api/strategy-report/'+id).then(function (response){
+        stratReportRef.value = response.data.strategy_reports;
+    }).catch(function (e){
+        Swal.fire({
+            title: 'Error!',
+            text: "Could not delete strategy report",
+            confirmButtonText: "OK",
+        })
+    });
 }
 </script>
 
@@ -56,10 +67,22 @@ function removeReport(id) {
                     <div class="px-4 py-5 sm:p-6">
                         <h3 class="text-base font-semibold leading-6 text-aaron-50">Generate new Strategy Report</h3>
                         <div class="mt-5">
-                            <div class="rounded-md text-aaron-50 bg-aaron-700 px-6 py-5 sm:flex sm:items-start sm:justify-between">
+                            <div class="rounded-md text-aaron-50 bg-aaron-700 px-6 py-5 sm:flex sm:items-start sm:justify-between" v-if="generatingStatus == 0">
                                 <button type="button" @click="generateReport"
                                         class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-aaron-400 px-10 py-8 text-lg font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                     GENERATE <ArrowRightIcon class="w-12 h-8" />
+                                </button>
+                            </div>
+                            <div class="rounded-md text-aaron-50 bg-aaron-700 px-6 py-5 sm:flex sm:items-start sm:justify-between" v-if="generatingStatus == 1">
+                                <button type="button" disabled
+                                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-green-500 px-10 py-8 text-lg font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Generating...
+                                </button>
+                            </div>
+                            <div class="rounded-md text-aaron-50 bg-aaron-700 px-6 py-5 sm:flex sm:items-start sm:justify-between" v-if="generatingStatus == 2">
+                                <button type="button" disabled
+                                        class="float-right mr-3 inline-flex items-center gap-x-1.5 rounded-md bg-red-500 px-10 py-8 text-lg font-semibold text-white shadow-sm hover:bg-[#0098bc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    Generation Failed.
                                 </button>
                             </div>
                         </div>
@@ -79,7 +102,7 @@ function removeReport(id) {
                                             </thead>
                                             <draggable v-if="stratReportRef.length > 0" v-model="stratReportRef" tag="tbody" item-key="name" @change="updateOrder" class="divide-y divide-gray-500">
                                                 <template #item="{ element }">
-                                                    <tr>
+                                                    <tr :class="element.is_new ? 'bg-aaron-400' : '' ">
                                                         <td class="px-3 py-4">
                                                             <!--
                                                             <a href="#" class="hover:text-indigo-900">

@@ -122,6 +122,18 @@
     h4.average-life {
         font-size: 12px;
     }
+    .white-line{
+        border-left: 1px solid white;
+        margin-left: calc(50% + 3px);
+    }
+    .white-line-pensions{
+        border-left: 1px solid white;
+        margin-left: calc(50% + 10px);
+    }
+    .white-line-wider{
+        border-left: 1px solid white;
+        margin-left: calc(50% + 21px);
+    }
 
     .section-right-border {
         border-right: 1px solid #7574BD;
@@ -712,20 +724,21 @@
 
 
 <!-- A HOLISTIC APPROACH -->
+@if($data['a_holistic_approach']['report_version'] == 'v1' )
 <div class="page" id="a-holistic-approach">
 
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
     <div class="flex mt-14 mb-8">
         <div class="w-9/12">
-            <h1 class="">A holistic approach ({{ $data['a_holistic_approach']['report_version'] }})
+            <h1 class="">A holistic approach
             </h1>
         </div>
-        <div class="w-3/12 mt-4 ml-32 -pr-44">
-            <a class="inline learn-more" href="#">Click on a section below to learn more
-                <img class="inline w-6" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-learn-more.svg">
-            </a>
-        </div>
+{{--        <div class="w-3/12 mt-4 ml-32 -pr-44">--}}
+{{--            <a class="inline learn-more" href="#">Click on a section below to learn more--}}
+{{--                <img class="inline w-6" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-learn-more.svg">--}}
+{{--            </a>--}}
+{{--        </div>--}}
     </div>
 
     <div class="flex">
@@ -760,21 +773,21 @@
 
     @include('documents.includes.footer', ['previousLink' => '#key-considerations', 'nextLink' => '#a-holistic-approach-2'])
 </div>
+@endif
 
-
-<!-- A HOLISTIC APPROACH V2-->
+@if($data['a_holistic_approach']['report_version'] == 'v2' )
 <div class="page" id="a-holistic-approach-2">
 
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
-    <div class="w-32 absolute learn-more-tag">
-        <a class="inline learn-more" href="#">
-            Click on a section below
-            <br>
-            to learn more
-            <img class="inline w-5" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-learn-more.svg">
-        </a>
-    </div>
+{{--    <div class="w-32 absolute learn-more-tag">--}}
+{{--        <a class="inline learn-more" href="#">--}}
+{{--            Click on a section below--}}
+{{--            <br>--}}
+{{--            to learn more--}}
+{{--            <img class="inline w-5" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/icon-learn-more.svg">--}}
+{{--        </a>--}}
+{{--    </div>--}}
 
     <div class="flex mt-14 mb-8">
         <div class="w-9/12">
@@ -812,6 +825,7 @@
 
     @include('documents.includes.footer', ['previousLink' => '#key-considerations', 'nextLink' => '#about-you'])
 </div>
+@endif
 <!-- A HOLISTIC APPROACH V2-->
 
 
@@ -831,7 +845,7 @@
                         @foreach ($data['about_you']['employments'] as $employment)
                             <div class="flex w-full">
                                 <div class="flex-shrink-0 mr-6" style="margin-top:-7px">
-                                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/work.svg" class="w-12">
+                                    <img src="{{$employment['icon']}}" class="w-12">
                                 </div>
                                 <div class="flex-1">
                                     <p class="small mb-4 mt-20 p-0" style="margin-top:-8px;">
@@ -892,6 +906,10 @@
                                             </div>
                                             @break
                                         @default
+                                            <div class="w-1">
+                                                <p class="small mb-2 pension-value-title"><strong>Income</strong></p>
+                                                <p class="small-pension-value">{{ $employment['income'] }}</p>
+                                            </div>
                                     @endswitch
                                 </div>
                             </div>
@@ -903,7 +921,7 @@
             @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
                 <div class="short-panel waw-bg-blue">
                     <div class="flex-shrink-0">
-                        <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/sailing.svg" class="w-12">
+                        <img src="{{$data['about_you']['bottom_left_icon']}}" class="w-12">
                     </div>
                     <div class="flex-1 ml-4">
                         @if( strlen($data['about_you']['bottom_left_status']) < 14 )
@@ -950,15 +968,13 @@
                     <p>{{ $data['about_you']['marital_status'] }}</p>
                 </div>
                 <div class="flex-shrink-0">
-                    <img src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/supervised_user_circle.svg" class="w-12">
+                    <img src="{{ $data['about_you']['marital_status_icon'] }}" class="w-12">
                 </div>
             </div>
             <div class="tall-panel waw-bg-light-blue flex flex-col items-center justify-center">
                 @foreach ($data['about_you']['personal_details']['clients'] as $client)
                     <p class="mb-3">
-                        @if($data['about_you']['employments'][0]['employment_status'] == 'Employed')
-                            <img src="{{$data['about_you']['personal_details']['icon']}}" class="w-16">
-                        @endif
+                        <img src="{{$data['about_you']['personal_details']['icon']}}" class="w-16">
                     </p>
                     <p class="text-center">{{ $client['name'] }}</p>
                     <p class="small">Age {{ $client['age'] . ' (' . $client['date_of_birth'] . ')' }}</p>
@@ -1052,9 +1068,9 @@
                         <img src="{{ $primaryObjective['icon'] }}" class="w-12">
                     </div>
                     <div class="objective-text ml-4 pr-8">
-                        <h4 class="font-bold text-white">{{ $primaryObjective['title'] }}</h4>
+                        <h4 class="font-bold text-white">{{ $primaryObjective['type'] }}</h4>
                         <div class="mt-2 text-sm">
-                            <p class="small">{{ $primaryObjective['description'] }}</p>
+                            <p class="small">{{ $primaryObjective['title'] . ' ' . $primaryObjective['description'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -1081,9 +1097,9 @@
                         <img src="{{ $secondaryObjective['icon'] }}" class="w-12">
                     </div>
                     <div class="objective-text ml-4 pr-8">
-                        <h4 class="font-bold text-white">{{ $secondaryObjective['title'] }}</h4>
+                        <h4 class="font-bold text-white">{{ $secondaryObjective['type'] }}</h4>
                         <div class="mt-2 text-sm">
-                            <p class="small">{{ $secondaryObjective['description'] }}</p>
+                            <p class="small">{{ $secondaryObjective['title'] . ' ' . $secondaryObjective['description'] }}</p>
                         </div>
                     </div>
                 </div>
@@ -1097,161 +1113,131 @@
 </div>
 
 <!-- YOUR FINANCES -->
-{{--<div class="page" id="your-finances">--}}
+<div class="page" id="your-finances">
 
-{{--    @include('documents.includes.header', ['activeLink' => 'your-objectives'])--}}
+    @include('documents.includes.header', ['activeLink' => 'your-objectives'])
 
-{{--    <div class="flex mt-3">--}}
-{{--        <div class="w-5/6 mr-5 mt-2">--}}
-{{--            <h1>Your finances</h1>--}}
-{{--        </div>--}}
-{{--        <div class="w-1/5 pt-3 pl-8">--}}
-{{--            <div class="total-assets">--}}
-{{--                <p class="total-assets-title">Total assets</p>--}}
-{{--                <p class="total-assets-value mt-3 -mr-1 font-bold">£{{ $data['your_finances']['total_assets'] }}</p>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-
-
-{{--    <div class="flex mt-3">--}}
-{{--        <div class="w-full absolute">--}}
-{{--            <img class="finances-line-map" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/finances-line-map.svg">--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="flex mt-3">
+        <div class="w-5/6 mr-5 mt-2">
+            <h1>Your finances</h1>
+        </div>
+        <div class="w-1/5 pt-3 pl-8">
+            <div class="total-assets">
+                <p class="total-assets-title">Total assets</p>
+                <p class="total-assets-value mt-3 -mr-1 font-bold">{{ $data['your_finances']['total_assets'] }}</p>
+            </div>
+        </div>
+    </div>
 
 
-{{--    <div class="flex finance-map-content w-full mt-10">--}}
-{{--        <div class="w-1/4">--}}
-{{--            <div class="finances-box pp-box mb-4">--}}
-{{--                <p class="finance-box-title">Property & Possessions</p>--}}
-{{--                <p class="finance-box-content">£{{ $data['your_finances']['property_and_possessions']['total'] }}</p>--}}
-{{--            </div>--}}
-
-{{--            @foreach ($data['your_finances']['property_and_possessions']['breakdown'] as $propertyAndPossession)--}}
-{{--                <div class="finances-box pp-box-child mb-3">--}}
-{{--                    <p class="finance-box-title">{{ $propertyAndPossession['title'] }}</p>--}}
-{{--                    <p class="finance-box-content">£{{ $propertyAndPossession['value'] }}</p>--}}
-{{--                </div>--}}
-{{--            @endforeach--}}
+    <div class="flex mt-3">
+        <div class="w-full absolute">
+            <img class="finances-line-map" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/ASSET-TREE-LINE.svg">
+        </div>
+    </div>
 
 
-{{--        </div>--}}
+    <div class="flex finance-map-content w-full mt-10">
+        <div class="w-1/4">
+            <div class="finances-box pp-box">
+                <p class="finance-box-title">Property & Possessions</p>
+                <p class="finance-box-content">{{ $data['your_finances']['property_and_possessions']['total'] }}</p>
+            </div>
 
-{{--        <div class="w-2/4 ml-14">--}}
-{{--            <div class="flex mb-4 ml-44">--}}
-{{--                <div class="finances-box liquid-assets-box">--}}
-{{--                    <p class="finance-box-title">Liquid Assets</p>--}}
-{{--                    <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['total'] }}</p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <div class="flex">--}}
-{{--                <div class="w-1/2 ml-5 mr-32">--}}
-{{--                    <div class="taxable-box mb-3">--}}
-{{--                        <p class="finance-box-title tax-title">Taxable</p>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--                <div class="w-1/2 mr-12 ml-48">--}}
-{{--                    <div class="tax-free-box mb-3">--}}
-{{--                        <p class="finance-box-title tax-title">Tax free</p>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            @foreach ($data['your_finances']['property_and_possessions']['breakdown'] as $key => $propertyAndPossession)
+                <div class='white-line h-4'></div>
+                <div class="finances-box pp-box-child ">
+                    <p class="finance-box-title">{{ $propertyAndPossession['title'] }}</p>
+                    <p class="finance-box-content">{{ $propertyAndPossession['value'] }}</p>
+                </div>
+            @endforeach
 
 
-{{--            <div class="flex">--}}
-{{--                <div class="w-1/3 -ml-8 mr-12">--}}
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][0]['title'] }}</p>--}}
-{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][0]['value'] }}</p>--}}
-{{--                    </div>--}}
+        </div>
 
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['taxable'][1]['title'] }}</p>--}}
-{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['taxable'][1]['value'] }}</p>--}}
-{{--                    </div>--}}
+        <div class="w-2/4 ml-14">
+            <div class="flex mb-4 ml-44">
+                <div class="finances-box liquid-assets-box">
+                    <p class="finance-box-title">Liquid Assets</p>
+                    <p class="finance-box-content">{{ $data['your_finances']['liquid_assets']['total'] }}</p>
+                </div>
+            </div>
 
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">National Savings</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
+            <div class="flex">
+                @if(array_key_exists('taxable',$data['your_finances']['liquid_assets']))
+                <div class="w-1/2 ml-5 mr-32">
+                    <div class="taxable-box mb-3">
+                        <p class="finance-box-title tax-title">Taxable</p>
+                    </div>
+                </div>
+                @endif
+                @if(array_key_exists('tax_free',$data['your_finances']['liquid_assets']))
+                <div class="w-1/2 mr-12 ml-48">
+                    <div class="tax-free-box ">
+                        <p class="finance-box-title tax-title">Tax free</p>
+                    </div>
+                </div>
+                @endif
+            </div>
 
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">Unit Trusts/OEICs/ETFs</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
+            @php
+                $taxableAssets = collect(array_slice($data['your_finances']['liquid_assets']['taxable'], 0, 8))->splitIn(2)->map(fn($i)=>$i->values())->toArray();
+            @endphp
+            <div class="flex">
+                    @if(count($taxableAssets) > 0)
 
+                    <div class="w-1/3 -ml-8 mr-12">
+                        @foreach($taxableAssets[0] as $key=>$asset)
+                            @if($key > 0)<div class='white-line-wider h-4'></div> @endif
+                            <div class="finances-box liquid-assets-box-child">
+                                <p class="finance-box-title">{{ $asset['title'] }}</p>
+                                <p class="finance-box-content">{{ $asset['value'] }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                    @if(count($taxableAssets) > 1)
+                    <div class="w-1/3 mr-14">
+                        @foreach($taxableAssets[1] as $key=>$asset)
+                            @if($key > 0)<div class='white-line-wider h-4'></div> @endif
+                            <div class="finances-box liquid-assets-box-child">
+                                <p class="finance-box-title">{{ $asset['title'] }}</p>
+                                <p class="finance-box-content">{{ $asset['value'] }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                    @endif
+                @endif
+                <div class="w-1/3" style="margin-top: -12px;">
+                    @foreach($data['your_finances']['liquid_assets']['tax_free'] as $asset)
+                        <div class='white-line-wider h-4'></div>
+                        <div class="finances-box tax-box-child">
+                            <p class="finance-box-title">{{ $asset['title'] }}</p>
+                            <p class="finance-box-content">{{ $asset['value'] }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
 
+        <div class="w-1/4 ml-32">
+            <div class="finances-box pensions-box">
+                <p class="finance-box-title">Pensions</p>
+                <p class="finance-box-content">{{ $data['your_finances']['pensions']['total']  }}</p>
+            </div>
+                @foreach($data['your_finances']['pensions']['breakdown'] as $key => $asset)
+                    <div class='white-line-pensions h-4'></div>
+                    <div class="finances-box pensions-box-child mb-3">
+                        <p class="finance-box-title">{{ $asset['title'] }}</p>
+                        <p class="finance-box-content">{{ $asset['value'] }}</p>
+                    </div>
+                @endforeach
+        </div>
 
+    </div>
 
-{{--                </div>--}}
-{{--                <div class="w-1/3 mr-14">--}}
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">Direct Shareholdings</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">Investment Bonds</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">Structured Products</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="finances-box liquid-assets-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">Discretionary Managed Service</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
-
-
-{{--                </div>--}}
-{{--                <div class="w-1/3">--}}
-{{--                    <div class="finances-box tax-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][0]['title'] }}</p>--}}
-{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][0]['value'] }}</p>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="finances-box tax-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">{{ $data['your_finances']['liquid_assets']['tax_free'][1]['title'] }}</p>--}}
-{{--                        <p class="finance-box-content">£{{ $data['your_finances']['liquid_assets']['tax_free'][1]['value'] }}</p>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="finances-box tax-box-child mb-3">--}}
-{{--                        <p class="finance-box-title">National Savings</p>--}}
-{{--                        <p class="finance-box-content">£XXX,XXX</p>--}}
-{{--                    </div>--}}
-
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
-{{--        <div class="w-1/4 ml-32">--}}
-{{--            <div class="finances-box pensions-box mb-4">--}}
-{{--                <p class="finance-box-title">Pensions</p>--}}
-{{--                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['total']  }}</p>--}}
-{{--            </div>--}}
-
-{{--            <div class="finances-box pensions-box-child mb-3">--}}
-{{--                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][0]['title'] }}</p>--}}
-{{--                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][0]['value'] }}</p>--}}
-{{--            </div>--}}
-
-{{--            <div class="finances-box pensions-box-child mb-3">--}}
-{{--                <p class="finance-box-title">{{ $data['your_finances']['pensions']['breakdown'][1]['title'] }}</p>--}}
-{{--                <p class="finance-box-content">£{{ $data['your_finances']['pensions']['breakdown'][1]['value'] }}</p>--}}
-{{--            </div>--}}
-
-{{--        </div>--}}
-
-{{--    </div>--}}
-
-{{--    <div class="page-number"></div>--}}
-{{--    @include('documents.includes.footer', ['previousLink' => '#your-objectives2', 'nextLink' => 'your-strategy'])--}}
-{{--</div>--}}
+    <div class="page-number"></div>
+    @include('documents.includes.footer', ['previousLink' => '#your-objectives2', 'nextLink' => 'your-strategy'])
+</div>
 
 <!-- YOUR STRATEGY -->
 <!-- YOUR CASHFLOW FORECAST -->

@@ -16,9 +16,11 @@ class StrategyReportResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
            'date' => Carbon::parse($this->created_at)->diffForHumans(),
            'file' => config('app.cdn') . $this->path,
-           'created_by' => $this->adviser->name
+           'created_by' => $this->adviser->name,
+           'is_new' => Carbon::parse($this->created_at)->diffInSeconds(Carbon::now()) < 60 ? true : false
         ];
     }
 }

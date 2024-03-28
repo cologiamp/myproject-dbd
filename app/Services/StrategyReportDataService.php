@@ -34,6 +34,7 @@ class StrategyReportDataService
         $adviser = $this->getAdviser($client);
 
         $bld = null;
+        $blicon = null;
         if(!$client_two && $client->strategy_report_recommendation->objective_type !== null)
         {
             $ed1 = EmploymentDetail::where('client_id', $client->id)->first();
@@ -56,7 +57,42 @@ class StrategyReportDataService
                     $bld = '';
                 }
             }
+            switch ($client->strategy_report_recommendation->objective_type){
+                case $this->enumValueByName('strategy_report_recommendations.objective_type','Considering Retirement'):
+                    $blicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.considering-retirement');
+                    break;
+                case $this->enumValueByName('strategy_report_recommendations.objective_type','Retiring'):
+                    $blicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.retiring');
+                    break;
+                case $this->enumValueByName('strategy_report_recommendations.objective_type','Accumulating Wealth'):
+                    $blicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.accumulating-wealth');
+                    break;
+                default:
+                    $blicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.retired');
+            }
         }
+
+        switch ($client->marital_status){
+            case $this->enumValueByName('client.marital_status','Single'):
+            case $this->enumValueByName('client.marital_status','Dissolved Civil Partner'):
+            case $this->enumValueByName('client.marital_status','Surviving Civil Partner'):
+            case $this->enumValueByName('client.marital_status','Widowed'):
+            case $this->enumValueByName('client.marital_status','Divorced'):
+            case $this->enumValueByName('client.marital_status','Separated'):
+                $msicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.single');
+                break;
+            case $this->enumValueByName('client.marital_status','Married'):
+            case $this->enumValueByName('client.marital_status','Civil Partner'):
+            case $this->enumValueByName('client.marital_status','Living Together'):
+                $msicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.living-together');
+                break;
+            case $this->enumValueByName('client.marital_status','Engaged'):
+                $msicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.engaged');
+                break;
+            default:
+                $msicon = config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.single');
+        }
+
         if(!$client_two)
         {
             $dependents = $client->dependents->values();
@@ -112,12 +148,12 @@ class StrategyReportDataService
         if($home)
         {
             $home_value_status = 'Home Value';
-            $home_value = $this->currencyIntToString($home->current_value);
+            $home_value = $this->currencyIntToString($home->current_value,0);
         }
         else
         {
             $home_value_status = 'Home Value';
-            $home_value = $this->currencyIntToString(0);
+            $home_value = $this->currencyIntToString(0,0);
         }
 
         if($client_two)
@@ -183,7 +219,7 @@ class StrategyReportDataService
         if(count($dc_pension) > 0)
         {
             $pension_status = 'Defined Contribution Pensions';
-            $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value));
+            $pension_value =  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value),0);
             $pensions_total = $dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value);
         }
         else{
@@ -250,7 +286,7 @@ class StrategyReportDataService
                    }
 
                    return $carry + $val;
-               }))
+               }),0)
            ];
        });
 
@@ -269,37 +305,37 @@ class StrategyReportDataService
         })->mapWithKeys(function ($collection,$key){
             return [$key => $collection->groupBy(function ($item){
                 return match (true) {
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','Collectives'),
                     ]) => 'Unit Trusts/OEICs/ETFs',
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','Direct Equities'),
                     ]) => 'Direct Shareholdings',
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','Onshore Bond'),
                         $this->enumValueByName('assets.investment_account_types','Offshore Bond'),
                     ]) => 'Investment Bonds',
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','Structured Product Income'),
                         $this->enumValueByName('assets.investment_account_types','Structure Product Growth'),
                     ]) => 'Structured Products',
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','Discretionary Management Service'),
                     ]) => 'Discretionary Managed Service',
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','Venture Capital Trust'),
                         $this->enumValueByName('assets.investment_account_types','Other Investment'),
                         $this->enumValueByName('assets.investment_account_types','Other Investment (Tax Free)'),
                         $this->enumValueByName('assets.investment_account_types','Seed Enterprise Investment Scheme'),
                     ]) => 'Other Investment',
-                    in_array($item->account_type,[
+                    in_array($item->contract_type,[
                         $this->enumValueByName('assets.investment_account_types','ISA Stocks & Shares'),
                     ]) => 'Stocks & Shares ISA',
                 };
             })->map(function ($items, $key){
                 return [
                     'title' => $key,
-                    'value' => $this->currencyIntToString($items->reduce(fn(?int $carry, $item) => $carry + $item->current_value))
+                    'value' => $this->currencyIntToString($items->reduce(fn(?int $carry, $item) => $carry + $item->current_value),0)
                 ];
             })->values()
             ];
@@ -338,7 +374,7 @@ class StrategyReportDataService
             })->map(function ($items, $key){
                 return [
                     'title' => $key,
-                    'value' => $this->currencyIntToString($items->reduce(fn(?int $carry, $item) => $carry + $item->current_value))
+                    'value' => $this->currencyIntToString($items->reduce(fn(?int $carry, $item) => $carry + $item->current_value),0)
                 ];
             })->values()
             ];
@@ -350,7 +386,7 @@ class StrategyReportDataService
         {
             $bd[] = [
                 'title' => 'Defined Contribution Pensions',
-                'value' =>  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value))
+                'value' =>  $this->currencyIntToString($dc_pension->reduce(fn(?int $carry, $item) => $carry + $item->defined_contribution_pension->value),0)
             ];
         }
 
@@ -358,6 +394,9 @@ class StrategyReportDataService
             'total' => $pension_value,
             'breakdown' => $bd
         ];
+
+
+
 
 
         return [
@@ -392,12 +431,14 @@ class StrategyReportDataService
             'employments' => $employments->map(fn($item)=> $item->presenter()->formatForStrategyReport())->values()->toArray(),
             'bottom_left_status' => $client_two == null ? config('enums.strategy_report_recommendations.objective_type')[$client->strategy_report_recommendation->objective_type] : null,
             'bottom_left_description' => $client_two == null ? $bld : null,
+            'bottom_left_icon' => $blicon,
             'marital_status' => config('enums.client.marital_status')[$client->marital_status],
+            'marital_status_icon' => $msicon,
             'personal_details' => $client_two == null ? [
-                'icon' => config('constants.cdn_url') . config('strategy_report.base_icon_path') . config('strategy_report.icons.personal_details_one_client'),
+                'icon' => config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.client-name'),
                 'clients' => [$client->presenter()->formatForPersonalDetails()]
             ] : [
-                'icon' =>  config('constants.cdn_url') . config('strategy_report.base_icon_path') . config('strategy_report.icons.personal_details_two_clients'),
+                'icon' =>  config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.icons.client-name'),
                 'clients' => [
                     $client->presenter()->formatForPersonalDetails(),
                     $client_two->presenter()->formatForPersonalDetails()
@@ -405,12 +446,12 @@ class StrategyReportDataService
             ],
             'dependent' => $dependents_title,
             'dependent_description' => $dependents_desc,
-            'dependent_icon' => str_contains($dependents_desc,'child') ? config('enums.strategy_report_icons.dependents')['child'] : config('enums.strategy_report_icons.dependents')['adult'] ,
-            'annual_expenditure' =>  $this->currencyIntToString($expenditures->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount)),
+            'dependent_icon' => str_contains($dependents_desc,'child') ?  config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.children') : config('constants.cdn_url') . config('strategy_report.icon_path') . config('strategy_report.dynamic_icons.dependents') ,
+            'annual_expenditure' =>  $this->currencyIntToString($expenditures->reduce(fn(?int $carry, $item) => $carry + $item->gross_annual_amount),0),
             'home_value_status' => $home_value_status,
             'home_value' => $home_value,
             'address' => $client->addresses->first()->formatForStrategyReport(),
-            'liquid_assets' => $this->currencyIntToString($assets->sum('current_value') + $investments->sum('current_value')),
+            'liquid_assets' => $this->currencyIntToString($assets->sum('current_value') + $investments->sum('current_value'),0),
             'pension_status' => $pension_status,
             'pension_value' => $pension_value
           ],
@@ -427,12 +468,12 @@ class StrategyReportDataService
                ];
            })->toArray(),
             'your_finances' => [
-                'total_assets' =>  $this->currencyIntToString($property_and_posessions_total + $liquid_assets_total + $pensions_total),
+                'total_assets' =>  $this->currencyIntToString($property_and_posessions_total + $liquid_assets_total + $pensions_total,0),
                 'property_and_possessions' => [
-                    'total' =>  $this->currencyIntToString($property_and_posessions_total),
+                    'total' =>  $this->currencyIntToString($property_and_posessions_total,0),
                     'breakdown' => $property_and_posessions->toArray()
                 ],
-                'liquid_assets' => array_merge($liquid_assets,['total' => $this->currencyIntToString($liquid_assets_total)]),
+                'liquid_assets' => array_merge($liquid_assets,['total' => $this->currencyIntToString($liquid_assets_total,0)]),
                 'pensions' => $pensions
             ],
             'summary' => [

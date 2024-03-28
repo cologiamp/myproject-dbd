@@ -26,7 +26,7 @@ class StrategyReportController extends Controller
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'content-title' => 'Welcome to ' . $client->name . "'s strategy report",
             'clientId' => $client->io_id,
-            'strategy_reports' => StrategyReportResource::collection(StrategyReport::all())
+            'strategy_reports' => StrategyReportResource::collection(StrategyReport::where('client_id', $client->id)->orderBy('created_at','DESC')->get()),
         ]);
     }
 }
