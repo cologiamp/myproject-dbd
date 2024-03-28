@@ -463,7 +463,7 @@
             </div>
         </div>
         <div class="w-1/2">
-            <img class="ml-28 mt-14 w-1/2 float-right" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/your-journey.svg">
+            <img class="mr-24 mt-14 w-1/2 float-right" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/intro/{{ $data['about_you']['personal_details']['clients'][0]['age'] > 50 ? 'OVER50.png' : 'UNDER50.png' }}">
         </div>
     </div>
 
@@ -597,7 +597,7 @@
                     </div>
 
                     <div class="w-1/2">
-                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/ADVICE_SERVICES.png">
                     </div>
                 </div>
             </div>
@@ -610,7 +610,7 @@
                     </div>
 
                     <div class="w-1/2">
-                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/WEALTH_SERVICES.png">
                     </div>
                 </div>
 
@@ -620,7 +620,7 @@
 
         <div class="w-1/4 -ml-2">
             <div class="director-wrapper p-6">
-                <img class="investment-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                <img class="investment-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/IM.png">
                 <p class="font-bold text-white key-considerations-investment">Investment Management</p>
             </div>
         </div>
@@ -1306,7 +1306,7 @@
         </div>
         <div class="w-1/2">
 
-            <img class="ml-28 mt-14" width="75%" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/your-cashflow-forecast.svg">
+            <img class="ml-28 mt-14" width="75%" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/cashflow-forecast/{{ $data['about_you']['personal_details']['clients'][0]['age'] > 50 ? 'OVER50.png' : 'UNDER50.png' }}">
 
         </div>
     </div>
@@ -1529,7 +1529,7 @@
         </div>
         <div class="w-1/2">
 
-            <img class="ml-28 mt-14 float-right w-3/4" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/summary.svg">
+            <img class="ml-28 mt-14 float-right w-3/4" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/summary/SUMMARY.png">
 
         </div>
     </div>
@@ -1572,13 +1572,13 @@
         </div>
         <div class="w-1/3">
             <div class="flex">
-                <img class="ml-12 mt-14 w-5/6 float-right next-steps-presentation-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/your-journey.svg">
+                <img class="ml-12 mt-14 w-5/6 float-right next-steps-presentation-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/next-steps/NEXT_APPOINTMENT.png">
             </div>
             <div class="flex-col justify-center pt-5">
-                <p class="w-full font-bold pl-24">
+                <p class="w-full font-bold pl-28">
                     {{ $data['next_steps']['next_meeting_title'] }}
                 </p>
-                <p class="w-full pl-20 mt-2">
+                <p class="w-full pl-24 mt-2">
                     {{ $data['next_steps']['next_meeting_date'] }}
                 </p>
             </div>
@@ -1602,12 +1602,12 @@
     @include('documents.includes.header', ['activeLink' => 'introduction'])
 
     <!-- The Modal -->
+
     <!--
     <div id="myModal" class="modal">
 
-        <!- Modal content ->
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <a class="close" href="#meet-your-team">&times;</a>
             <p>Some text in the Modal..</p>
             <div class="flex mb-2">
                 <div class="w-1/2 p-10 ml-12 mt-12">
@@ -1620,7 +1620,7 @@
                 </div>
                 <div class="w-1/2 p-10">
                     <div class="">
-                        <img class="modal-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/summary.svg">
+                        <img class="modal-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/WEALTH_SERVICES.png">
                     </div>
                 </div>
             </div>
@@ -1657,7 +1657,7 @@
                     </div>
 
                     <div class="w-1/2">
-                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/ADVICE_SERVICES.png">
                     </div>
                 </div>
             </div>
@@ -1670,7 +1670,7 @@
                     </div>
 
                     <div class="w-1/2">
-                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                        <img class="team-member-img inline" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/WEALTH_SERVICES.png">
                     </div>
                 </div>
 
@@ -1680,7 +1680,7 @@
 
         <div class="w-1/4 -ml-2">
             <div class="director-wrapper p-6">
-                <img class="investment-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/profile-paul-morton.svg">
+                <img class="investment-img" src="https://d3a6n7gvbr88rj.cloudfront.net/adviser-hub/strategy-report/team/IM.png">
                 <p class="font-bold text-white key-considerations-investment">Investment Management</p>
             </div>
         </div>
