@@ -53,7 +53,7 @@ class RiskAssessmentController extends Controller
         );
 
         //change later
-        return json_encode(['model' =>  $rasds->get(Client::where('id',$client->id)->first(),$step,$section)['model']]);
+        return json_encode(['model' =>  $rasds->get(Client::where('id',$client->id)->first(),$step,$section, null)['model']]);
     }
 
     /**
