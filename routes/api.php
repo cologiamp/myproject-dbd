@@ -71,6 +71,10 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/pr-allowances/{allowance}', [PRAllowanceController::class,'delete']);
     Route::delete('/pr-items/{item}', [PRItemsController::class,'delete']);
     Route::put('/risk-outcome/{outcome}/assess-outcome',[RiskAssessmentController::class,'assessOutcome']);
+//    Route::post('/toggle-complete/{client:io_id}',[ClientController::class,'toggleClientcompleted']);
+//    Route::post('/toggle-complete-client/{client:io_id}',[ray("hi")]);
 });
+
+Route::post('/toggle-complete/{client:io_id}',[ClientController::class,'toggleClientCompleted']);
 
 

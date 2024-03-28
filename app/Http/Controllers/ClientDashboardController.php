@@ -30,6 +30,7 @@ class ClientDashboardController extends Controller
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'content-title' => $client->dashboard_title,
             'clientId' => $client->io_id,
+            'clientComplete' => $client->complete,
         ]);
     }
 }

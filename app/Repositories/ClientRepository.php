@@ -78,6 +78,7 @@ class ClientRepository extends BaseRepository
      */
     public function update(BaseClientRequest $request): void
     {
+        ray($request);
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
         $this->client->update($request->safe());
         //relations here - e.g  $this->model->relation()->sync();
@@ -241,8 +242,17 @@ class ClientRepository extends BaseRepository
 
     public function filterIndexQuery(Request $request): LengthAwarePaginator
     {
+
+        if(Auth::user()->can('access all clients')){
+            $columnValue = null;
+            $operator = '!=';
+        } else {
+            $columnValue = auth()->user()->id;
+            $operator = '=';
+        }
+
         return Client::query()
-            ->where("adviser_id", auth()->user()->id)
+            ->where("adviser_id", $operator, $columnValue)
             ->when($request->input("search"), function($query, $search)  {
                 $query->where("first_name", "like", "%{$search}%")
                     ->orWhere("last_name", "like",  "%{$search}%");

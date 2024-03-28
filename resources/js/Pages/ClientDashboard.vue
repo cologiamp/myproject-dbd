@@ -10,6 +10,7 @@ const props = defineProps({
     breadcrumbs: Array,
     contentTitle: String,
     clientId: String,
+    clientComplete: Boolean
 });
 
 function syncToIo()
@@ -31,6 +32,12 @@ function syncToIo()
     });
 }
 
+function toggleClientComplete(event, clientID) {
+    axios.post('/api/toggle-complete/' + clientID, {
+        'complete': event.target.checked
+    })
+}
+
 </script>
 
 <template>
@@ -39,6 +46,19 @@ function syncToIo()
             <h3 class="text-aaron-50 text-2xl px-4 md:p-0">{{contentTitle}}</h3>
         </form-well>
         <div class="overflow-hidden bg-aaron-950 pt-5 rounded-lg ">
+            <div>
+                <div class="overflow-hidden bg-aaron-900 sm:rounded-lg ">
+                    <div class="px-1 py-1 sm:p-2 flex flex-row-reverse">
+                        <slot name="loading"></slot>
+                    </div>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input @change="toggleClientComplete($event, props.clientId)" v-model="props.clientComplete" type="checkbox" class="sr-only peer" checked>
+                        <span class="ms-3 text-sm font-medium text-white dark:text-gray-300">Client Complete</span>
+                        <div class="relative text-right table-cell w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+            </div>
+
             <div class="px-4 py-5 sm:p-6 w-full grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" >
 
                 <a href="fact-find" class="p-8 h-64 bg-pink-700 rounded-2xl items-center justify-center flex">

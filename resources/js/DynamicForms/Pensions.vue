@@ -28,7 +28,7 @@ const props = defineProps({
                 pension_crystallised_statuses: [],
                 pension_fund_types: [],
                 frequencies: [],
-                loa_submitted: []
+                loa_submitted: [],
                 chosens: [],
             },
             model: {
@@ -52,7 +52,7 @@ const props = defineProps({
                     retained_value: null,
                     is_retained: null,
                     funds: [],
-                    loa_submitted: null
+                    loa_submitted: null,
                     employer_contribution_frequency: null,
                 }],
                 db_pensions: [{
@@ -128,7 +128,7 @@ function addDc() {
         retained_value: null,
         is_retained: null,
         funds: [],
-        loa_submitted: null
+        loa_submitted: null,
         employer_contribution_frequency: null
     });
 }

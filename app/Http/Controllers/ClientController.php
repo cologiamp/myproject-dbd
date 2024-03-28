@@ -14,6 +14,7 @@ class ClientController extends Controller
     public function __construct(ClientRepository $cr)
     {
         $this->clientRepository = $cr;
+        ray($this)->green();
     }
     /**
      * Handle the incoming request.

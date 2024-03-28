@@ -158,7 +158,7 @@ const sidebarOpen = ref(false)
                                            <EllipsisHorizontalIcon class="mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </span>
                                         <span class="sr-only">Open user menu</span>
-                                        <img class="h-8 w-8 border-2 border-aaron-50 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+<!--                                        <img class="h-8 w-8 border-2 border-aaron-50 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />-->
 
                                     </MenuButton>
                                     <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
