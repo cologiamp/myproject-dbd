@@ -18,6 +18,7 @@ use Inertia\Inertia;
 use \App\Http\Controllers\DashboardController;
 use \App\Http\Controllers\TwoFaController;
 use \App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\RiskProfileQuestionnaireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,10 +79,23 @@ Route::middleware([
         //"API" style requests
         Route::post('/sync',SyncClientController::class)->name('sync');
         Route::post('/commit-to-io',DataIntoIoController::class)->name('commit-to-io');
+
+        Route::get('/risk-profile-questionnaire', [RiskProfileQuestionnaireController::class, 'show'])->name('risk.front');
+        Route::prefix('risk-profile-questionnaire')->group(function () {
+            Route::post('/q1/submit', [RiskProfileQuestionnaireController::class, 'submitQ1'])->name('risk.q1.submit');
+            Route::post('/q2/submit', [RiskProfileQuestionnaireController::class, 'submitQ2'])->name('risk.q2.submit');
+            Route::post('/q3/submit', [RiskProfileQuestionnaireController::class, 'submitQ3'])->name('risk.q3.submit');
+            Route::post('/q4/submit', [RiskProfileQuestionnaireController::class, 'submitQ4'])->name('risk.q4.submit');
+            Route::post('/q5/submit', [RiskProfileQuestionnaireController::class, 'submitQ5'])->name('risk.q5.submit');
+            Route::post('/q6/submit', [RiskProfileQuestionnaireController::class, 'submitQ6'])->name('risk.q6.submit');
+            Route::post('/q7/submit', [RiskProfileQuestionnaireController::class, 'submitQ7'])->name('risk.q7.submit');
+        });
+
     });
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/clients', ClientController::class)->name('clients');
+
 });
 
 
