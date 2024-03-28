@@ -268,6 +268,16 @@ return [
                         'messages' => []
                     ],
                     2 => [
+                        'name' => 'Expenditure Total',
+                        'fields' => [
+                            'total'
+                        ],
+                        'rules' => [
+                            'total' => 'sometimes|nullable'
+                        ],
+                        'messages' => []
+                    ],
+                    3 => [
                         'name' => 'Basic Essential Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -309,7 +319,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    3 => [
+                    4 => [
                         'name' => 'Basic Quality Of Living Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -351,7 +361,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    4 => [
+                    5 => [
                         'name' => 'Non Essential Outgoings Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -393,7 +403,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    5 => [
+                    6 => [
                         'name' => 'Liability Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -435,7 +445,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    6 => [
+                    7 => [
                         'name' => 'Lump Sum Expenditure',
                         'fields' => [
                             'expenditures' => [

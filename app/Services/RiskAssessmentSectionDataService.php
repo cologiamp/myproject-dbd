@@ -29,14 +29,15 @@ class RiskAssessmentSectionDataService
         $this->riskOutcomeRepository = $riskOutcomeRepository;
     }
     //get the data for a single section of a risk from a single client
-    public static function get($client, $step, $section): array
+    public static function get($client, $step, $section, $sectionCount): array
     {
         $riskInv = $client->risk_profile;
         return [
             'enums' => $riskInv->loadEnumsForStep($step, $section),
             'model' => $riskInv->presenter()->formatForStep($step, $section), //here we load the data for that part of the form
             'submit_method' => 'put', //this is always put for now
-            'submit_url' => '/api/client/' . $client->io_id . '/risk-assessment/' . $step . '/' . $section //here we hydrate the autosave URL
+            'submit_url' => '/api/client/' . $client->io_id . '/risk-assessment/' . $step . '/' . $section, //here we hydrate the autosave URL
+            'sectionCount' => $sectionCount
         ];
     }
 

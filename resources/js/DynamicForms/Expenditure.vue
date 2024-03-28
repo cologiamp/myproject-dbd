@@ -11,6 +11,8 @@ import Swal from "sweetalert2";
 import '@vuepic/vue-datepicker/dist/main.css'
 import { onBeforeMount, watch } from "vue";
 import {changeToCurrency} from "@/currency.js";
+import {forceCalculateExpenditures, tempExpenditures} from "@/calculateExpenditureTotal.js";
+
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -112,6 +114,9 @@ async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
     stepForm.expenditures = props.formData.model.expenditures;
     formatAmountOnload()
+
+    forceCalculateExpenditures.value += 1;
+    tempExpenditures.value = stepForm.expenditures;
 }
 
 
@@ -144,15 +149,15 @@ function formatAmount(e, typeIndex, expIndex, dataField) {
 
 
 function expenditureStatus($event, typeIndex, expIndex, dataField) {
-    if (dataField == 'currently_active') {
-        if ($event.target.value == 'true') {
+    if (dataField === 'currently_active') {
+        if ($event.target.value === 'true') {
             stepForm.expenditures[typeIndex][expIndex]['starts_at'] = null
             autosaveLocally();
         }
     }
 
-    if (dataField == 'known_end_date') {
-        if ($event.target.value == 'false') {
+    if (dataField === 'known_end_date') {
+        if ($event.target.value === 'false') {
             stepForm.expenditures[typeIndex][expIndex]['ends_at'] = null
             autosaveLocally();
         }
