@@ -36,10 +36,10 @@ const props = defineProps({
             },
             submit_method: 'post',
             submit_url: '/',
+            sectionCount: null
         },
     },
-    errors: Object,
-    sidebarItemsLength: Number
+    errors: Object
 });
 
 const stepForm = useForm({
@@ -75,7 +75,7 @@ function setRating(data) {
 }
 
 function submitAssessment() {
-    calculateRiskProfile(stepForm, props.formData.model.risk_outcome_id, props.sidebarItemsLength)
+    calculateRiskProfile(stepForm, props.formData.model.risk_outcome_id, props.formData.sectionCount)
 }
 
 function isSubmitDisabled() {
