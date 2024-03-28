@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
 use App\Http\Controllers\Api\RiskAssessmentController;
+use App\Http\Controllers\Api\StrategyReportController;
 
 
 /*
@@ -67,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
+    Route::delete('/strategy-report/{strategy_report}',[StrategyReportController::class,'delete']);
 
     Route::delete('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'delete']);
     Route::delete('/strategy-actions/{action}',[StrategyActionsController::class,'delete']);
@@ -77,4 +79,4 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::put('/risk-outcome/{outcome}/assess-outcome',[RiskAssessmentController::class,'assessOutcome']);
 });
 
-Route::get('/client/{client:io_id}/generate-pdf',\App\Http\Controllers\Api\StrategyReportController::class);
+Route::get('/client/{client:io_id}/generate-pdf',[StrategyReportController::class,'generate']);

@@ -24,7 +24,7 @@ class StrategyReportController extends Controller
     {
         $this->srds = $srds;
     }
-    public function __invoke(Client $client): JsonResponse
+    public function generate(Client $client): JsonResponse
     {
         if(!($client->strategy_report_recommendation &&
             $client->strategy_report_recommendation->report_version !== null &&
@@ -75,7 +75,18 @@ class StrategyReportController extends Controller
         $sr->path = $path;
         $sr->save();
 
-        return response()->json(['strategy_reports' => StrategyReportResource::collection(StrategyReport::all())]);
+        return response()->json(['strategy_reports' => StrategyReportResource::collection(StrategyReport::where('client_id', $client->id)->orderBy('created_at','DESC')->get())]);
 
+    }
+
+    /**
+     * @param StrategyReport $report
+     * @return void
+     */
+    public function delete(StrategyReport $strategy_report): JsonResponse
+    {
+        $client = $strategy_report->client;
+        $strategy_report->delete();
+        return response()->json(['strategy_reports' => StrategyReportResource::collection(StrategyReport::where('client_id', $client->id)->orderBy('created_at','DESC')->get())]);
     }
 }
