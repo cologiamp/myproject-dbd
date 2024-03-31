@@ -31,114 +31,76 @@ class RiskProfileQuestionnaireController extends Controller
             'client_id' => $client->io_id
         ]);
     }
-    public function submitQ1(Client $client,Request $request): \Illuminate\Http\RedirectResponse
+
+
+    public function store(Client $client, int $question, Request $request):\Illuminate\Http\RedirectResponse
     {
         $this->clientRepository->setClient($client);
         $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'risk_tolerance' => 'required|boolean',
-        ]);
 
-        $this->saveData('comfort_fluctuate_market', $request->risk_tolerance);
-
+        switch ($question){
+            case(1):
+                $request->validate([
+                    'risk_tolerance' => 'required|boolean',
+                ]);
+                $this->saveData('comfort_fluctuate_market', $request->risk_tolerance);
+                break;
+            case(2):
+                $request->validate([
+                    'volatility' => 'required|integer',
+                ]);
+                $this->saveData('day_to_day_volatility', $request->volatility);
+                break;
+            case(3):
+                $request->validate([
+                    'amount_invested' => 'required|numeric',
+                    'concern5percent' => 'required|numeric',
+                    'concern10percent' => 'required|numeric',
+                    'concern20percent' => 'required|numeric',
+                    'concern30percent' => 'required|numeric',
+                    'concern40percent' => 'required|numeric',
+                    'concern50percent' => 'required|numeric',
+                ]);
+                $this->saveData('short_term_volatility', json_encode([
+                    '0' => ['value' => (int)$request->concern5percent],
+                    '1' => ['value' => (int)$request->concern10percent],
+                    '2' => ['value' => (int)$request->concern20percent],
+                    '3' => ['value' => (int)$request->concern30percent],
+                    '4' => ['value' => (int)$request->concern40percent],
+                    '5' => ['value' => (int)$request->concern50percent]
+                ]));
+                break;
+            case(4):
+                $request->validate([
+                    'comfortable_range' => 'required|integer',
+                ]);
+                $this->saveData('medium_term_volatility', $request->comfortable_range);
+                break;
+            case(5):
+                $request->validate([
+                    'value_drop_behaviour' => 'required|integer',
+                ]);
+                $this->saveData('volatility_behaviour', $request->value_drop_behaviour);
+                break;
+            case(6):
+                $request->validate([
+                    'comfortable_volatility' => 'required|integer',
+                ]);
+                $this->saveData('long_term_volatility', $request->comfortable_volatility);
+                break;
+            case(7):
+                $request->validate([
+                    'cash_in_behaviour' => 'required|integer',
+                ]);
+                $this->saveData('time_in_market', $request->cash_in_behaviour);
+                break;
+        }
         return to_route('client.risk.front', ['client' => $client->io_id]);
     }
 
-    public function submitQ2(Client $client, Request $request): \Illuminate\Http\RedirectResponse
+
+    private function saveData($fieldName, $fieldValue): void
     {
-        $this->clientRepository->setClient($client);
-        $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'volatility' => 'required|integer',
-        ]);
-
-        $this->saveData('day_to_day_volatility', $request->volatility, $client);
-
-        return to_route('client.risk.front', ['client' => $client->io_id]);
-    }
-
-    public function submitQ3(Client $client,Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $this->clientRepository->setClient($client);
-        $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'amount_invested' => 'required|numeric',
-            'concern5percent' => 'required|numeric',
-            'concern10percent' => 'required|numeric',
-            'concern20percent' => 'required|numeric',
-            'concern30percent' => 'required|numeric',
-            'concern40percent' => 'required|numeric',
-            'concern50percent' => 'required|numeric',
-        ]);
-
-        $short_term_volatility = [
-            '0' => ['value' => $request->concern5percent],
-            '1' => ['value' => $request->concern10percent],
-            '2' => ['value' => $request->concern20percent],
-            '3' => ['value' => $request->concern30percent],
-            '4' => ['value' => $request->concern40percent],
-            '5' => ['value' => $request->concern50percent]
-        ];
-
-        $this->saveData('short_term_volatility', json_encode($short_term_volatility));
-
-        return to_route('client.risk.front', ['client' => $client->io_id]);
-    }
-
-    public function submitQ4(Client $client,Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $this->clientRepository->setClient($client);
-        $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'comfortable_range' => 'required|integer',
-        ]);
-
-        $this->saveData('medium_term_volatility', $request->comfortable_range);
-
-        return to_route('client.risk.front', ['client' => $client->io_id]);
-    }
-
-    public function submitQ5(Client $client, Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $this->clientRepository->setClient($client);
-        $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'value_drop_behaviour' => 'required|integer',
-        ]);
-
-        $this->saveData('volatility_behaviour', $request->value_drop_behaviour);
-
-        return to_route('client.risk.front', ['client' => $client->io_id]);
-    }
-
-    public function submitQ6(Client $client, Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $this->clientRepository->setClient($client);
-        $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'comfortable_volatility' => 'required|integer',
-        ]);
-
-        $this->saveData('long_term_volatility', $request->comfortable_volatility);
-
-        return to_route('client.risk.front', ['client' => $client->io_id]);
-    }
-
-    public function submitQ7(Client $client, Request $request): \Illuminate\Http\RedirectResponse
-    {
-        $this->clientRepository->setClient($client);
-        $this->riskProfileRepository->setClient($client);
-        $request->validate([
-            'cash_in_behaviour' => 'required|integer',
-        ]);
-
-        $this->saveData('time_in_market', $request->cash_in_behaviour);
-
-        return to_route('client.risk.front', ['client' => $client->io_id]);
-    }
-
-    private function saveData($fieldName, $fieldValue){
-
         $client = $this->clientRepository->getClient();
         $this->riskProfileRepository->createOrUpdate([
             'client_id' => $client->id,
