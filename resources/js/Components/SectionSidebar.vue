@@ -2,7 +2,7 @@
 import {ref, provide, inject, onBeforeMount, computed} from "vue";
 import {Link, router} from '@inertiajs/vue3';
 import {ArrowRightIcon, ArrowLeftIcon} from "@heroicons/vue/24/solid/index.js";
-
+// import {router} from '@inertiajs/vue3';
 
 const props = defineProps({
     sidebarItems: {

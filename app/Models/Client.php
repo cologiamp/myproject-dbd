@@ -95,18 +95,38 @@ class Client extends Model
     public function getJobTitleAttribute()
     {
         // chore: can we get this from IO
-        return "To Be Implemented";
+        if($this->employment_details->first() != null)
+        {
+            return $this->employment_details->first()->occupation;
+        }
+        else{
+            return "";
+        }
     }
 
-    public function getLastContactAttribute()
+    public function getLastUpdatedAttribute()
     {
         // chore: can we get this from IO
-        return "To Be Implemented";
+        return $this->updated_at->diffForHumans();
     }
 
     public function getStatusTextAttribute()
     {
-        return $this->advice_case?->status_text ?? "Fact Find";
+        return config('enums.client.statuses')[$this->status_int];
+    }
+
+    public function getStatusIntAttribute(): int
+    {
+        if($this->complete === 1)
+        {
+            return 4;
+        }
+        elseif($this->incomes->count() > 0 || $this->assets->count() > 0 || $this->liabilities->count() > 0 || $this->dependents->count() > 0 || $this->employment_details->count() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
 

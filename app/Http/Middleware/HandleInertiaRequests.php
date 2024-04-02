@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Middleware;
 
@@ -101,9 +102,19 @@ class HandleInertiaRequests extends Middleware
                 ],
             ]);
         }
+
+        if(Auth::check() && Auth::user()->profile_photo_path)
+        {
+            $pp = config('constants.cdn_url') . Auth::user()->profile_photo_path;
+        }
+        else{
+            $pp =  '/images/logo_square.svg';
+        }
+
         return array_merge(parent::share($request), [
             'logo' => config('constants.new_logo'),
-            'navigation' => $nav1
+            'navigation' => $nav1,
+            'profile_picture' => $pp
             //Chore: make when there's a "client" in the URL that the other tabs appear
             //Client Dashboard
 

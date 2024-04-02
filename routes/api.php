@@ -79,4 +79,6 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::put('/risk-outcome/{outcome}/assess-outcome',[RiskAssessmentController::class,'assessOutcome']);
 });
 
+Route::post('/toggle-complete/{client:io_id}',[ClientController::class,'toggleClientComplete']);
+
 Route::get('/client/{client:io_id}/generate-pdf',[StrategyReportController::class,'generate']);

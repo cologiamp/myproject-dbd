@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 use App\Services\DataIngestService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
@@ -37,5 +38,6 @@ class AppServiceProvider extends ServiceProvider
 
             return (object)[];
         });
+
     }
 }

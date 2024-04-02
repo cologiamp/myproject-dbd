@@ -658,7 +658,7 @@ class ClientPresenter extends BasePresenter
         return array_merge($this->default(), [
           'age'=> $this->model->age,
           'job_title' => $this->model->job_title,
-          'last_contact'=> $this->model->last_contact,
+          'last_updated'=> $this->model->last_updated,
           'status_text' => $this->model->status_text
         ]);
     }

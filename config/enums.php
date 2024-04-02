@@ -39,6 +39,11 @@ return [
         ]
     ],
     'client' => [
+        'statuses' => [
+            0 => 'New Case',
+            1 => 'In Progress',
+            4 => 'Completed'
+        ],
         'gendered_titles' => [
             0 => 2,
             1 => 1,
