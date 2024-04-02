@@ -24,6 +24,11 @@ class Client extends Model
     protected $guarded = [];
     protected $appends = ['name_with_c2'];
 
+    protected $casts = [
+        'valid_will' => 'boolean',
+        'will_up_to_date' => 'boolean',
+        'poa_granted' => 'boolean',
+    ];
 
     /**
      * Return the formatted attribute "title" according to the config enum;
@@ -141,7 +146,7 @@ class Client extends Model
 
     public function assets():BelongsToMany
     {
-        return $this->belongsToMany(Asset::class);
+        return $this->belongsToMany(Asset::class)->withPivot('percent_ownership');
     }
     public function liabilities():BelongsToMany
     {

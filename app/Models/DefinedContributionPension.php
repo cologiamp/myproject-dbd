@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DefinedContributionPension extends Model
 {
+    protected $casts = [
+        'policy_start_at' => 'date',
+        'valuation_at' => 'date',
+    ];
+
     public function pension_scheme():BelongsTo
     {
         return $this->belongsTo(PensionScheme::class);

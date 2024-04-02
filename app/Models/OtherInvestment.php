@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class OtherInvestment extends Model
 {
     protected $guarded = [];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'maturity_date' => 'date',
+    ];
+
     public function client():BelongsTo
     {
         return $this->belongsTo(Client::class);
