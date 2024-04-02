@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('strategy_recommendation_objectives', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('strategy_report_recommendation_id')->constrained();
+            $table->foreignId('strategy_report_recommendation_id')->constrained()->index('srr_id_objs_foreign');
             $table->integer('is_primary')->nullable();
             $table->integer('type')->nullable();
             $table->integer('objective')->nullable();

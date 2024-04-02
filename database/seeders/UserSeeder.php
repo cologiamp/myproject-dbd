@@ -26,8 +26,9 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'create notes']);
         Permission::create(['name' => 'access audit log']);
         Permission::create(['name' => 'access IO data']);
+        Permission::create(['name' => 'access all clients']);
 
-        Role::create(['name' => 'paraplanner'])->givePermissionTo(['update cases','create notes']);
+        Role::create(['name' => 'paraplanner'])->givePermissionTo(['update cases','create notes', 'access all clients']);
         Role::create(['name' => 'adviser'])->givePermissionTo(['create cases','delete cases','update cases','create notes','access IO data']);
         Role::create(['name' => 'admin'])->givePermissionTo(Permission::all());
 

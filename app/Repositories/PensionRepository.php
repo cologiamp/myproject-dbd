@@ -104,6 +104,13 @@ class PensionRepository extends BaseRepository
         else{
             $dc->gross_contribution_absolute = null;
         }
+        if(array_key_exists('employee_contribution_frequency',$item))
+        {
+            $dc->employee_contribution_frequency = $item['employee_contribution_frequency'];
+        }
+        else{
+            $dc->employee_contribution_frequency = null;
+        }
         if(array_key_exists('employer_contribution_percent',$item))
         {
             $dc->employer_contribution_percent = $item['employer_contribution_percent'];
@@ -162,8 +169,8 @@ class PensionRepository extends BaseRepository
         if(array_key_exists('crystallised_percentage',$item)) {
             $dc->crystallised_percentage = $item['crystallised_percentage'];
         }
-        if(array_key_exists('frequency',$item)) {
-            $dc->frequency = $item['frequency'];
+        if(array_key_exists('employer_contribution_frequency',$item)) {
+            $dc->employer_contribution_frequency = $item['employer_contribution_frequency'];
         }
 
         else{
@@ -300,20 +307,35 @@ class PensionRepository extends BaseRepository
         else{
             $pension->retirement_age = null;
         }
-        if(array_key_exists('lqa_submitted',$item))
+        if(array_key_exists('loa_submitted',$item))
         {
-            $pension->lqa_submitted = $item['lqa_submitted'];
+            $pension->loa_submitted = $item['loa_submitted'];
         }
         else{
-            $pension->lqa_submitted = null;
+            $pension->loa_submitted = null;
         }
-        if(array_key_exists('policy_reviewed_transfer',$item))
+        if(array_key_exists('is_retained',$item))
         {
-            $pension->policy_reviewed_transfer = $item['policy_reviewed_transfer'];
+            $pension->is_retained = $item['is_retained'];
         }
         else{
-            $pension->policy_reviewed_transfer = null;
+            $pension->is_retained = null;
         }
+        if(array_key_exists('active_pension_member',$item))
+        {
+            $pension->active_pension_member = $item['active_pension_member'];
+        }
+        else{
+            $pension->active_pension_member = null;
+        }
+        if(array_key_exists('active_pension_member_reason_not',$item))
+        {
+            $pension->active_pension_member_reason_not = $item['active_pension_member_reason_not'];
+        }
+        else{
+            $pension->active_pension_member_reason_not = null;
+        }
+
         return $pension;
     }
 

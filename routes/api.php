@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\EmploymentDetailController;
 use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\LumpSumCapitalController;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\FactFindController;
 use App\Http\Controllers\Api\InvestmentRecommendationController;
 use App\Http\Controllers\Api\PensionObjectivesController;
 use App\Http\Controllers\Api\InvestmentController;
+
 use App\Http\Controllers\Api\StrategyReportRecommendationsController;
 use App\Http\Controllers\APi\StrategyObjectivesController;
 use App\Http\Controllers\Api\StrategyActionsController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
 use App\Http\Controllers\Api\RiskAssessmentController;
 use App\Http\Controllers\RiskProfileQuestionnaireController;
+use App\Http\Controllers\Api\StrategyReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,23 +50,12 @@ Route::put('/client/{client:io_id}/fact-find/{section}/{step}',[FactFindControll
 Route::post('/client/{client:io_id}/fact-find-solo',[FactFindController::class,'solo']);
 Route::post('/client/{client:io_id}/fact-find-together/{c2id}',[FactFindController::class,'selectClientTwo']);
 Route::put('/client/{client:io_id}/pension-objectives/{step}',[PensionObjectivesController::class,'update'])->name('pensionobjectives.update');
-
+Route::put('/client/{client:io_id}/recommendations/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[StrategyReportRecommendationsController::class,'update'])->name('strategyreportrecommendations.update');
 Route::get('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'get'])->name('strategyobjectives.get');
 Route::get('/strategy-actions/{action}',[StrategyActionsController::class,'get'])->name('strategyactions.get');
-
-Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
 
-//Route::prefix('risk-profile-questionnaire')->group(function () {
-//    Route::post('/q1/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ1'])->name('risk.q1.submit');
-//    Route::post('/q2/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ2'])->name('risk.q2.submit');
-//    Route::post('/q3/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ3'])->name('risk.q3.submit');
-//    Route::post('/q4/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ4'])->name('risk.q4.submit');
-//    Route::post('/q5/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ5'])->name('risk.q5.submit');
-//    Route::post('/q6/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ6'])->name('risk.q6.submit');
-//    Route::post('/q7/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ7'])->name('risk.q7.submit');
-//});
 Route::post('/client/{client:io_id}/risk-profile-questionnaire/{question}',[RiskProfileQuestionnaireController::class,'store'])->name('risk.submit');
 
 Route::middleware('auth:sanctum')->group(function (){
@@ -72,11 +64,14 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/assets/{asset}',[AssetController::class,'delete']);
     Route::delete('/addresses/{address}',[ClientController::class,'deleteAddress']);
     Route::delete('/pensions/{pension}',[PensionController::class,'delete']);
+    Route::delete('/employments/{employment_detail}',[EmploymentDetailController::class,'delete']);
     Route::delete('/pension-funds/{pension_fund}',[PensionFundController::class,'delete']);
     Route::delete('/liabilities/{liability}',[LiabilityController::class,'delete']);
     Route::delete('/lsc/{lsc}',[LumpSumCapitalController::class,'delete']);
     Route::delete('/share-save-schemes/{scheme}',[ShareSaveSchemeController::class,'delete']);
     Route::delete('/investments/{investment}',[InvestmentController::class,'delete']);
+    Route::delete('/strategy-report/{strategy_report}',[StrategyReportController::class,'delete']);
+
     Route::delete('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'delete']);
     Route::delete('/strategy-actions/{action}',[StrategyActionsController::class,'delete']);
     Route::delete('/investment-recommendation-items/{item}', [InvestmentRecommendationItemController::class,'delete']);
@@ -86,4 +81,6 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::put('/risk-outcome/{outcome}/assess-outcome',[RiskAssessmentController::class,'assessOutcome']);
 });
 
+Route::post('/toggle-complete/{client:io_id}',[ClientController::class,'toggleClientComplete']);
 
+Route::get('/client/{client:io_id}/generate-pdf',[StrategyReportController::class,'generate']);

@@ -268,6 +268,16 @@ return [
                         'messages' => []
                     ],
                     2 => [
+                        'name' => 'Expenditure Total',
+                        'fields' => [
+                            'total'
+                        ],
+                        'rules' => [
+                            'total' => 'sometimes|nullable'
+                        ],
+                        'messages' => []
+                    ],
+                    3 => [
                         'name' => 'Basic Essential Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -309,7 +319,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    3 => [
+                    4 => [
                         'name' => 'Basic Quality Of Living Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -351,7 +361,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    4 => [
+                    5 => [
                         'name' => 'Non Essential Outgoings Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -393,7 +403,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    5 => [
+                    6 => [
                         'name' => 'Liability Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -435,7 +445,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    6 => [
+                    7 => [
                         'name' => 'Lump Sum Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -488,7 +498,7 @@ return [
                             'assets.current_value',
                             'assets.is_retained',
                             'assets.retained_value',
-
+                            'assets.equity'
                         ]
                     ],
                     'rules' => [
@@ -508,6 +518,7 @@ return [
                         'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
                         'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean',
+                        'fixed_assets.*.equity' => 'sometimes|nullable|string'
                     ],
                     'messages' => []
                 ],
@@ -606,6 +617,13 @@ return [
                         'db_pensions' => 'sometimes|array',
                             'db_pensions.*.id' => 'sometimes|nullable|integer',
                             'db_pensions.*.owner' => 'sometimes|nullable',
+                            'db_pensions.*.loa_submitted' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
+                            ],
                             'db_pensions.*.status' => [
                                 'sometimes',
                                 'numeric',
@@ -632,6 +650,13 @@ return [
                             'dc_pensions' => 'sometimes|array',
                             'dc_pensions.*.id' => 'sometimes|nullable|integer',
                             'dc_pensions.*.owner' => 'sometimes|nullable',
+                            'dc_pensions.*.loa_submitted' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
+                            ],
                             'dc_pensions.*.type' => [
                                 'sometimes',
                                 'numeric',
@@ -648,6 +673,13 @@ return [
                             'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.gross_contribution_percent' => 'sometimes|nullable',
                             'dc_pensions.*.gross_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.employee_contribution_frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.frequency'))))
+                            ],
                             'dc_pensions.*.employer_contribution_percent' => 'sometimes|nullable',
                             'dc_pensions.*.employer_contribution_absolute' => 'sometimes|nullable|string',
                             'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
@@ -673,7 +705,7 @@ return [
                             'dc_pensions.*.funds.*.current_fund_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.funds.*.fund_name' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.funds.*.current_transfer_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.frequency' => [
+                            'dc_pensions.*.employer_contribution_frequency' => [
                                 'sometimes',
                                 'nullable',
                                 'numeric',
@@ -878,7 +910,7 @@ return [
             ]
         ]
     ],
-    'investmentrecommendation' => [
+    'recommendations' => [
         1 => [
             'name' => 'Investment Recommendations',
             'sections' => [
@@ -1131,8 +1163,10 @@ return [
                         'existing_pension_plans.administrator',
                         'existing_pension_plans.policy_type',
                         'existing_pension_plans.policy_number',
-                        'existing_pension_plans.lqa_submitted',
-                        'existing_pension_plans.policy_reviewed_transfer'
+                        'existing_pension_plans.loa_submitted',
+                        'existing_pension_plans.is_retained',
+                        'existing_pension_plans.active_pension_member',
+                        'existing_pension_plans.active_pension_member_reason_not'
                     ],
                     'rules' => [
                         'existing_pension_plans' => 'sometimes|nullable',
@@ -1147,20 +1181,16 @@ return [
                             Rule::in(array_keys((config('enums.pension_recommendation.policy_type'))))
                         ],
                         'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string',
-                        'existing_pension_plans.*.lqa_submitted' => [
+                        'existing_pension_plans.*.loa_submitted' => [
                             'sometimes',
                             'nullable',
                             'numeric',
                             'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.lqa_submitted'))))
+                            Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
                         ],
-                        'existing_pension_plans.*.policy_reviewed_transfer' => [
-                            'sometimes',
-                            'nullable',
-                            'numeric',
-                            'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.policy_reviewed_transfer'))))
-                        ]
+                        'existing_pension_plans.*.is_retained' => 'sometimes|nullable|boolean',
+                        'existing_pension_plans.*.active_pension_member' => 'sometimes|nullable|boolean',
+                        'existing_pension_plans.*.active_pension_member_reason_not' => 'sometimes|nullable|string'
                     ],
                     'messages' => []
                 ],

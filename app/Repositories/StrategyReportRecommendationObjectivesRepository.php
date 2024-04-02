@@ -81,7 +81,13 @@ class StrategyReportRecommendationObjectivesRepository extends BaseRepository
 
     public function updateObjectivesOrder(array $objectives):void
     {
-        collect($objectives)->each(function ($obj){
+        collect($objectives)->map(function ($item) {
+            if($item['is_primary'] == 0 && $item->order < 50)
+            {
+                $item->order += 50;
+            }
+            return $item;
+        })->each(function ($obj){
             unset($obj['client_id']);
 
             $this->setStrategyReportRecommendationObjective(

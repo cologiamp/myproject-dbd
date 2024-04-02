@@ -23,6 +23,8 @@ class AssetPresenter extends BasePresenter
             'asset_type' => $this->model->type,
             'is_retained' => (bool)$this->model->is_retained,
             'retained_value' =>  $this->model->retained_value != null ? $this->currencyIntToString($this->model->retained_value): null,
+            'is_mortgaged' => $this->model->equity != null,
+            'equity' =>  $this->model->equity != null ? $this->currencyIntToString($this->model->equity): null,
         ];
     }
 
@@ -49,7 +51,7 @@ class AssetPresenter extends BasePresenter
                 'interest_rate' =>  $this->model->interest_rate,
                 'regular_contributions' => (bool)  $this->model->regular_contributions,
                 'contribution_amount' =>  $this->model->contribution_amount != null ? $this->currencyIntToString($this->model->contribution_amount) : null,
-                'frequency' => $this->model->frequency,
+                'employer_contribution_frequency' => $this->model->employer_contribution_frequency,
 
             ],
             default => []

@@ -314,7 +314,7 @@ class FactFindSectionDataService
                     if ($income['net_amount'] && $income['net_amount'] != null) {
                         $income['net_amount'] = $this->currencyStringToInt($income['net_amount']);
                     }
-                    if ($income['expenses'] && $income['expenses'] != null) {
+                    if (array_key_exists('expenses', $income) && $income['expenses'] && $income['expenses'] != null) {
                         $income['expenses'] = $this->currencyStringToInt($income['expenses']);
                     }
 
@@ -348,7 +348,16 @@ class FactFindSectionDataService
      */
     private function _22(array $validatedData): void
     {
-        $this->parseAndUpdateExpenditure($validatedData);
+        try {
+            if(array_key_exists('total',$validatedData) && $validatedData['total'] != null)
+            {
+                $this->cr->updateFromValidated(['total_expenditure_basic' => $this->currencyStringToInt($validatedData['total'])]);
+            } else {
+                $this->cr->updateFromValidated(['total_expenditure_basic' => 0]);
+            }
+        } catch (Throwable $e) {
+            Log::warning($e);
+        }
     }
 
     /**
@@ -384,7 +393,18 @@ class FactFindSectionDataService
         $this->parseAndUpdateExpenditure($validatedData);
     }
 
+    /**
+     * Section: 2
+     * Step: 6
+     * @param array $validatedData
+     * @return void
+     */
     private function _26(array $validatedData): void
+    {
+        $this->parseAndUpdateExpenditure($validatedData);
+    }
+
+    private function _27(array $validatedData): void
     {
         $this->parseAndUpdateExpenditure($validatedData);
     }
@@ -409,6 +429,9 @@ class FactFindSectionDataService
                     }
                     if (array_key_exists('current_value',$asset) && $asset['current_value'] != null){
                         $asset['current_value'] = $this->currencyStringToInt($asset['current_value']);
+                    }
+                    if (array_key_exists('equity',$asset) && $asset['equity'] != null){
+                        $asset['equity'] = $this->currencyStringToInt($asset['equity']);
                     }
                     unset($asset['asset_type']);//remove
                     return $asset;

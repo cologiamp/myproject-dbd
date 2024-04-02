@@ -148,11 +148,9 @@ function cancel() {
 
 function save() {
     if (stepForm.objective_custom && typeof stepForm.objective_custom !== 'string') {
-        alert('objective_custom')
         stepForm.objective_custom = stepForm.objective_custom.toString()
     }
     if (stepForm.what_for_custom && typeof stepForm.what_for_custom !== 'string') {
-        alert('what_for_custom')
         stepForm.what_for_custom = stepForm.what_for_custom.toString()
     }
 

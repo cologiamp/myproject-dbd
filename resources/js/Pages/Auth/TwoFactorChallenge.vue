@@ -70,7 +70,7 @@ onMounted( ()=> {
                         <div id="login-form" class="mt-10 w-fit md:w-96 mx-auto opacity-0">
                             <form @submit.prevent="submit" class="mt-4">
                                 <h2 class="mt-8 text-2xl leading-9 tracking-tight text-white">Two factor challenge</h2>
-                        
+
                                 <div v-if="! recovery">
                                     <InputLabel class="text-aaron-50 w-48 font-normal my-8" for="code" value="Enter the 2FA Code displayed on your authenticator app" />
                                     <span class="text-aaron-50 mb-4">Code</span>
@@ -80,7 +80,7 @@ onMounted( ()=> {
                                         v-model="form.code"
                                         type="text"
                                         inputmode="numeric"
-                                        class="mt-4 block w-full ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
+                                        class="mt-4 text-aaron-50  block w-full ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
                                         autofocus
                                         autocomplete="one-time-code"
                                     />
@@ -111,7 +111,7 @@ onMounted( ()=> {
                                         </template>
                                     </button>
 
-                                    <PrimaryButton class="ms-4 bg-teal-500 hover:bg-teal-700 w-[155px] h-[49px] justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                    <PrimaryButton class="ms-4 text-aaron-900 bg-teal-500 font-black hover:bg-teal-700 w-[155px] h-[49px] justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                         Log in
                                     </PrimaryButton>
                                 </div>

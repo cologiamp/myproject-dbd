@@ -33,6 +33,14 @@ class Client extends Model
     {
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
+    public function getFullNameAttribute(): string
+    {
+        if($this->middle_name && strlen($this->middle_name) > 0)
+        {
+            return $this->preferred_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        }
+        return $this->preferred_name . ' ' . $this->last_name;
+    }
 
     public function client_two(): BelongsTo
     {
@@ -47,6 +55,11 @@ class Client extends Model
     public function getNameWithC2Attribute():string //->name_with_c2
     {
         return $this->client_two ? $this->name . " & ". $this->client_two->name :  $this->name;
+    }
+
+    public function getPreferredNameAttribute():string
+    {
+        return $this->salutation ?: $this->first_name;
     }
 
 
@@ -73,10 +86,58 @@ class Client extends Model
         return $this->formatted_title . ' ' . $this->first_name . ' ' . $this->last_name;
     }
 
+
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->date_of_birth)->diffInYears(Carbon::now());
+    }
+
+    public function getJobTitleAttribute()
+    {
+        // chore: can we get this from IO
+        if($this->employment_details->first() != null)
+        {
+            return $this->employment_details->first()->occupation;
+        }
+        else{
+            return "";
+        }
+    }
+
+    public function getLastUpdatedAttribute()
+    {
+        // chore: can we get this from IO
+        return $this->updated_at->diffForHumans();
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return config('enums.client.statuses')[$this->status_int];
+    }
+
+    public function getStatusIntAttribute(): int
+    {
+        if($this->complete === 1)
+        {
+            return 4;
+        }
+        elseif($this->incomes->count() > 0 || $this->assets->count() > 0 || $this->liabilities->count() > 0 || $this->dependents->count() > 0 || $this->employment_details->count() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
     public function advice_case():BelongsTo
     {
         return $this->belongsTo(AdviceCase::class, "case_id");
     }
+
+
+
+    //Relations
 
     public function assets():BelongsToMany
     {
@@ -90,29 +151,6 @@ class Client extends Model
     public function incomes():BelongsToMany
     {
         return $this->belongsToMany(Income::class)->withPivot('is_primary');
-    }
-
-
-    public function getAgeAttribute()
-    {
-        return Carbon::parse($this->date_of_birth)->diffInYears(Carbon::now());
-    }
-
-    public function getJobTitleAttribute()
-    {
-        // chore: can we get this from IO
-        return "To Be Implemented";
-    }
-
-    public function getLastContactAttribute()
-    {
-        // chore: can we get this from IO
-        return "To Be Implemented";
-    }
-
-    public function getStatusTextAttribute()
-    {
-        return $this->advice_case?->status_text ?? "Fact Find";
     }
 
 
@@ -151,6 +189,10 @@ class Client extends Model
         return $this->hasMany(PensionScheme::class);
     }
 
+    public function strategy_reports():HasMany
+    {
+        return $this->hasMany(StrategyReport::class);
+    }
     /**
      * @return HasMany
      */
@@ -195,11 +237,11 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
-    public function strategy_report_recommendation():HasOne
+    public function strategy_report_recommendation():BelongsTo
     {
-        return $this->hasOne(StrategyReportRecommendation::class);
+        return $this->belongsTo(StrategyReportRecommendation::class);
     }
-  
+
     public function investment_recommendation():HasOne
     {
         return $this->hasOne(InvestmentRecommendation::class);
@@ -272,30 +314,33 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
             ],
             '2.2' => [
+                'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency'))
+            ],
+            '2.3' => [
                 'expenditure_types' => config('enums.expenditures.basic_essential_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'owners' => $this->getOwnersForForm(),
             ],
-            '2.3' => [
+            '2.4' => [
                 'expenditure_types' => config('enums.expenditures.basic_quality_of_living_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'owners' => $this->getOwnersForForm(),
             ],
-            '2.4' => [
+            '2.5' => [
                 'expenditure_types' => config('enums.expenditures.non_essential_outgoings_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'owners' => $this->getOwnersForForm(),
             ],
-            '2.5' => [
+            '2.6' => [
                 'expenditure_types' => config('enums.expenditures.liability_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
                 'owners' => $this->getOwnersForForm(),
             ],
-            '2.6' => [
+            '2.7' => [
                 'expenditure_types' => config('enums.expenditures.lump_sum_expenditure'),
                 'per_year_frequencies' => collect(config('enums.incomes.per_year_frequency')),
                 'frequencies' => collect(config('enums.incomes.frequency_public')),
@@ -309,7 +354,7 @@ class Client extends Model
                 'owners' => $this->getOwnersForForm(),
                 'providers' => array_values($this->getProviders()->take(100)->toArray()), //Note: change here
                 'account_types' => config('enums.assets.account_types'),
-                'frequencies' => collect(config('enums.assets.frequency')),
+                'employer_contribution_frequencies' => collect(config('enums.assets.frequency')),
             ],
             '3.3' => [
                 'owners' => $this->getOwnersForForm(true),
@@ -325,6 +370,7 @@ class Client extends Model
                 'pension_fund_types' => config('enums.assets.pension_fund_types'),
                 'administrators' =>  array_values($this->getProviders()->take(100)->toArray()),
                 'frequencies' => collect(config('enums.assets.frequency')),
+                'loa_submitted' => config('enums.pension_recommendation.loa_submitted'),
                 'chosens' => collect(config('enums.assets.chosen')), // chosen dropdown stuff
             ],
             '3.5' => [

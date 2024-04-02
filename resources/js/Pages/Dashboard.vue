@@ -62,9 +62,14 @@ const handlePageChange = paginationParams => {
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
         <div class="w-full h-full min-h-screen flex flex-col gap-12 px-6 md:px-0">
-            <StatsContent>
-                <Stats :stats="stats" />
-            </StatsContent>
+            <div class="flex flex-col gap-4">
+                <div class="py-2 rounded-[20px] max-h-full bg-aaron-900 min-h-24 min-w-24 p-4 md:p-6 duration-300">
+                    <p>Welcome to Adviser Hub,</p> <br>
+                    <p>A completely bespoke data-capture system designed to process fact finds, risk questionnaires, report recommendations, and generate Strategy Reports.</p> <br>
+                    <p>If you experience any issues whilst the system is in this beta stage (testing and implementing the service), please email dbd@wealthatwork.co.uk</p> <br>
+                </div>
+<!--                <slot />-->
+            </div>
             <ClientsContent @search-clients="handleSearchClients" :filters="filters">
                 <Clients :clients="clients"/>
                 <template #paginator>

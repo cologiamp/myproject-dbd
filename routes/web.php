@@ -38,6 +38,14 @@ Route::get('/logout',function (){
     \Illuminate\Support\Facades\Auth::logout();
     return redirect()->to('/login');
 });
+Route::get('/test', function() {
+
+    $srds = App::make(\App\Services\StrategyReportDataService::class);
+
+    $client = \App\Models\Client::find(2);
+    $data = $srds->getStrategyReportData($client);
+    return view('documents.strategy-report', ['data' => $data]);
+});
 
 Route::middleware([
     'auth:sanctum',
@@ -67,8 +75,9 @@ Route::middleware([
        Route::get('/relationships/select',ClientRelationshipController::class)->name('relationships');
        Route::get('/strategy-report',StrategyReportController::class)->name('strategy');
        Route::get('/fact-find',[FactFindController::class,'show'])->name('factfind');
-       Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
-       Route::get('/investment-recommendation',[InvestmentRecommendationController::class,'show'])->name('investmentrecommendation');
+        Route::put('/fact-find/{section}/{step}',[FactFindController::class,'update'])->name('factfind.update');
+        Route::get('/recommendations',[InvestmentRecommendationController::class,'show'])->name('recommendations');
+
 
        Route::get('/pension-objectives',[PensionObjectivesController::class,'show'])->name('pensionobjectives');
        Route::get('/strategy-report-recommendations',[StrategyReportRecommendationsController::class,'show'])->name('strategyreportrecommendations');

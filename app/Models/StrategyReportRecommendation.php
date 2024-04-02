@@ -28,7 +28,7 @@ class StrategyReportRecommendation extends Model
         return $this->hasMany(StrategyRecommendationAction::class);
     }
 
-    public function loadEnumsForStrategyRecommendationsStep($step)
+    public function loadEnumsForStrategyRecommendationsStep($step): array
     {
         return match ($step){
             1 => [
