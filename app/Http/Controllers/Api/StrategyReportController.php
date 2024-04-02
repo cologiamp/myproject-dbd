@@ -34,6 +34,22 @@ class StrategyReportController extends Controller
         {
             return response()->json(['message' => 'You need to complete a Strategy Report Recommendation first'],422);
         }
+        if(count($client->strategy_report_recommendation->objectives->filter(function ($item){
+            return $item->is_primary;
+        })) == 0)
+        {
+            return response()->json(['message' => 'No Primary Objective entered'],422);
+        }
+        if(count($client->strategy_report_recommendation->objectives->filter(function ($item){
+                return !$item->is_primary;
+            })) == 0)
+        {
+            return response()->json(['message' => 'No Secondary Objective entered'],422);
+        }
+        if(count($client->employment_details) == 0)
+        {
+            return response()->json(['message' => 'You must create an employment'],422);
+        }
 
         //Client has 0 employments - please enter one
 

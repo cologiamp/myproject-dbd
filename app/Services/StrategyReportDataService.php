@@ -290,7 +290,6 @@ class StrategyReportDataService
            ];
        });
 
-
         $liquid_assets = array_merge_recursive($investments->tap(function ($collection) use (&$liquid_assets_total){
             $liquid_assets_total += $collection->reduce(fn(?int $carry, $item) => $carry + $item->current_value);
         })->groupBy(function ($item){
@@ -379,6 +378,24 @@ class StrategyReportDataService
             })->values()
             ];
         })->toArray());
+        if(!(array_key_exists('taxable', $liquid_assets)))
+        {
+            $liquid_assets['taxable'] = [
+               [
+                   'title' => 'Cash/Savings Accounts',
+                   'value' => '£0.00'
+               ],
+                [
+                    'title' => 'Direct Shareholdings',
+                    'value' => '£0.00'
+                ],
+            ];
+        }
+        if(!(array_key_exists('tax_free', $liquid_assets)))
+        {
+            $liquid_assets['tax_free'] = [];
+        }
+        $liquid_assets = array_merge($liquid_assets,['total' => $this->currencyIntToString($liquid_assets_total,0)]);
 
         $bd = [];
 
@@ -473,7 +490,7 @@ class StrategyReportDataService
                     'total' =>  $this->currencyIntToString($property_and_posessions_total,0),
                     'breakdown' => $property_and_posessions->toArray()
                 ],
-                'liquid_assets' => array_merge($liquid_assets,['total' => $this->currencyIntToString($liquid_assets_total,0)]),
+                'liquid_assets' => $liquid_assets,
                 'pensions' => $pensions
             ],
             'summary' => [
