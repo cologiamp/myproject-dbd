@@ -26,8 +26,8 @@ use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
 use App\Http\Controllers\Api\RiskAssessmentController;
+use App\Http\Controllers\RiskProfileQuestionnaireController;
 use App\Http\Controllers\Api\StrategyReportController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +55,8 @@ Route::put('/client/{client:io_id}/strategy-report-recommendations/{step}',[Stra
 Route::get('/strategy-objectives/{objective}',[StrategyObjectivesController::class,'get'])->name('strategyobjectives.get');
 Route::get('/strategy-actions/{action}',[StrategyActionsController::class,'get'])->name('strategyactions.get');
 Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
+
+Route::post('/client/{client:io_id}/risk-profile-questionnaire/{question}',[RiskProfileQuestionnaireController::class,'store'])->name('risk.submit');
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);

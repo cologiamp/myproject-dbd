@@ -18,6 +18,7 @@ use Inertia\Inertia;
 use \App\Http\Controllers\DashboardController;
 use \App\Http\Controllers\TwoFaController;
 use \App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\RiskProfileQuestionnaireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,10 +88,14 @@ Route::middleware([
         //"API" style requests
         Route::post('/sync',SyncClientController::class)->name('sync');
         Route::post('/commit-to-io',DataIntoIoController::class)->name('commit-to-io');
+
+        Route::get('/risk-profile-questionnaire', [RiskProfileQuestionnaireController::class, 'show'])->name('risk.front');
+
     });
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/clients', ClientController::class)->name('clients');
+
 });
 
 

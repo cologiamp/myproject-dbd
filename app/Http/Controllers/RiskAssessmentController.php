@@ -59,8 +59,7 @@ class RiskAssessmentController extends Controller
         $step = $request->step ?? 1;
 
         $tabs = $this->clientRepository->loadRiskTabs($step,$section);
-
-        return Inertia::render('Risk', [
+         return Inertia::render('Risk', [
             'title' => 'Risk Profile',
             'breadcrumbs' => $this->clientRepository->loadBreadcrumbs(),
             'step' =>  $step,
