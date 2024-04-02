@@ -15,10 +15,6 @@ class ClientDependents
     {
         $i = new Io();
 
-//        $data = [
-//            'employment' => $this->unparseEmploymentData($client),
-//        ];
-
         // Get all dependent details records for the client
         $dependents = $client->dependents;
 

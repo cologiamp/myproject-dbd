@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class LumpSumCapital extends Model
 {
     protected $guarded = [];
+
+    protected $casts = [
+        'due_at' => 'datetime',
+    ];
+
     /**
      * Clients -> LSC is a many-to-many relation
      * @return BelongsToMany

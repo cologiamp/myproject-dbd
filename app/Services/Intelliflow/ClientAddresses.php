@@ -15,10 +15,6 @@ class ClientAddresses
     {
         $i = new Io();
 
-//        $data = [
-//            'employment' => $this->unparseEmploymentData($client),
-//        ];
-
         // Get all dependent details records for the client
         $addresses = $client->addresses;
 

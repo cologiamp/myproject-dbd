@@ -85,7 +85,7 @@ class Client extends Model
 
     public function assets():BelongsToMany
     {
-        return $this->belongsToMany(Asset::class);
+        return $this->belongsToMany(Asset::class)->withPivot('percent_ownership');
     }
     public function liabilities():BelongsToMany
     {

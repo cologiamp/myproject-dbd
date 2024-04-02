@@ -15,10 +15,6 @@ class ClientData
     {
         $i = new Io();
 
-//        $data = [
-//            'employment' => $this->unparseEmploymentData($client),
-//        ];
-
         $data = [
             'name' => $client->name,
             'created_at' => $client->created_at,
@@ -67,7 +63,6 @@ class ClientData
             }
 
         } catch (\Exception $e) {
-            dump($e->getMessage());
             Log::error('Failed to update dependent details for client: ' . $client->id);
             Log::error($e->getMessage());
             return false;

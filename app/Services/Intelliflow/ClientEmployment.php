@@ -16,10 +16,6 @@ class ClientEmployment
     {
         $i = new Io();
 
-//        $data = [
-//            'employment' => $this->unparseEmploymentData($client),
-//        ];
-
         // Get all employment details records for the client
         $employment = EmploymentDetail::where('client_id', $client->id)->get();
 

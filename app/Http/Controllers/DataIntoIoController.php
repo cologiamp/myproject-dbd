@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DataEgress\SendToIoJob;
 use App\Models\Client;
 use App\Repositories\ClientRepository;
 use App\Services\DataEgressService;
@@ -19,11 +20,7 @@ class DataIntoIoController extends Controller
     }
     public function __invoke(Client $client, Request $request): bool
     {
-        //chore: this needs to be more modular, might involve a queue job etc.
-
-        $this->dataEgressService->updateEmployment($client);
-
-//        $this->dataEgressService->updateClient($client); // returns true at the moment
+        SendToIoJob::dispatch($client);
 
         return true;
     }

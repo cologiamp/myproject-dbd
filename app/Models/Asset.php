@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Asset extends Model
 {
+    protected $casts = [
+        'start_at' => 'date',
+        'end_at' => 'date',
+    ];
 
     //Existing Accounts + Savings now included here
     protected $guarded = [];

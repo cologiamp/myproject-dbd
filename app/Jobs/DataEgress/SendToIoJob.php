@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateClientEmploymentJob implements ShouldQueue
+class SendToIoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,5 +28,17 @@ class UpdateClientEmploymentJob implements ShouldQueue
         $this->dataEgressService->updateEmployment($this->client);
         $this->dataEgressService->updateDependents($this->client);
         $this->dataEgressService->updateAddresses($this->client);
+        $this->dataEgressService->updateHealth($this->client);
+
+        $this->dataEgressService->updateClientIncome($this->client);
+        $this->dataEgressService->updateClientExpenditure($this->client);
+
+        // Assets
+        $this->dataEgressService->updateClientAssetsFixed($this->client);
+        $this->dataEgressService->updateClientAssetsSavings($this->client);
+        $this->dataEgressService->updateClientAssetsLumpSum($this->client);
+        $this->dataEgressService->updateClientAssetsShareSaveSchemes($this->client);
+        $this->dataEgressService->updateClientAssetsOtherInvestments($this->client);
+        $this->dataEgressService->updateClientAssetsPensions($this->client);
     }
 }
