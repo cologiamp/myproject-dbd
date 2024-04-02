@@ -127,7 +127,7 @@ function removeReport(id) {
                                             <tbody v-else>
                                             <tr class="text-center">
                                                 <td colspan="7" class="text-sm px-3 py-4 text-center">
-                                                    No objectives data.
+                                                    No Strategy Report generated
                                                 </td>
                                             </tr>
                                             </tbody>
