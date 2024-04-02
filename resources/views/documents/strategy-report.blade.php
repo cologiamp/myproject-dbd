@@ -834,7 +834,7 @@
 
     @include('documents.includes.header', ['activeLink' => 'your-objectives'])
 
-    <div class="flex">
+    <div class="flex mt-8">
         <div class="objectives-col">
             <div class="short-panel waw-bg-green">
                 <p class="text-center">About you</p>
