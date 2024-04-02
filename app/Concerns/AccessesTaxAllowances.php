@@ -17,6 +17,7 @@ trait AccessesTaxAllowances{
                 return $this->setAccessToken();
             });
             $response = Http::withHeader("Authorization", $token)->get(config('datahub.url') . "api/tax-years");
+
             $tax_year_allowances =  collect($response->json()['data'])->mapWithKeys(function ($item){
                 return [$item['tax_year'] => $item['allowance']];
             });

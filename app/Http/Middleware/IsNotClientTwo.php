@@ -24,7 +24,7 @@ class IsNotClientTwo
                 return $next($request);
             }
             else{
-                return redirect()->route('client.dashboard',['client_id' => Client::where('c2_id',$request->client->id)->first()->id]);
+                return redirect()->route('client.dashboard',['client' => Client::where('c2_id',$request->client->id)->first()->io_id]);
             }
         }
         return $next($request);
