@@ -918,7 +918,7 @@
 
                 </div>
             </div>
-            @if(count($data['about_you']['employments']) <= 1 || count($data['about_you']['personal_details']['clients']) <= 1)
+            @if(count($data['about_you']['personal_details']['clients']) <= 1)
                 <div class="short-panel waw-bg-blue">
                     <div class="flex-shrink-0">
                         <img src="{{$data['about_you']['bottom_left_icon']}}" class="w-12">

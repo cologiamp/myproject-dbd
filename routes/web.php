@@ -42,7 +42,7 @@ Route::get('/test', function() {
 
     $srds = App::make(\App\Services\StrategyReportDataService::class);
 
-    $client = \App\Models\Client::find(2);
+    $client = \App\Models\Client::find(1);
     $data = $srds->getStrategyReportData($client);
     return view('documents.strategy-report', ['data' => $data]);
 });

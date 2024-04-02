@@ -5,6 +5,7 @@ namespace App\Models\Presenters;
 use App\Concerns\FlipsEnums;
 use App\Concerns\FormatsCurrency;
 use App\Models\Asset;
+use App\Models\Client;
 use App\Models\Dependent;
 use App\Models\Income;
 use PHPUnit\Framework\Attributes\Depends;
@@ -14,6 +15,15 @@ class EmploymentPresenter extends BasePresenter
     use FlipsEnums, FormatsCurrency;
    public function formatForStrategyReport()
    {
+       $srr = $this->model->client->strategy_report_recommendation;
+       if($srr == null)
+       {
+           $client_one = Client::where('c2_id',$this->model->client->id)->first();
+           if($client_one != null)
+           {
+               $srr = $client_one->strategy_report_recommendation;
+           }
+       }
        switch ($this->model->employment_status){
            case $this->enumValueByName('employment.employment_status','Self Employed'):
            case $this->enumValueByName('employment.employment_status','Employed'):
@@ -56,7 +66,7 @@ class EmploymentPresenter extends BasePresenter
        ]))
        {
 
-           if($this->model->client->strategy_report_recommendation->retirement_status === $this->enumValueByName('strategy_report_recommendations.retirement_status','Retiring'))
+           if($srr->retirement_status === $this->enumValueByName('strategy_report_recommendations.retirement_status','Retiring'))
            {
                //best fit pension scheme
                $ps = $this->model->client->pension_schemes->where('employer','LIKE','%'.$this->model->employer)->first();
@@ -92,7 +102,7 @@ class EmploymentPresenter extends BasePresenter
 
 
            }
-           elseif($this->model->client->strategy_report_recommendation->retirement_status === $this->enumValueByName('strategy_report_recommendations.retirement_status','Flex Retirement'))
+           elseif($srr->retirement_status === $this->enumValueByName('strategy_report_recommendations.retirement_status','Flex Retirement'))
            {
                return [
                    'employment_status' => 'Flex Retirement',
