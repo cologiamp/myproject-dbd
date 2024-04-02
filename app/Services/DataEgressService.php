@@ -1,10 +1,23 @@
 <?php
-namespace App\Services;
 
+namespace App\Services;
 
 use App\Concerns\ParsesIoClientData;
 use App\Models\Client;
-use Illuminate\Support\Collection;
+use App\Services\Intelliflow\ClientAddresses;
+use App\Services\Intelliflow\ClientAssetFixed;
+use App\Services\Intelliflow\ClientAssetLumpSum;
+use App\Services\Intelliflow\ClientAssetOtherInvestments;
+use App\Services\Intelliflow\ClientAssetPensions;
+use App\Services\Intelliflow\ClientAssetSavings;
+use App\Services\Intelliflow\ClientAssetShareSaveSchemes;
+use App\Services\Intelliflow\ClientContacts;
+use App\Services\Intelliflow\ClientData;
+use App\Services\Intelliflow\ClientDependents;
+use App\Services\Intelliflow\ClientEmployment;
+use App\Services\Intelliflow\ClientExpenditure;
+use App\Services\Intelliflow\ClientHealth;
+use App\Services\Intelliflow\ClientIncome;
 use Illuminate\Support\Facades\Log;
 use Waw\Io\Io;
 
@@ -12,81 +25,74 @@ class DataEgressService
 {
     use ParsesIoClientData;
 
-    /**
-     * @param $io_id
-     * @return Collection
-     * @throws \Exception
-     */
-    public function updateClient(Client $client): bool
+
+    public function updateClientData(Client $client): bool
     {
-        $i = new Io();
-
-        $data = [
-            'person' => $this->unparseClientData($client),
-            'currentAdviser' => [
-                'id' => $client->adviser->io_id,
-                'name' => $client->adviser->name
-            ]
-        ];
-        try{
-           $i->updateClient($client->io_id, $data);
-
-           //we must check if anything actually changed and if we need to update these details.
-           $existingContactDetails = collect($i->getContactDetails($client->io_id)['items']);
-            $telephone = $existingContactDetails->where('type','Telephone')->first();
-            $mobile = $existingContactDetails->where('type','Mobile')->first();
-            $email = $existingContactDetails->where('type','Email')->first();
-            if($telephone != null)
-            {
-               if($client->phone_number != $telephone['value'])
-               {
-                   $i->updateContactDetails(
-                       clientId: $client->io_id,
-                       contactDetailId: $telephone['id'],
-                       payload: [
-                           'type' => 'Telephone',
-                           'value' => $client->phone_number
-                       ]
-                   );
-               }
-            }
-            if($mobile != null)
-            {
-                if($client->mobile_number != $mobile['value'])
-                {
-                    $i->updateContactDetails(
-                        clientId: $client->io_id,
-                        contactDetailId: $telephone['id'],
-                        payload: [
-                            'type' => 'Mobile',
-                            'value' => $client->mobile_number
-                        ]
-                    );
-                }
-            }
-            if($email != null)
-            {
-                if($client->email_address != $email['value'])
-                {
-                    $i->updateContactDetails(
-                        clientId: $client->io_id,
-                        contactDetailId: $email['id'],
-                        payload: [
-                            'type' => 'Email',
-                            'value' => $client->email_address
-                        ]
-                    );
-                }
-            }
-
-        }
-        catch(\Exception $e)
-        {
-            Log::critical('Failed to update IO.');
-            throw $e;
-        }
-        return true;
+        return (new ClientData())->updateClientData($client);
     }
 
+    public function updateClientContacts(Client $client): bool
+    {
+        return (new ClientContacts())->updateClientContacts($client);
+    }
 
+    public function updateEmployment(Client $client): bool
+    {
+        return (new ClientEmployment())->updateEmployment($client);
+    }
+
+    public function updateDependents(Client $client): bool
+    {
+        return (new ClientDependents())->updateDependents($client);
+    }
+
+    public function updateAddresses(Client $client): bool
+    {
+        return (new ClientAddresses())->updateAddresses($client);
+    }
+
+    public function updateHealth(Client $client): bool
+    {
+        return (new ClientHealth())->updateHealth($client);
+    }
+
+    public function updateClientIncome(Client $client): bool
+    {
+        return (new ClientIncome())->updateClientIncome($client);
+    }
+
+    public function updateClientExpenditure(Client $client): bool
+    {
+        return (new ClientExpenditure())->updateClientExpenditure($client);
+    }
+
+    public function updateClientAssetsFixed(Client $client): bool
+    {
+        return (new ClientAssetFixed())->updateClientAssetsFixed($client);
+    }
+
+    public function updateClientAssetsSavings(Client $client): bool
+    {
+        return (new ClientAssetSavings())->updateClientAssetsSavings($client);
+    }
+
+    public function updateClientAssetsLumpSum(Client $client): bool
+    {
+        return (new ClientAssetLumpSum())->updateClientAssetsLumpSum($client);
+    }
+
+    public function updateClientAssetsOtherInvestments(Client $client): bool
+    {
+        return (new ClientAssetOtherInvestments())->updateClientAssetOtherInvestments($client);
+    }
+
+    public function updateClientAssetsShareSaveSchemes(Client $client): bool
+    {
+        return (new ClientAssetShareSaveSchemes())->updateClientAssetsShareSaveSchemes($client);
+    }
+
+    public function updateClientAssetsPensions(Client $client): bool
+    {
+        return (new ClientAssetPensions())->updateClientAssetPensions($client);
+    }
 }
