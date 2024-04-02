@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\PRContributionController;
 use App\Http\Controllers\Api\PRAllowanceController;
 use App\Http\Controllers\Api\PRItemsController;
 use App\Http\Controllers\Api\RiskAssessmentController;
+use App\Http\Controllers\RiskProfileQuestionnaireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,17 @@ Route::get('/strategy-actions/{action}',[StrategyActionsController::class,'get']
 
 Route::put('/client/{client:io_id}/investment-recommendation/{section}/{step}',[InvestmentRecommendationController::class,'update']);
 Route::put('/client/{client:io_id}/risk-assessment/{section}/{step}',[RiskAssessmentController::class,'update']);
+
+//Route::prefix('risk-profile-questionnaire')->group(function () {
+//    Route::post('/q1/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ1'])->name('risk.q1.submit');
+//    Route::post('/q2/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ2'])->name('risk.q2.submit');
+//    Route::post('/q3/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ3'])->name('risk.q3.submit');
+//    Route::post('/q4/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ4'])->name('risk.q4.submit');
+//    Route::post('/q5/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ5'])->name('risk.q5.submit');
+//    Route::post('/q6/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ6'])->name('risk.q6.submit');
+//    Route::post('/q7/submit/{client:io_id}', [RiskProfileQuestionnaireController::class, 'submitQ7'])->name('risk.q7.submit');
+//});
+Route::post('/client/{client:io_id}/risk-profile-questionnaire/{question}',[RiskProfileQuestionnaireController::class,'store'])->name('risk.submit');
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::delete('/expenditures/{expenditure}', [ExpenditureController::class,'delete']);
