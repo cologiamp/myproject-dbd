@@ -72,6 +72,10 @@ class IncomeRepository extends BaseRepository
     public function delete(): void
     {
         //handle any cleanup required here
+        $this->income->clients()->each(function ($item) {
+            $item->incomes()->detach([$this->income->id]);
+        });
+
         $this->income->delete();
     }
 
@@ -100,7 +104,6 @@ class IncomeRepository extends BaseRepository
                         'ends_at' => $income['ends_at'],
                         'starts_at' => $income['starts_at']
                     );
-
                     $model->update($formatIncomeData);
                     $model->clients()->detach();
 

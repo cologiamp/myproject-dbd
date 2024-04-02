@@ -1,5 +1,5 @@
 <script setup>
-import {defineAsyncComponent, inject, watch} from "vue";
+import {defineAsyncComponent, inject} from "vue";
 
 const props = defineProps({
     item: {
@@ -22,25 +22,24 @@ const props = defineProps({
     }
 });
 
+const expenditure_sections = ['BasicEssentialExpenditure', 'BasicQualityOfLivingExpenditure', 'NonEssentialOutgoingsExpenditure', 'LiabilityExpenditure', 'LumpSumExpenditure'];
+
 function dynamicComponent(component){
     // For Expenditure sections
-    if (component.includes('Expenditure')) {
+    if (expenditure_sections.includes(component)) {
        component = 'Expenditure'
     }
 
     return defineAsyncComponent(() => import(`../DynamicForms/${component}.vue`));
 }
 
-// need to send the section
-// the input fields
 const selectedSectionId = inject("selectedSectionId");
 
 </script>
-
 <template>
     <div class="tab-content" v-show="sectionIndex == selectedSectionId">
         <component :is="dynamicComponent(item.renderable)"
-                   :formData="item.dynamicData"
+           :formData="item.dynamicData"
         />
     </div>
 </template>

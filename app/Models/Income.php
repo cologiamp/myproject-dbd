@@ -18,4 +18,8 @@ class Income extends Model
     {
         return $this->belongsToMany(Client::class)->withPivot('is_primary');
     }
+    public function getGrossAnnualAmountAttribute()
+    {
+        return $this->gross_amount * config('enums.incomes.per_year_frequency')[$this->frequency];
+    }
 }

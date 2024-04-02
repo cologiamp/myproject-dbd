@@ -10,6 +10,9 @@ import Swal from "sweetalert2";
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import { onBeforeMount, watch } from "vue";
+import {changeToCurrency} from "@/currency.js";
+import {forceCalculateExpenditures, tempExpenditures} from "@/calculateExpenditureTotal.js";
+
 
 const emit = defineEmits(['autosaveStateChange'])
 
@@ -111,6 +114,9 @@ async function autosaveLocally(){
     props.formData.model = await autosaveT(stepForm,props.formData.submit_url)
     stepForm.expenditures = props.formData.model.expenditures;
     formatAmountOnload()
+
+    forceCalculateExpenditures.value += 1;
+    tempExpenditures.value = stepForm.expenditures;
 }
 
 
@@ -138,36 +144,20 @@ function formatAmountOnload() {
 function formatAmount(e, typeIndex, expIndex, dataField) {
     stepForm.expenditures[typeIndex][expIndex][dataField] = '';
     stepForm.expenditures[typeIndex][expIndex][dataField] = changeToCurrency(e.target.value);
+    autosaveLocally();
 }
 
-function changeToCurrency(amount) {
-    const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'GBP',
-        minimumFractionDigits: 0
-    });
-
-    // Remove non-numeric characters from user input and convert to int
-    let tempAmount = amount.replace(/[^\d.]/g, '');
-    let numberValue = ''
-
-    if (tempAmount) {
-        numberValue = tempAmount;
-        // Format input using Intl.NumberFormat
-        return formatter.format(numberValue)
-    }
-}
 
 function expenditureStatus($event, typeIndex, expIndex, dataField) {
-    if (dataField == 'currently_active') {
-        if ($event.target.value == 'true') {
+    if (dataField === 'currently_active') {
+        if ($event.target.value === 'true') {
             stepForm.expenditures[typeIndex][expIndex]['starts_at'] = null
             autosaveLocally();
         }
     }
 
-    if (dataField == 'known_end_date') {
-        if ($event.target.value == 'false') {
+    if (dataField === 'known_end_date') {
+        if ($event.target.value === 'false') {
             stepForm.expenditures[typeIndex][expIndex]['ends_at'] = null
             autosaveLocally();
         }
@@ -232,9 +222,8 @@ function expenditureStatus($event, typeIndex, expIndex, dataField) {
                     <div class="mt-2 md:mt-0 md:pr-2 md:col-span-3">
                         <label for="amount" class="block text-sm font-medium leading-6 text-aaron-50 sm:pt-1.5 mt-2 md:mt-0  sm:pb-2"> Amount </label>
                         <div class="flex shadow-sm rounded-md  focus-within:ring-2 focus-within:ring-inset focus-within:ring-red-300 sm:max-w-md">
-                            <input @change="autosaveLocally()" type="currency" name="amount" id="amount"
+                            <input @change="formatAmount($event, typeIndex, expIndex, 'amount')" type="currency" name="amount" id="amount"
                                    :value="expenditure.amount"
-                                   @input="formatAmount($event, typeIndex, expIndex, 'amount')"
                                    class="block ring-1 ring-inset ring-aaron-500 flex-1 border-0 rounded-md bg-aaron-950 py-1.5 pl-2 text-aaron-50 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none" placeholder="£" />
                         </div>
                         <p class="mt-2 text-sm text-red-600" v-if="stepForm.errors && stepForm.errors.amount">{{ stepForm.errors.amount }}</p>

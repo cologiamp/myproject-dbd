@@ -9,6 +9,8 @@ use App\Repositories\ClientRepository;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+
 class SyncClientController extends Controller
 {
     use ParsesIoClientData;

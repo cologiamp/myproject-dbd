@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Middleware;
 
@@ -76,34 +77,50 @@ class HandleInertiaRequests extends Middleware
                     'current' => $request->route()->getName() === 'client.pensionobjectives'
                 ],
                 [
+                    'name' => 'Recommendations',
+                    'href' => '/client/'.$client->io_id.'/recommendations',
+                    'icon' => 'IRIcon',
+                    'current' => $request->route()->getName() === 'client.recommendations'
+                ],
+                [
+                    'name' => 'Strategy Report Options',
+                    'href' => '/client/'.$client->io_id.'/strategy-report-recommendations',
+                    'icon' => 'SRRIcon',
+                    'current' => $request->route()->getName() === 'client.strategyreportrecommendations'
+                ],
+                [
                     'name' => 'Strategy Report',
                     'href' => '/client/'.$client->io_id.'/strategy-report',
                     'icon' => 'SRIcon',
                     'current' => $request->route()->getName() === 'client.strategy'
                 ],
                 [
-                    'name' => 'Investment Recommendation',
-                    'href' => '/client/'.$client->io_id.'/investment-recommendation',
-                    'icon' => 'IRIcon',
-                    'current' => $request->route()->getName() === 'client.investmentrecommendation'
+                    'name' => 'Risk Assessment',
+                    'href' => '/client/'.$client->io_id.'/risk-assessment',
+                    'icon' => 'RPIcon',
+                    'current' => $request->route()->getName() === 'client.riskassessment'
                 ],
             ]);
         }
-//        $client_enabled_nav
+
+        if(Auth::check() && Auth::user()->profile_photo_path)
+        {
+            $pp = config('constants.cdn_url') . Auth::user()->profile_photo_path;
+        }
+        else{
+            $pp =  '/images/logo_square.svg';
+        }
+
         return array_merge(parent::share($request), [
             'logo' => config('constants.new_logo'),
-            'navigation' => $nav1
-
-
-
-
+            'navigation' => $nav1,
+            'profile_picture' => $pp
             //Chore: make when there's a "client" in the URL that the other tabs appear
             //Client Dashboard
 
             //Fact Find
             //Strategy Report
-
-//]
+            //]
 
         ]);
     }

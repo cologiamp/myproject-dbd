@@ -2,8 +2,11 @@
 
 namespace App\Models\Presenters;
 
+use App\Concerns\FormatsCurrency;
+
 class ExpenditurePresenter extends BasePresenter
 {
+    use FormatsCurrency;
     public function index():array
     {
         return array_merge($this->default(),
@@ -19,7 +22,7 @@ class ExpenditurePresenter extends BasePresenter
             'expenditure_id' => $this->model->id,
             'expenditure_type' => $this->model->type,
             'description' => $this->model->description,
-            'amount' => $this->model->amount,
+            'amount' => $this->model->amount != null ? $this->currencyIntToString($this->model->amount) : null,
             'frequency' => $this->model->frequency,
             'starts_at' => $this->model->starts_at,
             'ends_at' => $this->model->ends_at,

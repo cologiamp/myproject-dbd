@@ -268,6 +268,16 @@ return [
                         'messages' => []
                     ],
                     2 => [
+                        'name' => 'Expenditure Total',
+                        'fields' => [
+                            'total'
+                        ],
+                        'rules' => [
+                            'total' => 'sometimes|nullable'
+                        ],
+                        'messages' => []
+                    ],
+                    3 => [
                         'name' => 'Basic Essential Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -309,7 +319,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    3 => [
+                    4 => [
                         'name' => 'Basic Quality Of Living Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -351,7 +361,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    4 => [
+                    5 => [
                         'name' => 'Non Essential Outgoings Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -393,7 +403,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    5 => [
+                    6 => [
                         'name' => 'Liability Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -435,7 +445,7 @@ return [
                         ],
                         'messages' => []
                     ],
-                    6 => [
+                    7 => [
                         'name' => 'Lump Sum Expenditure',
                         'fields' => [
                             'expenditures' => [
@@ -488,7 +498,7 @@ return [
                             'assets.current_value',
                             'assets.is_retained',
                             'assets.retained_value',
-
+                            'assets.equity'
                         ]
                     ],
                     'rules' => [
@@ -508,6 +518,7 @@ return [
                         'fixed_assets.*.retained_value' => 'sometimes|nullable|string',
                         'fixed_assets.*.purchased_at' => 'sometimes|nullable|date',
                         'fixed_assets.*.is_retained' => 'sometimes|nullable|boolean',
+                        'fixed_assets.*.equity' => 'sometimes|nullable|string'
                     ],
                     'messages' => []
                 ],
@@ -606,6 +617,13 @@ return [
                         'db_pensions' => 'sometimes|array',
                             'db_pensions.*.id' => 'sometimes|nullable|integer',
                             'db_pensions.*.owner' => 'sometimes|nullable',
+                            'db_pensions.*.loa_submitted' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
+                            ],
                             'db_pensions.*.status' => [
                                 'sometimes',
                                 'numeric',
@@ -619,11 +637,26 @@ return [
                             'db_pensions.*.prospective_pension_max' => 'sometimes|nullable|string',
                             'db_pensions.*.prospective_pcls_standard' => 'sometimes|nullable|string',
                             'db_pensions.*.prospective_pcls_max' => 'sometimes|nullable|string',
+                            'db_pensions.*.chosen' => [
+                                'sometimes',
+                                'numeric',
+                                'nullable',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.chosen'))))
+                            ],
+                            'db_pensions.*.notes' => 'sometimes|nullable|string',
                             'db_pensions.*.cetv' => 'sometimes|nullable|string',
                             'db_pensions.*.cetv_ends_at' => 'sometimes|nullable|date',
-                        'dc_pensions' => 'sometimes|array',
+                            'dc_pensions' => 'sometimes|array',
                             'dc_pensions.*.id' => 'sometimes|nullable|integer',
                             'dc_pensions.*.owner' => 'sometimes|nullable',
+                            'dc_pensions.*.loa_submitted' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
+                            ],
                             'dc_pensions.*.type' => [
                                 'sometimes',
                                 'numeric',
@@ -640,6 +673,13 @@ return [
                             'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.gross_contribution_percent' => 'sometimes|nullable',
                             'dc_pensions.*.gross_contribution_absolute' => 'sometimes|nullable|string',
+                            'dc_pensions.*.employee_contribution_frequency' => [
+                                'sometimes',
+                                'nullable',
+                                'numeric',
+                                'integer',
+                                Rule::in(array_keys((config('enums.assets.frequency'))))
+                            ],
                             'dc_pensions.*.employer_contribution_percent' => 'sometimes|nullable',
                             'dc_pensions.*.employer_contribution_absolute' => 'sometimes|nullable|string',
                             'dc_pensions.*.valuation_at' => 'sometimes|nullable|date',
@@ -665,7 +705,7 @@ return [
                             'dc_pensions.*.funds.*.current_fund_value' => 'sometimes|nullable|string',
                             'dc_pensions.*.funds.*.fund_name' => 'sometimes|nullable|max:255',
                             'dc_pensions.*.funds.*.current_transfer_value' => 'sometimes|nullable|string',
-                            'dc_pensions.*.frequency' => [
+                            'dc_pensions.*.employer_contribution_frequency' => [
                                 'sometimes',
                                 'nullable',
                                 'numeric',
@@ -870,7 +910,7 @@ return [
             ]
         ]
     ],
-    'investmentrecommendation' => [
+    'recommendations' => [
         1 => [
             'name' => 'Investment Recommendations',
             'sections' => [
@@ -1123,8 +1163,10 @@ return [
                         'existing_pension_plans.administrator',
                         'existing_pension_plans.policy_type',
                         'existing_pension_plans.policy_number',
-                        'existing_pension_plans.lqa_submitted',
-                        'existing_pension_plans.policy_reviewed_transfer'
+                        'existing_pension_plans.loa_submitted',
+                        'existing_pension_plans.is_retained',
+                        'existing_pension_plans.active_pension_member',
+                        'existing_pension_plans.active_pension_member_reason_not'
                     ],
                     'rules' => [
                         'existing_pension_plans' => 'sometimes|nullable',
@@ -1139,20 +1181,16 @@ return [
                             Rule::in(array_keys((config('enums.pension_recommendation.policy_type'))))
                         ],
                         'existing_pension_plans.*.policy_number' => 'sometimes|nullable|string',
-                        'existing_pension_plans.*.lqa_submitted' => [
+                        'existing_pension_plans.*.loa_submitted' => [
                             'sometimes',
                             'nullable',
                             'numeric',
                             'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.lqa_submitted'))))
+                            Rule::in(array_keys((config('enums.pension_recommendation.loa_submitted'))))
                         ],
-                        'existing_pension_plans.*.policy_reviewed_transfer' => [
-                            'sometimes',
-                            'nullable',
-                            'numeric',
-                            'integer',
-                            Rule::in(array_keys((config('enums.pension_recommendation.policy_reviewed_transfer'))))
-                        ]
+                        'existing_pension_plans.*.is_retained' => 'sometimes|nullable|boolean',
+                        'existing_pension_plans.*.active_pension_member' => 'sometimes|nullable|boolean',
+                        'existing_pension_plans.*.active_pension_member_reason_not' => 'sometimes|nullable|string'
                     ],
                     'messages' => []
                 ],
@@ -1255,5 +1293,444 @@ return [
             ]
         ]
     ],
-
+    'strategyreportrecommendations' => [
+        1 => [
+            'name' => 'Strategy Report Recommendations',
+            'rules' => [
+                'report_version' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.report_version'))),
+                ],
+                'retirement_status' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.retirement_status'))),
+                ],
+                'objective_type' => [
+                    'sometimes',
+                    'nullable',
+                    'numeric',
+                    'integer',
+                    Rule::in(array_keys(config('enums.strategy_report_recommendations.objective_type'))),
+                ],
+                'next_meeting_date' => 'sometimes|nullable|date',
+            ]
+        ],
+        2 => [
+            'name' => 'Objectives',
+            'rules' => [
+                'id' => 'sometimes|nullable|numeric',
+                'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'objective_type' => 'sometimes|nullable|numeric',
+                'type' => 'sometimes|nullable|numeric',
+                'objective' => 'sometimes|nullable|numeric',
+                'objective_custom' => 'sometimes|nullable|string',
+                'what_for' => 'sometimes|nullable|numeric',
+                'what_for_custom' => 'sometimes|nullable|string',
+                'objectives' => 'sometimes|nullable',
+                'objectives.*.id' => 'sometimes|nullable|numeric',
+                'objectives.*.strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'objectives.*.is_primary' => 'sometimes|nullable|numeric',
+                'objectives.*.type' => 'sometimes|nullable|numeric',
+                'objectives.*.objective' => 'sometimes|nullable|numeric',
+                'objectives.*.objective_custom' => 'sometimes|nullable|string',
+                'objectives.*.what_for' => 'sometimes|nullable|numeric',
+                'objectives.*.what_for_custom' => 'sometimes|nullable|string',
+            ],
+            'messages' => []
+        ],
+        3 => [
+            'name' => 'Call to Actions',
+            'rules' => [
+                'id' => 'sometimes|nullable|numeric',
+                'strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'call_to_action' => 'sometimes|nullable|numeric',
+                'call_to_action_custom' => 'sometimes|nullable|string',
+                'actions' => 'sometimes|nullable',
+                'actions.*.id' => 'sometimes|nullable|numeric',
+                'actions.*.strategy_report_recommendation_id' => 'sometimes|nullable|numeric',
+                'actions.*.call_to_action' => 'sometimes|nullable|numeric',
+                'actions.*.call_to_action_custom' => 'sometimes|nullable|string'
+            ]
+        ]
+    ],
+    'riskassessment' => [
+        1 => [
+            'name' => 'Investment Risk Assessment',
+            'sections' => [
+                1 => [
+                    'name' => 'Knowledge and Experience',
+                    'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance',
+                        'experience_details'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|boolean',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|array',
+                        'experience_buying_bonds' => 'sometimes|nullable|array',
+                        'experience_buying_equities' => 'sometimes|nullable|array',
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'experience_details' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                2 => [
+                    'name' => 'Capacity for Loss',
+                    'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds',
+                        'capacity_for_loss_investment'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_investment' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                3 => [
+                    'name' => 'Knowledge and Experience',
+                    'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance',
+                        'experience_details'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|boolean',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|array',
+                        'experience_buying_bonds' => 'sometimes|nullable|array',
+                        'experience_buying_equities' => 'sometimes|nullable|array',
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'experience_details' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                4 => [
+                    'name' => 'Capacity for Loss',
+                    'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds',
+                        'capacity_for_loss_investment'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_investment' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+            ]
+        ],
+        2 => [
+            'name' => 'Pension Risk Assessment',
+            'sections' => [
+                1 => [
+                    'name' => 'Knowledge and Experience',
+                    'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance',
+                        'execution_only_experience',
+                        'experience_details',
+                        'experience_of_annuities',
+                        'experience_of_income_drawdown',
+                        'experience_of_phased_retirement',
+                        'spoken_to_pensionwise'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|integer',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|array',
+                        'experience_buying_bonds' => 'sometimes|nullable|array',
+                        'experience_buying_equities' => 'sometimes|nullable|array',
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'execution_only_experience' => 'sometimes|nullable|boolean',
+                        'experience_details' => 'sometimes|nullable|string',
+                        'experience_of_annuities' => 'sometimes|nullable|integer',
+                        'experience_of_income_drawdown' => 'sometimes|nullable|integer',
+                        'experience_of_phased_retirement' => 'sometimes|nullable|integer',
+                        'spoken_to_pensionwise' => 'sometimes|nullable|boolean'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                2 => [
+                    'name' => 'Capacity for Loss',
+                    'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds',
+                        'capacity_for_loss_pension'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_pension' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                3 => [
+                    'name' => 'Knowledge and Experience',
+                    'fields' => [
+                        'id',
+                        'particular_issues',
+                        'level_of_knowledge',
+                        'aware_of_market_fluctuations',
+                        'comfort_of_fluctuations',
+                        'active_interest',
+                        'discretionary_experience',
+                        'ever_taken_invest_advice',
+                        'experience_buying_cash',
+                        'experience_buying_bonds',
+                        'experience_buying_equities',
+                        'experience_buying_insurance',
+                        'execution_only_experience',
+                        'experience_details',
+                        'experience_of_annuities',
+                        'experience_of_income_drawdown',
+                        'experience_of_phased_retirement',
+                        'spoken_to_pensionwise'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'particular_issues' => 'sometimes|nullable|boolean',
+                        'level_of_knowledge' => 'sometimes|nullable|integer',
+                        'aware_of_market_fluctuations' => 'sometimes|nullable|integer',
+                        'comfort_of_fluctuations' => 'sometimes|nullable|boolean',
+                        'active_interest' => 'sometimes|nullable|boolean',
+                        'discretionary_experience' => 'sometimes|nullable|boolean',
+                        'ever_taken_invest_advice' => 'sometimes|nullable|boolean',
+                        'experience_buying_cash' => 'sometimes|nullable|array',
+                        'experience_buying_bonds' => 'sometimes|nullable|array',
+                        'experience_buying_equities' => 'sometimes|nullable|array',
+                        'experience_buying_insurance' => 'sometimes|nullable|array',
+                        'execution_only_experience' => 'sometimes|nullable|boolean',
+                        'experience_details' => 'sometimes|nullable|string',
+                        'experience_of_annuities' => 'sometimes|nullable|integer',
+                        'experience_of_income_drawdown' => 'sometimes|nullable|integer',
+                        'experience_of_phased_retirement' => 'sometimes|nullable|integer',
+                        'spoken_to_pensionwise' => 'sometimes|nullable|boolean'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                4 => [
+                    'name' => 'Capacity for Loss',
+                    'fields' => [
+                        'id',
+                        'investment_length',
+                        'standard_of_living',
+                        'emergency_funds',
+                        'capacity_for_loss_pension'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'investment_length' => 'sometimes|nullable|integer',
+                        'standard_of_living' => 'sometimes|nullable|integer',
+                        'emergency_funds' => 'sometimes|nullable|integer',
+                        'capacity_for_loss_pension' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ]
+            ]
+        ],
+        3 => [
+            'name' => 'Risk Profile',
+            'sections' => [
+                1 => [
+                    'name' => 'Risk Profile',
+                    'fields' => [
+                        'id',
+                        'comfort_fluctuate_market',
+                        'day_to_day_volatility',
+                        'short_term_volatility',
+                        'medium_term_volatility',
+                        'volatility_behaviour',
+                        'long_term_volatility',
+                        'time_in_market'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'comfort_fluctuate_market' => 'sometimes|nullable|boolean',
+                        'day_to_day_volatility' => 'sometimes|nullable|integer',
+                        'short_term_volatility' => 'sometimes|nullable|array',
+                        'medium_term_volatility' => 'sometimes|nullable|integer',
+                        'volatility_behaviour' => 'sometimes|nullable|integer',
+                        'long_term_volatility' => 'sometimes|nullable|integer',
+                        'time_in_market' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                2 => [
+                    'name' => 'Risk Profile',
+                    'fields' => [
+                        'id',
+                        'comfort_fluctuate_market',
+                        'day_to_day_volatility',
+                        'short_term_volatility',
+                        'medium_term_volatility',
+                        'volatility_behaviour',
+                        'long_term_volatility',
+                        'time_in_market'
+                    ],
+                    'rules' => [
+                        'id' => 'sometimes|nullable|integer',
+                        'comfort_fluctuate_market' => 'sometimes|nullable|boolean',
+                        'day_to_day_volatility' => 'sometimes|nullable|integer',
+                        'short_term_volatility' => 'sometimes|nullable|array',
+                        'medium_term_volatility' => 'sometimes|nullable|integer',
+                        'volatility_behaviour' => 'sometimes|nullable|integer',
+                        'long_term_volatility' => 'sometimes|nullable|integer',
+                        'time_in_market' => 'sometimes|nullable|integer'
+                    ],
+                    'messages' => [
+                    ]
+                ]
+            ]
+        ],
+        4 => [
+            'name' => 'Summary',
+            'sections' => [
+                1 => [
+                    'name' => 'Summary',
+                    'fields' => [
+                        'using_calculated_risk_profile_investment',
+                        'using_calculated_risk_profile_pension',
+                        'adviser_recommendation_investment',
+                        'adviser_recommendation_pension',
+                        'why_investment',
+                        'why_pension'
+                    ],
+                    'rules' => [
+                        'using_calculated_risk_profile_investment' => 'sometimes|nullable|boolean',
+                        'using_calculated_risk_profile_pension' => 'sometimes|nullable|boolean',
+                        'adviser_recommendation_investment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'adviser_recommendation_pension' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'why_investment' => 'sometimes|nullable|string',
+                        'why_pension' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ],
+                2 => [
+                    'name' => 'Summary',
+                    'fields' => [
+                        'using_calculated_risk_profile_investment',
+                        'using_calculated_risk_profile_pension',
+                        'adviser_recommendation_investment',
+                        'adviser_recommendation_pension',
+                        'why_investment',
+                        'why_pension'
+                    ],
+                    'rules' => [
+                        'using_calculated_risk_profile_investment' => 'sometimes|nullable|boolean',
+                        'using_calculated_risk_profile_pension' => 'sometimes|nullable|boolean',
+                        'adviser_recommendation_investment' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'adviser_recommendation_pension' => [
+                            'sometimes',
+                            'nullable',
+                            'numeric',
+                            'integer',
+                            Rule::in(array_keys((config('enums.risk_assessment.assessment_result_public'))))
+                        ],
+                        'why_investment' => 'sometimes|nullable|string',
+                        'why_pension' => 'sometimes|nullable|string'
+                    ],
+                    'messages' => [
+                    ]
+                ]
+            ]
+        ]
+    ]
 ];

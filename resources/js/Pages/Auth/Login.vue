@@ -16,7 +16,7 @@ import {isMobile} from "@/mobileCheck.js";
 defineProps({
     canResetPassword: Boolean,
     status: String,
-    halfPageImage: String
+    halfPageImage: String,
 });
 
 const form = useForm({
@@ -132,7 +132,7 @@ onMounted( ()=> {
                             </div>
 
                             <div>
-                                <PrimaryButton class="flex w-full h-12 justify-center rounded-md bg-teal-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                <PrimaryButton class="flex w-full h-12 justify-center rounded-md bg-teal-500 px-3 py-1.5 text-sm font-black leading-6 text-aaron-900 shadow-sm hover:bg-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                     Log in
                                 </PrimaryButton>
 

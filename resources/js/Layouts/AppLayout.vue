@@ -13,6 +13,7 @@ function comp(componentName){
 
 defineProps({
     title: String,
+    profile_picture: String,
     breadcrumbs: Array,
 });
 
@@ -51,7 +52,7 @@ import {
 import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
 
 const userNavigation = [
-    { name: 'Your profile', href: '/profile' },
+    { name: 'Clients', href: '/clients' },
     { name: 'Sign out', href: '/logout' },
 ]
 
@@ -127,8 +128,8 @@ const sidebarOpen = ref(false)
                             <li>
                                 <ul role="list" class="-mx-2 space-y-1">
                                     <li v-for="item in navigation" :key="item.name">
-                                        <Link :href="item.name === 'Fact-Find' || item.name === 'Investment Recommendation' ? item.href + '?step=1&section=1' : item.href" :class="[item.current ? 'bg-aaron-400 text-aaron-50' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
-                                            <component :is="comp(item.icon)"  class='text-aaron-50 h-6 w-6 shrink-0' aria-hidden="true" />
+                                        <Link :href="item.name === 'Fact-Find' || item.name === 'Investment Recommendation' ? item.href + '?step=1&section=1' : item.href" :class="[item.current ? 'bg-aaron-400 text-aaron-950' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                                            <component :is="comp(item.icon)" :class="[item.current ? 'text-aaron-950' : 'text-aaron-50 hover:text-aaron-50 hover:bg-aaron-400', 'h-6 w-6 shrink-0']" aria-hidden="true" />
                                             {{ item.name }}
                                         </Link>
                                     </li>
@@ -158,7 +159,7 @@ const sidebarOpen = ref(false)
                                            <EllipsisHorizontalIcon class="mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </span>
                                         <span class="sr-only">Open user menu</span>
-                                        <img class="h-8 w-8 border-2 border-aaron-50 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                        <img class="h-8 w-8 border-2 border-aaron-50 rounded-full bg-gray-50" :src="page.props.profile_picture" alt="" />
 
                                     </MenuButton>
                                     <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
