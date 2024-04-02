@@ -27,14 +27,10 @@ class ClientController extends Controller
         return true;
     }
 
-    public function toggleClientCompleted(Request $request, Client $client):bool
+    public function toggleClientComplete(Request $request, Client $client):bool
     {
-        if(isset($request->complete)){
-            $client->complete = $request->complete;
-            $client->save();
-        } else {
-            return false;
-        }
+        $client->complete = !$client->complete;
+        $client->save();
         return true;
     }
 }

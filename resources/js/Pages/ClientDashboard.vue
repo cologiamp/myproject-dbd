@@ -4,6 +4,9 @@ import FormWell from "@/Components/FormWell.vue";
 import {Link} from "@inertiajs/vue3";
 import {QuestionMarkCircleIcon, ShieldExclamationIcon, GlobeAsiaAustraliaIcon, BanknotesIcon} from "@heroicons/vue/24/solid/index.js";
 import Swal from "sweetalert2";
+import { Switch } from '@headlessui/vue'
+import {onMounted, ref} from "vue";
+import {isMobile} from "@/mobileCheck.js";
 
 const props = defineProps({
     title: String,
@@ -12,6 +15,8 @@ const props = defineProps({
     clientId: String,
     clientComplete: Boolean
 });
+
+let completeToggle = ref(false);
 
 function syncToIo()
 {
@@ -32,18 +37,34 @@ function syncToIo()
     });
 }
 
-function toggleClientComplete(event, clientID) {
-    axios.post('/api/toggle-complete/' + clientID, {
-        'complete': event.target.checked
-    })
+
+
+function toggleClientComplete() {
+    axios.post('/api/toggle-complete/' +  props.clientId)
 }
+
+
+onMounted( ()=> {
+    console.log(props.clientComplete);
+    completeToggle.value = props.clientComplete
+});
+
 
 </script>
 
 <template>
     <AppLayout :title="title" :breadcrumbs="breadcrumbs">
         <form-well>
-            <h3 class="text-aaron-50 text-2xl px-4 md:p-0">{{contentTitle}}</h3>
+            <h3 class="text-aaron-50 w-[100%] text-2xl px-4 md:p-0">{{contentTitle}}</h3>
+            <div class="relative right-8 text-center">
+                <div class="pr-6">
+                    <label for="adviser_hub_access" class="block text-sm font-medium leading-6 text-aaron-50 switch">Complete?</label>
+                    <Switch @click="toggleClientComplete" v-model="completeToggle" :class="[completeToggle ? 'bg-green-600' : 'bg-gray-200', 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2']">
+                        <span class="sr-only">Use setting</span>
+                        <span aria-hidden="true" :class="[completeToggle ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out']" />
+                    </Switch>
+                </div>
+            </div>
         </form-well>
         <div class="overflow-hidden bg-aaron-950 pt-5 rounded-lg ">
 

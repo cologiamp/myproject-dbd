@@ -31,6 +31,7 @@ class ClientDashboardController extends Controller
             'content-title' => $client->dashboard_title,
             'clientId' => $client->io_id,
             'clientComplete' => $client->complete,
+            'clientStatus' => $client->status_int,
         ]);
     }
 }

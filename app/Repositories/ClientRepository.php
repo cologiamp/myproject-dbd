@@ -78,7 +78,6 @@ class ClientRepository extends BaseRepository
      */
     public function update(BaseClientRequest $request): void
     {
-        ray($request);
         //merge "other values" - eg array_merge($request->safe()->only([]),[])
         $this->client->update($request->safe());
         //relations here - e.g  $this->model->relation()->sync();
