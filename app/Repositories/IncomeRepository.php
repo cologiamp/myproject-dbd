@@ -104,7 +104,6 @@ class IncomeRepository extends BaseRepository
                         'ends_at' => $income['ends_at'],
                         'starts_at' => $income['starts_at']
                     );
-
                     $model->update($formatIncomeData);
                     $model->clients()->detach();
 

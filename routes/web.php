@@ -37,6 +37,14 @@ Route::get('/logout',function (){
     \Illuminate\Support\Facades\Auth::logout();
     return redirect()->to('/login');
 });
+Route::get('/test', function() {
+
+    $srds = App::make(\App\Services\StrategyReportDataService::class);
+
+    $client = \App\Models\Client::find(2);
+    $data = $srds->getStrategyReportData($client);
+    return view('documents.strategy-report', ['data' => $data]);
+});
 
 Route::middleware([
     'auth:sanctum',

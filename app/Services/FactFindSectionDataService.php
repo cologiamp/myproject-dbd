@@ -314,7 +314,7 @@ class FactFindSectionDataService
                     if ($income['net_amount'] && $income['net_amount'] != null) {
                         $income['net_amount'] = $this->currencyStringToInt($income['net_amount']);
                     }
-                    if ($income['expenses'] && $income['expenses'] != null) {
+                    if (array_key_exists('expenses', $income) && $income['expenses'] && $income['expenses'] != null) {
                         $income['expenses'] = $this->currencyStringToInt($income['expenses']);
                     }
 

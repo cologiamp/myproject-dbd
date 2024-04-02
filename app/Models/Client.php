@@ -33,6 +33,14 @@ class Client extends Model
     {
         return $this->title != null ? config('enums.client.title')[$this->title] : null;
     }
+    public function getFullNameAttribute(): string
+    {
+        if($this->middle_name && strlen($this->middle_name) > 0)
+        {
+            return $this->preferred_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        }
+        return $this->preferred_name . ' ' . $this->last_name;
+    }
 
     public function client_two(): BelongsTo
     {
@@ -47,6 +55,11 @@ class Client extends Model
     public function getNameWithC2Attribute():string //->name_with_c2
     {
         return $this->client_two ? $this->name . " & ". $this->client_two->name :  $this->name;
+    }
+
+    public function getPreferredNameAttribute():string
+    {
+        return $this->salutation ?: $this->first_name;
     }
 
 
@@ -71,25 +84,6 @@ class Client extends Model
     public function getNameAttribute()
     {
         return $this->formatted_title . ' ' . $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function advice_case():BelongsTo
-    {
-        return $this->belongsTo(AdviceCase::class, "case_id");
-    }
-
-    public function assets():BelongsToMany
-    {
-        return $this->belongsToMany(Asset::class);
-    }
-    public function liabilities():BelongsToMany
-    {
-        return $this->belongsToMany(Liability::class);
-    }
-
-    public function incomes():BelongsToMany
-    {
-        return $this->belongsToMany(Income::class)->withPivot('is_primary');
     }
 
 
@@ -136,6 +130,30 @@ class Client extends Model
     }
 
 
+    public function advice_case():BelongsTo
+    {
+        return $this->belongsTo(AdviceCase::class, "case_id");
+    }
+
+
+
+    //Relations
+
+    public function assets():BelongsToMany
+    {
+        return $this->belongsToMany(Asset::class);
+    }
+    public function liabilities():BelongsToMany
+    {
+        return $this->belongsToMany(Liability::class);
+    }
+
+    public function incomes():BelongsToMany
+    {
+        return $this->belongsToMany(Income::class)->withPivot('is_primary');
+    }
+
+
     public function addresses():BelongsToMany
     {
         return $this->belongsToMany(Address::class)->withPivot('percent_ownership');
@@ -171,6 +189,10 @@ class Client extends Model
         return $this->hasMany(PensionScheme::class);
     }
 
+    public function strategy_reports():HasMany
+    {
+        return $this->hasMany(StrategyReport::class);
+    }
     /**
      * @return HasMany
      */
@@ -215,9 +237,9 @@ class Client extends Model
         return $this->belongsTo(User::class,'adviser_id');
     }
 
-    public function strategy_report_recommendation():HasOne
+    public function strategy_report_recommendation():BelongsTo
     {
-        return $this->hasOne(StrategyReportRecommendation::class);
+        return $this->belongsTo(StrategyReportRecommendation::class);
     }
 
     public function investment_recommendation():HasOne

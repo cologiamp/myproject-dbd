@@ -80,7 +80,7 @@ onMounted( ()=> {
                                         v-model="form.code"
                                         type="text"
                                         inputmode="numeric"
-                                        class="mt-4 block w-full ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
+                                        class="mt-4 text-aaron-50  block w-full ring-1 ring-inset ring-aaron-500 bg-aaron-950 focus:ring-1 focus:ring-inset focus:ring-aaron-500"
                                         autofocus
                                         autocomplete="one-time-code"
                                     />

@@ -21,9 +21,9 @@ trait FormatsCurrency{
      * @param int $amount
      * @return string
      */
-    private function currencyIntToString(int $amount): string
+    private function currencyIntToString(int|null $amount,$decimals = 2): string
     {
-        return '£' . number_format($amount/100,2);
+        return $amount != null && $amount != 0 ? '£' . number_format($amount/100,$decimals) : '£0.00';
     }
     /**
      * Formats percentage as required
