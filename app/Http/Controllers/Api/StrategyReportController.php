@@ -55,10 +55,13 @@ class StrategyReportController extends Controller
 
         $data = $this->srds->getStrategyReportData($client);
         $docraptor = new DocRaptor\DocApi();
-        $docraptor->getConfig()->setUsername(env('DOCRAPTOR_API_KEY'));
+        $docraptor->getConfig()->setUsername(config('docraptor.key'));
 
         $doc = new DocRaptor\Doc();
-        $doc->setTest(true); // test documents are free but watermarked
+        if(config('docraptor.test'))
+        {
+            $doc->setTest(true); // test documents are free but watermarked
+        }
 
         $documentContent = view('documents.strategy-report', ['data' => $data])->render();
 
