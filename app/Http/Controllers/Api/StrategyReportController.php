@@ -58,7 +58,7 @@ class StrategyReportController extends Controller
         $docraptor->getConfig()->setUsername(config('docraptor.key'));
 
         $doc = new DocRaptor\Doc();
-        if(config('docraptor.test'))
+        if(config('docraptor.test') === true)
         {
             $doc->setTest(true); // test documents are free but watermarked
         }
