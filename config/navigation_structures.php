@@ -668,6 +668,7 @@ return [
                             'dc_pensions.*.administrator' => [
                                 'sometimes',
                                 'nullable',
+                                'array'
                             ],
                             'dc_pensions.*.policy_starts_at' => 'sometimes|nullable|date',
                             'dc_pensions.*.policy_number' => 'sometimes|nullable|max:255',
